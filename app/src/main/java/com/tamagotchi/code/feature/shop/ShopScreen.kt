@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.data.database.PetStateEntity
+import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -24,12 +24,14 @@ fun ShopScreen(
     viewModel: PetViewModel,
     state: PetStateEntity
 ) {
+    val appTheme = LocalAppTheme.current
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = ">>> TIENDA",
             fontSize = 14.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
@@ -44,6 +46,8 @@ fun ShopPanel(
     viewModel: PetViewModel,
     state: PetStateEntity
 ) {
+    val appTheme = LocalAppTheme.current
+    
     val shopItems = listOf(
         ShopItemData("Café Negro (CPU Booster)", 10, "Restaura +20 Energía mental", 0f, 0f, 20f, Icons.Default.Coffee),
         ShopItemData("Pizza de Código (Bytes Snack)", 15, "Restaura +35 Alimento", 35f, 0f, 0f, Icons.Default.LocalPizza),
@@ -55,8 +59,8 @@ fun ShopPanel(
         Text(
             text = "Compra raciones o medicinas con tus Bytes de estudio acumulados.",
             fontSize = 11.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color.Gray,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -65,9 +69,9 @@ fun ShopPanel(
             shopItems.forEach { item ->
                 val canAfford = state.bytes >= item.cost
                 Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFF151D16),
-                    border = BorderStroke(1.dp, Color(0xFF2E7D32).copy(alpha = 0.4f)),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    border = BorderStroke(appTheme.borderWidth.coerceAtMost(1.dp), MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -77,7 +81,7 @@ fun ShopPanel(
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.name,
-                            tint = if (canAfford) Color(0xFFFFD54F) else Color.Gray,
+                            tint = if (canAfford) appTheme.accent else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
@@ -86,15 +90,15 @@ fun ShopPanel(
                             Text(
                                 text = item.name,
                                 fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.bodyMedium,
                                 fontSize = 12.sp,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = item.effect,
-                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.bodySmall,
                                 fontSize = 10.sp,
-                                color = Color.LightGray
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
 
@@ -110,10 +114,10 @@ fun ShopPanel(
                             },
                             enabled = canAfford,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFFD54F),
-                                disabledContainerColor = Color.DarkGray
+                                containerColor = appTheme.accent,
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                             ),
-                            shape = RoundedCornerShape(6.dp),
+                            shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(6.dp)),
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                             modifier = Modifier
                                 .height(32.dp)
@@ -121,9 +125,9 @@ fun ShopPanel(
                         ) {
                             Text(
                                 text = "${item.cost} B",
-                                color = Color.Black,
+                                color = if (canAfford) appTheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Bold,
-                                fontFamily = FontFamily.Monospace,
+                                style = MaterialTheme.typography.labelSmall,
                                 fontSize = 11.sp
                             )
                         }

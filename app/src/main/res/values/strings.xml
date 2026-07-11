@@ -1,3 +1,122 @@
 <resources>
     <string name="app_name">Code Tamagotchi</string>
+    
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Saltar</string>
+    <string name="onboarding_next">Siguiente</string>
+    
+    <!-- Step 1 -->
+    <string name="onboarding_step1_title">Tu compañero de código</string>
+    <string name="onboarding_step1_desc">Tu mascota virtual que te acompaña mientras practicas programación.</string>
+    <string name="onboarding_step1_terminal">\> hola_mundo</string>
+    
+    <!-- Step 2 -->
+    <string name="onboarding_step2_title">Tu práctica la hace evolucionar</string>
+    <string name="onboarding_step2_card1">Resuelve retos</string>
+    <string name="onboarding_step2_card2">Completa Focus</string>
+    <string name="onboarding_step2_card3">Cuida a tu mascota</string>
+    <string name="onboarding_step2_desc">Los retos y Focus entregan XP; los Bytes sirven para cuidado, juegos y estética.</string>
+    
+    <!-- Step 3 -->
+    <string name="onboarding_step3_title">Elige tu ruta</string>
+    <string name="onboarding_step3_subtitle">Para comenzar, elige hasta 3 temas</string>
+    <string name="onboarding_step3_initial_route">Ruta inicial</string>
+    <string name="topic_kotlin">Kotlin</string>
+    <string name="topic_javascript">JavaScript</string>
+    <string name="topic_python">Python</string>
+    <string name="topic_php">PHP</string>
+    <string name="topic_sql">SQL</string>
+    <string name="topic_git">Git</string>
+    <string name="topic_clean_code">Clean Code</string>
+    <string name="topic_data_structures">Estructuras de Datos</string>
+    
+    <!-- Step 4 -->
+    <string name="onboarding_step4_title">Dale nombre a tu copiloto</string>
+    <string name="onboarding_step4_preview">\> ¡Compilado! Soy %1$s.</string>
+    <string name="onboarding_step4_cta">Crear a %1$s</string>
+    <string name="default_pet_name">Codey</string>
+    
+    <!-- Dialog Skip -->
+    <string name="dialog_skip_title">¿Omitir configuración?</string>
+    <string name="dialog_skip_desc">Tu mascota se llamará Codey y usará la Ruta Inicial.</string>
+    <string name="dialog_skip_confirm">Sí, omitir</string>
+    <string name="dialog_skip_cancel">No, volver</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Configuración</string>
+    <string name="settings_section_profile">Perfil</string>
+    <string name="settings_profile_name">Nombre de mascota</string>
+    <string name="settings_profile_level">Nivel actual: %1$d</string>
+    <string name="settings_section_learning">Aprendizaje</string>
+    <string name="settings_learning_languages">Lenguajes y temas</string>
+    <string name="settings_learning_focus_duration">Duración Focus predeterminada</string>
+    <string name="settings_learning_focus_duration_value">Configurado en pantalla Focus</string>
+    <string name="settings_section_experience">Experiencia</string>
+    <string name="settings_experience_theme">Tema visual</string>
+    <string name="settings_experience_sound">Sonido</string>
+    <string name="settings_experience_vibration">Vibración</string>
+    <string name="settings_experience_reduce_motion">Reducir animaciones</string>
+    <string name="settings_experience_theme_active">Activo</string>
+    <string name="settings_section_reminders">Recordatorios</string>
+    <string name="settings_reminders_daily">Recordatorio diario de estudio</string>
+    <string name="settings_section_data">Datos y Ayuda</string>
+    <string name="settings_data_export">Exportar progreso</string>
+    <string name="settings_data_reset">Restablecer progreso</string>
+    <string name="settings_data_about">Acerca de</string>
+
+    <!-- Reset Dialog -->
+    <string name="dialog_reset_title">¿Restablecer todo el progreso?</string>
+    <string name="dialog_reset_desc">Esta acción borrará permanentemente tu mascota, nivel, XP, Bytes y configuración. Esta acción no se puede deshacer.</string>
+    <string name="dialog_reset_confirm">Sí, restablecer</string>
+    <string name="dialog_reset_cancel">Cancelar</string>
+    <string name="dialog_reset_confirm2_title">¿Estás seguro?</string>
+    <string name="dialog_reset_confirm2_desc">Esta es tu última oportunidad. Todo tu progreso se perderá para siempre. ¿Confirmas?</string>
+    <string name="dialog_reset_confirm2_confirm">Sí, estoy seguro</string>
+
+    <!-- Rename Dialog -->
+    <string name="dialog_rename_title">Renombrar mascota</string>
+    <string name="dialog_rename_label">Nuevo nombre (máx 15)</string>
+    <string name="dialog_rename_confirm">Guardar</string>
+
+    <!-- Settings Language Screen -->
+    <string name="settings_lang_title">Lenguajes y Temas</string>
+    <string name="settings_lang_primary">Lenguaje Principal</string>
+    <string name="settings_lang_active_topics">Temas Activos</string>
+    <string name="settings_lang_difficulty">Dificultad</string>
+    <string name="settings_lang_diff_initial">Inicial</string>
+    <string name="settings_lang_diff_intermediate">Intermedia</string>
+    <string name="settings_lang_diff_mixed">Mixta</string>
+    <string name="settings_lang_preview">Rotación actual: %1$d temas en dificultad %2$s.</string>
+
+    <!-- Games Screen -->
+    <string name="games_title">Arcade de Depuración</string>
+    <string name="games_bug_hunt_title">Bug Hunt</string>
+    <string name="games_bug_hunt_desc">Encuentra el punto y coma fugitivo y otros horrores sintácticos.</string>
+    <string name="games_git_rescue_title">Git Rescue</string>
+    <string name="games_git_rescue_desc">Una rama está a punto del colapso. Toma las decisiones correctas.</string>
+    <string name="games_refactor_rush_title">Refactor Rush</string>
+    <string name="games_refactor_rush_desc">Ordena el código para que tenga sentido antes de que falle el build.</string>
+    <string name="games_classic_arcade">Arcade Clásico</string>
+    <string name="games_classic_desc">Minijuegos antiguos para pasar el rato.</string>
+    <string name="games_cooldown">En enfriamiento (Vuelve más tarde para ganar más recompensa)</string>
+    <string name="games_play">Jugar</string>
+
+    <!-- Bug Hunt -->
+    <string name="bug_hunt_title">Terminal Panic</string>
+    <string name="bug_hunt_instruction">Encuentra la línea con el bug.</string>
+    <string name="bug_hunt_round">Ronda %1$d / %2$d</string>
+
+    <!-- Git Rescue -->
+    <string name="git_rescue_title">Git Rescue</string>
+    <string name="git_rescue_instruction">Elige el comando correcto para salvar el repo.</string>
+
+    <!-- Refactor Rush -->
+    <string name="refactor_rush_title">Refactor Rush</string>
+    <string name="refactor_rush_instruction">Ordena los bloques lógicos de la función.</string>
+    
+    <!-- Game Results -->
+    <string name="game_result_title">¡Build completado!</string>
+    <string name="game_result_reward">Ganaste %1$d Bytes.</string>
+    <string name="game_result_finish">Finalizar</string>
+
 </resources>

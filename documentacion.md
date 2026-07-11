@@ -66,8 +66,6 @@ Code Tamagotchi busca **gamificar el hábito de estudio en programación**. A di
 
 La app está completamente funcional pero en fase **beta**:
 - Builds: Solo debug (sin firma release configurada)
-- Firebase: Configurado como opcional (app check, AI)
-- Sin Google Services JSON (el build advierte pero no falla)
 - Sin sistema de notificaciones ni widgets todavía
 
 ---
@@ -162,53 +160,60 @@ Estudiar código → Ganas XP y Bytes → Mejoras a tu mascota (comida, medicina
 ```
 app/src/main/java/com/tamagotchi/code/
 ├── CodeTamagotchiApp.kt              ← Application class (inicia Koin)
-├── MainActivity.kt                    ← Entry point, @AndroidEntryPoint → koinViewModel()
+├── MainActivity.kt                    ← Entry point, koinViewModel() + tema dinámico
 ├── data/
 │   ├── ChallengesData.kt              ← 88 retos de programación (Kotlin, JS, PHP, Python)
 │   ├── CodingChallenge.kt             ← data class del reto
+│   ├── SpecialChallengesData.kt       ← 6 retos especiales (desbloquean temas)
 │   ├── database/
-│   │   ├── AppDatabase.kt             ← Room DB singleton con patrón double-check locking
+│   │   ├── AppDatabase.kt             ← Room DB v2 con migración M1→2
 │   │   ├── PetDao.kt                  ← DAO con queries reactivas (Flow)
 │   │   ├── PetStateEntity.kt          ← Entidad: estado completo de la mascota
 │   │   ├── StudySessionEntity.kt      ← Entidad: sesiones de estudio históricas
 │   │   └── FocusSessionEntity.kt      ← Entidad: sesión activa del timer Pomodoro
 │   └── repository/
 │       ├── PetRepository.kt           ← Capa de datos mascota + sesiones + focus
-│       └── UserPreferencesRepository.kt ← DataStore (onboarding, tema, temas desbloq.)
+│       ├── UserPreferencesRepository.kt ← DataStore (onboarding, tema, cooldown juegos)
+│       └── AchievementsRepository.kt  ← DataStore para logros desbloqueados
 ├── di/
 │   └── AppModule.kt                   ← Módulo Koin: BD, DAO, repos, ViewModel
 ├── navigation/
-│   ├── AppNavigation.kt               ← Scaffold + bottom nav + enrutamiento de pantallas
-│   └── Screen.kt                      ← sealed class con destinos (Home, Learn, Focus, Shop)
+│   ├── AppNavigation.kt               ← Scaffold + bottom nav + 12 rutas
+│   └── Screen.kt                      ← sealed class con 13 destinos
 ├── feature/
 │   ├── home/
-│   │   └── HomeScreen.kt              ← Tarjeta mascota + meters + botones de acción
+│   │   └── HomeScreen.kt              ← Tarjeta mascota + meters + diálogo offline
 │   ├── learn/
-│   │   └── LearnScreen.kt             ← Retos de programación (normales y especiales)
+│   │   └── LearnScreen.kt             ← Retos programación + especiales + temas
 │   ├── focus/
-│   │   └── FocusScreen.kt             ← Pomodoro + bitácora de estudio
+│   │   └── FocusScreen.kt             ← Pomodoro persistente + bitácora
 │   ├── shop/
 │   │   └── ShopScreen.kt              ← Tienda con productos para la mascota
 │   ├── games/
-│   │   ├── MinigamesDialog.kt         ← Selector de minijuegos
+│   │   ├── GamesScreen.kt             ← Hub arcade con cooldown diario
+│   │   ├── BugHuntScreen.kt           ← Encuentra bugs (10 snippets, explicaciones)
+│   │   ├── GitRescueScreen.kt         ← Decisiones Git (8 escenarios, progreso rama)
+│   │   ├── RefactorRushScreen.kt      ← Ordena bloques (12 puzzles, aleatorio)
+│   │   ├── MinigamesDialog.kt         ← Arcade clásico
 │   │   ├── BinaryGuessGame.kt         ← Adivina el bit (5 rondas)
 │   │   ├── BugSmasherGame.kt          ← Caza bugs 3×3 (10 segundos)
-│   │   └── RockPaperSciGame.kt        ← Servidor, Script, Hacker (mejor de 3)
+│   │   └── RockPaperSciGame.kt        ← Servidor, Script, Hacker
+│   ├── onboarding/
+│   │   └── OnboardingScreen.kt        ← 4 pasos con HorizontalPager
 │   └── settings/
-│       └── PersonalizeDialog.kt       ← Configuración (nombre, lenguaje, tema)
+│       ├── SettingsScreen.kt          ← Configuración con carrusel de temas
+│       └── SettingsLanguageScreen.kt  ← Lenguaje principal + temas + dificultad
 ├── ui/
 │   ├── components/
-│   │   ├── MeterItem.kt               ← Barra de progreso individual
-│   │   └── ViewportCard.kt            ← Card principal con mascota animada + meters
-│   ├── screens/
-│   │   └── OnboardingScreen.kt        ← Pantalla de bienvenida y naming
+│   │   ├── MeterItem.kt               ← Barra de progreso animada
+│   │   └── ViewportCard.kt            ← Card con mascota + meters + emociones
 │   ├── theme/
 │   │   ├── Color.kt                   ← Colores base Material 3
-│   │   ├── Theme.kt                   ← Tema Material 3 con soporte dinámico (Android 12+)
-│   │   ├── ThemeConfig.kt             ← 25 temas personalizados (colores, nombres)
-│   │   └── Type.kt                    ← Tipografía base
+│   │   ├── Theme.kt                   ← MyApplicationTheme + LocalAppTheme + LocalReduceMotion
+│   │   ├── ThemeConfig.kt             ← 12 temas premium con AppTheme
+│   │   └── Type.kt                    ← buildTypography() dinámica por tema
 │   └── viewmodel/
-│       └── PetViewModel.kt            ← Toda la lógica de negocio (DI via Koin)
+│       └── PetViewModel.kt            ← Toda la lógica de negocio (~820 líneas)
 └── util/
     └── SoundManager.kt                ← Efectos de sonido con ToneGenerator
 ```
@@ -223,13 +228,14 @@ val appModule = module {
     single { get<AppDatabase>().petDao() }
     single { PetRepository(get()) }
     single { UserPreferencesRepository(androidContext()) }
-    viewModel { PetViewModel(get(), get()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
 }
 ```
 
 - `CodeTamagotchiApp` inicia Koin en `onCreate()`
 - `MainActivity` obtiene el ViewModel con `koinViewModel()`
-- `PetViewModel` recibe `PetRepository` y `UserPreferencesRepository` por constructor
+- `PetViewModel` recibe `PetRepository`, `UserPreferencesRepository` y `AchievementsRepository` por constructor
 
 ---
 
@@ -244,26 +250,32 @@ onCreate()
     ↓
 enableEdgeToEdge()
     ↓
-setContent { MyApplicationTheme { ... } }
+setContent {
+    val appTheme = ThemeRegistry.getTheme(currentTheme.value)
+    MyApplicationTheme(appTheme = appTheme, reduceMotion = ...) { ... }
+}
     ↓
-koinViewModel() → PetViewModel(PetRepository, UserPreferencesRepository)
+koinViewModel() → PetViewModel(PetRepository, UserPreferencesRepository, AchievementsRepository)
     ↓
 init { } del ViewModel:
     ├── Leer DataStore: hasSeenOnboarding (suspend)
     ├── Colectar Flow: currentTheme → actualizar tema
     ├── Colectar Flow: unlockedThemes → actualizar temas
+    ├── Colectar Flow: unlockedAchievements → actualizar logros
+    ├── Colectar Flow: gameCooldowns → control farm de moneda
     ├── Room: leer petState
     │   ├── null  → crear PetStateEntity default → loadChallenges("Kotlin")
     │   └── exist → applyDecay(petState) → loadChallenges(petState.language)
     └── Room: buscar FocusSession activa
         ├── null  → nada
-        └── exist → reanudar timer (calcular tiempo restante)
+        ├── exist + tiempo restante → reanudar timer
+        └── exist + tiempo agotado → recompensa offline + diálogo
     ↓
 Composable:
-    ├── hasSeenOnboarding == false → OnboardingScreen
+    ├── hasSeenOnboarding == false → OnboardingScreen (4 pasos: presentación,
+    │   explicación, elegir temas, nombrar mascota)
     │       ↓
-    │   completeOnboarding(petName)
-    │       ↓ DataStore + Room
+    │   completeOnboarding(name, topics) → DataStore + Room
     │       ↓ → recomposición → hasSeenOnboarding = true → AppNavigation
     │
     └── hasSeenOnboarding == true → AppNavigation (HomeScreen por defecto)
@@ -272,47 +284,53 @@ Composable:
 ### 4.2 Mapa de Navegación (Bottom Navigation)
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    TOP BAR                           │
-│           Code Tamagotchi [⚙️ personalizar]         │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│   ┌─────────────────────────────────────────────┐   │
-│   │              HOME SCREEN                     │   │
-│   │  (ViewportCard: mascota + meters + botones)  │   │
-│   │  ┌─────────────────────────────────────┐     │   │
-│   │  │        🖼️ MASCOTA ANIMADA           │     │   │
-│   │  │  (bounce al tocarla + ❤️ flotante)  │     │   │
-│   │  └─────────────────────────────────────┘     │   │
-│   │  ▓▓▓▓▓░░░ Vida    ▓▓░░░░░ Alimento ▓▓▓░░░░  │   │
-│   │  💰 Bytes   🔥 Streak   😴 Dormir           │   │
-│   │  [Acariciar] [Limpiar] [🎮 Jugar]           │   │
-│   └─────────────────────────────────────────────┘   │
-│                                                      │
-├─────────────────────────────────────────────────────┤
-│  [🏠] Inicio   [💻] Aprender   [⏱️] Focus   [🛒]  │
-│                        Tienda                        │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                        TOP BAR (Material 3)                       │
+│           Code Tamagotchi                    [⚙️ Configuración]  │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   ┌──────────────────────────────────────────────────────────┐   │
+│   │                   HOME SCREEN                             │   │
+│   │      (ViewportCard: mascota + meters + botones)           │   │
+│   │  ┌──────────────────────────────────────────────────┐     │   │
+│   │  │            🖼️ MASCOTA ANIMADA                    │     │   │
+│   │  │  (bounce + ❤️ flotante al tocarla)               │     │   │
+│   │  └──────────────────────────────────────────────────┘     │   │
+│   │  ▓▓▓▓▓░░░ Salud    ▓▓░░░░░ Hambre  ▓▓▓░░░░ Energía       │   │
+│   │  💰 Bytes   🔥 Racha   😴 Dormir   🧹 Limpiar            │   │
+│   │  [Acariciar] [🎮 Jugar]                                    │   │
+│   └──────────────────────────────────────────────────────────┘   │
+│                                                                   │
+├──────────────────────────────────────────────────────────────────┤
+│  [🏠] Inicio  [💻] Aprender  [⏱️] Focus  [🛒] Tienda            │
+└──────────────────────────────────────────────────────────────────┘
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Al tocar Aprender / Focus / Tienda:
+Pantallas adicionales (acceso desde top bar o bottom nav):
 
-┌─────────────────────────────────────────────────────┐
-│   (overlay con slide-up desde abajo)                 │
-│                                                      │
-│   ┌─────────────────────────────────────────────┐   │
-│   │           TERMINAL HUB                        │   │
-│   │  ● ● ●  terminal@codey:~  v2.0.0            │   │
-│   │  ─────────────────────────────────────────   │   │
-│   │                                               │   │
-│   │  [LEARN] → Retos de programación por lenguaje │   │
-│   │  [FOCUS] → Pomodoro (15/25/50 min) + bitácora│   │
-│   │  [SHOP]  → Productos + comida                 │   │
-│   │                                               │   │
-│   └─────────────────────────────────────────────┘   │
-│                                                      │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│  ⚙️ CONFIGURACIÓN (SettingsScreen)                               │
+│  ├─ Perfil: nombre, nivel, renombrar                             │
+│  ├─ Aprendizaje: lenguajes, temas activos, dificultad            │
+│  ├─ Experiencia: 🎨 carrusel de temas, sonido, vibración,        │
+│  │               reducir animaciones                             │
+│  ├─ Recordatorios: estructura local (placeholder)                │
+│  └─ Datos: exportar (mock), restablecer (doble confirmación)     │
+│                                                                   │
+│  🕹️ ARCADE (GamesScreen)                                         │
+│  ├─ Bug Hunt → Encuentra bugs en 5 rondas (con explicaciones)    │
+│  ├─ Git Rescue → 5 decisiones Git con progreso de rama           │
+│  ├─ Refactor Rush → Ordena bloques (12 puzzles aleatorios)       │
+│  └─ Arcade Clásico → Minijuegos antiguos                         │
+│    ⏳ Cooldown diario de 24h por juego                           │
+│                                                                   │
+│  🎓 ONBOARDING (primera apertura)                                │
+│  ├─ Paso 1: "Tu compañero de código" + animación mascota         │
+│  ├─ Paso 2: "Tu práctica la hace evolucionar" + tarjetas         │
+│  ├─ Paso 3: "Elige tu ruta" → FilterChip con 8 temas             │
+│  └─ Paso 4: "Dale nombre a tu copiloto" (máx 15 caracteres)      │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ### 4.3 Manejo de Ciclo de Vida
@@ -448,37 +466,44 @@ val currentHearts = (state.health / 20f).toInt().coerceIn(0, 5)
 
 ## 6. Módulos y Funcionalidades
 
-### 6.1 Onboarding (`OnboardingScreen.kt`)
+### 6.1 Onboarding (`feature/onboarding/OnboardingScreen.kt`)
 
-**Propósito:** Primera experiencia del usuario.
+**Propósito:** Primera experiencia del usuario en 4 pasos con HorizontalPager.
 
 **Flujo:**
-1. Muestra imagen de mascota feliz + texto de bienvenida
-2. Input para nombre (máx 15 caracteres)
-3. Botón "Compilar y Empezar"
-4. Al completar: `UserPreferencesRepository.setOnboardingCompleted()` + crea `PetStateEntity`
+1. **Paso 1 — "Tu compañero de código":** Mascota, animación, terminal `> hola_mundo`
+2. **Paso 2 — "Tu práctica la hace evolucionar":** 3 tarjetas (retos, Focus, cuidados), explicación XP/Bytes
+3. **Paso 3 — "Elige tu ruta":** FilterChip multiselección (8 temas), Ruta inicial, contador (máx 3)
+4. **Paso 4 — "Dale nombre a tu copiloto":** Input (máx 15), preview `> ¡Compilado! Soy {name}`
+5. **Skip:** Diálogo de confirmación → usa "Codey" + Ruta inicial
+6. Al completar: `setOnboardingCompleted()`, `setSelectedTopics()`, crea `PetStateEntity(name)`, navega a Home
 
 ### 6.2 Pantalla Principal (`AppNavigation.kt` + `HomeScreen.kt`)
 
-**Propósito:** Centro de toda la interacción con la mascota. Scaffold con bottom navigation y sistema de paneles modales.
+**Propósito:** Centro de toda la interacción con la mascota. Scaffold con bottom navigation y 13 rutas.
 
 **Componentes:**
 
 | Componente | Archivo | Función |
 |:-----------|:--------|:--------|
-| `AppNavigation` | `navigation/AppNavigation.kt` | Scaffold + bottom nav + diálogos |
-| `Screen` | `navigation/Screen.kt` | sealed class (Home, Learn, Focus, Shop) |
-| `HomeScreen` | `feature/home/HomeScreen.kt` | ViewportCard + botones de acción |
+| `AppNavigation` | `navigation/AppNavigation.kt` | Scaffold + bottom nav + 13 rutas (when) |
+| `Screen` | `navigation/Screen.kt` | sealed class: Home, Learn, Focus, Shop, Settings, SettingsLanguage, Games, BugHunt, GitRescue, RefactorRush |
+| `HomeScreen` | `feature/home/HomeScreen.kt` | ViewportCard + botones + diálogo offline reward |
 | `ViewportCard` | `ui/components/ViewportCard.kt` | Mascota animada + meters + nombre |
-| `MeterItem` | `ui/components/MeterItem.kt` | Barra de progreso individual |
-| `LearnScreen` | `feature/learn/LearnScreen.kt` | Retos de programación con pestañas |
-| `FocusScreen` | `feature/focus/FocusScreen.kt` | Pomodoro + bitácora de estudio |
-| `ShopScreen` | `feature/shop/ShopScreen.kt` | Tienda con productos |
-| `PersonalizeDialog` | `feature/settings/PersonalizeDialog.kt` | Configuración (nombre, lenguaje, tema) |
-| `MinigamesDialog` | `feature/games/MinigamesDialog.kt` | Selector de 3 minijuegos |
-| `BinaryGuessGame` | `feature/games/BinaryGuessGame.kt` | Adivina el bit (5 rondas) |
-| `BugSmasherGame` | `feature/games/BugSmasherGame.kt` | Caza bugs 3×3 (10 segundos) |
-| `RockPaperSciGame` | `feature/games/RockPaperSciGame.kt` | Servidor, Script, Hacker (mejor de 3) |
+| `MeterItem` | `ui/components/MeterItem.kt` | Barra de progreso animada |
+| `LearnScreen` | `feature/learn/LearnScreen.kt` | Retos de programación (normales + especiales) |
+| `FocusScreen` | `feature/focus/FocusScreen.kt` | Pomodoro persistente + bitácora de estudio |
+| `ShopScreen` | `feature/shop/ShopScreen.kt` | Tienda con productos y comida |
+| `SettingsScreen` | `feature/settings/SettingsScreen.kt` | Configuración completa con carrusel de temas |
+| `SettingsLanguageScreen` | `feature/settings/SettingsLanguageScreen.kt` | Lenguaje principal, temas activos, dificultad |
+| `GamesScreen` | `feature/games/GamesScreen.kt` | Hub arcade con cooldown diario |
+| `BugHuntScreen` | `feature/games/BugHuntScreen.kt` | Encuentra bugs en código (10 snippets) |
+| `GitRescueScreen` | `feature/games/GitRescueScreen.kt` | Decisiones Git con progreso visual |
+| `RefactorRushScreen` | `feature/games/RefactorRushScreen.kt` | Ordena bloques (12 puzzles) |
+| `MinigamesDialog` | `feature/games/MinigamesDialog.kt` | Arcade clásico (3 juegos legacy) |
+| `BinaryGuessGame` | `feature/games/BinaryGuessGame.kt` | Adivina el bit (legacy) |
+| `BugSmasherGame` | `feature/games/BugSmasherGame.kt` | Caza bugs 3×3 (legacy) |
+| `RockPaperSciGame` | `feature/games/RockPaperSciGame.kt` | Servidor, Script, Hacker (legacy) |
 
 ### 6.3 Pet Tap
 
@@ -580,20 +605,22 @@ completeStudySession() {
 | Dormir | Recupera energía | Sin cambios |
 | Despertar | Vuelve a HAPPY | Sin cambios |
 
-### 6.8 Minijuegos
+### 6.8 Configuración (`SettingsScreen.kt`)
 
-**1. Adivina el Bit (`BinaryGuessGame`):**
-- 5 rondas, adivinar bit secreto (0/1)
-- Premio: `score × 4` Bytes, `score × 3`% Salud
+**Propósito:** Todas las opciones de personalización y administración.
 
-**2. Caza de Bugs (`BugSmasherGame`):**
-- Cuadrícula 3×3, 10 segundos, tocar el bug que aparece aleatoriamente
-- Premio: `score × 2` Bytes, `score × 1.5`% Salud (max 30%)
+**Secciones:**
+- **Perfil:** nombre, nivel actual, botón renombrar (diálogo con validación 1-15 chars)
+- **Aprendizaje:** atajo a `SettingsLanguageScreen` (lenguaje principal, temas activos, dificultad)
+- **Experiencia:** 🎨 carrusel de temas visual con LazyRow, toggle sonido/vibración, reducir animaciones
+- **Recordatorios:** estructura visual (placeholder sin lógica de notificaciones)
+- **Datos:** exportar progreso (mock JSON), restablecer todo (doble confirmación con diálogo en dos pasos)
 
-**3. Servidor, Script, Hacker (`RockPaperSciGame`):**
-- Servidor > Hacker > Script > Servidor, mejor de 3
-- Premio (ganar): 20 Bytes, 25% Salud
-- Premio (perder): 5 Bytes, 10% Salud
+**Temas visuales:**
+- 12 temas premium con emoji, tipografía única, corner radius, gradientes
+- Carrusel con preview de colores, dots de paleta, check en activo, candado en bloqueados
+- Animación suave de borde con `animateColorAsState`
+- Persistencia en DataStore + CompositionLocal (`LocalAppTheme`)
 
 ---
 
@@ -750,55 +777,90 @@ app/src/main/assets/pet/
 ### 8.1 Estructura
 
 ```kotlin
-data class AppThemeColors(
-    val name: String,
-    val background: Color,
-    val surface: Color,
-    val primary: Color,
-    val secondary: Color,
-    val onPrimary: Color,
-    val textPrimary: Color,
-    val textSecondary: Color,
-    val success: Color,
-    val error: Color
+data class AppTheme(
+    val name: String,           // "Matrix Green"
+    val emoji: String,          // "🖥️"
+    val description: String,    // "Terminal hacker. Código verde sobre negro."
+    val isDark: Boolean,        // true = darkColorScheme, false = lightColorScheme
+
+    // Color palette (12 colores)
+    val background: Color, val surface: Color, val surfaceVariant: Color,
+    val primary: Color, val secondary: Color, val tertiary: Color,
+    val onPrimary: Color, val textPrimary: Color, val textSecondary: Color,
+    val accent: Color, val success: Color, val error: Color,
+
+    // Typography (distinta por tema)
+    val fontFamily: FontFamily,      // body (Monospace, Serif, SansSerif)
+    val titleFontFamily: FontFamily, // títulos (puede diferir del body)
+    val titleWeight: FontWeight,     // Bold, Thin, ExtraBold, Black...
+
+    // Visual style
+    val cornerRadius: Dp,       // 0dp (Retro Pixel) a 20dp (Galáctico)
+    val borderWidth: Dp,        // 0dp a 2dp
+    val usesGradients: Boolean,
+    val gradientColors: List<Color>
 )
 ```
 
-### 8.2 Temas Disponibles (25)
+### 8.2 Temas Disponibles (12 premium)
 
-| # | Tema | Background | Primary | Estilo |
-|:-:|:-----|:-----------|:--------|:-------|
-| 1 | Matrix Green | `#0C100D` | `#2E7D32` | 🌑 Oscuro |
-| 2 | Galáctico | `#090A0F` | `#6200EA` | 🌑 Oscuro |
-| 3 | Cyberpunk | `#0F0B1E` | `#F50057` | 🌑 Oscuro |
-| 4 | Bosque Encantado | `#0D1F15` | `#388E3C` | 🌑 Oscuro |
-| 5 | Sakura | `#FCE4EC` | `#E91E63` | 🌕 Claro |
-| 6 | Minimalista | `#FFFFFF` | `#212121` | 🌕 Claro |
-| 7 | Neón | `#000000` | `#39FF14` | 🌑 Oscuro |
-| 8 | Océano | `#001F3F` | `#0074D9` | 🌑 Oscuro |
-| 9 | Volcánico | `#2A0800` | `#FF4500` | 🌑 Oscuro |
-| 10 | Ártico | `#E0FFFF` | `#00BFFF` | 🌕 Claro |
-| 11 | Vaporwave | `#2B00FF` | `#00FFFF` | 🌑 Oscuro |
-| 12 | Café | `#3E2723` | `#8D6E63` | 🌑 Oscuro |
-| 13 | Retro | `#F4A460` | `#8B4513` | 🌕 Claro |
-| 14 | Pixel Art | `#2C3E50` | `#E74C3C` | 🌑 Oscuro |
-| 15 | Samurai | `#1C1C1C` | `#C62828` | 🌑 Oscuro |
-| 16 | Medieval | `#2E2B2A` | `#FFD700` | 🌑 Oscuro |
-| 17 | Desierto | `#EDC9AF` | `#D2691E` | 🌕 Claro |
-| 18 | Aurora | `#0B192C` | `#00FF7F` | 🌑 Oscuro |
-| 19 | Cristal | `#F0F8FF` | `#9370DB` | 🌕 Claro |
-| 20 | Nocturno | `#000000` | `#0A84FF` | 🌑 Oscuro |
-| 21 | Tropical | `#FFFAF0` | `#FF7F50` | 🌕 Claro |
-| 22 | Otoño | `#5C2C16` | `#FFA500` | 🌑 Oscuro |
-| 23 | Hacker | `#000000` | `#00FF00` | 🌑 Oscuro |
-| 24 | Magma | `#1A0000` | `#FF0000` | 🌑 Oscuro |
-| 25 | Fantasma | `#E8ECEF` | `#6C7A89` | 🌕 Claro |
+| # | Tema | Emoji | Dark | Fuente | Esquinas | Gradiente |
+|:-:|:-----|:-----:|:----:|:-------|:--------:|:---------:|
+| 1 | Matrix Green | 🖥️ | Sí | Monospace | 4dp | — |
+| 2 | Galáctico | 🌌 | Sí | SansSerif | 20dp | ✅ |
+| 3 | Cyberpunk | ⚡ | Sí | Monospace | 2dp | ✅ |
+| 4 | Sakura | 🌸 | No | Serif | 16dp | ✅ |
+| 5 | Minimalista | ◻️ | No | SansSerif | 8dp | — |
+| 6 | Neón | 💜 | Sí | Monospace | 12dp | — |
+| 7 | Océano | 🌊 | Sí | SansSerif | 14dp | ✅ |
+| 8 | Volcánico | 🌋 | Sí | Serif | 6dp | ✅ |
+| 9 | Samurai | ⚔️ | Sí | Serif | 4dp | — |
+| 10 | Aurora | ✨ | Sí | SansSerif | 18dp | ✅ |
+| 11 | Nocturno | 🌙 | Sí | SansSerif | 12dp | — |
+| 12 | Retro Pixel | 👾 | Sí | Monospace | 0dp | — |
 
-### 8.3 Persistencia de Temas
+### 8.3 Integración con Material 3
 
-Los temas se guardan en **DataStore** (migrado desde SharedPreferences en v2.0):
-- `currentTheme` → Flow vía DataStore
-- `unlockedThemes` → Flow vía DataStore
+Cada `AppTheme` se convierte a un `ColorScheme` completo de Material 3 mediante:
+
+```kotlin
+fun AppTheme.toColorScheme(): ColorScheme {
+    val builder = if (isDark) ::darkColorScheme else ::lightColorScheme
+    return builder(
+        primary = primary, onPrimary = onPrimary,
+        primaryContainer = primary.copy(alpha = 0.20f),
+        secondary = secondary, tertiary = tertiary,
+        background = background, surface = surface,
+        surfaceVariant = surfaceVariant,
+        error = error, outline = textSecondary.copy(alpha = 0.5f),
+        ...
+    )
+}
+```
+
+Además, la tipografía se construye dinámicamente vía `buildTypography(bodyFont, titleFont, titleWeight)`.
+
+### 8.4 Composición Local
+
+```kotlin
+val LocalAppTheme = staticCompositionLocalOf { ThemeRegistry.allThemes.first() }
+```
+
+Cualquier componente puede leer el tema actual completo con `LocalAppTheme.current` para acceder a propiedades como `cornerRadius`, `emoji`, `borderWidth`, etc.
+
+### 8.5 Selección Visual
+
+Los temas se seleccionan mediante un **carrusel horizontal** (`LazyRow`) en SettingsScreen:
+
+- Cada tarjeta muestra: gradiente de colores, emoji, nombre, descripción, dots de paleta
+- El tema activo tiene borde brillante + check + etiqueta "Activo"
+- Los temas bloqueados muestran candado y están deshabilitados
+- Animación suave de borde (`animateColorAsState`)
+
+### 8.6 Persistencia
+
+- `currentTheme` → Flow vía DataStore (default: "Matrix Green")
+- `unlockedThemes` → Flow vía DataStore (default: {"Matrix Green"})
 - Los temas se desbloquean al acertar retos especiales mediante `addUnlockedTheme()`
 
 ---
@@ -860,52 +922,102 @@ earnedXp = 25        // antes: 20
 
 ## 10. Minijuegos
 
-### 10.1 Adivina el Bit
+La app tiene 3 juegos originales (Arcade de Depuración) más 3 juegos clásicos (Arcade Clásico legacy). Todos los juegos entregan Bytes y afecto, nunca XP de estudio. Cada juego tiene cooldown diario de 24h.
 
+### 10.1 Bug Hunt — Terminal Panic
+
+**Propósito:** Encontrar la línea con bug en fragmentos de código ficticio.
+
+**Mecánica:**
+- 5 rondas de 60 segundos
+- Se muestra un snippet de 4-5 líneas de código
+- El jugador toca la línea que contiene el bug
+- 10 snippets diferentes en el pool (aleatorio cada partida)
+- Después de responder: explicación técnica + humor de Codey
+
+**Sistema de recompensa:**
+- `score × 10` Bytes (máx 50)
+- `+10%` Salud, `-5%` Energía
+- Logro "Cazador de bugs" si score = 10
+
+**Ejemplo de ronda:**
 ```
-Ronda 1 de 5
-┌──────────────────┐
-│        ?         │  ← Bit secreto oculto
-└──────────────────┘
-   [0]          [1]
+Ronda 3 de 5
+⌛ 42s
 
-→ Si aciertas: ✓ "El bit secreto era X."
-→ Si fallas:   ✗ "Incorrecto. Era X."
-```
+Codey: ¡Los paréntesis no son decoración! Son parte de la sintaxis.
 
-**Premio:** `score × 4` Bytes, `score × 3`% Salud
+1. val nums = listOf(1, 2, 3)
+2. for i in nums {          ← BUG (falta paréntesis)
+3.     print(i)
+4. }
 
-### 10.2 Caza de Bugs
-
-```
-Tiempo: 10s    Bugs atrapados: 3
-┌─────┬─────┬─────┐
-│     │ 🐛 │     │
-├─────┼─────┼─────┤
-│     │     │     │
-├─────┼─────┼─────┤
-│     │     │     │
-└─────┴─────┴─────┘
-```
-
-**Premio:** `score × 2` Bytes, `score × 1.5`% Salud (máx 30%)
-
-### 10.3 Servidor, Script, Hacker
-
-```
-TÚ: 1 | CPU: 0 (Mejor de 3)
-
-    TÚ        VS    COMPILADOR
-  [Servidor]       [Hacker]
-
-═══ Reglas ═══
-Servidor 🔒 > Hacker 👤
-Hacker   👤 > Script 📄
-Script   📄 > Servidor 🔒
+Explicación: En Kotlin el for usa paréntesis: for (i in nums).
 ```
 
-**Premio (ganar):** 20 Bytes, 25% Salud
-**Premio (perder):** 5 Bytes, 10% Salud
+### 10.2 Git Rescue
+
+**Propósito:** Elegir el comando Git correcto en situaciones de merge, rebase y conflictos.
+
+**Mecánica:**
+- 5 escenarios secuenciales de 8 en el pool
+- Cada escenario: situación narrativa + 3 opciones (correcta, plausible, absurda)
+- Después de responder: explicación + humor
+- Progreso visual de rama con círculos numerados
+
+**Sistema de recompensa:**
+- `score × 15` Bytes (máx 45)
+- `+10%` Salud, `-5%` Energía
+- Logro "Git sin pánico" si score = 3
+
+**Ejemplo:**
+```
+Paso 2 de 5
+
+Codey: revert HEAD es más seguro que reset --hard
+
+Situación: Has hecho cambios locales y rompiste todo.
+> git reset --hard HEAD
+> git revert HEAD                ← CORRECTA
+> git rm -rf .
+
+Explicación: revert crea un nuevo commit preservando la historia.
+```
+
+### 10.3 Refactor Rush
+
+**Propósito:** Ordenar bloques de código en el orden correcto.
+
+**Mecánica:**
+- 1 puzzle aleatorio de 12 en el banco
+- Bloques desordenados, se mueven con botones ▲/▼
+- Múltiples intentos permitidos
+- Penalización por intentos extra (menos Bytes)
+
+**Sistema de recompensa:**
+- `max(50 - attempts × 5, 10)` Bytes
+- `+10%` Salud, `-5%` Energía
+
+### 10.4 Arcade Clásico (Legacy)
+
+Sección secundaria en GamesScreen que conserva los minijuegos originales:
+
+#### 10.4.1 Adivina el Bit
+- 5 rondas, adivinar bit secreto (0/1)
+- Premio: `score × 4` Bytes, `score × 3`% Salud
+
+#### 10.4.2 Caza de Bugs
+- Cuadrícula 3×3, 10 segundos, tocar el bug
+- Premio: `score × 2` Bytes, `score × 1.5`% Salud (máx 30%)
+
+#### 10.4.3 Servidor, Script, Hacker
+- Servidor > Hacker > Script > Servidor, mejor de 3
+- Premio (ganar): 20 Bytes, 25% Salud
+- Premio (perder): 5 Bytes, 10% Salud
+
+### 10.5 Cooldown Diario
+
+Cada juego registra su última fecha de juego en DataStore (`game_last_played`). Un juego solo puede jugarse si pasaron 24h desde la última partida. El cooldown se muestra visualmente: tarjeta atenuada, botón deshabilitado, texto "En enfriamiento".
 
 ---
 
@@ -1026,7 +1138,8 @@ val appModule = module {
     single { get<AppDatabase>().petDao() }
     single { PetRepository(get()) }
     single { UserPreferencesRepository(androidContext()) }
-    viewModel { PetViewModel(get(), get()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
 }
 ```
 
@@ -1038,7 +1151,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyApplicationTheme {
+            val appTheme = ThemeRegistry.getTheme(currentTheme.value)
+            MyApplicationTheme(appTheme = appTheme, reduceMotion = ...) {
                 val petViewModel: PetViewModel = koinViewModel()
                 // ...
             }
@@ -1052,11 +1166,12 @@ class MainActivity : ComponentActivity() {
 ```kotlin
 class PetViewModel(
     private val repository: PetRepository,
-    private val userPreferences: UserPreferencesRepository
+    private val userPreferences: UserPreferencesRepository,
+    private val achievementsRepository: AchievementsRepository
 ) : ViewModel() {
-    // No más AndroidViewModel ni getSharedPreferences manual
-    // No más AppDatabase.getDatabase() en init
-    // Todo inyectado por Koin
+    // 3 dependencias inyectadas por Koin
+    // DataStore para temas, onboarding, logros, cooldown juegos
+    // Room para estado mascota, sesiones de estudio y focus
 }
 ```
 
@@ -1076,7 +1191,7 @@ class PetViewModel(
 
 **Archivo:** `GreetingScreenshotTest.kt`
 
-Nota: v2.0 requiere actualización del test porque `CodeTamagotchiScreen.kt` fue eliminado y reemplazado por `AppNavigation.kt`.
+Actualizado en v2.0: ahora recibe `PetRepository`, `UserPreferencesRepository` y `AchievementsRepository` por constructor (mockeado con `fakePetState`).
 
 ### 15.4 Tests de Instrumentación
 
@@ -1088,7 +1203,7 @@ Nota: v2.0 requiere actualización del test porque `CodeTamagotchiScreen.kt` fue
 |:-----|:---------|:-------|
 | Unit test | 1 | ✅ Básico |
 | Robolectric | 2 | ✅ Funcional |
-| Screenshot | 1 | ⚠️ Requiere actualización |
+| Screenshot | 1 | ✅ Actualizado |
 | Instrumentación | 1 | ✅ Básico |
 
 ---
@@ -1229,9 +1344,43 @@ CodingChallenge(
 
 #### 🏗️ Arquitectura
 - **Modularización:** `CodeTamagotchiScreen.kt` (~2925 líneas) dividido en `feature/{home,learn,focus,shop,games,settings}/`, `navigation/AppNavigation.kt` y `ui/components/`
-- **Navegación:** Sistema de bottom nav con sealed class `Screen` (sin NavHost)
+- **Navegación:** Sistema de bottom nav con sealed class `Screen` (sin NavHost), 13 rutas total
 - **DI:** Migración a **Koin 4.0.2** (no usa Gradle plugin, compatible con AGP 9.x)
-- **DataStore:** SharedPreferences migrado a **DataStore Preferences** (`UserPreferencesRepository`)
+- **DataStore:** SharedPreferences migrado a **DataStore Preferences** (`UserPreferencesRepository`) + nuevo `AchievementsRepository`
+- **GreetingScreenshotTest:** actualizado con 3 parámetros en constructor
+
+#### 🎮 Nuevos Juegos (Arcade de Depuración)
+- **Bug Hunt — Terminal Panic:** 10 snippets de código, 5 rondas, explicaciones con humor de Codey
+- **Git Rescue:** 8 escenarios Git, 5 decisiones, progreso visual de rama
+- **Refactor Rush:** 12 puzzles de ordenamiento, aleatorio por partida, penalización por intentos
+- **Cooldown diario de 24h por juego:** persistido en DataStore, UI atenuada + botón deshabilitado
+
+#### 🎨 Sistema de Temas Premium (12)
+- Rediseño completo: `AppTheme` con emoji, tipografía única, corner radius, gradientes, border
+- `toColorScheme()` → mapeo a Material 3 ColorScheme completo
+- `buildTypography()` dinámica por tema (Monospace/Serif/SansSerif + title weight)
+- `LocalAppTheme` CompositionLocal para acceso desde cualquier componente
+- Carrusel visual en Settings (LazyRow + preview colores + check/candado + borde animado)
+- Persistencia: `currentTheme` + `unlockedThemes` en DataStore
+
+#### ⚙️ Configuración Completa (`SettingsScreen.kt`)
+- Perfil: nombre, nivel, renombrar con diálogo validado
+- Aprendizaje: lenguaje principal, temas activos, dificultad
+- Experiencia: carrusel de temas, sonido, vibración, reducir animaciones
+- Recordatorios: estructura visual (placeholder)
+- Datos: exportar progreso (mock), restablecer con **doble confirmación**
+
+#### 🎓 Onboarding Rediseñado (4 pasos)
+- Paso 1: "Tu compañero de código" + animación mascota + terminal
+- Paso 2: "Tu práctica la hace evolucionar" + tarjetas XP/Bytes
+- Paso 3: "Elige tu ruta" → FilterChip multiselección (8 temas, máx 3)
+- Paso 4: "Dale nombre a tu copiloto" (input 1-15 chars, preview)
+- Skip: diálogo de confirmación → Codey + ruta inicial
+
+#### 🏆 Logros
+- Nuevo `AchievementsRepository` en DataStore (Flow persistente)
+- Logros: "Cazador de bugs" (Bug Hunt score = 5), "Git sin pánico" (Git Rescue score ≥ 3)
+- Se muestran en SettingsScreen
 
 #### ⏱️ Timer Persistente
 - Nueva entidad `FocusSessionEntity` en Room
@@ -1252,7 +1401,8 @@ CodingChallenge(
 
 #### 🧹 Limpieza
 - Eliminados ~20 imports/dependencias comentadas (Firebase Auth, Camera, Coil, etc.)
-- Deprecation warnings eliminados (`fallbackToDestructiveMigration(false)`, Koin DSL `org.koin.core.module.dsl.viewModel`, `Icons.AutoMirrored.Filled.KeyboardArrowLeft`)
+- Eliminado archivo duplicado `ui/screens/OnboardingScreen.kt`
+- Deprecation warnings eliminados (`fallbackToDestructiveMigration(false)`, Koin DSL, `Icons.AutoMirrored`)
 - Build: **0 warnings, 0 errors**
 
 ---

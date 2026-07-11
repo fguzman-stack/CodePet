@@ -32,4 +32,8 @@ class PetRepository(private val petDao: PetDao) {
     suspend fun updateFocusSessionStatus(sessionId: Long, status: String) {
         petDao.updateFocusSessionStatus(sessionId, status)
     }
+
+    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
+        petDao.completeOfflineSession(sessionId, status, petState)
+    }
 }

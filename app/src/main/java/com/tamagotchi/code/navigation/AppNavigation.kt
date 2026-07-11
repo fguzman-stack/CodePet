@@ -20,18 +20,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.feature.focus.FocusScreen
-import com.tamagotchi.code.feature.games.MinigamesDialog
 import com.tamagotchi.code.feature.home.HomeScreen
 import com.tamagotchi.code.feature.learn.LearnScreen
-import com.tamagotchi.code.feature.settings.PersonalizeDialog
+
 import com.tamagotchi.code.feature.shop.ShopScreen
-import com.tamagotchi.code.ui.theme.ThemeRegistry
+import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 data class BottomNavItem(
@@ -54,16 +52,19 @@ fun AppNavigation(viewModel: PetViewModel) {
     val studySessions by viewModel.studySessions.collectAsStateWithLifecycle()
 
     var activeScreen by remember { mutableStateOf<Screen>(Screen.Home) }
-    var showRenameDialog by remember { mutableStateOf(false) }
-    var renameInput by remember { mutableStateOf("") }
-    var showMinigamesDialog by remember { mutableStateOf(false) }
 
-    val currentThemeValue = viewModel.currentTheme.value
-    val appTheme = ThemeRegistry.getTheme(currentThemeValue)
-    val themeBackgroundColor = appTheme.background
+    val appTheme = LocalAppTheme.current
+
+    if (!viewModel.hasSeenOnboarding.value) {
+        com.tamagotchi.code.feature.onboarding.OnboardingScreen(
+            onComplete = { name, topics -> viewModel.completeOnboarding(name, topics) },
+            onSkip = { viewModel.skipOnboarding() }
+        )
+        return
+    }
 
     Scaffold(
-        containerColor = themeBackgroundColor,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -77,7 +78,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                         Text(
                             text = "Code Tamagotchi",
                             fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.titleMedium,
                             fontSize = 20.sp
                         )
                     }
@@ -87,7 +88,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                 ),
                 actions = {
                     IconButton(
-                        onClick = { showRenameDialog = true },
+                        onClick = { activeScreen = Screen.Settings },
                         modifier = Modifier.testTag("action_edit_pet")
                     ) {
                         Icon(
@@ -108,7 +109,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                         selected = activeScreen == item.screen,
                         onClick = { activeScreen = item.screen },
                         icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label, fontFamily = FontFamily.Monospace, fontSize = 10.sp) }
+                        label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
                     )
                 }
             }
@@ -125,10 +126,9 @@ fun AppNavigation(viewModel: PetViewModel) {
                     HomeScreen(
                         viewModel = viewModel,
                         onRenameClick = {
-                            petState?.let { renameInput = it.name }
-                            showRenameDialog = true
+                            activeScreen = Screen.Settings
                         },
-                        onPlayClick = { showMinigamesDialog = true }
+                        onPlayClick = { activeScreen = Screen.Games }
                     )
                 }
                 Screen.Learn -> {
@@ -136,7 +136,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color(0xCC000000))
+                                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             LearnScreen(viewModel = viewModel, state = state)
@@ -148,7 +148,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color(0xCC000000))
+                                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             FocusScreen(
@@ -164,12 +164,52 @@ fun AppNavigation(viewModel: PetViewModel) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(Color(0xCC000000))
+                                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             ShopScreen(viewModel = viewModel, state = state)
                         }
                     }
+                }
+                Screen.Settings -> {
+                    com.tamagotchi.code.feature.settings.SettingsScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Home },
+                        onNavigateToLanguage = { activeScreen = Screen.SettingsLanguage }
+                    )
+                }
+                Screen.SettingsLanguage -> {
+                    com.tamagotchi.code.feature.settings.SettingsLanguageScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Settings }
+                    )
+                }
+                Screen.Games -> {
+                    com.tamagotchi.code.feature.games.GamesScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Home },
+                        onNavigateToBugHunt = { activeScreen = Screen.BugHunt },
+                        onNavigateToGitRescue = { activeScreen = Screen.GitRescue },
+                        onNavigateToRefactorRush = { activeScreen = Screen.RefactorRush }
+                    )
+                }
+                Screen.BugHunt -> {
+                    com.tamagotchi.code.feature.games.BugHuntScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Games }
+                    )
+                }
+                Screen.GitRescue -> {
+                    com.tamagotchi.code.feature.games.GitRescueScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Games }
+                    )
+                }
+                Screen.RefactorRush -> {
+                    com.tamagotchi.code.feature.games.RefactorRushScreen(
+                        viewModel = viewModel,
+                        onNavigateBack = { activeScreen = Screen.Games }
+                    )
                 }
             }
 
@@ -185,32 +225,4 @@ fun AppNavigation(viewModel: PetViewModel) {
     }
 
     val unlockedThemes by viewModel.unlockedThemes.collectAsStateWithLifecycle()
-
-    if (showRenameDialog) {
-        petState?.let { state ->
-            PersonalizeDialog(
-                currentName = state.name,
-                currentLanguage = state.language,
-                currentTheme = viewModel.currentTheme.value,
-                unlockedThemes = unlockedThemes,
-                onDismiss = { showRenameDialog = false },
-                onSave = { name, language, theme ->
-                    viewModel.renamePet(name)
-                    viewModel.selectLanguage(language)
-                    viewModel.changeTheme(theme)
-                    showRenameDialog = false
-                }
-            )
-        }
-    }
-
-    if (showMinigamesDialog) {
-        petState?.let { state ->
-            MinigamesDialog(
-                state = state,
-                viewModel = viewModel,
-                onDismiss = { showMinigamesDialog = false }
-            )
-        }
-    }
 }

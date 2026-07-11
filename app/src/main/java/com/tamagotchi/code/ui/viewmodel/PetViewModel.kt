@@ -10,6 +10,7 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.data.repository.PetRepository
 import com.tamagotchi.code.data.repository.UserPreferencesRepository
+import com.tamagotchi.code.data.repository.AchievementsRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,8 @@ import java.util.Calendar
 
 class PetViewModel(
     private val repository: PetRepository,
-    private val userPreferences: UserPreferencesRepository
+    private val userPreferences: UserPreferencesRepository,
+    private val achievementsRepository: AchievementsRepository
 ) : ViewModel() {
     val soundManager = com.tamagotchi.code.util.SoundManager()
 
@@ -33,8 +35,8 @@ class PetViewModel(
     var currentTheme = mutableStateOf("Matrix Green")
         private set
 
-    var unlockedThemes = MutableStateFlow<Set<String>>(setOf("Matrix Green"))
-        private set
+    val unlockedThemes = MutableStateFlow<Set<String>>(setOf("Matrix Green"))
+    val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
 
     fun unlockTheme(themeName: String) {
         viewModelScope.launch {
@@ -44,9 +46,24 @@ class PetViewModel(
         }
     }
 
-    fun completeOnboarding(petName: String) {
+    val selectedTopics = MutableStateFlow<Set<String>>(emptySet())
+    val defaultInitialTopics = setOf("Kotlin", "Estructuras de Datos", "Git")
+
+    fun setTopics(topics: Set<String>) {
+        viewModelScope.launch {
+            userPreferences.setSelectedTopics(topics)
+            selectedTopics.value = topics
+        }
+    }
+
+    fun completeOnboarding(petName: String, topics: Set<String>) {
         viewModelScope.launch {
             userPreferences.setOnboardingCompleted()
+            
+            val finalTopics = if (topics.isEmpty()) defaultInitialTopics else topics
+            userPreferences.setSelectedTopics(finalTopics)
+            selectedTopics.value = finalTopics
+            
             hasSeenOnboarding.value = true
             soundManager.playLevelUp()
             val current = repository.petState.firstOrNull()
@@ -61,11 +78,72 @@ class PetViewModel(
         }
     }
 
+    fun skipOnboarding() {
+        completeOnboarding("Codey", defaultInitialTopics)
+    }
+
+    val difficulty = MutableStateFlow("Inicial")
+    val focusDurationDefault = MutableStateFlow(25)
+    val soundEnabled = MutableStateFlow(true)
+    val vibrationEnabled = MutableStateFlow(true)
+    val reduceMotion = MutableStateFlow(false)
+
     fun changeTheme(theme: String) {
         viewModelScope.launch {
             userPreferences.setTheme(theme)
             currentTheme.value = theme
             soundManager.playClick()
+        }
+    }
+
+    fun setDifficulty(newDifficulty: String) {
+        viewModelScope.launch {
+            userPreferences.setDifficulty(newDifficulty)
+            difficulty.value = newDifficulty
+        }
+    }
+
+    fun setFocusDurationDefault(duration: Int) {
+        viewModelScope.launch {
+            userPreferences.setFocusDurationDefault(duration)
+            focusDurationDefault.value = duration
+        }
+    }
+
+    fun toggleSound(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferences.setSoundEnabled(enabled)
+            soundEnabled.value = enabled
+        }
+    }
+
+    fun toggleVibration(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferences.setVibrationEnabled(enabled)
+            vibrationEnabled.value = enabled
+        }
+    }
+
+    fun toggleReduceMotion(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferences.setReduceMotion(enabled)
+            reduceMotion.value = enabled
+        }
+    }
+
+    fun exportProgressMock() {
+        // Mock function for exporting progress
+    }
+
+    fun resetProgress() {
+        viewModelScope.launch {
+            // Note: Needs dao methods or we just save a new initial PetStateEntity
+            val defaultPet = PetStateEntity(name = "Codey")
+            repository.savePetState(defaultPet)
+            userPreferences.setSelectedTopics(defaultInitialTopics)
+            hasSeenOnboarding.value = false
+            userPreferences.setDifficulty("Inicial")
+            userPreferences.setFocusDurationDefault(25)
         }
     }
 
@@ -87,8 +165,20 @@ class PetViewModel(
     var currentStudyTopic = mutableStateOf("Kotlin")
         private set
 
+    var showOfflineRewardDialog = mutableStateOf(false)
+        private set
+    var offlineRewardXp = mutableStateOf(0)
+        private set
+    var offlineRewardBytes = mutableStateOf(0)
+        private set
+
+    fun dismissOfflineRewardDialog() {
+        showOfflineRewardDialog.value = false
+    }
+
     private var activeFocusSessionId: Long? = null
     private var timerJob: Job? = null
+    private val _activeFocusEntity = MutableStateFlow<FocusSessionEntity?>(null)
 
     private val _activeChallenges = MutableStateFlow<List<CodingChallenge>>(emptyList())
     val activeChallenges = _activeChallenges.asStateFlow()
@@ -129,8 +219,32 @@ class PetViewModel(
         }
 
         viewModelScope.launch {
+            userPreferences.selectedTopics.collect { topics ->
+                selectedTopics.value = topics
+            }
+        }
+        
+        viewModelScope.launch { userPreferences.difficulty.collect { difficulty.value = it } }
+        viewModelScope.launch { userPreferences.focusDurationDefault.collect { focusDurationDefault.value = it } }
+        viewModelScope.launch { userPreferences.soundEnabled.collect { soundEnabled.value = it } }
+        viewModelScope.launch { userPreferences.vibrationEnabled.collect { vibrationEnabled.value = it } }
+        viewModelScope.launch { userPreferences.reduceMotion.collect { reduceMotion.value = it } }
+
+        viewModelScope.launch {
             userPreferences.unlockedThemes.collect { themes ->
                 unlockedThemes.value = themes
+            }
+        }
+
+        viewModelScope.launch {
+            achievementsRepository.unlockedAchievements.collect { achievements ->
+                unlockedAchievements.value = achievements
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.gameCooldowns.collect { cooldowns ->
+                _gameLastPlayed.value = cooldowns
             }
         }
 
@@ -161,7 +275,24 @@ class PetViewModel(
                     activeFocusSessionId = active.id
                     resumeTimer()
                 } else {
-                    repository.updateFocusSessionStatus(active.id, "COMPLETED")
+                    val current = repository.petState.firstOrNull()
+                    if (current != null) {
+                        val xpReward = active.plannedDurationMinutes * 2
+                        val bytesReward = active.plannedDurationMinutes * 1
+                        val updatedXp = current.xp + xpReward
+                        val updatedLevel = calculateLevel(updatedXp, current.level)
+                        val updated = current.copy(
+                            xp = updatedXp,
+                            level = updatedLevel,
+                            bytes = current.bytes + bytesReward
+                        )
+                        repository.completeOfflineSession(active.id, "COMPLETED", updated)
+                        offlineRewardXp.value = xpReward
+                        offlineRewardBytes.value = bytesReward
+                        showOfflineRewardDialog.value = true
+                    } else {
+                        repository.updateFocusSessionStatus(active.id, "COMPLETED")
+                    }
                 }
             }
         }
@@ -241,6 +372,10 @@ class PetViewModel(
                     )
                 )
                 repository.savePetState(updated)
+                
+                if (updated.level > current.level) {
+                    achievementsRepository.unlockAchievement("Nivel Experto")
+                }
             }
         } else {
             soundManager.playError()
@@ -332,6 +467,7 @@ class PetViewModel(
             )
             repository.saveFocusSession(session)
             activeFocusSessionId = session.id
+            _activeFocusEntity.value = session
 
             val updated = current.copy(
                 currentStatus = "STUDYING",
@@ -348,6 +484,40 @@ class PetViewModel(
             }
             if (timerSecondsRemaining.value <= 0 && isTimerRunning.value) {
                 completeStudySession()
+            }
+        }
+    }
+
+    fun completeFocusSession() {
+        viewModelScope.launch {
+            if (_activeFocusEntity.value != null && _activeFocusEntity.value!!.status == "RUNNING") {
+                val pet = repository.petState.firstOrNull() ?: return@launch
+                val elapsed = System.currentTimeMillis() - _activeFocusEntity.value!!.startedAt
+                val minutes = (elapsed / 60000).toInt()
+                
+                val xpEarned = minutes * 5
+                val healthRecovered = 20
+                val energyRecovered = -10
+                
+                val updated = pet.copy(
+                    xp = pet.xp + xpEarned,
+                    health = (pet.health + healthRecovered).coerceIn(0f, 100f),
+                    energy = (pet.energy + energyRecovered).coerceIn(0f, 100f)
+                )
+
+                if (updated.xp >= updated.level * 100) {
+                    soundManager.playLevelUp()
+                } else {
+                    soundManager.playSuccess()
+                }
+                
+                repository.savePetState(updated)
+                
+                repository.updateFocusSessionStatus(_activeFocusEntity.value!!.id, "COMPLETED")
+                
+                _activeFocusEntity.value = null
+                
+                achievementsRepository.unlockAchievement("Primer build")
             }
         }
     }
@@ -571,24 +741,37 @@ class PetViewModel(
         }
     }
 
-    fun completeMinigame(bytesEarned: Int, happinessBoost: Float, energyBoost: Float) {
+    fun canPlayGame(gameId: String, cooldownHours: Long = 24): Boolean {
+        val lastPlayed = _gameLastPlayed.value[gameId] ?: 0L
+        return System.currentTimeMillis() - lastPlayed >= cooldownHours * 60 * 60 * 1000
+    }
+
+    fun recordGamePlay(gameId: String) {
         viewModelScope.launch {
-            val current = petState.value ?: return@launch
-            val updatedEnergy = (current.energy + energyBoost).coerceIn(0f, 100f)
-            val updatedHealth = (current.health + happinessBoost).coerceIn(0f, 100f)
-            val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
-                determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
-            } else {
-                current.currentStatus
-            }
-            val updated = current.copy(
-                bytes = current.bytes + bytesEarned,
-                energy = updatedEnergy,
-                health = updatedHealth,
-                currentStatus = newStatus,
-                lastUpdated = System.currentTimeMillis()
+            userPreferences.recordGamePlay(gameId)
+            _gameLastPlayed.value = _gameLastPlayed.value + (gameId to System.currentTimeMillis())
+        }
+    }
+
+    private val _gameLastPlayed = MutableStateFlow<Map<String, Long>>(emptyMap())
+    val gameCooldowns: StateFlow<Map<String, Long>> = _gameLastPlayed.asStateFlow()
+
+    fun completeMinigame(bytesEarned: Int, healthEarned: Float, energyCost: Float) {
+        viewModelScope.launch {
+            val pet = repository.petState.firstOrNull() ?: return@launch
+            val updated = pet.copy(
+                bytes = pet.bytes + bytesEarned,
+                health = (pet.health + healthEarned).coerceIn(0f, 100f),
+                energy = (pet.energy + energyCost).coerceIn(0f, 100f)
             )
             repository.savePetState(updated)
+            soundManager.playSuccess()
+            
+            if (bytesEarned == 100) { // Bug Hunt score 10
+                achievementsRepository.unlockAchievement("Cazador de bugs")
+            } else if (bytesEarned == 45) { // Git Rescue score 3
+                achievementsRepository.unlockAchievement("Git sin pánico")
+            }
         }
     }
 }

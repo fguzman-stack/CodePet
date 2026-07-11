@@ -360,7 +360,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                                 if (index == currentChallenge.correctAnswerIndex) {
                                     showFeedback = true
                                     viewModel.soundManager.playLevelUp()
-                                    viewModel.completeMinigame(bytesEarned = 50, happinessBoost = 10f, energyBoost = 0f)
+                                    viewModel.completeMinigame(bytesEarned = 50, healthEarned = 10f, energyCost = 0f)
 
                                     val lockedThemes = com.tamagotchi.code.ui.theme.ThemeRegistry.allThemes.map { it.name }.filter { !unlockedThemes.contains(it) }
                                     if (lockedThemes.isNotEmpty()) {

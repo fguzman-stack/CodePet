@@ -42,6 +42,19 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+
+        if (viewModel.showOfflineRewardDialog.value) {
+            AlertDialog(
+                onDismissRequest = { viewModel.dismissOfflineRewardDialog() },
+                title = { Text("Sesión completada mientras estabas fuera") },
+                text = { Text("¡Felicidades! Has ganado ${viewModel.offlineRewardXp.value} XP y ${viewModel.offlineRewardBytes.value} Bytes por tu sesión de Focus.") },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.dismissOfflineRewardDialog() }) {
+                        Text("Aceptar")
+                    }
+                }
+            )
+        }
     } else {
         Box(
             modifier = Modifier.fillMaxSize(),

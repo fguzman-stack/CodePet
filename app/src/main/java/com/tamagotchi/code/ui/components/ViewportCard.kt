@@ -21,12 +21,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
+import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,6 +44,9 @@ fun ViewportCard(
     val heartOffsetY = remember { Animatable(0f) }
     val heartAlpha = remember { Animatable(0f) }
     var showHeart by remember { mutableStateOf(false) }
+
+    val appTheme = LocalAppTheme.current
+    val cardShape = RoundedCornerShape(appTheme.cornerRadius)
 
     fun onPetTap() {
         viewModel.petThePet()
@@ -74,12 +77,12 @@ fun ViewportCard(
 
     val statusColor = when (state.currentStatus) {
         "SLEEPING" -> Color(0xFF64B5F6)
-        "STUDYING" -> Color(0xFF81C784)
-        "SICK" -> Color(0xFFE57373)
+        "STUDYING" -> MaterialTheme.colorScheme.primary
+        "SICK" -> MaterialTheme.colorScheme.error
         "SAD" -> Color(0xFF90A4AE)
         "HUNGRY" -> Color(0xFFFFB74D)
         "EXCITED" -> Color(0xFFFF80AB)
-        else -> Color(0xFFBA68C8)
+        else -> MaterialTheme.colorScheme.secondary
     }
 
     val randomQuote = remember(state.currentStatus) {
@@ -125,8 +128,8 @@ fun ViewportCard(
     }
 
     Card(
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, statusColor.copy(alpha = 0.8f)),
+        shape = cardShape,
+        border = BorderStroke(appTheme.borderWidth, statusColor.copy(alpha = 0.8f)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
         ),
@@ -149,7 +152,7 @@ fun ViewportCard(
                             text = state.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
-                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier.testTag("pet_name_text")
                         )
                         Spacer(modifier = Modifier.width(6.dp))
@@ -165,7 +168,7 @@ fun ViewportCard(
                     Text(
                         text = "Especialista: ${state.language}",
                         fontSize = 12.sp,
-                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(4.dp))
@@ -179,7 +182,7 @@ fun ViewportCard(
                             Icon(
                                 imageVector = if (isFilled) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                                 contentDescription = "Corazón $i",
-                                tint = if (isFilled) Color(0xFFEF5350) else Color.Gray,
+                                tint = if (isFilled) MaterialTheme.colorScheme.error else Color.Gray,
                                 modifier = Modifier.size(16.dp)
                             )
                         }
@@ -187,7 +190,7 @@ fun ViewportCard(
                 }
 
                 Surface(
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     color = statusColor.copy(alpha = 0.2f),
                     border = BorderStroke(1.dp, statusColor),
                     modifier = Modifier.testTag("level_badge")
@@ -195,7 +198,7 @@ fun ViewportCard(
                     Text(
                         text = "LVL ${state.level}",
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.labelMedium,
                         fontSize = 13.sp,
                         color = statusColor,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -241,13 +244,17 @@ fun ViewportCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(12.dp)))
                     .background(
                         Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
+                            colors = if (appTheme.usesGradients && appTheme.gradientColors.isNotEmpty()) {
+                                appTheme.gradientColors
+                            } else {
+                                listOf(
+                                    MaterialTheme.colorScheme.surface,
+                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                )
+                            }
                         )
                     ),
                 contentAlignment = Alignment.Center
@@ -277,7 +284,7 @@ fun ViewportCard(
                         Text(
                             text = state.currentStatus,
                             fontSize = 10.sp,
-                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -288,7 +295,7 @@ fun ViewportCard(
                         Icon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = "Amor",
-                            tint = Color(0xFFEF5350),
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .offset(y = heartOffsetY.value.dp)
@@ -302,7 +309,7 @@ fun ViewportCard(
             Spacer(modifier = Modifier.height(12.dp))
 
             Surface(
-                shape = RoundedCornerShape(topStart = 0.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 12.dp),
+                shape = RoundedCornerShape(topStart = 0.dp, topEnd = appTheme.cornerRadius.coerceAtMost(12.dp), bottomStart = appTheme.cornerRadius.coerceAtMost(12.dp), bottomEnd = appTheme.cornerRadius.coerceAtMost(12.dp)),
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -320,7 +327,7 @@ fun ViewportCard(
                     Text(
                         text = randomQuote,
                         fontSize = 13.sp,
-                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodySmall,
                         lineHeight = 18.sp,
                         modifier = Modifier.weight(1f)
                     )
@@ -341,13 +348,13 @@ fun ViewportCard(
                     Text(
                         text = "XP: ${state.xp} / $currentLevelRequiredXp",
                         fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = "${(xpProgress * 100).toInt()}%",
                         fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -373,20 +380,20 @@ fun ViewportCard(
             ) {
                 MeterItem(
                     label = "Vida", value = state.health,
-                    icon = Icons.Default.Favorite, activeColor = Color(0xFFEF5350),
-                    trackColor = Color(0xFFEF5350).copy(alpha = 0.2f),
+                    icon = Icons.Default.Favorite, activeColor = MaterialTheme.colorScheme.error,
+                    trackColor = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("health_bar")
                 )
                 MeterItem(
                     label = "Alimento", value = state.hunger,
-                    icon = Icons.Default.Restaurant, activeColor = Color(0xFFFFA726),
-                    trackColor = Color(0xFFFFA726).copy(alpha = 0.2f),
+                    icon = Icons.Default.Restaurant, activeColor = appTheme.accent,
+                    trackColor = appTheme.accent.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("hunger_bar")
                 )
                 MeterItem(
                     label = "Energía", value = state.energy,
-                    icon = Icons.Default.FlashOn, activeColor = Color(0xFF29B6F6),
-                    trackColor = Color(0xFF29B6F6).copy(alpha = 0.2f),
+                    icon = Icons.Default.FlashOn, activeColor = MaterialTheme.colorScheme.tertiary,
+                    trackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("energy_bar")
                 )
             }
@@ -401,13 +408,13 @@ fun ViewportCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = Color(0xFFFFD54F), modifier = Modifier.size(16.dp))
+                    Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = appTheme.accent, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${state.bytes} B", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 13.sp, color = Color(0xFFFFD54F))
+                    Text("${state.bytes} B", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = appTheme.accent)
                     Spacer(modifier = Modifier.width(16.dp))
-                    Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = Color(0xFFFF7043), modifier = Modifier.size(16.dp))
+                    Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${state.streak} días", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 13.sp, color = Color(0xFFFF7043))
+                    Text("${state.streak} días", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = MaterialTheme.colorScheme.error)
                 }
                 Button(
                     onClick = { viewModel.toggleSleep() },
@@ -415,7 +422,7 @@ fun ViewportCard(
                         containerColor = if (state.currentStatus == "SLEEPING") MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primaryContainer,
                         contentColor = if (state.currentStatus == "SLEEPING") MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                     modifier = Modifier.height(32.dp).testTag("action_toggle_sleep")
                 ) {
@@ -427,7 +434,7 @@ fun ViewportCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         if (state.currentStatus == "SLEEPING") "Despertar" else "Dormir",
-                        fontSize = 10.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace
+                        fontSize = 10.sp, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall
                     )
                 }
             }
@@ -443,46 +450,46 @@ fun ViewportCard(
                 Button(
                     onClick = { viewModel.petThePet(); viewModel.soundManager.playClick() },
                     colors = ButtonDefaults.buttonColors(containerColor = statusColor),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
                     Icon(Icons.Default.Pets, contentDescription = "Acariciar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Acariciar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    Text("Acariciar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = { viewModel.cleanThePet(); viewModel.soundManager.playClick() },
                     colors = ButtonDefaults.buttonColors(containerColor = statusColor),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
                     Icon(Icons.Default.CleaningServices, contentDescription = "Limpiar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Limpiar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    Text("Limpiar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = { onRenameClick() },
                     colors = ButtonDefaults.buttonColors(containerColor = statusColor),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = "Ajustar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Ajustar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    Text("Ajustar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = onPlayClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD54F)),
-                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = appTheme.accent),
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", tint = Color.Black, modifier = Modifier.size(14.dp))
+                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", tint = appTheme.onPrimary, modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Jugar", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    Text("Jugar", color = appTheme.onPrimary, fontWeight = FontWeight.Bold, fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
                 }
             }
         }

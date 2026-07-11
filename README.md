@@ -114,13 +114,14 @@ Resuelve desafíos, completa sesiones Pomodoro, gana Bytes y mantén a **Codey**
 </td>
 <td width="50%" valign="top">
 
-### 🎮 Minijuegos
+### 🕹️ Arcade de Depuración
 
-- 🤖 **Adivina el Bit**
-- 🐛 **Caza de Bugs**
-- 🔒 **Servidor, Script, Hacker**
-- Premios en Bytes y salud
-- Jugabilidad breve para descansar entre sesiones
+- 🐛 **Bug Hunt — Terminal Panic:** Encuentra bugs en fragmentos de código
+- 🌿 **Git Rescue:** Decisiones Git para salvar un repo en llamas
+- 🔄 **Refactor Rush:** Ordena bloques de código para que compilen
+- Explicaciones con humor de Codey en cada ronda
+- Cooldown diario para evitar farm de moneda
+- 🎲 Arcade clásico (Adivina el Bit, Caza de Bugs, Servidor/Script/Hacker)
 
 </td>
 </tr>
@@ -250,22 +251,32 @@ CodePet/
 ├── app/
 │   ├── src/main/
 │   │   ├── java/com/tamagotchi/code/
+│   │   │   ├── CodeTamagotchiApp.kt
+│   │   │   ├── MainActivity.kt
 │   │   │   ├── data/
-│   │   │   │   ├── database/
-│   │   │   │   └── repository/
+│   │   │   │   ├── ChallengesData.kt
+│   │   │   │   ├── database/ (AppDatabase, PetDao, Entities)
+│   │   │   │   └── repository/ (PetRepository, UserPreferences, Achievements)
+│   │   │   ├── di/ (AppModule.kt — Koin)
+│   │   │   ├── navigation/ (AppNavigation, Screen)
+│   │   │   ├── feature/
+│   │   │   │   ├── home/ (HomeScreen)
+│   │   │   │   ├── learn/ (LearnScreen — 88 retos)
+│   │   │   │   ├── focus/ (FocusScreen — Pomodoro)
+│   │   │   │   ├── shop/ (ShopScreen)
+│   │   │   │   ├── games/ (BugHunt, GitRescue, RefactorRush, clásicos)
+│   │   │   │   ├── onboarding/ (OnboardingScreen 4 pasos)
+│   │   │   │   └── settings/ (SettingsScreen + LanguageScreen)
 │   │   │   ├── ui/
-│   │   │   │   ├── screens/
-│   │   │   │   └── theme/
-│   │   │   ├── util/
-│   │   │   ├── viewmodel/
-│   │   │   └── MainActivity.kt
+│   │   │   │   ├── components/ (MeterItem, ViewportCard)
+│   │   │   │   ├── theme/ (12 temas con tipografía y personalidad)
+│   │   │   │   └── viewmodel/ (PetViewModel)
+│   │   │   └── util/ (SoundManager)
 │   │   └── res/
 │   │       ├── drawable/
-│   │       ├── mipmap-*/
-│   │       └── values/
-│   ├── build.gradle.kts
-│   └── proguard-rules.pro
-├── .env.example
+│   │       └── values/ (strings.xml, colors.xml)
+│   └── build.gradle.kts
+├── gradle/libs.versions.toml
 ├── build.gradle.kts
 ├── settings.gradle.kts
 └── README.md
@@ -325,53 +336,54 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 | Actividad | Bytes | XP |
 |:--|:--:|:--:|
-| Reto normal | +20 a +25 | +15 a +20 |
+| Reto normal | +25 a +30 | +20 a +25 |
 | Reto especial | +50 | — |
-| Estudio por minuto | +1 | +2 |
-| Bonus de sesión 25+ min | +25 | +50 |
-| Minijuego ganado | Hasta +20 | Variable |
+| Estudio por minuto | +2 | +3 |
+| Bonus de sesión 25+ min | +50 | +75 |
+| Minijuego (Bug Hunt) | Hasta +50 | — |
+| Minijuego (Git Rescue) | Hasta +45 | — |
+| Minijuego (Refactor Rush) | Hasta +50 | — |
 
 ---
 
 ## 🎨 Temas visuales
 
-Code Tamagotchi incluye **25 temas** desbloqueables para personalizar la experiencia.
+Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno configura
+colores, tipografía, esquinas, gradientes y un emoji representativo.
 
-```text
-Matrix Green · Galáctico · Cyberpunk · Bosque Encantado · Sakura
-Minimalista · Neón · Océano · Volcánico · Ártico · Vaporwave
-Café · Retro · Pixel Art · Samurai · Medieval · Desierto · Aurora
-Cristal · Nocturno · Tropical · Otoño · Hacker · Magma · Fantasma
-```
+| Tema | Emoji | Personalidad |
+|:-----|:-----:|:-------------|
+| Matrix Green | 🖥️ | Terminal hacker, monospace puro |
+| Galáctico | 🌌 | Púrpuras profundos y destellos cósmicos |
+| Cyberpunk | ⚡ | Rosa eléctrico y cian contra la oscuridad |
+| Sakura | 🌸 | Elegancia japonesa en rosa suave |
+| Minimalista | ◻️ | Blanco puro con acentos sutiles |
+| Neón | 💜 | Oscuridad total con destellos vibrantes |
+| Océano | 🌊 | Azules profundos, calma submarina |
+| Volcánico | 🌋 | Fuego bajo la superficie |
+| Samurai | ⚔️ | Acero, sangre y oro antiguo |
+| Aurora | ✨ | Luces del norte en el cielo oscuro |
+| Nocturno | 🌙 | Noche elegante estilo iOS |
+| Retro Pixel | 👾 | 8-bit, colores saturados, esquinas afiladas |
 
-Cada tema configura:
-
-```kotlin
-background
-surface
-primary
-secondary
-onPrimary
-textPrimary
-textSecondary
-success
-error
-```
-
-> Resuelve desafíos especiales en **LEARN** para desbloquear nuevos estilos.
+> Selecciona desde un carrusel visual en **Configuración**. Resuelve desafíos especiales para desbloquear nuevos temas.
 
 ---
 
 ## 🗺️ Roadmap
 
+- [x] 🎨 Rediseño completo de temas (12 premium con tipografía y personalidad)
+- [x] 🕹️ 3 juegos originales: Bug Hunt, Git Rescue, Refactor Rush
+- [x] 🧭 Onboarding interactivo de 4 pasos con selección de temas
+- [x] ⚙️ Pantalla de configuración profesional con secciones
+- [x] 🔄 Cooldown diario en juegos para evitar farm
+- [x] 🏆 Logros locales (Primer build, Cazador de bugs, Git sin pánico)
 - [ ] 🔔 Notificaciones para recordar cuidados y sesiones
 - [ ] 🌐 Retos en Ruby, Go, Rust y Swift
-- [ ] 🏆 Sistema de logros desbloqueables
 - [ ] 🧬 Evolución visual de la mascota por nivel
 - [ ] 📱 Widgets para pantalla de inicio
 - [ ] ☁️ Sincronización con Firebase Firestore
 - [ ] 👥 Funcionalidad multijugador y rankings
-- [ ] 🕹️ Nuevos minijuegos: Memory Match y Typing Race
 
 ---
 

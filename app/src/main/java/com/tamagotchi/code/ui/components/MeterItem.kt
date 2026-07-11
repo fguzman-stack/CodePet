@@ -11,10 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.ui.theme.LocalAppTheme
 
 @Composable
 fun MeterItem(
@@ -26,6 +25,7 @@ fun MeterItem(
     modifier: Modifier = Modifier
 ) {
     val animatedProgress by animateFloatAsState(targetValue = value / 100f)
+    val appTheme = LocalAppTheme.current
 
     Column(
         modifier = modifier,
@@ -45,8 +45,7 @@ fun MeterItem(
             Text(
                 text = label,
                 fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
@@ -58,13 +57,13 @@ fun MeterItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
-                .clip(RoundedCornerShape(4.dp))
+                .clip(RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(4.dp)))
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = "${value.toInt()}%",
             fontSize = 10.sp,
-            fontFamily = FontFamily.Monospace,
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }

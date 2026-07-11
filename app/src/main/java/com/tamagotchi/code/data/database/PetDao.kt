@@ -34,4 +34,10 @@ interface PetDao {
 
     @Query("SELECT * FROM focus_sessions ORDER BY id DESC")
     fun getAllFocusSessions(): Flow<List<FocusSessionEntity>>
+
+    @androidx.room.Transaction
+    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
+        updateFocusSessionStatus(sessionId, status)
+        insertOrUpdatePetState(petState)
+    }
 }

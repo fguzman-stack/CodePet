@@ -3,6 +3,7 @@ package com.tamagotchi.code.di
 import com.tamagotchi.code.data.database.AppDatabase
 import com.tamagotchi.code.data.repository.PetRepository
 import com.tamagotchi.code.data.repository.UserPreferencesRepository
+import com.tamagotchi.code.data.repository.AchievementsRepository
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -13,5 +14,6 @@ val appModule = module {
     single { get<AppDatabase>().petDao() }
     single { PetRepository(get()) }
     single { UserPreferencesRepository(androidContext()) }
-    viewModel { PetViewModel(get(), get()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
 }
