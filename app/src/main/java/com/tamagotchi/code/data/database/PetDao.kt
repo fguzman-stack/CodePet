@@ -19,4 +19,19 @@ interface PetDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStudySession(session: StudySessionEntity)
+
+    @Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
+    fun getLatestFocusSession(): Flow<FocusSessionEntity?>
+
+    @Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' ORDER BY id DESC LIMIT 1")
+    suspend fun getActiveFocusSession(): FocusSessionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFocusSession(session: FocusSessionEntity)
+
+    @Query("UPDATE focus_sessions SET status = :status WHERE id = :sessionId")
+    suspend fun updateFocusSessionStatus(sessionId: Long, status: String)
+
+    @Query("SELECT * FROM focus_sessions ORDER BY id DESC")
+    fun getAllFocusSessions(): Flow<List<FocusSessionEntity>>
 }

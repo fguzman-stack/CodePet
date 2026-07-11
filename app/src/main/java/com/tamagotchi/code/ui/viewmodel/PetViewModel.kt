@@ -1,16 +1,15 @@
 package com.tamagotchi.code.ui.viewmodel
 
-import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tamagotchi.code.data.ChallengesData
 import com.tamagotchi.code.data.CodingChallenge
-import com.tamagotchi.code.data.database.AppDatabase
+import com.tamagotchi.code.data.database.FocusSessionEntity
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.data.repository.PetRepository
+import com.tamagotchi.code.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,35 +21,34 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class PetViewModel(application: Application) : AndroidViewModel(application) {
+class PetViewModel(
+    private val repository: PetRepository,
+    private val userPreferences: UserPreferencesRepository
+) : ViewModel() {
     val soundManager = com.tamagotchi.code.util.SoundManager()
-    private val prefs = application.getSharedPreferences("codetamagotchi_prefs", Context.MODE_PRIVATE)
 
-    var hasSeenOnboarding = mutableStateOf(prefs.getBoolean("has_seen_onboarding", false))
+    var hasSeenOnboarding = mutableStateOf(false)
         private set
 
-    var currentTheme = mutableStateOf(prefs.getString("app_theme", "Matrix Green") ?: "Matrix Green")
+    var currentTheme = mutableStateOf("Matrix Green")
         private set
 
-    var unlockedThemes = MutableStateFlow(
-        prefs.getStringSet("unlocked_themes", setOf("Matrix Green")) ?: setOf("Matrix Green")
-    )
+    var unlockedThemes = MutableStateFlow<Set<String>>(setOf("Matrix Green"))
         private set
 
     fun unlockTheme(themeName: String) {
-        val current = unlockedThemes.value.toMutableSet()
-        if (current.add(themeName)) {
-            prefs.edit().putStringSet("unlocked_themes", current).apply()
-            unlockedThemes.value = current
+        viewModelScope.launch {
+            userPreferences.addUnlockedTheme(themeName)
+            unlockedThemes.value = unlockedThemes.value + themeName
             soundManager.playLevelUp()
         }
     }
 
     fun completeOnboarding(petName: String) {
-        prefs.edit().putBoolean("has_seen_onboarding", true).apply()
-        hasSeenOnboarding.value = true
-        soundManager.playLevelUp()
         viewModelScope.launch {
+            userPreferences.setOnboardingCompleted()
+            hasSeenOnboarding.value = true
+            soundManager.playLevelUp()
             val current = repository.petState.firstOrNull()
             val updatedName = if (petName.isNotBlank()) petName else "Codey"
             if (current == null) {
@@ -64,9 +62,11 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun changeTheme(theme: String) {
-        prefs.edit().putString("app_theme", theme).apply()
-        currentTheme.value = theme
-        soundManager.playClick()
+        viewModelScope.launch {
+            userPreferences.setTheme(theme)
+            currentTheme.value = theme
+            soundManager.playClick()
+        }
     }
 
     override fun onCleared() {
@@ -74,9 +74,9 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         soundManager.release()
     }
 
-    private val repository: PetRepository
     val petState: StateFlow<PetStateEntity?>
     val studySessions: StateFlow<List<StudySessionEntity>>
+    val latestFocusSession: StateFlow<FocusSessionEntity?>
 
     var isTimerRunning = mutableStateOf(false)
         private set
@@ -87,6 +87,7 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
     var currentStudyTopic = mutableStateOf("Kotlin")
         private set
 
+    private var activeFocusSessionId: Long? = null
     private var timerJob: Job? = null
 
     private val _activeChallenges = MutableStateFlow<List<CodingChallenge>>(emptyList())
@@ -102,9 +103,6 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
     val selectedChallengeLanguage = _selectedChallengeLanguage.asStateFlow()
 
     init {
-        val database = AppDatabase.getDatabase(application)
-        repository = PetRepository(database.petDao())
-
         studySessions = repository.studySessions.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -117,6 +115,25 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
             initialValue = null
         )
 
+        latestFocusSession = repository.latestFocusSession.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
+        viewModelScope.launch {
+            hasSeenOnboarding.value = userPreferences.getHasSeenOnboarding()
+            userPreferences.currentTheme.collect { theme ->
+                currentTheme.value = theme
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.unlockedThemes.collect { themes ->
+                unlockedThemes.value = themes
+            }
+        }
+
         viewModelScope.launch {
             val current = repository.petState.firstOrNull()
             if (current == null) {
@@ -127,6 +144,38 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
                 val decayed = applyDecay(current)
                 repository.savePetState(decayed)
                 loadChallengesForLanguage(decayed.language)
+            }
+        }
+
+        viewModelScope.launch {
+            val active = repository.getActiveFocusSession()
+            if (active != null) {
+                val elapsedSeconds = (System.currentTimeMillis() - active.startedAt) / 1000
+                val totalSeconds = active.plannedDurationMinutes * 60L
+                val remaining = (totalSeconds - elapsedSeconds).toInt()
+                if (remaining > 0) {
+                    isTimerRunning.value = true
+                    timerSelectedMinutes.value = active.plannedDurationMinutes
+                    timerSecondsRemaining.value = remaining
+                    currentStudyTopic.value = active.topic
+                    activeFocusSessionId = active.id
+                    resumeTimer()
+                } else {
+                    repository.updateFocusSessionStatus(active.id, "COMPLETED")
+                }
+            }
+        }
+    }
+
+    private fun resumeTimer() {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            while (timerSecondsRemaining.value > 0 && isTimerRunning.value) {
+                delay(1000)
+                timerSecondsRemaining.value -= 1
+            }
+            if (timerSecondsRemaining.value <= 0 && isTimerRunning.value) {
+                completeStudySession()
             }
         }
     }
@@ -169,8 +218,8 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 val current = petState.value ?: return@launch
                 
-                val earnedBytes = if (challenge.type == "DEBUG") 25 else 20
-                val earnedXp = if (challenge.type == "DEBUG") 20 else 15
+                val earnedBytes = if (challenge.type == "DEBUG") 30 else 25
+                val earnedXp = if (challenge.type == "DEBUG") 25 else 20
                 val hungerRestore = 15f
                 val healthRestore = 20f
 
@@ -274,6 +323,16 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             val current = petState.value ?: return@launch
+
+            val session = FocusSessionEntity(
+                topic = topic,
+                plannedDurationMinutes = minutes,
+                startedAt = System.currentTimeMillis(),
+                status = "RUNNING"
+            )
+            repository.saveFocusSession(session)
+            activeFocusSessionId = session.id
+
             val updated = current.copy(
                 currentStatus = "STUDYING",
                 lastUpdated = System.currentTimeMillis()
@@ -299,6 +358,10 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         timerJob?.cancel()
 
         viewModelScope.launch {
+            activeFocusSessionId?.let { id ->
+                repository.updateFocusSessionStatus(id, "CANCELLED")
+                activeFocusSessionId = null
+            }
             val current = petState.value ?: return@launch
             val newStatus = determineStatus(current.health, current.hunger, current.energy, false, false)
             val updated = current.copy(
@@ -313,6 +376,11 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         isTimerRunning.value = false
         timerJob?.cancel()
 
+        activeFocusSessionId?.let { id ->
+            repository.updateFocusSessionStatus(id, "COMPLETED")
+            activeFocusSessionId = null
+        }
+
         val current = petState.value ?: return
         val minutes = timerSelectedMinutes.value
         val topic = currentStudyTopic.value
@@ -320,11 +388,11 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         val session = StudySessionEntity(topic = topic, durationMinutes = minutes)
         repository.addStudySession(session)
 
-        val baseBytes = minutes * 1
-        val baseXP = minutes * 2
+        val baseBytes = minutes * 2
+        val baseXP = minutes * 3
         
-        val bonusBytes = if (minutes >= 25) 25 else 0
-        val bonusXP = if (minutes >= 25) 50 else 0
+        val bonusBytes = if (minutes >= 25) 50 else 0
+        val bonusXP = if (minutes >= 25) 75 else 0
 
         val totalBytesEarned = baseBytes + bonusBytes
         val totalXPEarned = baseXP + bonusXP
@@ -357,7 +425,7 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        val energyCost = (minutes * 0.6f).coerceAtMost(40f)
+        val energyCost = (minutes * 0.5f).coerceAtMost(30f)
         val updatedEnergy = (current.energy - energyCost).coerceIn(0f, 100f)
         val updatedXp = current.xp + totalXPEarned
         val updatedLevel = calculateLevel(updatedXp, current.level)
@@ -392,9 +460,9 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
             isExcited -> "EXCITED"
             isStudying -> "STUDYING"
             isSleeping -> "SLEEPING"
-            health < 30f -> "SICK"
-            hunger < 30f -> "HUNGRY"
-            energy < 20f -> "SAD"
+            health < 20f -> "SICK"
+            hunger < 20f -> "HUNGRY"
+            energy < 15f -> "SAD"
             else -> "HAPPY"
         }
     }
@@ -419,32 +487,32 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
             0f
         }
 
-        if (hoursSinceLastStudy > 36f) {
+        if (hoursSinceLastStudy > 48f) {
             newStreak = 0
         }
 
         if (state.currentStatus == "SLEEPING") {
-            newEnergy = (newEnergy + (hours * 15f)).coerceIn(0f, 100f)
-            newHunger = (newHunger - (hours * 1.5f)).coerceIn(0f, 100f)
+            newEnergy = (newEnergy + (hours * 12f)).coerceIn(0f, 100f)
+            newHunger = (newHunger - (hours * 1f)).coerceIn(0f, 100f)
             if (newEnergy >= 100f) {
                 newStatus = "HAPPY"
             }
         } else {
-            newHunger = (newHunger - (hours * 4f)).coerceIn(0f, 100f)
-            newEnergy = (newEnergy - (hours * 3f)).coerceIn(0f, 100f)
+            newHunger = (newHunger - (hours * 2.5f)).coerceIn(0f, 100f)
+            newEnergy = (newEnergy - (hours * 2f)).coerceIn(0f, 100f)
         }
 
-        val baseHealthDecay = hours * 3.64f
+        val baseHealthDecay = hours * 1.5f
         newHealth = (newHealth - baseHealthDecay).coerceIn(0f, 100f)
 
         if (newHunger <= 0f) {
-            newHealth = (newHealth - (hours * 5f)).coerceIn(0f, 100f)
+            newHealth = (newHealth - (hours * 3f)).coerceIn(0f, 100f)
         }
         if (newEnergy <= 10f) {
-            newHealth = (newHealth - (hours * 2f)).coerceIn(0f, 100f)
+            newHealth = (newHealth - (hours * 1f)).coerceIn(0f, 100f)
         }
-        if (hoursSinceLastStudy > 48f) {
-            newHealth = (newHealth - (hours * 3f)).coerceIn(0f, 100f)
+        if (hoursSinceLastStudy > 72f) {
+            newHealth = (newHealth - (hours * 1.5f)).coerceIn(0f, 100f)
         }
 
         if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
@@ -465,8 +533,8 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             soundManager.playClick()
-            val updatedEnergy = (current.energy + 10f).coerceIn(0f, 100f)
-            val updatedHealth = (current.health + 3f).coerceIn(0f, 100f)
+            val updatedEnergy = (current.energy + 15f).coerceIn(0f, 100f)
+            val updatedHealth = (current.health + 5f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
                 determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
             } else {
@@ -486,8 +554,8 @@ class PetViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             soundManager.playClick()
-            val updatedHealth = (current.health + 6f).coerceIn(0f, 100f)
-            val updatedEnergy = (current.energy + 5f).coerceIn(0f, 100f)
+            val updatedHealth = (current.health + 12f).coerceIn(0f, 100f)
+            val updatedEnergy = (current.energy + 8f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
                 determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
             } else {

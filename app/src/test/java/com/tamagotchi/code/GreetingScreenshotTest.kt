@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.test.core.app.ApplicationProvider
-import com.tamagotchi.code.ui.screens.CodeTamagotchiScreen
+import com.tamagotchi.code.navigation.AppNavigation
 import com.tamagotchi.code.ui.theme.MyApplicationTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.github.takahirom.roborazzi.RobolectricDeviceQualifiers
@@ -28,7 +28,7 @@ class GreetingScreenshotTest {
     val viewModel = PetViewModel(application)
     composeTestRule.setContent {
       MyApplicationTheme {
-        CodeTamagotchiScreen(viewModel = viewModel)
+        AppNavigation(viewModel = viewModel)
       }
     }
     composeTestRule.onRoot().captureRoboImage(filePath = "src/test/screenshots/greeting.png")
