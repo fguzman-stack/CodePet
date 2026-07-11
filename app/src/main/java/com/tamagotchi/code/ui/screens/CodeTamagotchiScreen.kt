@@ -5,6 +5,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +32,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -155,61 +160,38 @@ fun CodeTamagotchiScreen(
 
                     ViewportCard(
                         state = state,
+                        viewModel = viewModel,
                         onRenameClick = {
                             renameInput = state.name
                             showRenameDialog = true
-                        }
+                        },
+                        onPlayClick = { showMinigamesDialog = true }
                     )
-
-                    if (activePanel == "HOME") {
-                        StatusMetersSection(state = state)
-                        BalanceAndQuickActionsRow(
-                            state = state,
-                            viewModel = viewModel
-                        )
-                        CareCenterSection(
-                            state = state,
-                            viewModel = viewModel,
-                            onPlayClick = { showMinigamesDialog = true }
-                        )
-                    }
-
-                    if (activePanel != "HOME") {
-                        TerminalHub(
-                            activePanel = activePanel,
-                            state = state,
-                            studySessions = studySessions,
-                            viewModel = viewModel
-                        )
-                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+            }
 
-                AnimatedVisibility(
-                    visible = (state.hunger < 40f || state.health < 40f || state.energy < 40f) && activePanel != "HOME",
-                    enter = androidx.compose.animation.slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-                    exit = androidx.compose.animation.slideOutVertically(targetOffsetY = { -it }) + fadeOut(),
+            AnimatedVisibility(
+                visible = activePanel != "HOME",
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Box(
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(16.dp)
-                        .padding(top = 16.dp)
+                        .fillMaxSize()
+                        .background(Color(0xCC000000))
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        modifier = Modifier.clickable { activePanel = "HOME" }
-                    ) {
-                        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                "¡Hey! Necesito atención en Inicio 🥺",
-                                color = MaterialTheme.colorScheme.onErrorContainer,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+                    TerminalHub(
+                        activePanel = activePanel,
+                        state = state,
+                        studySessions = studySessions,
+                        viewModel = viewModel
+                    )
                 }
             }
         } ?: Box(
@@ -254,8 +236,34 @@ fun CodeTamagotchiScreen(
 @Composable
 fun ViewportCard(
     state: PetStateEntity,
-    onRenameClick: () -> Unit
+    viewModel: PetViewModel,
+    onRenameClick: () -> Unit,
+    onPlayClick: () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
+    val bounceScale = remember { Animatable(1f) }
+    val bounceOffsetY = remember { Animatable(0f) }
+    val heartOffsetY = remember { Animatable(0f) }
+    val heartAlpha = remember { Animatable(0f) }
+    var showHeart by remember { mutableStateOf(false) }
+
+    fun onPetTap() {
+        viewModel.petThePet()
+        viewModel.soundManager.playClick()
+        scope.launch {
+            showHeart = true
+            bounceScale.snapTo(1f)
+            bounceOffsetY.snapTo(0f)
+            heartOffsetY.snapTo(0f)
+            heartAlpha.snapTo(1f)
+            launch { bounceScale.animateTo(1.25f, tween(100)); bounceScale.animateTo(1f, spring(dampingRatio = 0.3f)) }
+            launch { bounceOffsetY.animateTo(-20f, tween(100)); bounceOffsetY.animateTo(0f, spring(dampingRatio = 0.3f)) }
+            launch { heartOffsetY.animateTo(-120f, tween(800)); heartAlpha.animateTo(0f, tween(800)) }
+            delay(900)
+            showHeart = false
+        }
+    }
+
     val petImageRes = when (state.currentStatus) {
         "SLEEPING" -> R.drawable.img_pet_sleep_1783728828159
         "STUDYING" -> R.drawable.img_pet_study_1783728839262
@@ -446,32 +454,51 @@ fun ViewportCard(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = petImageRes),
-                    contentDescription = "Estado: ${state.currentStatus}",
-                    modifier = Modifier
-                        .offset(x = offsetX.dp, y = offsetY.dp)
-                        .scale(scale)
-                        .size(170.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF1B5E20)),
-                    contentScale = ContentScale.Crop
-                )
-
                 Box(
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp)
-                        .background(statusColor, RoundedCornerShape(4.dp))
+                        .offset(x = offsetX.dp, y = offsetY.dp)
+                        .scale(bounceScale.value * scale)
                 ) {
-                    Text(
-                        text = state.currentStatus,
-                        fontSize = 10.sp,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                    Image(
+                        painter = painterResource(id = petImageRes),
+                        contentDescription = "Estado: ${state.currentStatus}",
+                        modifier = Modifier
+                            .offset(y = bounceOffsetY.value.dp)
+                            .size(170.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0xFF1B5E20))
+                            .clickable { onPetTap() },
+                        contentScale = ContentScale.Crop
                     )
+
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                            .background(statusColor, RoundedCornerShape(4.dp))
+                    ) {
+                        Text(
+                            text = state.currentStatus,
+                            fontSize = 10.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
+
+                    if (showHeart) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Amor",
+                            tint = Color(0xFFEF5350),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .offset(y = heartOffsetY.value.dp)
+                                .graphicsLayer(alpha = heartAlpha.value)
+                                .size(48.dp)
+                        )
+                    }
                 }
             }
 
@@ -537,6 +564,129 @@ fun ViewportCard(
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp))
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(color = statusColor.copy(alpha = 0.3f))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                MeterItem(
+                    label = "Vida", value = state.health,
+                    icon = Icons.Default.Favorite, activeColor = Color(0xFFEF5350),
+                    trackColor = Color(0xFFEF5350).copy(alpha = 0.2f),
+                    modifier = Modifier.weight(1f).testTag("health_bar")
+                )
+                MeterItem(
+                    label = "Alimento", value = state.hunger,
+                    icon = Icons.Default.Restaurant, activeColor = Color(0xFFFFA726),
+                    trackColor = Color(0xFFFFA726).copy(alpha = 0.2f),
+                    modifier = Modifier.weight(1f).testTag("hunger_bar")
+                )
+                MeterItem(
+                    label = "Energía", value = state.energy,
+                    icon = Icons.Default.FlashOn, activeColor = Color(0xFF29B6F6),
+                    trackColor = Color(0xFF29B6F6).copy(alpha = 0.2f),
+                    modifier = Modifier.weight(1f).testTag("energy_bar")
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+            HorizontalDivider(color = statusColor.copy(alpha = 0.2f))
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = Color(0xFFFFD54F), modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("${state.bytes} B", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 13.sp, color = Color(0xFFFFD54F))
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = Color(0xFFFF7043), modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("${state.streak} días", fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 13.sp, color = Color(0xFFFF7043))
+                }
+                Button(
+                    onClick = { viewModel.toggleSleep() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (state.currentStatus == "SLEEPING") MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = if (state.currentStatus == "SLEEPING") MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.height(32.dp).testTag("action_toggle_sleep")
+                ) {
+                    Icon(
+                        imageVector = if (state.currentStatus == "SLEEPING") Icons.Default.WbSunny else Icons.Default.NightsStay,
+                        contentDescription = "Dormir/Despertar",
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        if (state.currentStatus == "SLEEPING") "Despertar" else "Dormir",
+                        fontSize = 10.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+            HorizontalDivider(color = statusColor.copy(alpha = 0.15f))
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Button(
+                    onClick = { viewModel.petThePet(); viewModel.soundManager.playClick() },
+                    colors = ButtonDefaults.buttonColors(containerColor = statusColor),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).height(34.dp)
+                ) {
+                    Icon(Icons.Default.Pets, contentDescription = "Acariciar", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Acariciar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                }
+                Button(
+                    onClick = { viewModel.cleanThePet(); viewModel.soundManager.playClick() },
+                    colors = ButtonDefaults.buttonColors(containerColor = statusColor),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).height(34.dp)
+                ) {
+                    Icon(Icons.Default.CleaningServices, contentDescription = "Limpiar", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Limpiar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                }
+                Button(
+                    onClick = { onRenameClick() },
+                    colors = ButtonDefaults.buttonColors(containerColor = statusColor),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).height(34.dp)
+                ) {
+                    Icon(Icons.Default.Settings, contentDescription = "Ajustar", modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Ajustar", fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                }
+                Button(
+                    onClick = onPlayClick,
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFD54F)),
+                    shape = RoundedCornerShape(8.dp),
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
+                    modifier = Modifier.weight(1f).height(34.dp)
+                ) {
+                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", tint = Color.Black, modifier = Modifier.size(14.dp))
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text("Jugar", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                }
             }
         }
     }
