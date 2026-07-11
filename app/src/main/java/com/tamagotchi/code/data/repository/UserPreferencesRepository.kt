@@ -42,7 +42,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
-        prefs[KEY_UNLOCKED_THEMES] ?: ALL_THEMES
+        ALL_THEMES
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -97,10 +97,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     suspend fun addUnlockedTheme(theme: String) {
-        context.dataStore.edit { prefs ->
-            val current = prefs[KEY_UNLOCKED_THEMES] ?: ALL_THEMES
-            prefs[KEY_UNLOCKED_THEMES] = current + theme
-        }
+        // all themes are always unlocked for testing
     }
 
     suspend fun getHasSeenOnboarding(): Boolean {
