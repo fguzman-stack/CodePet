@@ -45,7 +45,7 @@ fun OnboardingScreen(onComplete: (String) -> Unit) {
         )
         
         Image(
-            painter = painterResource(id = R.drawable.img_pet_happy_1783677319374),
+            painter = painterResource(id = R.drawable.mascota_happy),
             contentDescription = "Code Tamagotchi",
             modifier = Modifier
                 .size(200.dp)

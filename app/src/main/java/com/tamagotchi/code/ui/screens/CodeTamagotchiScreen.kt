@@ -265,13 +265,13 @@ fun ViewportCard(
     }
 
     val petImageRes = when (state.currentStatus) {
-        "SLEEPING" -> R.drawable.img_pet_sleep_1783728828159
-        "STUDYING" -> R.drawable.img_pet_study_1783728839262
-        "SICK" -> R.drawable.img_pet_sick_1783728805525
-        "SAD" -> R.drawable.img_pet_sad_1783728794177
-        "HUNGRY" -> R.drawable.img_pet_hungry_1783728816746
-        "EXCITED" -> R.drawable.img_pet_excited_1783728850905
-        else -> R.drawable.img_pet_happy_1783728781307
+        "SLEEPING" -> R.drawable.mascota_sleeping
+        "STUDYING" -> R.drawable.mascota_studying
+        "SICK" -> R.drawable.mascota_sick
+        "SAD" -> R.drawable.mascota_sad
+        "HUNGRY" -> R.drawable.mascota_hungry
+        "EXCITED" -> R.drawable.mascota_excited
+        else -> R.drawable.mascota_happy
     }
 
     val statusColor = when (state.currentStatus) {
@@ -459,16 +459,15 @@ fun ViewportCard(
                         .offset(x = offsetX.dp, y = offsetY.dp)
                         .scale(bounceScale.value * scale)
                 ) {
-                    Image(
-                        painter = painterResource(id = petImageRes),
-                        contentDescription = "Estado: ${state.currentStatus}",
-                        modifier = Modifier
-                            .offset(y = bounceOffsetY.value.dp)
-                            .size(170.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFF1B5E20))
-                            .clickable { onPetTap() },
-                        contentScale = ContentScale.Crop
+                        Image(
+                            painter = painterResource(id = petImageRes),
+                            contentDescription = "Estado: ${state.currentStatus}",
+                            modifier = Modifier
+                                .offset(y = bounceOffsetY.value.dp)
+                                .size(170.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { onPetTap() },
+                            contentScale = ContentScale.Crop
                     )
 
                     Box(
