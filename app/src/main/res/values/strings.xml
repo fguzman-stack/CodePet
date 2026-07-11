@@ -57,6 +57,7 @@
     <string name="settings_experience_vibration">Vibración</string>
     <string name="settings_experience_reduce_motion">Reducir animaciones</string>
     <string name="settings_experience_theme_active">Activo</string>
+    <string name="settings_section_achievements">Logros</string>
     <string name="settings_section_reminders">Recordatorios</string>
     <string name="settings_reminders_daily">Recordatorio diario de estudio</string>
     <string name="settings_section_data">Datos y Ayuda</string>

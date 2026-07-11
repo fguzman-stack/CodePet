@@ -11,6 +11,10 @@ import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.data.repository.PetRepository
 import com.tamagotchi.code.data.repository.UserPreferencesRepository
 import com.tamagotchi.code.data.repository.AchievementsRepository
+import com.tamagotchi.code.util.DecayCalculator
+import com.tamagotchi.code.util.LevelCalculator
+import com.tamagotchi.code.util.RewardCalculator
+import com.tamagotchi.code.util.StatusCalculator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +24,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.Calendar
-
 class PetViewModel(
     private val repository: PetRepository,
     private val userPreferences: UserPreferencesRepository,
@@ -41,8 +43,11 @@ class PetViewModel(
     fun unlockTheme(themeName: String) {
         viewModelScope.launch {
             userPreferences.addUnlockedTheme(themeName)
-            unlockedThemes.value = unlockedThemes.value + themeName
+            val newSet = unlockedThemes.value + themeName
+            unlockedThemes.value = newSet
             soundManager.playLevelUp()
+            if (newSet.size >= 3) achievementsRepository.unlockAchievement("coleccionista")
+            if (newSet.size >= 12) achievementsRepository.unlockAchievement("completista")
         }
     }
 
@@ -255,7 +260,7 @@ class PetViewModel(
                 repository.savePetState(defaultPet)
                 loadChallengesForLanguage("Kotlin")
             } else {
-                val decayed = applyDecay(current)
+                val decayed = DecayCalculator.applyDecay(current)
                 repository.savePetState(decayed)
                 loadChallengesForLanguage(decayed.language)
             }
@@ -280,7 +285,7 @@ class PetViewModel(
                         val xpReward = active.plannedDurationMinutes * 2
                         val bytesReward = active.plannedDurationMinutes * 1
                         val updatedXp = current.xp + xpReward
-                        val updatedLevel = calculateLevel(updatedXp, current.level)
+                        val updatedLevel = LevelCalculator.calculateLevel(updatedXp)
                         val updated = current.copy(
                             xp = updatedXp,
                             level = updatedLevel,
@@ -348,24 +353,22 @@ class PetViewModel(
             soundManager.playSuccess()
             viewModelScope.launch {
                 val current = petState.value ?: return@launch
-                
-                val earnedBytes = if (challenge.type == "DEBUG") 30 else 25
-                val earnedXp = if (challenge.type == "DEBUG") 25 else 20
-                val hungerRestore = 15f
-                val healthRestore = 20f
 
-                val updatedXp = current.xp + earnedXp
-                val updatedLevel = calculateLevel(updatedXp, current.level)
-                
+                val reward = RewardCalculator.calculateChallengeReward(challenge.type)
+                val updatedXp = current.xp + reward.xp
+                val updatedLevel = LevelCalculator.calculateLevel(updatedXp)
+                val newHealth = (current.health + reward.healthRestore).coerceIn(0f, 100f)
+                val newHunger = (current.hunger + reward.hungerRestore).coerceIn(0f, 100f)
+
                 val updated = current.copy(
                     xp = updatedXp,
                     level = updatedLevel,
-                    bytes = current.bytes + earnedBytes,
-                    hunger = (current.hunger + hungerRestore).coerceIn(0f, 100f),
-                    health = (current.health + healthRestore).coerceIn(0f, 100f),
-                    currentStatus = determineStatus(
-                        health = (current.health + healthRestore).coerceIn(0f, 100f),
-                        hunger = (current.hunger + hungerRestore).coerceIn(0f, 100f),
+                    bytes = current.bytes + reward.bytes,
+                    hunger = newHunger,
+                    health = newHealth,
+                    currentStatus = StatusCalculator.determineStatus(
+                        health = newHealth,
+                        hunger = newHunger,
                         energy = current.energy,
                         isSleeping = current.currentStatus == "SLEEPING",
                         isStudying = current.currentStatus == "STUDYING"
@@ -374,7 +377,10 @@ class PetViewModel(
                 repository.savePetState(updated)
                 
                 if (updated.level > current.level) {
-                    achievementsRepository.unlockAchievement("Nivel Experto")
+                    achievementsRepository.unlockAchievement("nivel_experto")
+                }
+                if (updated.bytes >= 1000) {
+                    achievementsRepository.unlockAchievement("ahorrador")
                 }
             }
         } else {
@@ -410,7 +416,7 @@ class PetViewModel(
             
             var newStatus = current.currentStatus
             if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
-                newStatus = determineStatus(updatedHealth, updatedHunger, updatedEnergy, false, false)
+                newStatus = StatusCalculator.determineStatus(updatedHealth, updatedHunger, updatedEnergy, false, false)
             }
 
             val updated = current.copy(
@@ -435,11 +441,14 @@ class PetViewModel(
             }
             
             val newStatus = if (isCurrentlySleeping) {
-                determineStatus(current.health, current.hunger, current.energy, false, false)
+                StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false)
             } else {
                 "SLEEPING"
             }
 
+            if (!isCurrentlySleeping) {
+                achievementsRepository.unlockAchievement("duermevela")
+            }
             val updated = current.copy(
                 currentStatus = newStatus,
                 lastUpdated = System.currentTimeMillis()
@@ -517,7 +526,7 @@ class PetViewModel(
                 
                 _activeFocusEntity.value = null
                 
-                achievementsRepository.unlockAchievement("Primer build")
+                achievementsRepository.unlockAchievement("primer_build")
             }
         }
     }
@@ -533,7 +542,7 @@ class PetViewModel(
                 activeFocusSessionId = null
             }
             val current = petState.value ?: return@launch
-            val newStatus = determineStatus(current.health, current.hunger, current.energy, false, false)
+            val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false)
             val updated = current.copy(
                 currentStatus = newStatus,
                 lastUpdated = System.currentTimeMillis()
@@ -558,145 +567,29 @@ class PetViewModel(
         val session = StudySessionEntity(topic = topic, durationMinutes = minutes)
         repository.addStudySession(session)
 
-        val baseBytes = minutes * 2
-        val baseXP = minutes * 3
-        
-        val bonusBytes = if (minutes >= 25) 50 else 0
-        val bonusXP = if (minutes >= 25) 75 else 0
-
-        val totalBytesEarned = baseBytes + bonusBytes
-        val totalXPEarned = baseXP + bonusXP
+        val reward = RewardCalculator.calculateStudyReward(
+            minutes = minutes, currentXp = current.xp,
+            currentLevel = current.level, currentStreak = current.streak,
+            lastStudyDate = current.lastStudyDate
+        )
 
         val now = System.currentTimeMillis()
-        var newStreak = current.streak
-        
-        if (current.lastStudyDate == 0L) {
-            newStreak = 1
-        } else {
-            val lastCalendar = Calendar.getInstance().apply { timeInMillis = current.lastStudyDate }
-            val nowCalendar = Calendar.getInstance().apply { timeInMillis = now }
-
-            val sameDay = lastCalendar.get(Calendar.YEAR) == nowCalendar.get(Calendar.YEAR) &&
-                    lastCalendar.get(Calendar.DAY_OF_YEAR) == nowCalendar.get(Calendar.DAY_OF_YEAR)
-
-            if (!sameDay) {
-                val yesterdayCalendar = Calendar.getInstance().apply {
-                    timeInMillis = now
-                    add(Calendar.DAY_OF_YEAR, -1)
-                }
-                val studiedYesterday = lastCalendar.get(Calendar.YEAR) == yesterdayCalendar.get(Calendar.YEAR) &&
-                        lastCalendar.get(Calendar.DAY_OF_YEAR) == yesterdayCalendar.get(Calendar.DAY_OF_YEAR)
-
-                if (studiedYesterday) {
-                    newStreak += 1
-                } else {
-                    newStreak = 1
-                }
-            }
-        }
-
-        val energyCost = (minutes * 0.5f).coerceAtMost(30f)
-        val updatedEnergy = (current.energy - energyCost).coerceIn(0f, 100f)
-        val updatedXp = current.xp + totalXPEarned
-        val updatedLevel = calculateLevel(updatedXp, current.level)
-
-        val newStatus = determineStatus(current.health, current.hunger, updatedEnergy, false, false)
+        val updatedEnergy = (current.energy - reward.energyCost).coerceIn(0f, 100f)
+        val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, updatedEnergy, false, false)
 
         val updated = current.copy(
-            xp = updatedXp,
-            level = updatedLevel,
-            bytes = current.bytes + totalBytesEarned,
+            xp = current.xp + reward.xp,
+            level = reward.newLevel,
+            bytes = current.bytes + reward.bytes,
             energy = updatedEnergy,
-            streak = newStreak,
+            streak = reward.streak,
             lastStudyDate = now,
             lastUpdated = now,
             currentStatus = newStatus
         )
         repository.savePetState(updated)
-    }
-
-    private fun calculateLevel(xp: Int, currentLevel: Int): Int {
-        var level = 1
-        var requiredXp = 100
-        while (xp >= requiredXp) {
-            level++
-            requiredXp += level * 100
-        }
-        return level
-    }
-
-    private fun determineStatus(health: Float, hunger: Float, energy: Float, isSleeping: Boolean, isStudying: Boolean, isExcited: Boolean = false): String {
-        return when {
-            isExcited -> "EXCITED"
-            isStudying -> "STUDYING"
-            isSleeping -> "SLEEPING"
-            health < 20f -> "SICK"
-            hunger < 20f -> "HUNGRY"
-            energy < 15f -> "SAD"
-            else -> "HAPPY"
-        }
-    }
-
-    private fun applyDecay(state: PetStateEntity): PetStateEntity {
-        val now = System.currentTimeMillis()
-        val elapsedMs = now - state.lastUpdated
-        if (elapsedMs <= 0) return state
-
-        val hours = elapsedMs.toFloat() / (1000f * 60f * 60f)
-        if (hours < 0.02f) return state
-
-        var newHunger = state.hunger
-        var newEnergy = state.energy
-        var newHealth = state.health
-        var newStatus = state.currentStatus
-        var newStreak = state.streak
-
-        val hoursSinceLastStudy = if (state.lastStudyDate > 0) {
-            (now - state.lastStudyDate).toFloat() / (1000f * 60f * 60f)
-        } else {
-            0f
-        }
-
-        if (hoursSinceLastStudy > 48f) {
-            newStreak = 0
-        }
-
-        if (state.currentStatus == "SLEEPING") {
-            newEnergy = (newEnergy + (hours * 12f)).coerceIn(0f, 100f)
-            newHunger = (newHunger - (hours * 1f)).coerceIn(0f, 100f)
-            if (newEnergy >= 100f) {
-                newStatus = "HAPPY"
-            }
-        } else {
-            newHunger = (newHunger - (hours * 2.5f)).coerceIn(0f, 100f)
-            newEnergy = (newEnergy - (hours * 2f)).coerceIn(0f, 100f)
-        }
-
-        val baseHealthDecay = hours * 1.5f
-        newHealth = (newHealth - baseHealthDecay).coerceIn(0f, 100f)
-
-        if (newHunger <= 0f) {
-            newHealth = (newHealth - (hours * 3f)).coerceIn(0f, 100f)
-        }
-        if (newEnergy <= 10f) {
-            newHealth = (newHealth - (hours * 1f)).coerceIn(0f, 100f)
-        }
-        if (hoursSinceLastStudy > 72f) {
-            newHealth = (newHealth - (hours * 1.5f)).coerceIn(0f, 100f)
-        }
-
-        if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
-            newStatus = determineStatus(newHealth, newHunger, newEnergy, false, false)
-        }
-
-        return state.copy(
-            hunger = newHunger,
-            energy = newEnergy,
-            health = newHealth,
-            streak = newStreak,
-            lastUpdated = now,
-            currentStatus = newStatus
-        )
+        if (reward.streak >= 7) achievementsRepository.unlockAchievement("racha_7")
+        if (reward.streak >= 30) achievementsRepository.unlockAchievement("racha_30")
     }
 
     fun petThePet() {
@@ -706,7 +599,7 @@ class PetViewModel(
             val updatedEnergy = (current.energy + 15f).coerceIn(0f, 100f)
             val updatedHealth = (current.health + 5f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
-                determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
+                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
             } else {
                 current.currentStatus
             }
@@ -717,6 +610,7 @@ class PetViewModel(
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updated)
+            achievementsRepository.unlockAchievement("primer_acaricie")
         }
     }
 
@@ -727,7 +621,7 @@ class PetViewModel(
             val updatedHealth = (current.health + 12f).coerceIn(0f, 100f)
             val updatedEnergy = (current.energy + 8f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
-                determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
+                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
             } else {
                 current.currentStatus
             }
@@ -768,9 +662,9 @@ class PetViewModel(
             soundManager.playSuccess()
             
             if (bytesEarned == 100) { // Bug Hunt score 10
-                achievementsRepository.unlockAchievement("Cazador de bugs")
+                achievementsRepository.unlockAchievement("cazador_de_bugs")
             } else if (bytesEarned == 45) { // Git Rescue score 3
-                achievementsRepository.unlockAchievement("Git sin pánico")
+                achievementsRepository.unlockAchievement("git_sin_panico")
             }
         }
     }

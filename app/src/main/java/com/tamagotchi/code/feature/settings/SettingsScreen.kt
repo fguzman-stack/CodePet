@@ -229,6 +229,44 @@ fun SettingsScreen(
 
             HorizontalDivider()
 
+            // D2. Logros
+            SettingsSectionTitle(stringResource(R.string.settings_section_achievements))
+            val unlockedAchievements by viewModel.unlockedAchievements.collectAsStateWithLifecycle()
+            val allAchievements = com.tamagotchi.code.data.repository.AchievementsRepository.ALL_ACHIEVEMENTS
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                allAchievements.forEach { achievement ->
+                    val isUnlocked = achievement.id in unlockedAchievements
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = if (isUnlocked) "🏆" else "🔒",
+                            fontSize = 16.sp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = achievement.name,
+                                fontWeight = if (isUnlocked) FontWeight.Bold else FontWeight.Normal,
+                                fontSize = 14.sp,
+                                color = if (isUnlocked) MaterialTheme.colorScheme.onSurface
+                                else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = achievement.description,
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+
+            HorizontalDivider()
+
             // E. Datos y ayuda
             SettingsSectionTitle(stringResource(R.string.settings_section_data))
             SettingsItemClickable(

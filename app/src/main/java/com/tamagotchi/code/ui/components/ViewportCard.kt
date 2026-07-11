@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
@@ -359,15 +360,21 @@ fun ViewportCard(
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                LinearProgressIndicator(
-                    progress = { animatedXpProgress },
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp))
-                )
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(fraction = animatedXpProgress)
+                            .clip(RoundedCornerShape(3.dp))
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -456,7 +463,7 @@ fun ViewportCard(
                 ) {
                     Icon(Icons.Default.Pets, contentDescription = "Acariciar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Acariciar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
+                    Text("Acariciar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = { viewModel.cleanThePet(); viewModel.soundManager.playClick() },
@@ -467,7 +474,7 @@ fun ViewportCard(
                 ) {
                     Icon(Icons.Default.CleaningServices, contentDescription = "Limpiar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Limpiar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
+                    Text("Limpiar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = { onRenameClick() },
@@ -478,18 +485,18 @@ fun ViewportCard(
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = "Ajustar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Ajustar", fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
+                    Text("Ajustar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = onPlayClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = appTheme.accent),
+                    colors = ButtonDefaults.buttonColors(containerColor = statusColor),
                     shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", tint = appTheme.onPrimary, modifier = Modifier.size(14.dp))
+                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Jugar", color = appTheme.onPrimary, fontWeight = FontWeight.Bold, fontSize = 10.sp, style = MaterialTheme.typography.labelSmall)
+                    Text("Jugar", fontWeight = FontWeight.Bold, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
             }
         }

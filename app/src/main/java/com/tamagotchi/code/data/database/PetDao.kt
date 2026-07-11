@@ -11,6 +11,9 @@ interface PetDao {
     @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
     fun getPetState(): Flow<PetStateEntity?>
 
+    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
+    suspend fun getPetStateSuspend(): PetStateEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdatePetState(state: PetStateEntity)
 
