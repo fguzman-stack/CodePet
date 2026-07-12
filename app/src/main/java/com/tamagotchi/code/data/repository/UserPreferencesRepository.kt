@@ -15,12 +15,6 @@ private val Context.dataStore by preferencesDataStore(name = "user_preferences")
 class UserPreferencesRepository(private val context: Context) {
 
     companion object {
-        val ALL_THEMES = setOf(
-            "Matrix Green", "Galáctico", "Cyberpunk", "Sakura",
-            "Minimalista", "Neón", "Océano", "Volcánico",
-            "Samurai", "Aurora", "Nocturno", "Retro Pixel"
-        )
-
         private val KEY_ONBOARDING = booleanPreferencesKey("has_seen_onboarding")
         private val KEY_THEME = stringPreferencesKey("app_theme")
         private val KEY_UNLOCKED_THEMES = stringSetPreferencesKey("unlocked_themes")
@@ -42,7 +36,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
-        ALL_THEMES
+        prefs[KEY_UNLOCKED_THEMES] ?: setOf("Matrix Green")
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -97,7 +91,10 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     suspend fun addUnlockedTheme(theme: String) {
-        // all themes are always unlocked for testing
+        context.dataStore.edit { prefs ->
+            val current = prefs[KEY_UNLOCKED_THEMES] ?: setOf("Matrix Green")
+            prefs[KEY_UNLOCKED_THEMES] = current + theme
+        }
     }
 
     suspend fun getHasSeenOnboarding(): Boolean {
