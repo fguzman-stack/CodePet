@@ -817,7 +817,7 @@ data class AppTheme(
 | 9 | Samurai | ⚔️ | Sí | Serif | 4dp | — |
 | 10 | Aurora | ✨ | Sí | SansSerif | 18dp | ✅ |
 | 11 | Nocturno | 🌙 | Sí | SansSerif | 12dp | — |
-| 12 | Retro Pixel | 👾 | Sí | Monospace | 0dp | — |
+| 12 | Retro Pixel 🏆 | 👾 | Sí | **Press Start 2P** (8-bit) | 0dp | — |
 
 ### 8.3 Integración con Material 3
 
@@ -1094,6 +1094,27 @@ override fun onCleared() {
 "EXCITED" → "¡Podría compilar el kernel de Linux en 1 segundo!"
 ```
 
+### 12.4 Fondos Animados por Tema (`AnimatedThemeBackground.kt`)
+
+Cada tema tiene un fondo animado único que se renderiza via `Canvas` de Compose:
+
+| Tema | Efecto visual |
+|:-----|:--------------|
+| Matrix Green | Lluvia de 1/0 con mensajes ocultos y bursts de velocidad |
+| Galáctico | Nebulosas + estrellas titilantes + polvo estelar |
+| Cyberpunk | Rejilla neon + glitch lines horizontales |
+| Sakura | Pétalos de cerezo cayendo con rotación |
+| Minimalista | Círculos concéntricos orbitando suavemente |
+| Neón | Anillos pulsantes con resplandores radiales |
+| Océano | Olas sinusoidales + burbujas ascendentes |
+| Volcánico | Flujo de lava + ascuas ardientes |
+| Samurai | Mon (escudo) + hojas de bambú + katana |
+| Aurora | Cortinas polares ondulantes |
+| Nocturno | Cielo estrellado con estrella fugaz periódica |
+| **Retro Pixel 🏆** | **Mundo 8-bit completo:** cielo pixelado, estrellas, luna, montañas parallax, árboles, suelo con textura, nubes scrolling, luciérnagas, rejilla CRT |
+
+El fondo se pinta a través de `AnimatedThemeBackground()` que lee el `LocalAppTheme` y selecciona la animación correspondiente mediante un `when (theme.name)`.
+
 ---
 
 ## 13. Notificaciones y Widgets
@@ -1362,6 +1383,21 @@ CodingChallenge(
 - `LocalAppTheme` CompositionLocal para acceso desde cualquier componente
 - Carrusel visual en Settings (LazyRow + preview colores + check/candado + borde animado)
 - Persistencia: `currentTheme` + `unlockedThemes` en DataStore
+
+#### 🕹️ Rediseño Retro Pixel — Tema Final (v2.1)
+- **Paleta NES 8-bit:** colores vibrantes (rojo `#FF4136`, verde `#2ECC40`, amarillo `#FFDC00`) sobre fondo azul noche `#0B0B3B`
+- **Fuente Press Start 2P:** tipografía pixelada clásica de juegos retro (Google Fonts)
+- **Fondo animado 8-bit:** 11 capas que construyen un mundo pixel art completo:
+  - Cielo degradado pixelado + estrellas parpadeantes con efecto cruz
+  - Luna creciente pixelada con resplandor
+  - Montañas con parallax (2 capas de profundidad)
+  - Árboles pixelados con follaje detallado
+  - Suelo verde con textura de pasto variante
+  - Briznas de hierba animadas
+  - Nubes pixeladas con scrolling parallax
+  - Luciérnagas flotantes con destello
+  - Rejilla pixelada sutil + efecto scanline CRT
+- **Esquinas 0dp,** bordes gruesos (3dp) para aspecto pixelado auténtico
 
 #### ⚙️ Configuración Completa (`SettingsScreen.kt`)
 - Perfil: nombre, nivel, renombrar con diálogo validado
