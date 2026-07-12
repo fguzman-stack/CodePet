@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.tamagotchi.code.ui.theme.ThemeRegistry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -36,7 +37,9 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
-        prefs[KEY_UNLOCKED_THEMES] ?: setOf("Matrix Green")
+        val stored = prefs[KEY_UNLOCKED_THEMES]
+        val allNames = ThemeRegistry.allThemes.map { it.name }.toSet()
+        if (stored == null || stored.isEmpty()) allNames else stored
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -92,8 +95,14 @@ class UserPreferencesRepository(private val context: Context) {
 
     suspend fun addUnlockedTheme(theme: String) {
         context.dataStore.edit { prefs ->
-            val current = prefs[KEY_UNLOCKED_THEMES] ?: setOf("Matrix Green")
+            val current = prefs[KEY_UNLOCKED_THEMES] ?: ThemeRegistry.allThemes.map { it.name }.toSet()
             prefs[KEY_UNLOCKED_THEMES] = current + theme
+        }
+    }
+
+    suspend fun setUnlockedThemes(themes: Set<String>) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_UNLOCKED_THEMES] = themes
         }
     }
 

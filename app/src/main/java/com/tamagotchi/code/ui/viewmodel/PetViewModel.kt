@@ -11,6 +11,7 @@ import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.data.repository.PetRepository
 import com.tamagotchi.code.data.repository.UserPreferencesRepository
 import com.tamagotchi.code.data.repository.AchievementsRepository
+import com.tamagotchi.code.ui.theme.ThemeRegistry
 import com.tamagotchi.code.util.DecayCalculator
 import com.tamagotchi.code.util.LevelCalculator
 import com.tamagotchi.code.util.RewardCalculator
@@ -37,7 +38,7 @@ class PetViewModel(
     var currentTheme = mutableStateOf("Matrix Green")
         private set
 
-    val unlockedThemes = MutableStateFlow<Set<String>>(setOf("Matrix Green"))
+    val unlockedThemes = MutableStateFlow<Set<String>>(ThemeRegistry.allThemes.map { it.name }.toSet())
     val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
 
     fun unlockTheme(themeName: String) {
@@ -237,7 +238,13 @@ class PetViewModel(
 
         viewModelScope.launch {
             userPreferences.unlockedThemes.collect { themes ->
-                unlockedThemes.value = themes
+                val allThemes = ThemeRegistry.allThemes.map { it.name }.toSet()
+                if (themes != allThemes) {
+                    userPreferences.setUnlockedThemes(allThemes)
+                    unlockedThemes.value = allThemes
+                } else {
+                    unlockedThemes.value = themes
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package com.tamagotchi.code.ui.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
+import com.tamagotchi.code.ui.theme.LocalReduceMotion
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,6 +48,7 @@ fun ViewportCard(
     var showHeart by remember { mutableStateOf(false) }
 
     val appTheme = LocalAppTheme.current
+    val reduceMotion = LocalReduceMotion.current
     val cardShape = RoundedCornerShape(appTheme.cornerRadius)
 
     fun onPetTap() {
@@ -58,10 +60,10 @@ fun ViewportCard(
             bounceOffsetY.snapTo(0f)
             heartOffsetY.snapTo(0f)
             heartAlpha.snapTo(1f)
-            launch { bounceScale.animateTo(1.25f, tween(100)); bounceScale.animateTo(1f, spring(dampingRatio = 0.3f)) }
-            launch { bounceOffsetY.animateTo(-20f, tween(100)); bounceOffsetY.animateTo(0f, spring(dampingRatio = 0.3f)) }
-            launch { heartOffsetY.animateTo(-120f, tween(800)); heartAlpha.animateTo(0f, tween(800)) }
-            delay(900)
+            launch { bounceScale.animateTo(1.18f, tween(PetAnimationConfig.bounceDurationMs(reduceMotion))); bounceScale.animateTo(1f, spring(dampingRatio = 0.35f)) }
+            launch { bounceOffsetY.animateTo(-16f, tween(PetAnimationConfig.bounceDurationMs(reduceMotion))); bounceOffsetY.animateTo(0f, spring(dampingRatio = 0.35f)) }
+            launch { heartOffsetY.animateTo(-110f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))); heartAlpha.animateTo(0f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))) }
+            delay((PetAnimationConfig.heartDurationMs(reduceMotion) + 120).toLong())
             showHeart = false
         }
     }
@@ -211,31 +213,32 @@ fun ViewportCard(
 
             val infiniteTransition = rememberInfiniteTransition(label = "pet_animation")
 
+            val amplitude = PetAnimationConfig.petFloatAmplitudeDp(state.currentStatus)
             val offsetY by infiniteTransition.animateFloat(
-                initialValue = if (state.currentStatus == "EXCITED" || state.currentStatus == "HAPPY") -10f else if (state.currentStatus == "SLEEPING") -5f else 0f,
-                targetValue = if (state.currentStatus == "EXCITED" || state.currentStatus == "HAPPY") 10f else if (state.currentStatus == "SLEEPING") 5f else 0f,
+                initialValue = -amplitude,
+                targetValue = amplitude,
                 animationSpec = infiniteRepeatable(
-                    animation = tween(if (state.currentStatus == "EXCITED") 300 else if (state.currentStatus == "HAPPY") 600 else if (state.currentStatus == "SLEEPING") 2000 else 1000, easing = LinearEasing),
+                    animation = tween(PetAnimationConfig.petFloatDurationMs(state.currentStatus, reduceMotion), easing = FastOutSlowInEasing),
                     repeatMode = RepeatMode.Reverse
                 ),
                 label = "pet_offset_y"
             )
 
             val offsetX by infiniteTransition.animateFloat(
-                initialValue = if (state.currentStatus == "SICK") -5f else 0f,
-                targetValue = if (state.currentStatus == "SICK") 5f else 0f,
+                initialValue = if (state.currentStatus == "SICK") -4f else 0f,
+                targetValue = if (state.currentStatus == "SICK") 4f else 0f,
                 animationSpec = infiniteRepeatable(
-                    animation = tween(if (state.currentStatus == "SICK") 100 else 1000, easing = LinearEasing),
+                    animation = tween(if (reduceMotion) 1200 else 1400, easing = FastOutSlowInEasing),
                     repeatMode = RepeatMode.Reverse
                 ),
                 label = "pet_offset_x"
             )
 
             val scale by infiniteTransition.animateFloat(
-                initialValue = if (state.currentStatus == "HUNGRY") 0.95f else 1f,
-                targetValue = if (state.currentStatus == "HUNGRY") 1.05f else 1f,
+                initialValue = if (state.currentStatus == "HUNGRY") 0.97f else 1f,
+                targetValue = if (state.currentStatus == "HUNGRY") 1.03f else 1f,
                 animationSpec = infiniteRepeatable(
-                    animation = tween(if (state.currentStatus == "HUNGRY") 1000 else 1000, easing = LinearEasing),
+                    animation = tween(if (reduceMotion) 1600 else 2200, easing = FastOutSlowInEasing),
                     repeatMode = RepeatMode.Reverse
                 ),
                 label = "pet_scale"

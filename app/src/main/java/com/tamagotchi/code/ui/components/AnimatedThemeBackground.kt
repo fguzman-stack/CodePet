@@ -69,8 +69,8 @@ fun MatrixBackground(primary: Color, accent: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "matrix")
 
     val baseTime by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 10000f,
-        animationSpec = infiniteRepeatable(tween(80000, easing = LinearEasing)),
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(320000, easing = LinearEasing)),
         label = "baseTime"
     )
 
@@ -78,13 +78,13 @@ fun MatrixBackground(primary: Color, accent: Color) {
         initialValue = 0f, targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = keyframes {
-                durationMillis = 80000
+                durationMillis = 320000
                 0f at 0 with LinearEasing
-                0f at 10000 with LinearEasing
-                1f at 12000 with FastOutSlowInEasing
-                1f at 15000 with LinearEasing
-                0f at 17000 with LinearEasing
-                0f at 80000 with LinearEasing
+                0f at 60000 with LinearEasing
+                1f at 84000 with FastOutSlowInEasing
+                1f at 104000 with LinearEasing
+                0f at 128000 with LinearEasing
+                0f at 320000 with LinearEasing
             }
         ),
         label = "burst"
@@ -111,7 +111,7 @@ fun MatrixBackground(primary: Color, accent: Color) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         val numColumns = (size.width / 32f).toInt()
         val random = java.util.Random(42)
-        val speedMultiplier = 1f + burstFactor * 4f
+        val speedMultiplier = 1f + burstFactor * 0.5f
         val textStyle = TextStyle(
             color = primary,
             fontSize = 14.sp,
@@ -124,7 +124,7 @@ fun MatrixBackground(primary: Color, accent: Color) {
         )
 
         for (i in 0 until numColumns) {
-            val speed = (30f + random.nextFloat() * 70f) * speedMultiplier
+            val speed = (8f + random.nextFloat() * 12f) * speedMultiplier
             val yOffset = (baseTime * speed + random.nextFloat() * 2000f) % (size.height + 200f) - 100f
             val length = 6 + random.nextInt(6)
 
@@ -176,7 +176,7 @@ fun GalacticBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "galaxy")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(15000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(60000, easing = LinearEasing)),
         label = "time"
     )
 
@@ -247,12 +247,12 @@ fun CyberpunkBackground(color1: Color, color2: Color, color3: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "cyberpunk")
     val offset by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 100f,
-        animationSpec = infiniteRepeatable(tween(2000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(16000, easing = LinearEasing)),
         label = "grid"
     )
     val glitchPhase by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(3000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(24000, easing = LinearEasing)),
         label = "glitch"
     )
 
@@ -302,7 +302,7 @@ fun SakuraBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "sakura")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(30000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(140000, easing = LinearEasing)),
         label = "fall"
     )
 
@@ -353,7 +353,7 @@ fun MinimalistBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "minimal")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(30000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
         label = "orbit"
     )
     Canvas(modifier = Modifier.fillMaxSize()) {
@@ -392,17 +392,17 @@ fun NeonBackground(color1: Color, color2: Color, color3: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "neon")
     val pulse1 by infiniteTransition.animateFloat(
         initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(2500, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        animationSpec = infiniteRepeatable(tween(15000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "pulse1"
     )
     val pulse2 by infiniteTransition.animateFloat(
         initialValue = 0.5f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(3500, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        animationSpec = infiniteRepeatable(tween(22000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "pulse2"
     )
     val pulse3 by infiniteTransition.animateFloat(
         initialValue = 0.4f, targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(tween(1800, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        animationSpec = infiniteRepeatable(tween(17000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
         label = "pulse3"
     )
 
@@ -466,7 +466,7 @@ fun OceanBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "ocean")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(8000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(70000, easing = LinearEasing)),
         label = "wave"
     )
 
@@ -524,7 +524,7 @@ fun VolcanicBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "volcano")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(12000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
         label = "time"
     )
 
@@ -593,7 +593,7 @@ fun SamuraiBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "samurai")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(25000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(78000, easing = LinearEasing)),
         label = "time"
     )
 
@@ -715,7 +715,7 @@ fun AuroraBackground(color1: Color, color2: Color, color3: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "aurora")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(20000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
         label = "time"
     )
 
@@ -770,7 +770,7 @@ fun NightBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "night")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(6000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(56000, easing = LinearEasing)),
         label = "time"
     )
 
@@ -809,7 +809,7 @@ fun RetroPixelBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "retro")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(30000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(140000, easing = LinearEasing)),
         label = "time"
     )
 
