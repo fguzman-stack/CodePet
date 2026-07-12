@@ -68,9 +68,17 @@ fun AppNavigation(viewModel: PetViewModel) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showBottomBar = currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)
+    val appTheme = com.tamagotchi.code.ui.theme.LocalAppTheme.current
+    val reduceMotion by viewModel.reduceMotion.collectAsStateWithLifecycle()
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    Box(modifier = Modifier.fillMaxSize()) {
+        com.tamagotchi.code.ui.components.AnimatedThemeBackground(
+            theme = appTheme,
+            reduceMotion = reduceMotion
+        )
+
+        Scaffold(
+            containerColor = androidx.compose.ui.graphics.Color.Transparent,
         topBar = {
             if (currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)) {
                 TopAppBar(
@@ -154,7 +162,6 @@ fun AppNavigation(viewModel: PetViewModel) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         LearnScreen(viewModel = viewModel, state = state)
@@ -168,7 +175,6 @@ fun AppNavigation(viewModel: PetViewModel) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         FocusScreen(
@@ -185,7 +191,6 @@ fun AppNavigation(viewModel: PetViewModel) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.95f))
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         ShopScreen(viewModel = viewModel, state = state)
@@ -234,4 +239,5 @@ fun AppNavigation(viewModel: PetViewModel) {
             }
         }
     }
+}
 }

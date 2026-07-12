@@ -135,6 +135,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        containerColor = Color.Transparent,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.Bold) },
@@ -400,11 +401,12 @@ fun ThemePreviewCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Emoji
-            Text(
-                text = theme.emoji,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
+            // Icon
+            Icon(
+                imageVector = theme.icon,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = if (isUnlocked) theme.primary else Color.Gray
             )
 
             Spacer(modifier = Modifier.height(4.dp))
