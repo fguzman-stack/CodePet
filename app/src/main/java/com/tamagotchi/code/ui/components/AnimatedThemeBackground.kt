@@ -1024,7 +1024,7 @@ fun RetroPixelBackground() {
             val grassH = 2f + (sin(gx * 1.7f + time * 0.01f) + 1f) * 3f
             drawRect(
                 color = listOf(Color(0xFF4CAF50), Color(0xFF66BB6A), Color(0xFF81C784))
-                    .random(java.util.Random(gx.hashCode())).copy(alpha = 0.5f),
+                    .random(kotlin.random.Random(gx.hashCode().toLong())).copy(alpha = 0.5f),
                 topLeft = Offset(gx * 4f, groundY - grassH),
                 size = Size(2f, grassH)
             )
