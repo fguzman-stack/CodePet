@@ -8,7 +8,7 @@
 
 <br/>
 
-<img src="app/src/main/res/drawable/img_pet_happy_1783677319374.jpg" width="150" alt="Codey, la mascota virtual de Code Tamagotchi"/>
+<img src="app/src/main/res/drawable/iconoapp.png" width="150" alt="Code Tamagotchi Logo"/>
 
 # 🐾 Code Tamagotchi
 
@@ -364,7 +364,7 @@ colores, tipografía, esquinas, gradientes y un emoji representativo.
 | Samurai | ⚔️ | Acero, sangre y oro antiguo |
 | Aurora | ✨ | Luces del norte en el cielo oscuro |
 | Nocturno | 🌙 | Noche elegante estilo iOS |
-| Retro Pixel | 👾 | 8-bit, colores saturados, esquinas afiladas |
+| Retro Pixel | 👾 | 🏆 TEMA FINAL — Experiencia 8-bit definitiva, pixel art y mundo retro |
 
 > Selecciona desde un carrusel visual en **Configuración**. Resuelve desafíos especiales para desbloquear nuevos temas.
 

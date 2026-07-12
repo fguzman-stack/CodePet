@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.ui.theme.AppTheme
 import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.math.abs
 import kotlin.math.PI
 import kotlin.random.Random
 
@@ -802,77 +803,286 @@ fun NightBackground() {
 }
 
 // ---------------------------------------------------------
-// 12. Retro Pixel — 8-bit game world
+// 12. RETRO PIXEL — Experiencia 8-bit definitiva
 // ---------------------------------------------------------
+private data class RetroCloudDef(
+    val startY: Float, val size: Int, val speed: Float, val alpha: Float
+)
+
+private val retroStarSeeds = listOf(
+    floatArrayOf(0.08f, 0.12f), floatArrayOf(0.22f, 0.05f), floatArrayOf(0.35f, 0.18f),
+    floatArrayOf(0.45f, 0.08f), floatArrayOf(0.55f, 0.15f), floatArrayOf(0.68f, 0.06f),
+    floatArrayOf(0.78f, 0.20f), floatArrayOf(0.88f, 0.10f), floatArrayOf(0.15f, 0.25f),
+    floatArrayOf(0.50f, 0.22f), floatArrayOf(0.72f, 0.28f), floatArrayOf(0.92f, 0.03f),
+    floatArrayOf(0.05f, 0.30f), floatArrayOf(0.40f, 0.32f), floatArrayOf(0.62f, 0.12f),
+    floatArrayOf(0.82f, 0.35f), floatArrayOf(0.30f, 0.38f), floatArrayOf(0.95f, 0.40f),
+    floatArrayOf(0.10f, 0.42f), floatArrayOf(0.58f, 0.36f), floatArrayOf(0.75f, 0.08f),
+    floatArrayOf(0.48f, 0.28f), floatArrayOf(0.02f, 0.08f), floatArrayOf(0.98f, 0.15f),
+    floatArrayOf(0.20f, 0.35f), floatArrayOf(0.65f, 0.30f), floatArrayOf(0.38f, 0.14f),
+    floatArrayOf(0.85f, 0.24f), floatArrayOf(0.12f, 0.18f), floatArrayOf(0.52f, 0.34f)
+)
+
+private val retroMountData = listOf(
+    0.08f to 0.35f, 0.20f to 0.50f, 0.32f to 0.30f,
+    0.45f to 0.55f, 0.55f to 0.25f, 0.68f to 0.45f,
+    0.78f to 0.38f, 0.92f to 0.52f
+)
+
+private val retroTreePositions = listOf(0.08f, 0.18f, 0.28f, 0.40f, 0.52f, 0.62f, 0.75f, 0.88f, 0.95f)
+
+private val retroClouds = listOf(
+    RetroCloudDef(0.08f, 4, 12f, 0.15f),
+    RetroCloudDef(0.15f, 3, 18f, 0.12f),
+    RetroCloudDef(0.05f, 5, 8f, 0.18f),
+    RetroCloudDef(0.20f, 3, 22f, 0.10f),
+    RetroCloudDef(0.12f, 4, 14f, 0.14f),
+    RetroCloudDef(0.18f, 2, 28f, 0.08f)
+)
+
+private val retroMoonPattern = listOf(
+    "   1111   ",
+    "  111111  ",
+    " 11111111 ",
+    "1111111111",
+    "1111111111",
+    "1111111111",
+    "1111111111",
+    " 11111111 ",
+    "  111111  ",
+    "   1111   "
+)
+
 @Composable
 fun RetroPixelBackground() {
     val infiniteTransition = rememberInfiniteTransition(label = "retro")
     val time by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(140000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(tween(180000, easing = LinearEasing)),
         label = "time"
     )
 
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(600)
-        val ps = 12f
+    val cloudTime by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
+        label = "clouds"
+    )
 
-        for (gx in 0..(size.width / ps).toInt()) {
-            for (gy in 0..(size.height / ps).toInt()) {
-                if ((gx + gy) % 2 == 0) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val pw = 8f
+        val groundY = size.height * 0.82f
+
+        // ── 1. SKY GRADIENT (pixelated bands) ──
+        val skyBands = 32
+        val bandHeight = groundY / skyBands
+        for (band in 0 until skyBands) {
+            val t = band.toFloat() / skyBands
+            drawRect(
+                color = Color(
+                    (11 + t * 22).toInt().coerceIn(0, 255),
+                    (11 + t * 38).toInt().coerceIn(0, 255),
+                    (59 + t * 55).toInt().coerceIn(0, 255)
+                ),
+                topLeft = Offset(0f, band * bandHeight),
+                size = Size(size.width, bandHeight + 1f)
+            )
+        }
+
+        // ── 2. STARS ──
+        for (seed in retroStarSeeds) {
+            val sx = seed[0] * size.width
+            val sy = seed[1] * groundY * 0.7f
+            val twinkle = (sin(time * 0.03f + sx * 0.1f + sy * 0.1f) + 1f) / 2f
+            val alpha = 0.15f + twinkle * 0.6f
+            val starSize = if (seed[1] > 0.2f) 2f else 3f
+            drawRect(
+                color = Color.White.copy(alpha = alpha.coerceIn(0f, 1f)),
+                topLeft = Offset(sx, sy),
+                size = Size(starSize, starSize)
+            )
+            if (starSize > 2f && twinkle > 0.7f) {
+                drawRect(
+                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
+                    topLeft = Offset(sx - 2f, sy), size = Size(7f, 1f)
+                )
+                drawRect(
+                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
+                    topLeft = Offset(sx, sy - 2f), size = Size(1f, 7f)
+                )
+            }
+        }
+
+        // ── 3. PIXEL MOON ──
+        val moonX = size.width * 0.78f
+        val moonY = groundY * 0.12f
+        val moonR = size.width * 0.045f
+        for (my in retroMoonPattern.indices) {
+            for (mx in retroMoonPattern[my].indices) {
+                if (retroMoonPattern[my][mx] == '1') {
                     drawRect(
-                        color = Color.White.copy(alpha = 0.02f),
-                        topLeft = Offset(gx * ps, gy * ps),
-                        size = Size(ps, ps)
+                        color = Color(0xFFFFFDE7),
+                        topLeft = Offset(
+                            moonX - moonR + mx * (moonR * 2f / retroMoonPattern[0].length),
+                            moonY - moonR + my * (moonR * 2f / retroMoonPattern.size)
+                        ),
+                        size = Size(moonR * 0.22f, moonR * 0.22f)
                     )
                 }
             }
         }
+        drawRect(
+            color = Color(0xFFFFFDE7).copy(alpha = 0.06f),
+            topLeft = Offset(moonX - moonR * 1.5f, moonY - moonR * 1.5f),
+            size = Size(moonR * 3f, moonR * 3f)
+        )
 
-        val groundY = size.height * 0.78f
-        val groundPixels = (size.width / ps).toInt()
-        for (gp in 0..groundPixels) {
-            val shade = if ((gp + (time / 50).toInt()) % 3 == 0) 0.12f else 0.08f
-            drawRect(
-                color = Color(0xFF218C3A).copy(alpha = shade),
-                topLeft = Offset(gp * ps, groundY),
-                size = Size(ps, ps)
-            )
+        // ── 4. MOUNTAINS ──
+        val mountPath1 = Path().apply {
+            moveTo(0f, groundY)
+            for (seg in 0..size.width.toInt() step 4) {
+                val x = seg.toFloat()
+                var y = groundY
+                for ((mx, my) in retroMountData) {
+                    val cx = mx * size.width
+                    val cy = my * groundY * 0.35f
+                    val dist = abs(x - cx)
+                    if (dist < size.width * 0.25f) {
+                        y = minOf(y, groundY * 0.65f - cy * (1f - dist / (size.width * 0.25f)))
+                    }
+                }
+                lineTo(x, y)
+            }
+            lineTo(size.width, groundY); close()
         }
+        drawPath(mountPath1, color = Color(0xFF1A1A3E))
 
-        for (i in 0..5) {
-            val cloudX = (time * (10f + random.nextFloat() * 15f) + random.nextFloat() * 3000f) %
-                    (size.width + 200f) - 100f
-            val cloudY = 40f + i * 50f + random.nextFloat() * 30f
-            val cloudColor = Color.White.copy(alpha = 0.12f)
+        val mountPath2 = Path().apply {
+            moveTo(0f, groundY)
+            for (seg in 0..size.width.toInt() step 4) {
+                val x = seg.toFloat()
+                var y = groundY
+                for ((i, pair) in retroMountData.withIndex()) {
+                    val cx = (i.toFloat() / retroMountData.size) * size.width +
+                            sin(time * 0.005f + i) * 10f
+                    val cy = pair.second * groundY * 0.25f
+                    val dist = abs(x - cx)
+                    if (dist < size.width * 0.20f) {
+                        y = minOf(y, groundY * 0.75f - cy * (1f - dist / (size.width * 0.20f)))
+                    }
+                }
+                lineTo(x, y.coerceAtMost(groundY * 0.75f))
+            }
+            lineTo(size.width, groundY); close()
+        }
+        drawPath(mountPath2, color = Color(0xFF12122E))
 
-            val cloudPattern = listOf(
-                listOf(0, 1, 1, 0),
-                listOf(1, 1, 1, 1),
-                listOf(0, 1, 1, 0)
+        // ── 5. PIXEL TREES ──
+        for (pos in retroTreePositions) {
+            val tx = pos * size.width
+            val treeH = 30f + (pos * 40f) % 35f
+            drawRect(
+                color = Color(0xFF5D4037),
+                topLeft = Offset(tx - 3f, groundY - treeH),
+                size = Size(6f, treeH)
             )
-            for (cy in cloudPattern.indices) {
-                for (cx in cloudPattern[cy].indices) {
-                    if (cloudPattern[cy][cx] == 1) {
+            for (ly in 0..4) {
+                for (lx in 0..6) {
+                    val shade = when {
+                        (ly == 1 && lx in 1..5) || (ly == 2 && lx in 0..6) ||
+                                (ly == 3 && lx in 1..5) -> 1
+                        (ly == 0 && lx in 2..4) || (ly == 1 && lx == 3) ||
+                                (ly == 2 && lx in 2..4) -> 2
+                        else -> 0
+                    }
+                    if (shade > 0) {
                         drawRect(
-                            color = cloudColor,
-                            topLeft = Offset(cloudX + cx * ps, cloudY + cy * ps),
-                            size = Size(ps, ps)
+                            color = if (shade == 2) Color(0xFF1B5E20) else Color(0xFF2E7D32),
+                            topLeft = Offset(tx - 14f + lx * 5f, groundY - treeH - 20f + ly * 5f),
+                            size = Size(5f, 5f)
                         )
                     }
                 }
             }
         }
 
-        val starRandom = java.util.Random(700)
-        for (i in 0..15) {
-            val sx = starRandom.nextFloat() * size.width
-            val sy = starRandom.nextFloat() * groundY * 0.8f
+        // ── 6. GROUND ──
+        val grassRand = java.util.Random(123)
+        for (gx in 0..(size.width / pw).toInt()) {
+            val shade = grassRand.nextInt(3)
             drawRect(
-                color = Color(0xFFFFE600).copy(alpha = 0.2f),
-                topLeft = Offset(sx, sy),
-                size = Size(3f, 3f)
+                color = when (shade) {
+                    0 -> Color(0xFF1B5E20)
+                    1 -> Color(0xFF2E7D32)
+                    else -> Color(0xFF388E3C)
+                }.copy(alpha = 0.7f + grassRand.nextFloat() * 0.3f),
+                topLeft = Offset(gx * pw, groundY),
+                size = Size(pw, size.height - groundY)
             )
+        }
+
+        // ── 7. GRASS TEXTURE ──
+        for (gx in 0..(size.width / 4f).toInt()) {
+            val grassH = 2f + (sin(gx * 1.7f + time * 0.01f) + 1f) * 3f
+            drawRect(
+                color = listOf(Color(0xFF4CAF50), Color(0xFF66BB6A), Color(0xFF81C784))
+                    .random(java.util.Random(gx.hashCode())).copy(alpha = 0.5f),
+                topLeft = Offset(gx * 4f, groundY - grassH),
+                size = Size(2f, grassH)
+            )
+        }
+
+        // ── 8. PIXEL CLOUDS ──
+        for (cloud in retroClouds) {
+            val cw = cloud.size * 8f
+            val ch = cloud.size * 4f
+            val cx = (cloudTime * cloud.speed + cloud.startY * 2000f) %
+                    (size.width + cw * 2f) - cw
+            val cy = cloud.startY * groundY * 0.5f
+            val cols = 7
+            val rows = 5
+            for (iy in 0 until rows) {
+                for (ix in 0 until cols) {
+                    val isFilled = when {
+                        iy == 0 -> ix in 2..4
+                        iy == 1 -> ix in 1..5
+                        iy == 2 -> ix in 0..6
+                        iy == 3 -> ix in 1..5
+                        else -> ix in 2..4
+                    }
+                    if (isFilled) {
+                        drawRect(
+                            color = Color.White.copy(alpha = cloud.alpha),
+                            topLeft = Offset(cx + ix * (cw / cols), cy + iy * (ch / rows)),
+                            size = Size(cw / cols, ch / rows)
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── 9. FIREFLIES ──
+        val fireflyRandom = java.util.Random(456)
+        for (i in 0..8) {
+            val fx = fireflyRandom.nextFloat() * size.width
+            val fy = groundY * 0.4f + (time * (5f + i * 2f) + fireflyRandom.nextFloat() * 2000f) %
+                    (groundY * 0.5f)
+            val flicker = (sin(time * 0.1f + i * 2.5f) + 1f) / 2f
+            val a = (flicker * 0.4f + 0.1f).coerceIn(0f, 1f)
+            drawRect(color = Color(0xFFFFE600).copy(alpha = a), topLeft = Offset(fx, fy), size = Size(3f, 3f))
+            drawRect(color = Color(0xFFFFE600).copy(alpha = a * 0.3f), topLeft = Offset(fx - 2f, fy - 2f), size = Size(7f, 7f))
+        }
+
+        // ── 10. GRID OVERLAY ──
+        val gridSpacing = 16f
+        for (gx in 0..(size.width / gridSpacing).toInt()) {
+            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(gx * gridSpacing, 0f), size = Size(1f, size.height))
+        }
+        for (gy in 0..(size.height / gridSpacing).toInt()) {
+            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(0f, gy * gridSpacing), size = Size(size.width, 1f))
+        }
+
+        // ── 11. SCANLINES ──
+        for (scanY in 0..(size.height / 4f).toInt()) {
+            drawRect(color = Color.Black.copy(alpha = 0.04f), topLeft = Offset(0f, scanY * 4f), size = Size(size.width, 1f))
         }
     }
 }
