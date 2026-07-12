@@ -1,8 +1,10 @@
 package com.tamagotchi.code.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.tamagotchi.code.R
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
@@ -385,8 +387,8 @@ object ThemeRegistry {
             accent = Color(0xFF00E5FF),
             success = Color(0xFF2ECC40),
             error = Color(0xFFFF4136),
-            fontFamily = FontFamily.Monospace,
-            titleFontFamily = FontFamily.Monospace,
+            fontFamily = FontFamily(Font(R.font.press_start_2p)),
+            titleFontFamily = FontFamily(Font(R.font.press_start_2p)),
             titleWeight = FontWeight.ExtraBold,
             cornerRadius = 0.dp,
             borderWidth = 3.dp,
