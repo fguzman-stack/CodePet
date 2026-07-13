@@ -38,7 +38,7 @@
 
 ### 1.1 Genesis
 
-Code Tamagotchi nació como un proyecto generado inicialmente por **Google AI Studio**, un asistente de IA para prototipado rápido de apps Android. El código base original fue creado con fines educativos, combinando el concepto clásico de mascota virtual (Tamagotchi) con elementos de productividad para programadores.
+Code Tamagotchi fue creado por **FGuz20**, combinando el concepto clásico de mascota virtual (Tamagotchi) con elementos de productividad para programadores.
 
 ### 1.2 Inspiraciones Directas
 
