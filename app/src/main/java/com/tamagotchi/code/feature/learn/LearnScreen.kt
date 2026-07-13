@@ -25,6 +25,8 @@ import com.tamagotchi.code.data.CodingChallenge
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
+import com.tamagotchi.code.ui.components.AnimatedPetSprite
+
 @Composable
 fun LearnScreen(
     viewModel: PetViewModel,
@@ -34,14 +36,37 @@ fun LearnScreen(
     val tabs = listOf("Retos Normales", "Retos Especiales")
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = ">>> APRENDER",
-            fontSize = 14.sp,
-            fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = ">>> APRENDER",
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = Color(0xFF81C784),
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = if (activeTab == 0) "Estudiando con ${state.name}" else "Desafíos de élite",
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = Color.Gray
+                )
+            }
+            
+            Box(modifier = Modifier.size(80.dp)) {
+                AnimatedPetSprite(
+                    status = state.currentStatus,
+                    celebrationTrigger = viewModel.celebrationTrigger,
+                    learningEventTrigger = viewModel.learningEventTrigger,
+                    onClick = { viewModel.petThePet() },
+                    modifier = Modifier.scale(0.6f)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -103,6 +128,30 @@ fun QuizPanel(viewModel: PetViewModel) {
             )
         } else if (currentIndex < challengesList.size) {
             val challenge = challengesList[currentIndex]
+            
+            // Comentario dinámico de la mascota
+            val petTip = remember(challenge.id) {
+                when(challenge.type) {
+                    "DEBUG" -> "¡Cuidado! Ese bug muerde. Revisa bien los puntos y coma."
+                    "TRIVIA" -> "Esta es fácil... si has leído la documentación."
+                    else -> "Concéntrate, mi CPU depende de tu respuesta."
+                }
+            }
+
+            Surface(
+                shape = RoundedCornerShape(topStart = 0.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 12.dp),
+                color = Color(0xFF1B5E20).copy(alpha = 0.1f),
+                border = BorderStroke(1.dp, Color(0xFF81C784).copy(alpha = 0.3f)),
+                modifier = Modifier.padding(bottom = 12.dp)
+            ) {
+                Text(
+                    text = petTip,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace,
+                    color = Color(0xFF81C784),
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
 
             Text(
                 text = "Desafío ${currentIndex + 1} de ${challengesList.size} (${if (challenge.type == "DEBUG") "Desbuguear" else "Trivia"}):",

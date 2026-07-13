@@ -383,6 +383,7 @@ class PetViewModel(
             _challengeFeedback.value = "CORRECT"
             soundManager.playSuccess()
             triggerCelebration()
+            triggerLearningEvent("SUCCESS")
             viewModelScope.launch {
                 val current = petState.value ?: return@launch
 
@@ -418,6 +419,7 @@ class PetViewModel(
         } else {
             soundManager.playError()
             _challengeFeedback.value = "INCORRECT"
+            triggerLearningEvent("FAILURE")
         }
     }
 
@@ -687,6 +689,15 @@ class PetViewModel(
 
     private val _celebrationTrigger = MutableSharedFlow<Unit>(replay = 0)
     val celebrationTrigger: SharedFlow<Unit> = _celebrationTrigger.asSharedFlow()
+
+    private val _learningEventTrigger = MutableSharedFlow<String>(replay = 0)
+    val learningEventTrigger: SharedFlow<String> = _learningEventTrigger.asSharedFlow()
+
+    fun triggerLearningEvent(type: String) {
+        viewModelScope.launch {
+            _learningEventTrigger.emit(type)
+        }
+    }
 
     fun triggerCelebration() {
         viewModelScope.launch {

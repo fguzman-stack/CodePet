@@ -234,6 +234,7 @@ fun ViewportCard(
                     AnimatedPetSprite(
                         status = state.currentStatus,
                         celebrationTrigger = viewModel.celebrationTrigger,
+                        learningEventTrigger = viewModel.learningEventTrigger,
                         onClick = { onPetTap() }
                     )
 

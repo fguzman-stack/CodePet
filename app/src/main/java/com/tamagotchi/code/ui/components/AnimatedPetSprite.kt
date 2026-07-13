@@ -37,6 +37,7 @@ import kotlin.random.Random
 fun AnimatedPetSprite(
     status: String,
     celebrationTrigger: SharedFlow<Unit>,
+    learningEventTrigger: SharedFlow<String>? = null,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,6 +48,30 @@ fun AnimatedPetSprite(
     // Animación de celebración (Bounce + Wobble)
     val bounceAnim = remember { Animatable(0f) }
     val wobbleAnim = remember { Animatable(0f) }
+    val flashAnim = remember { Animatable(1f) }
+
+    // Suscripción al trigger de aprendizaje
+    LaunchedEffect(learningEventTrigger) {
+        learningEventTrigger?.collect { type ->
+            if (!reduceMotion) {
+                when (type) {
+                    "SUCCESS" -> {
+                        launch {
+                            flashAnim.animateTo(1.5f, tween(100))
+                            flashAnim.animateTo(1f, tween(200))
+                        }
+                    }
+                    "FAILURE" -> {
+                        launch {
+                            wobbleAnim.animateTo(-10f, tween(50))
+                            wobbleAnim.animateTo(10f, tween(50))
+                            wobbleAnim.animateTo(0f, tween(50))
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     // Suscripción al trigger de celebración
     LaunchedEffect(celebrationTrigger) {
@@ -183,8 +208,8 @@ fun AnimatedPetSprite(
             .scale(
                 when {
                     status == "HUNGRY" && !reduceMotion -> hungryScale
-                    status != "SLEEPING" && !reduceMotion -> breathingScale
-                    else -> 1.0f
+                    status != "SLEEPING" && !reduceMotion -> breathingScale * flashAnim.value
+                    else -> 1.0f * flashAnim.value
                 }
             )
             .graphicsLayer {
