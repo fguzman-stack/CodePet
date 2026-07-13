@@ -1,6 +1,6 @@
-# DocumentaciÃ³n Completa â€” Code Tamagotchi
+# Documentación — Code Tamagotchi
 
-> **VersiÃ³n:** 2.0.0  
+> **Versión:** 2.0.0  
 > **Plataforma:** Android (API 24+)  
 > **Lenguaje:** Kotlin 2.2.10  
 > **UI:** Jetpack Compose + Material 3  
@@ -11,1457 +11,216 @@
 
 ---
 
-## Ãndice
+## Índice
 
-1. [Origen e InspiraciÃ³n](#1-origen-e-inspiraciÃ³n)
-2. [Concepto y PropÃ³sito](#2-concepto-y-propÃ³sito)
+1. [Origen e Inspiración](#1-origen-e-inspiración)
+2. [Concepto y Propósito](#2-concepto-y-propósito)
 3. [Arquitectura General](#3-arquitectura-general)
 4. [Flujo Completo de la App](#4-flujo-completo-de-la-app)
 5. [Sistema de la Mascota](#5-sistema-de-la-mascota)
-6. [Base de Datos y Persistencia](#6-base-de-datos-y-persistencia)
-7. [Sistema de Temas](#7-sistema-de-temas)
-8. [Sistema de Retos (88+ challenges)](#8-sistema-de-retos)
-9. [Minijuegos](#9-minijuegos)
-10. [Sistema de Sonido](#10-sistema-de-sonido)
-11. [Estados y Animaciones](#11-estados-y-animaciones)
-12. [Widget y Notificaciones](#12-widget-y-notificaciones)
-13. [InyecciÃ³n de Dependencias (Koin)](#13-inyecciÃ³n-de-dependencias)
-14. [Pruebas](#14-pruebas)
-15. [CÃ³digo Fuente Completo](#15-cÃ³digo-fuente-completo)
+6. [Módulos y Funcionalidades](#6-módulos-y-funcionalidades)
+7. [Base de Datos y Persistencia](#7-base-de-datos-y-persistencia)
+8. [Sistema de Temas](#8-sistema-de-temas)
+9. [Sistema de Retos (88 challenges)](#9-sistema-de-retos)
+10. [Minijuegos](#10-minijuegos)
+11. [Sistema de Sonido](#11-sistema-de-sonido)
+12. [Estados y Animaciones](#12-estados-y-animaciones)
+13. [Notificaciones y Widgets](#13-notificaciones-y-widgets)
+14. [Inyección de Dependencias (Koin)](#14-inyección-de-dependencias)
+15. [Pruebas](#15-pruebas)
 16. [Dependencias Externas](#16-dependencias-externas)
-17. [GuÃ­a para Desarrolladores](#17-guÃ­a-para-desarrolladores)
+17. [Guía para Desarrolladores](#17-guía-para-desarrolladores)
 18. [Changelog vs v1.0](#18-changelog)
 
 ---
 
-## 1. Origen e InspiraciÃ³n
+## 1. Origen e Inspiración
 
 ### 1.1 Genesis
 
-Code Tamagotchi naciÃ³ como un proyecto generado inicialmente por **Google AI Studio**, un asistente de IA para prototipado rÃ¡pido de apps Android. El cÃ³digo base original fue creado con fines educativos, combinando el concepto clÃ¡sico de mascota virtual (Tamagotchi) con elementos de productividad para programadores.
+Code Tamagotchi nació como un proyecto generado inicialmente por **Google AI Studio**, un asistente de IA para prototipado rápido de apps Android. El código base original fue creado con fines educativos, combinando el concepto clásico de mascota virtual (Tamagotchi) con elementos de productividad para programadores.
 
 ### 1.2 Inspiraciones Directas
 
-| InspiraciÃ³n | Elemento adoptado |
+| Inspiración | Elemento adoptado |
 |:------------|:-----------------|
 | **Tamagotchi original (Bandai, 1996)** | Mascota que requiere cuidado constante, estados emocionales, decaimiento por abandono |
-| **SUSH** | MenÃº limpio centrado en la mascota, animaciÃ³n de rebote al tocar, corazÃ³n flotante, fondo personalizable |
-| **Duolingo** | Sistema de rachas (streaks), gamificaciÃ³n del aprendizaje |
+| **SUSH** | Menú limpio centrado en la mascota, animación de rebote al tocar, corazón flotante, fondo personalizable |
+| **Duolingo** | Sistema de rachas (streaks), gamificación del aprendizaje |
 | **Pomodoro Technique** | Temporizador de estudio con intervalos de 15/25/50 minutos |
-| **Terminales hacker / Matrix** | EstÃ©tica visual: fondos oscuros, tipografÃ­a monospace, colores verde neÃ³n, decoraciÃ³n tipo terminal |
-| **Tamagotchi virtuales modernos** | Estados emocionales con frases contextuales, sistema de alimentaciÃ³n y limpieza |
+| **Terminales hacker / Matrix** | Estética visual: fondos oscuros, tipografía monospace, colores verde neón, decoración tipo terminal |
+| **Tamagotchi virtuales modernos** | Estados emocionales con frases contextuales, sistema de alimentación y limpieza |
 
-### 1.3 PropÃ³sito
+### 1.3 Propósito
 
-Code Tamagotchi busca **gamificar el hÃ¡bito de estudio en programaciÃ³n**. A diferencia de otras mascotas virtuales, aquÃ­ el progreso real del usuario (resolver retos de cÃ³digo, estudiar temas tÃ©cnicos) se refleja directamente en la salud y felicidad de la mascota.
+Code Tamagotchi busca **gamificar el hábito de estudio en programación**. A diferencia de otras mascotas virtuales, aquí el progreso real del usuario (resolver retos de código, estudiar temas técnicos) se refleja directamente en la salud y felicidad de la mascota.
 
-### 1.4 PÃºblico Objetivo
+### 1.4 Público Objetivo
 
-- Estudiantes de programaciÃ³n que quieren mantener constancia
-- Desarrolladores que disfrutan del humor tÃ©cnico
-- Fans de mascotas virtuales con estÃ©tica retro-tech
-- Personas que responden bien a la gamificaciÃ³n para mantener hÃ¡bitos
+- Estudiantes de programación que quieren mantener constancia
+- Desarrolladores que disfrutan del humor técnico
+- Fans de mascotas virtuales con estética retro-tech
+- Personas que responden bien a la gamificación para mantener hábitos
 
 ### 1.5 Estado Actual
 
-La app estÃ¡ completamente funcional pero en fase **beta**:
-- Builds: Debug + Release configurados (con signing)
-- Sistema de notificaciones funcional via WorkManager
-- Widget bÃ¡sico implementado
+La app está completamente funcional pero en fase **beta**:
+- Builds: Solo debug (sin firma release configurada)
+- Sin sistema de notificaciones ni widgets todavía
 
 ---
 
-## 2. Concepto y PropÃ³sito
+## 2. Concepto y Propósito
 
-### 2.1 Â¿QuÃ© es Code Tamagotchi?
+### 2.1 ¿Qué es Code Tamagotchi?
 
-Es una **mascota virtual para programadores** que vive en tu celular. Tiene hambre, energÃ­a, salud, y estados de Ã¡nimo que cambian segÃºn cÃ³mo la trates. La diferencia con un Tamagotchi comÃºn: **para mantenerla feliz tienes que programar y estudiar**.
+Es una **mascota virtual para programadores** que vive en tu celular. Tiene hambre, energía, salud, y estados de ánimo que cambian según cómo la trates. La diferencia con un Tamagotchi común: **para mantenerla feliz tienes que programar y estudiar**.
 
-### 2.2 Ciclo BÃ¡sico
+### 2.2 Ciclo Básico
 
 ```
-Estudiar cÃ³digo â†’ Ganas XP y Bytes â†’ Mejoras a tu mascota (comida, medicina)
-                                        â†“
+Estudiar código → Ganas XP y Bytes → Mejoras a tu mascota (comida, medicina)
+                                        ↓
                               La mascota sube de nivel
-                                        â†“
+                                        ↓
                               Desbloqueas temas visuales
-                                        â†“
+                                        ↓
                               Te motiva a seguir estudiando
 ```
 
-### 2.3 FilosofÃ­a de DiseÃ±o
+### 2.3 Filosofía de Diseño
 
-- **La mascota es el centro**: ocupa la mayor parte de la pantalla, todo lo demÃ¡s son overlays
-- **EstÃ©tica terminal**: monospace, verde matrix, fondos oscuros, decoraciÃ³n de ventana de terminal
-- **Humor tÃ©cnico**: los mensajes de la mascota son chistes de programaciÃ³n
-- **Feedback inmediato**: cada acciÃ³n tiene una animaciÃ³n o sonido de respuesta
-- **Castigo realista**: si no estudias por dÃ­as, la mascota se enferma (como un Tamagotchi real)
+- **La mascota es el centro**: ocupa la mayor parte de la pantalla, todo lo demás son overlays
+- **Estética terminal**: monospace, verde matrix, fondos oscuros, decoración de ventana de terminal
+- **Humor técnico**: los mensajes de la mascota son chistes de programación
+- **Feedback inmediato**: cada acción tiene una animación o sonido de respuesta
+- **Castigo realista**: si no estudias por días, la mascota se enferma (como un Tamagotchi real)
 
 ---
 
 ## 3. Arquitectura General
 
-### 3.1 PatrÃ³n MVVM + Feature Modules
+### 3.1 Patrón MVVM + Feature Modules
 
 ```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                      VIEW (Compose)                           â”‚
-â”‚  AppNavigation.kt Â· feature/{home,learn,focus,shop,games}/   â”‚
-â”‚  Observa StateFlow del ViewModel Â· Emite eventos UI          â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                      VIEWMODEL                                â”‚
-â”‚  PetViewModel.kt (727 lÃ­neas)                                 â”‚
-â”‚  LÃ³gica de negocio Â· Temporizador Â· Retos Â· Cuidados         â”‚
-â”‚  DataStore (temas, onboarding) Â· Room (mascota, sesiones)    â”‚
-â”‚  StateFlow + mutableStateOf para estado reactivo              â”‚
-â”‚  @Inject constructor vÃ­a Koin                                 â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                      REPOSITORY                               â”‚
-â”‚  PetRepository.kt Â· UserPreferencesRepository.kt              â”‚
-â”‚  AchievementsRepository.kt                                    â”‚
-â”‚  AbstracciÃ³n entre ViewModel y capa de datos                  â”‚
-â”‚  Expone Flow<PetStateEntity>, Flow<List<StudySession>>, etc. â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                     DATA (Room + DataStore)                   â”‚
-â”‚  AppDatabase (singleton via Koin, version 3)                  â”‚
-â”‚  PetDao (@Dao con queries reactivas)                          â”‚
-â”‚  PetStateEntity Â· StudySessionEntity Â· FocusSessionEntity     â”‚
-â”‚  DataStore Preferences (user_preferences)                     â”‚
-â”‚  â†’ UserPreferencesRepository                                  â”‚
-â”‚  â†’ AchievementsRepository                                     â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+┌──────────────────────────────────────────────────────────────┐
+│                      VIEW (Compose)                           │
+│  AppNavigation.kt · feature/{home,learn,focus,shop,games}/   │
+│  Observa StateFlow del ViewModel · Emite eventos UI          │
+├──────────────────────────────────────────────────────────────┤
+│                      VIEWMODEL                                │
+│  PetViewModel.kt                                              │
+│  Lógica de negocio · Temporizador · Retos · Cuidados         │
+│  DataStore (temas, onboarding) · Room (mascota, sesiones)    │
+│  StateFlow + mutableStateOf para estado reactivo              │
+│  @Inject constructor vía Koin                                 │
+├──────────────────────────────────────────────────────────────┤
+│                      REPOSITORY                               │
+│  PetRepository.kt · UserPreferencesRepository.kt              │
+│  Abstracción entre ViewModel y capa de datos                  │
+│  Expone Flow<PetStateEntity>, Flow<List<StudySession>>, etc. │
+├──────────────────────────────────────────────────────────────┤
+│                     DATA (Room + DataStore)                   │
+│  AppDatabase (singleton via Koin)                             │
+│  PetDao (@Dao con queries reactivas)                          │
+│  PetStateEntity · StudySessionEntity · FocusSessionEntity     │
+│  DataStore Preferences (user_preferences)                     │
+│  → UserPreferencesRepository                                  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### 3.2 Flujo de Datos
 
 ```
-ðŸ‘¤ Usuario toca la pantalla
-        â†“
-ðŸŽ¨ Composable (HomeScreen â†’ ViewportCard)
-        â†“ llama
-ðŸ§  PetViewModel.petThePet()
-        â†“
-ðŸ“¦ PetRepository.savePetState(updated)
-        â†“
-ðŸ’¾ PetDao.insertOrUpdatePetState(entity)
-        â†“
-ðŸ—„ï¸ Room SQLite (code_tamagotchi_db)
+👤 Usuario toca la pantalla
+        ↓
+🎨 Composable (HomeScreen → ViewportCard)
+        ↓ llama
+🧠 PetViewModel.petThePet()
+        ↓
+📦 PetRepository.savePetState(updated)
+        ↓
+💾 PetDao.insertOrUpdatePetState(entity)
+        ↓
+🗄️ Room SQLite (code_tamagotchi_db)
 
-        â”€â”€ Luego â”€â”€
+        ── Luego ──
 
-ðŸ’¾ Room emite cambio â†’ Flow<PetStateEntity?>
-        â†“
-ðŸ“¦ PetRepository.petState (Flow)
-        â†“
-ðŸ§  PetViewModel (stateIn con WhileSubscribed)
-        â†“
-ðŸŽ¨ collectAsStateWithLifecycle() â†’ recomposiciÃ³n automÃ¡tica
+💾 Room emite cambio → Flow<PetStateEntity?>
+        ↓
+📦 PetRepository.petState (Flow)
+        ↓
+🧠 PetViewModel (stateIn con WhileSubscribed)
+        ↓
+🎨 collectAsStateWithLifecycle() → recomposición automática
 ```
 
 ### 3.3 Mapa de Archivos
 
 ```
 app/src/main/java/com/tamagotchi/code/
-â”œâ”€â”€ CodeTamagotchiApp.kt              â† Application class (inicia Koin + WorkManager)
-â”œâ”€â”€ MainActivity.kt                    â† Entry point, koinViewModel() + tema dinÃ¡mico
-â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ ChallengesData.kt              â† 90+ retos de programaciÃ³n + data class CodingChallenge
-â”‚   â”œâ”€â”€ SpecialChallengesData.kt       â† 6 retos especiales (algoritmos)
-â”‚   â”œâ”€â”€ database/
-â”‚   â”‚   â”œâ”€â”€ AppDatabase.kt             â† Room DB v3 con migraciones M1â†’2 y M2â†’3
-â”‚   â”‚   â”œâ”€â”€ PetDao.kt                  â† DAO con queries reactivas (Flow)
-â”‚   â”‚   â”œâ”€â”€ PetStateEntity.kt          â† Entidad: estado completo de la mascota
-â”‚   â”‚   â”œâ”€â”€ StudySessionEntity.kt      â† Entidad: sesiones de estudio histÃ³ricas
-â”‚   â”‚   â””â”€â”€ FocusSessionEntity.kt      â† Entidad: sesiÃ³n activa del timer Pomodoro
-â”‚   â””â”€â”€ repository/
-â”‚       â”œâ”€â”€ PetRepository.kt           â† Capa de datos mascota + sesiones + focus
-â”‚       â”œâ”€â”€ UserPreferencesRepository.kt â† DataStore (onboarding, tema, cooldown juegos)
-â”‚       â””â”€â”€ AchievementsRepository.kt  â† DataStore para logros (12 logros)
-â”œâ”€â”€ di/
-â”‚   â””â”€â”€ AppModule.kt                   â† MÃ³dulo Koin: BD, DAO, repos, ViewModel
-â”œâ”€â”€ navigation/
-â”‚   â””â”€â”€ AppNavigation.kt               â† Scaffold + NavHost + 10 rutas + Routes object
-â”œâ”€â”€ feature/
-â”‚   â”œâ”€â”€ home/
-â”‚   â”‚   â””â”€â”€ HomeScreen.kt              â† Tarjeta mascota + meters + diÃ¡logo offline
-â”‚   â”œâ”€â”€ learn/
-â”‚   â”‚   â””â”€â”€ LearnScreen.kt             â† Retos programaciÃ³n + especiales con QuizPanel
-â”‚   â”œâ”€â”€ focus/
-â”‚   â”‚   â””â”€â”€ FocusScreen.kt             â† Pomodoro persistente + bitÃ¡cora
-â”‚   â”œâ”€â”€ shop/
-â”‚   â”‚   â””â”€â”€ ShopScreen.kt              â† Tienda con 4 productos + comida adicional
-â”‚   â”œâ”€â”€ games/
-â”‚   â”‚   â”œâ”€â”€ GamesScreen.kt             â† Hub arcade con cooldown diario + GameCard
-â”‚   â”‚   â”œâ”€â”€ BugHuntScreen.kt           â† Encuentra bugs (10 snippets, 5 rondas)
-â”‚   â”‚   â”œâ”€â”€ GitRescueScreen.kt         â† Decisiones Git (8 escenarios, progreso rama)
-â”‚   â”‚   â”œâ”€â”€ RefactorRushScreen.kt      â† Ordena bloques (12 puzzles, aleatorio)
-â”‚   â”‚   â”œâ”€â”€ MinigamesDialog.kt         â† Arcade clÃ¡sico (selector de 3 juegos)
-â”‚   â”‚   â”œâ”€â”€ BinaryGuessGame.kt         â† Adivina el bit (5 rondas)
-â”‚   â”‚   â”œâ”€â”€ BugSmasherGame.kt          â† Caza bugs 3Ã—3 (10 segundos)
-â”‚   â”‚   â””â”€â”€ RockPaperSciGame.kt        â† Servidor, Script, Hacker (mejor de 3)
-â”‚   â”œâ”€â”€ onboarding/
-â”‚   â”‚   â””â”€â”€ OnboardingScreen.kt        â† 4 pasos con HorizontalPager
-â”‚   â””â”€â”€ settings/
-â”‚       â”œâ”€â”€ SettingsScreen.kt          â† ConfiguraciÃ³n con carrusel de temas + logros
-â”‚       â””â”€â”€ SettingsLanguageScreen.kt  â† Lenguaje principal + temas + dificultad
-â”œâ”€â”€ ui/
-â”‚   â”œâ”€â”€ components/
-â”‚   â”‚   â”œâ”€â”€ MeterItem.kt               â† Barra de progreso animada
-â”‚   â”‚   â”œâ”€â”€ ViewportCard.kt            â† Card con mascota + meters + emociones (455 lÃ­neas)
-â”‚   â”‚   â”œâ”€â”€ AnimatedPetSprite.kt       â† Sprite animado con breathing, tremble, blink (264 lÃ­neas)
-â”‚   â”‚   â”œâ”€â”€ AnimatedThemeBackground.kt â† Fondos animados para 12 temas (1077 lÃ­neas)
-â”‚   â”‚   â”œâ”€â”€ CodePetWidget.kt           â† Vista previa Compose del widget
-â”‚   â”‚   â””â”€â”€ PetAnimationConfig.kt      â† ConfiguraciÃ³n de animaciones
-â”‚   â”œâ”€â”€ theme/
-â”‚   â”‚   â”œâ”€â”€ Color.kt                   â† Colores base legacy
-â”‚   â”‚   â”œâ”€â”€ Theme.kt                   â† MyApplicationTheme + LocalAppTheme + LocalReduceMotion
-â”‚   â”‚   â”œâ”€â”€ ThemeConfig.kt             â† 12 temas premium con AppTheme data class (402 lÃ­neas)
-â”‚   â”‚   â””â”€â”€ Type.kt                    â† buildTypography() dinÃ¡mica por tema (146 lÃ­neas)
-â”‚   â””â”€â”€ viewmodel/
-â”‚       â””â”€â”€ PetViewModel.kt            â† LÃ³gica de negocio central (727 lÃ­neas)
-â”œâ”€â”€ util/
-â”‚   â”œâ”€â”€ SoundManager.kt                â† Efectos de sonido con ToneGenerator
-â”‚   â”œâ”€â”€ DecayCalculator.kt             â† Decaimiento progresivo de stats
-â”‚   â”œâ”€â”€ LevelCalculator.kt             â† CÃ¡lculo de nivel por XP
-â”‚   â”œâ”€â”€ RewardCalculator.kt            â† CÃ¡lculo de recompensas
-â”‚   â”œâ”€â”€ StatusCalculator.kt            â† Determina estado emocional
-â”‚   â””â”€â”€ PetCheckWorker.kt              â† WorkManager para notificaciones periÃ³dicas
-â””â”€â”€ widget/
-    â””â”€â”€ CodePetWidgetProvider.kt       â† AppWidgetProvider con RemoteViews
+├── CodeTamagotchiApp.kt              ← Application class (inicia Koin)
+├── MainActivity.kt                    ← Entry point, koinViewModel() + tema dinámico
+├── data/
+│   ├── ChallengesData.kt              ← 88 retos de programación (Kotlin, JS, PHP, Python)
+│   ├── CodingChallenge.kt             ← data class del reto
+│   ├── SpecialChallengesData.kt       ← 6 retos especiales (desbloquean temas)
+│   ├── database/
+│   │   ├── AppDatabase.kt             ← Room DB v2 con migración M1→2
+│   │   ├── PetDao.kt                  ← DAO con queries reactivas (Flow)
+│   │   ├── PetStateEntity.kt          ← Entidad: estado completo de la mascota
+│   │   ├── StudySessionEntity.kt      ← Entidad: sesiones de estudio históricas
+│   │   └── FocusSessionEntity.kt      ← Entidad: sesión activa del timer Pomodoro
+│   └── repository/
+│       ├── PetRepository.kt           ← Capa de datos mascota + sesiones + focus
+│       ├── UserPreferencesRepository.kt ← DataStore (onboarding, tema, cooldown juegos)
+│       └── AchievementsRepository.kt  ← DataStore para logros desbloqueados
+├── di/
+│   └── AppModule.kt                   ← Módulo Koin: BD, DAO, repos, ViewModel
+├── navigation/
+│   ├── AppNavigation.kt               ← Scaffold + bottom nav + 12 rutas
+│   └── Screen.kt                      ← sealed class con 13 destinos
+├── feature/
+│   ├── home/
+│   │   └── HomeScreen.kt              ← Tarjeta mascota + meters + diálogo offline
+│   ├── learn/
+│   │   └── LearnScreen.kt             ← Retos programación + especiales + temas
+│   ├── focus/
+│   │   └── FocusScreen.kt             ← Pomodoro persistente + bitácora
+│   ├── shop/
+│   │   └── ShopScreen.kt              ← Tienda con productos para la mascota
+│   ├── games/
+│   │   ├── GamesScreen.kt             ← Hub arcade con cooldown diario
+│   │   ├── BugHuntScreen.kt           ← Encuentra bugs (10 snippets, explicaciones)
+│   │   ├── GitRescueScreen.kt         ← Decisiones Git (8 escenarios, progreso rama)
+│   │   ├── RefactorRushScreen.kt      ← Ordena bloques (12 puzzles, aleatorio)
+│   │   ├── MinigamesDialog.kt         ← Arcade clásico
+│   │   ├── BinaryGuessGame.kt         ← Adivina el bit (5 rondas)
+│   │   ├── BugSmasherGame.kt          ← Caza bugs 3×3 (10 segundos)
+│   │   └── RockPaperSciGame.kt        ← Servidor, Script, Hacker
+│   ├── onboarding/
+│   │   └── OnboardingScreen.kt        ← 4 pasos con HorizontalPager
+│   └── settings/
+│       ├── SettingsScreen.kt          ← Configuración con carrusel de temas
+│       └── SettingsLanguageScreen.kt  ← Lenguaje principal + temas + dificultad
+├── ui/
+│   ├── components/
+│   │   ├── MeterItem.kt               ← Barra de progreso animada
+│   │   └── ViewportCard.kt            ← Card con mascota + meters + emociones
+│   ├── theme/
+│   │   ├── Color.kt                   ← Colores base Material 3
+│   │   ├── Theme.kt                   ← MyApplicationTheme + LocalAppTheme + LocalReduceMotion
+│   │   ├── ThemeConfig.kt             ← 12 temas premium con AppTheme
+│   │   └── Type.kt                    ← buildTypography() dinámica por tema
+│   └── viewmodel/
+│       └── PetViewModel.kt            ← Toda la lógica de negocio (~820 líneas)
+└── util/
+    └── SoundManager.kt                ← Efectos de sonido con ToneGenerator
 ```
 
----
+### 3.4 DI: Koin
 
-## 4. Flujo Completo de la App
-
-### 4.1 Inicio (MainActivity.kt)
-
-```
-App abierta
-    â†“
-onCreate()
-    â†“
-enableEdgeToEdge()
-    â†“
-setContent {
-    val appTheme = ThemeRegistry.getTheme(currentTheme.value)
-    MyApplicationTheme(appTheme = appTheme, reduceMotion = ...) { ... }
-}
-    â†“
-koinViewModel() â†’ PetViewModel(PetRepository, UserPreferencesRepository, AchievementsRepository)
-    â†“
-init { } del ViewModel (block init de ~110 lÃ­neas):
-    â”œâ”€â”€ stateIn() para petState, studySessions, latestFocusSession
-    â”œâ”€â”€ Leer DataStore: hasSeenOnboarding (suspend)
-    â”œâ”€â”€ Colectar Flow: currentTheme, selectedTopics, difficulty, etc.
-    â”œâ”€â”€ Colectar Flow: unlockedThemes â†’ sincronizar con ALL_THEMES
-    â”œâ”€â”€ Colectar Flow: unlockedAchievements
-    â”œâ”€â”€ Colectar Flow: gameCooldowns
-    â”œâ”€â”€ Room: leer petState
-    â”‚   â”œâ”€â”€ null â†’ crear PetStateEntity default â†’ loadChallenges("Kotlin")
-    â”‚   â””â”€â”€ exist â†’ applyDecay(petState) â†’ loadChallenges(petState.language)
-    â””â”€â”€ Room: buscar FocusSession activa
-        â”œâ”€â”€ null â†’ nada
-        â”œâ”€â”€ exist + tiempo restante â†’ reanudar timer + resumeTimer()
-        â””â”€â”€ exist + tiempo agotado â†’ recompensa offline + showOfflineRewardDialog
-    â†“
-Composable:
-    â”œâ”€â”€ hasSeenOnboarding == false â†’ OnboardingScreen (4 pasos)
-    â””â”€â”€ hasSeenOnboarding == true â†’ AppNavigation (NavHost con bottom nav)
-```
-
-### 4.2 Mapa de NavegaciÃ³n (Bottom Navigation)
-
-```
-â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-â”‚                        TOP BAR (Material 3)                       â”‚
-â”‚           Code Tamagotchi                    [âš™ï¸ ConfiguraciÃ³n]  â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚                                                                   â”‚
-â”‚   â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”   â”‚
-â”‚   â”‚                   HOME SCREEN                             â”‚   â”‚
-â”‚   â”‚      (ViewportCard: mascota + meters + botones)           â”‚   â”‚
-â”‚   â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”‚   â”‚
-â”‚   â”‚  â”‚            ðŸ–¼ï¸ MASCOTA ANIMADA                    â”‚     â”‚   â”‚
-â”‚   â”‚  â”‚  (bounce + â¤ï¸ flotante al tocarla)               â”‚     â”‚   â”‚
-â”‚   â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â”‚   â”‚
-â”‚   â”‚  â–“â–“â–“â–“â–“â–‘â–‘â–‘ Salud (5 corazones)  â–“â–“â–‘â–‘â–‘â–‘â–‘ Hambre            â”‚   â”‚
-â”‚   â”‚  â–“â–“â–“â–‘â–‘â–‘â–‘ EnergÃ­a  ðŸ’° Bytes  ðŸ”¥ Racha                     â”‚   â”‚
-â”‚   â”‚  ðŸ˜´ Dormir  ðŸ§¹ Limpiar  [Acariciar] [Jugar]              â”‚   â”‚
-â”‚   â”‚  âFrase contextual aleatoriaâž                             â”‚   â”‚
-â”‚   â”‚  â–“â–“â–“â–“â–‘â–‘â–‘ Barra de XP                                      â”‚   â”‚
-â”‚   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜   â”‚
-â”‚                                                                   â”‚
-â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
-â”‚  [ðŸ ] Inicio  [ðŸ’»] Aprender  [â±ï¸] Focus  [ðŸ›’] Tienda            â”‚
-â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-
-Rutas adicionales (sin bottom bar):
-  âš™ï¸ ConfiguraciÃ³n (SettingsScreen) â†’ Perfil, Temas, Sonido, Logros
-  ðŸŒ ConfiguraciÃ³n de Lenguaje (SettingsLanguageScreen)
-  ðŸ•¹ï¸ Arcade (GamesScreen) â†’ BugHunt, GitRescue, RefactorRush + Arcade ClÃ¡sico
-```
-
-### 4.3 Manejo de Ciclo de Vida
-
-```kotlin
-override fun onCleared() {
-    super.onCleared()
-    soundManager.release()  // Liberar ToneGenerator
-}
-```
-
-**Temporizador persistente:** Al cerrar la app durante un estudio, la `FocusSessionEntity` persiste con estado `RUNNING`. Al reabrir, el ViewModel restaura el temporizador calculando `(plannedDurationMs - (now - startedAt))` y lo reanuda automÃ¡ticamente vÃ­a `resumeTimer()`.
-
----
-
-## 5. Sistema de la Mascota
-
-### 5.1 Entidad PetStateEntity
-
-```kotlin
-@Entity(tableName = "pet_state")
-data class PetStateEntity(
-    @PrimaryKey val id: Int = 1,
-    val name: String = "Codey",
-    val language: String = "Kotlin",
-    val level: Int = 1,
-    val xp: Int = 0,
-    val hunger: Float = 100f,
-    val health: Float = 100f,
-    val energy: Float = 100f,
-    val bytes: Int = 50,
-    val lastUpdated: Long = System.currentTimeMillis(),
-    val streak: Int = 0,
-    val lastStudyDate: Long = 0,
-    val currentStatus: String = "HAPPY",
-    val hasRenamed: Boolean = false
-)
-```
-
-### 5.2 Mapa de Estados y Transiciones
-
-```
-                 â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                 â”‚  EXCITED â”‚ â† Desbloquear tema, mucho cariÃ±o
-                 â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜
-                      â”‚
-        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-        â”‚             â”‚             â”‚
-   â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”
-   â”‚  HAPPY  â”‚  â”‚ STUDYINGâ”‚  â”‚ SLEEPINGâ”‚
-   â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”˜
-        â”‚             â”‚             â”‚
-   â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”
-   â”‚  SAD    â”‚  â”‚  HUNGRY â”‚  â”‚  SICK   â”‚
-   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-```
-
-**Transiciones:**
-- `HAPPY â†” SLEEPING`: toggleSleep()
-- `HAPPY â†’ STUDYING`: startStudyTimer()
-- `STUDYING â†’ HAPPY/SAD/HUNGRY/SICK`: completeStudySession()
-- `SLEEPING â†’ HAPPY`: toggleSleep() o automÃ¡tico al recuperar energÃ­a
-- `SAD â†’ HAPPY`: Acariciar, dar comida, mejorar energÃ­a
-- `HUNGRY â†’ HAPPY`: Dar comida (hunger > 20)
-- `SICK â†’ HAPPY`: Dar medicina (health > 20)
-- `HAPPY â†’ EXCITED`: Acertar reto, desbloquear tema
-- Cualquier estado â†’ `SLEEPING`: toggleSleep()
-- Cualquier estado â†’ `STUDYING`: startStudyTimer()
-
-### 5.3 Sistema de Decaimiento (DecayCalculator.kt)
-
-Cuando la app se inicia o se reanuda, se calcula el tiempo transcurrido:
-
-```kotlin
-object DecayCalculator {
-    fun applyDecay(state: PetStateEntity): PetStateEntity {
-        val now = System.currentTimeMillis()
-        val elapsedMs = now - state.lastUpdated
-        if (elapsedMs <= 0) return state
-        val hours = elapsedMs.toFloat() / (1000f * 60f * 60f)
-        if (hours < 0.02f) return state
-
-        var newHunger = state.hunger; var newEnergy = state.energy
-        var newHealth = state.health; var newStatus = state.currentStatus
-        var newStreak = state.streak
-
-        val hoursSinceLastStudy = if (state.lastStudyDate > 0)
-            (now - state.lastStudyDate).toFloat() / (1000f * 60f * 60f) else 0f
-
-        if (hoursSinceLastStudy > 48f) newStreak = 0
-
-        if (state.currentStatus == "SLEEPING") {
-            newEnergy = (newEnergy + (hours * 12f)).coerceIn(0f, 100f)
-            newHunger = (newHunger - (hours * 1f)).coerceIn(0f, 100f)
-            if (newEnergy >= 100f) newStatus = "HAPPY"
-        } else {
-            newHunger = (newHunger - (hours * 2.5f)).coerceIn(0f, 100f)
-            newEnergy = (newEnergy - (hours * 2f)).coerceIn(0f, 100f)
-        }
-
-        val baseHealthDecay = hours * 1.5f
-        newHealth = (newHealth - baseHealthDecay).coerceIn(0f, 100f)
-
-        if (newHunger <= 0f) newHealth = (newHealth - (hours * 3f)).coerceIn(0f, 100f)
-        if (newEnergy <= 10f) newHealth = (newHealth - (hours * 1f)).coerceIn(0f, 100f)
-        if (hoursSinceLastStudy > 72f) newHealth = (newHealth - (hours * 1.5f)).coerceIn(0f, 100f)
-
-        if (newStatus != "SLEEPING" && newStatus != "STUDYING")
-            newStatus = StatusCalculator.determineStatus(newHealth, newHunger, newEnergy, false, false)
-
-        return state.copy(hunger = newHunger, energy = newEnergy, health = newHealth,
-            streak = newStreak, lastUpdated = now, currentStatus = newStatus)
-    }
-}
-```
-
-**Efectos por hora transcurrida (v2.0 rebalanceado):**
-
-| CondiciÃ³n | Efecto v2.0 |
-|:----------|:-----------|
-| **Despierto** â€” Hambre | -2.5%/h |
-| **Despierto** â€” EnergÃ­a | -2%/h |
-| **Despierto** â€” Salud base | -1.5%/h |
-| **Durmiendo** â€” EnergÃ­a | +12%/h |
-| **Durmiendo** â€” Hambre | -1%/h |
-| **Hambre = 0%** â€” Salud extra | -3%/h |
-| **EnergÃ­a < 10%** â€” Salud extra | -1%/h |
-| **Sin estudio > 48h** â€” Streak reseteado | = 0 |
-| **Sin estudio > 72h** â€” Salud extra | -1.5%/h |
-
-**PropÃ³sito:** El rebalance hace la mascota menos punitiva. Antes morÃ­a en ~27h; ahora sobrevive ~67h sin cuidados.
-
-### 5.4 CÃ¡lculo de Nivel (LevelCalculator.kt)
-
-```kotlin
-object LevelCalculator {
-    fun calculateLevel(xp: Int): Int {
-        var level = 1
-        var requiredXp = 100
-        while (xp >= requiredXp) {
-            level++
-            requiredXp += level * 100
-        }
-        return level
-    }
-    fun xpForNextLevel(level: Int) = level * 100
-}
-```
-
-| Nivel | XP Requerido | XP Acumulado |
-|:-----:|:------------:|:------------:|
-| 1 | 0 | 0 |
-| 2 | 100 | 100 |
-| 3 | 200 | 300 |
-| 4 | 300 | 600 |
-| 5 | 400 | 1000 |
-| 10 | 1000 | 5500 |
-| n | n Ã— 100 | n(n+1)/2 Ã— 100 |
-
-### 5.5 StatusCalculator.kt
-
-```kotlin
-object StatusCalculator {
-    fun determineStatus(
-        health: Float, hunger: Float, energy: Float,
-        isSleeping: Boolean, isStudying: Boolean, isExcited: Boolean = false
-    ): String = when {
-        isExcited -> "EXCITED"; isStudying -> "STUDYING"
-        isSleeping -> "SLEEPING"; health < 20f -> "SICK"
-        hunger < 20f -> "HUNGRY"; energy < 15f -> "SAD"
-        else -> "HAPPY"
-    }
-}
-```
-
-### 5.6 RewardCalculator.kt
-
-```kotlin
-object RewardCalculator {
-    data class StudyReward(val bytes: Int, val xp: Int, val energyCost: Float, val streak: Int, val newLevel: Int)
-    data class ChallengeReward(val bytes: Int, val xp: Int, val hungerRestore: Float, val healthRestore: Float)
-
-    fun calculateStudyReward(minutes: Int, currentXp: Int, currentLevel: Int,
-        currentStreak: Int, lastStudyDate: Long): StudyReward {
-        val baseBytes = minutes * 2; val baseXP = minutes * 3
-        val bonusBytes = if (minutes >= 25) 50 else 0; val bonusXP = if (minutes >= 25) 75 else 0
-        val totalBytes = baseBytes + bonusBytes; val totalXp = baseXP + bonusXP
-        val energyCost = (minutes * 0.5f).coerceAtMost(30f)
-        var newStreak = currentStreak
-        if (lastStudyDate != 0L) {
-            val lastCal = Calendar.getInstance().apply { timeInMillis = lastStudyDate }
-            val nowCal = Calendar.getInstance().apply { timeInMillis = System.currentTimeMillis() }
-            val sameDay = lastCal.get(Calendar.YEAR) == nowCal.get(Calendar.YEAR) &&
-                lastCal.get(Calendar.DAY_OF_YEAR) == nowCal.get(Calendar.DAY_OF_YEAR)
-            if (!sameDay) {
-                val yesterdayCal = Calendar.getInstance().apply {
-                    timeInMillis = System.currentTimeMillis(); add(Calendar.DAY_OF_YEAR, -1) }
-                val studiedYesterday = lastCal.get(Calendar.YEAR) == yesterdayCal.get(Calendar.YEAR) &&
-                    lastCal.get(Calendar.DAY_OF_YEAR) == yesterdayCal.get(Calendar.DAY_OF_YEAR)
-                newStreak = if (studiedYesterday) currentStreak + 1 else 1
-            }
-        } else { newStreak = 1 }
-        val newLevel = LevelCalculator.calculateLevel(currentXp + totalXp)
-        return StudyReward(totalBytes, totalXp, energyCost, newStreak, newLevel)
-    }
-
-    fun calculateChallengeReward(type: String): ChallengeReward {
-        val bytes = if (type == "DEBUG") 30 else 25
-        val xp = if (type == "DEBUG") 25 else 20
-        return ChallengeReward(bytes, xp, 15f, 20f)
-    }
-
-    fun calculateMinigameReward(score: Int, maxBytes: Int) = (score * 10).coerceAtMost(maxBytes)
-    fun calculateRefactorReward(attempts: Int) = maxOf(50 - attempts * 5, 10)
-}
-```
-
-### 5.7 PetViewModel.kt â€” LÃ³gica Central (727 lÃ­neas)
-
-El ViewModel central gestiona todo el estado de la app. Sus funciones clave:
-
-```kotlin
-class PetViewModel(
-    private val repository: PetRepository,
-    private val userPreferences: UserPreferencesRepository,
-    private val achievementsRepository: AchievementsRepository
-) : ViewModel() {
-    val soundManager = SoundManager()
-
-    // === STATE FLOWS ===
-    var hasSeenOnboarding = mutableStateOf(false)
-    var currentTheme = mutableStateOf("Matrix Green")
-    val unlockedThemes = MutableStateFlow<Set<String>>(allThemes)
-    val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
-    val selectedTopics = MutableStateFlow<Set<String>>(emptySet())
-    val petState: StateFlow<PetStateEntity?>
-    val studySessions: StateFlow<List<StudySessionEntity>>
-    val latestFocusSession: StateFlow<FocusSessionEntity?>
-    val activeChallenges: StateFlow<List<CodingChallenge>>
-    val challengeFeedback: StateFlow<String?>
-    val celebrationTrigger: SharedFlow<Unit>
-    val learningEventTrigger: SharedFlow<String>
-
-    // === ONBOARDING ===
-    fun completeOnboarding(petName: String, topics: Set<String>) {
-        viewModelScope.launch {
-            userPreferences.setOnboardingCompleted()
-            val finalTopics = if (topics.isEmpty()) defaultInitialTopics else topics
-            userPreferences.setSelectedTopics(finalTopics)
-            hasSeenOnboarding.value = true
-            soundManager.playLevelUp()
-            val current = repository.petState.firstOrNull()
-            if (current == null) {
-                repository.savePetState(PetStateEntity(name = if (petName.isNotBlank()) petName else "Codey"))
-                loadChallengesForLanguage("Kotlin")
-            } else {
-                repository.savePetState(current.copy(name = if (petName.isNotBlank()) petName else "Codey"))
-            }
-        }
-    }
-
-    // === PET CARE ===
-    fun petThePet() { /* +15% EnergÃ­a, +5% Salud */ }
-    fun cleanThePet() { /* +12% Salud, +8% EnergÃ­a */ }
-    fun toggleSleep() { /* HAPPY â†” SLEEPING */ }
-    fun renamePet(newName: String) { /* Con simulaciÃ³n de anuncio si ya renombrÃ³ */ }
-
-    // === SHOP ===
-    fun buyShopItem(itemName: String, cost: Int, hungerRestore: Float, healthRestore: Float, energyRestore: Float)
-
-    // === STUDY TIMER ===
-    fun startStudyTimer(minutes: Int, topic: String) { /* Persiste FocusSessionEntity */ }
-    fun cancelStudyTimer() { /* Cancela y actualiza estado */ }
-    private suspend fun completeStudySession() { /* Calcula recompensa, actualiza streak */ }
-    fun completeFocusSession() { /* Completa sesiÃ³n manualmente */ }
-
-    // === CHALLENGES ===
-    fun loadChallengesForLanguage(language: String) { /* Filtra 3 aleatorios */ }
-    fun submitAnswer(optionIndex: Int) { /* Verifica, otorga recompensa, desbloquea logros */ }
-    fun nextChallenge() { /* Avanza o recarga */ }
-
-    // === GAMES ===
-    fun canPlayGame(gameId: String, cooldownHours: Long = 24): Boolean
-    fun recordGamePlay(gameId: String)
-    fun completeMinigame(bytesEarned: Int, healthEarned: Float, energyCost: Float)
-
-    // === THEMES ===
-    fun changeTheme(theme: String)
-    fun unlockTheme(themeName: String) { /* Desbloquea y verifica logros coleccionista/completista */ }
-
-    // === SETTINGS ===
-    fun toggleSound(enabled: Boolean); fun toggleVibration(enabled: Boolean)
-    fun toggleReduceMotion(enabled: Boolean); fun setDifficulty(newDifficulty: String)
-    fun setTopics(topics: Set<String>); fun selectLanguage(language: String)
-    fun exportProgressMock(); fun resetProgress()
-}
-```
-
-### 5.8 Reward Calculator
-
-```kotlin
-val baseBytes = minutes * 2      // antes: minutes * 1
-val baseXP = minutes * 3          // antes: minutes * 2
-val bonusBytes = if (minutes >= 25) 50 else 0  // antes: 25
-val bonusXP = if (minutes >= 25) 75 else 0      // antes: 50
-val energyCost = (minutes * 0.5f).coerceAtMost(30f)  // antes: 0.6 max 40
-```
-
-**Recompensas comparativas para 25 min:**
-| Concepto | v1.0 | v2.0 |
-|:---------|:----:|:----:|
-| Bytes base | 25 | **50** |
-| XP base | 50 | **75** |
-| Bonus 25+ | +25 B, +50 XP | **+50 B, +75 XP** |
-| Total | 75 B, 125 XP | **150 B, 225 XP** |
-| Costo energÃ­a | -15 | **-12.5** |
-
----
-
-## 6. Base de Datos y Persistencia
-
-### 6.1 AppDatabase.kt
-
-```kotlin
-@Database(entities = [PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class], version = 3, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun petDao(): PetDao
-
-    companion object {
-        @Volatile private var INSTANCE: AppDatabase? = null
-
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("""
-                    CREATE TABLE IF NOT EXISTS `focus_sessions` (
-                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        `topic` TEXT NOT NULL, `plannedDurationMinutes` INTEGER NOT NULL,
-                        `startedAt` INTEGER NOT NULL, `status` TEXT NOT NULL
-                    )""")
-            }
-        }
-
-        val MIGRATION_2_3 = object : Migration(2, 3) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE pet_state ADD COLUMN hasRenamed INTEGER NOT NULL DEFAULT 0")
-            }
-        }
-
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext,
-                    AppDatabase::class.java, "code_tamagotchi_db")
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
-                INSTANCE = instance; instance
-            }
-        }
-    }
-}
-```
-
-### 6.2 PetDao.kt
-
-```kotlin
-@Dao
-interface PetDao {
-    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
-    fun getPetState(): Flow<PetStateEntity?>
-
-    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
-    suspend fun getPetStateSuspend(): PetStateEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdatePetState(state: PetStateEntity)
-
-    @Query("SELECT * FROM study_sessions ORDER BY timestamp DESC")
-    fun getAllStudySessions(): Flow<List<StudySessionEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStudySession(session: StudySessionEntity)
-
-    @Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
-    fun getLatestFocusSession(): Flow<FocusSessionEntity?>
-
-    @Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' ORDER BY id DESC LIMIT 1")
-    suspend fun getActiveFocusSession(): FocusSessionEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFocusSession(session: FocusSessionEntity)
-
-    @Query("UPDATE focus_sessions SET status = :status WHERE id = :sessionId")
-    suspend fun updateFocusSessionStatus(sessionId: Long, status: String)
-
-    @Query("SELECT * FROM focus_sessions ORDER BY id DESC")
-    fun getAllFocusSessions(): Flow<List<FocusSessionEntity>>
-
-    @Transaction
-    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
-        updateFocusSessionStatus(sessionId, status)
-        insertOrUpdatePetState(petState)
-    }
-}
-```
-
-### 6.3 StudySessionEntity.kt
-
-```kotlin
-@Entity(tableName = "study_sessions")
-data class StudySessionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val topic: String,
-    val durationMinutes: Int,
-    val timestamp: Long = System.currentTimeMillis()
-)
-```
-
-### 6.4 FocusSessionEntity.kt
-
-```kotlin
-@Entity(tableName = "focus_sessions")
-data class FocusSessionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val topic: String,
-    val plannedDurationMinutes: Int,
-    val startedAt: Long,
-    val status: String = "RUNNING"
-)
-```
-
-### 6.5 PetRepository.kt
-
-```kotlin
-class PetRepository(private val petDao: PetDao) {
-    val petState: Flow<PetStateEntity?> = petDao.getPetState()
-    val studySessions: Flow<List<StudySessionEntity>> = petDao.getAllStudySessions()
-    val latestFocusSession: Flow<FocusSessionEntity?> = petDao.getLatestFocusSession()
-    val allFocusSessions: Flow<List<FocusSessionEntity>> = petDao.getAllFocusSessions()
-
-    suspend fun savePetState(state: PetStateEntity) = petDao.insertOrUpdatePetState(state)
-    suspend fun addStudySession(session: StudySessionEntity) = petDao.insertStudySession(session)
-    suspend fun getActiveFocusSession(): FocusSessionEntity? = petDao.getActiveFocusSession()
-    suspend fun saveFocusSession(session: FocusSessionEntity): Long { petDao.insertFocusSession(session); return session.id }
-    suspend fun updateFocusSessionStatus(sessionId: Long, status: String) = petDao.updateFocusSessionStatus(sessionId, status)
-    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) =
-        petDao.completeOfflineSession(sessionId, status, petState)
-}
-```
-
-### 6.6 UserPreferencesRepository.kt
-
-```kotlin
-private val Context.dataStore by preferencesDataStore(name = "user_preferences")
-
-class UserPreferencesRepository(private val context: Context) {
-    companion object {
-        private val KEY_ONBOARDING = booleanPreferencesKey("has_seen_onboarding")
-        private val KEY_THEME = stringPreferencesKey("app_theme")
-        private val KEY_UNLOCKED_THEMES = stringSetPreferencesKey("unlocked_themes")
-        private val KEY_SELECTED_TOPICS = stringSetPreferencesKey("selected_topics")
-        private val KEY_DIFFICULTY = stringPreferencesKey("difficulty")
-        private val KEY_FOCUS_DURATION = intPreferencesKey("focus_duration_default")
-        private val KEY_SOUND_ENABLED = booleanPreferencesKey("sound_enabled")
-        private val KEY_VIBRATION_ENABLED = booleanPreferencesKey("vibration_enabled")
-        private val KEY_REDUCE_MOTION = booleanPreferencesKey("reduce_motion")
-        private val KEY_GAME_LAST_PLAYED = stringSetPreferencesKey("game_last_played")
-    }
-
-    val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { it[KEY_ONBOARDING] ?: false }
-    val currentTheme: Flow<String> = context.dataStore.data.map { it[KEY_THEME] ?: "Matrix Green" }
-    val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map {
-        val stored = it[KEY_UNLOCKED_THEMES]
-        if (stored == null || stored.isEmpty()) ThemeRegistry.allThemes.map { t -> t.name }.toSet() else stored
-    }
-    val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { it[KEY_SELECTED_TOPICS] ?: defaultTopics }
-    val difficulty: Flow<String> = context.dataStore.data.map { it[KEY_DIFFICULTY] ?: "Inicial" }
-    val focusDurationDefault: Flow<Int> = context.dataStore.data.map { it[KEY_FOCUS_DURATION] ?: 25 }
-    val soundEnabled: Flow<Boolean> = context.dataStore.data.map { it[KEY_SOUND_ENABLED] ?: true }
-    val vibrationEnabled: Flow<Boolean> = context.dataStore.data.map { it[KEY_VIBRATION_ENABLED] ?: true }
-    val reduceMotion: Flow<Boolean> = context.dataStore.data.map { it[KEY_REDUCE_MOTION] ?: false }
-    val gameCooldowns: Flow<Map<String, Long>> = context.dataStore.data.map { prefs ->
-        val raw = prefs[KEY_GAME_LAST_PLAYED] ?: emptySet()
-        raw.mapNotNull { entry ->
-            val parts = entry.split(":", limit = 2)
-            if (parts.size == 2) parts[0] to (parts[1].toLongOrNull() ?: 0L) else null
-        }.toMap()
-    }
-
-    suspend fun setOnboardingCompleted() { context.dataStore.edit { it[KEY_ONBOARDING] = true } }
-    suspend fun setTheme(theme: String) { context.dataStore.edit { it[KEY_THEME] = theme } }
-    suspend fun addUnlockedTheme(theme: String) { context.dataStore.edit {
-        it[KEY_UNLOCKED_THEMES] = (it[KEY_UNLOCKED_THEMES] ?: emptySet()) + theme } }
-    suspend fun getHasSeenOnboarding(): Boolean = context.dataStore.data.first()[KEY_ONBOARDING] ?: false
-    suspend fun setSelectedTopics(topics: Set<String>) { context.dataStore.edit { it[KEY_SELECTED_TOPICS] = topics } }
-    suspend fun recordGamePlay(gameId: String) { context.dataStore.edit {
-        val current = it[KEY_GAME_LAST_PLAYED] ?: emptySet()
-        it[KEY_GAME_LAST_PLAYED] = current.filter { !it.startsWith("$gameId:") }.toSet() + "$gameId:${System.currentTimeMillis()}" } }
-    // ... mÃ¡s setters similares
-}
-```
-
-### 6.7 AchievementsRepository.kt
-
-```kotlin
-private val Context.achievementsDataStore by preferencesDataStore(name = "achievements")
-
-class AchievementsRepository(private val context: Context) {
-    companion object {
-        private val KEY_UNLOCKED_ACHIEVEMENTS = stringSetPreferencesKey("unlocked_achievements")
-        val ALL_ACHIEVEMENTS = listOf(
-            Achievement("primer_build", "Primer build", "CompletÃ¡ tu primera sesiÃ³n Focus"),
-            Achievement("nivel_experto", "Nivel Experto", "SubÃ­ de nivel por primera vez"),
-            Achievement("cazador_de_bugs", "Cazador de bugs", "PuntuaciÃ³n perfecta en Bug Hunt"),
-            Achievement("git_sin_panico", "Git sin pÃ¡nico", "AprobÃ¡ Git Rescue con 3+ aciertos"),
-            Achievement("racha_7", "Racha de 7 dÃ­as", "MantenÃ© una racha de estudio de 7 dÃ­as"),
-            Achievement("racha_30", "Racha de 30 dÃ­as", "MantenÃ© una racha de estudio de 30 dÃ­as"),
-            Achievement("coleccionista", "Coleccionista", "DesbloqueÃ¡ 3 temas visuales"),
-            Achievement("completista", "Completista", "DesbloqueÃ¡ los 12 temas visuales"),
-            Achievement("ahorrador", "Ahorrador", "AcumulÃ¡ 1000 Bytes"),
-            Achievement("primer_acaricie", "Primer mimo", "AcariciÃ¡ a tu mascota por primera vez"),
-            Achievement("duermevela", "Duermevela", "PonÃ© a dormir a tu mascota"),
-            Achievement("limpiador", "Limpieza profunda", "LimpiÃ¡ a tu mascota 10 veces"),
-        )
-    }
-
-    val unlockedAchievements: Flow<Set<String>> = context.achievementsDataStore.data.map { it[KEY_UNLOCKED_ACHIEVEMENTS] ?: emptySet() }
-    suspend fun unlockAchievement(achievementId: String) { context.achievementsDataStore.edit {
-        val current = it[KEY_UNLOCKED_ACHIEVEMENTS] ?: emptySet()
-        if (!current.contains(achievementId)) it[KEY_UNLOCKED_ACHIEVEMENTS] = current + achievementId } }
-    fun getAchievementById(id: String): Achievement? = ALL_ACHIEVEMENTS.find { it.id == id }
-}
-
-data class Achievement(val id: String, val name: String, val description: String)
-```
-
-### 6.8 DataStore Keys Summary
-
-| Key | Tipo | Default |
-|:----|:----:|:--------|
-| `has_seen_onboarding` | Boolean | false |
-| `app_theme` | String | "Matrix Green" |
-| `unlocked_themes` | Set<String> | Todos los temas |
-| `selected_topics` | Set<String> | {"Kotlin", "Estructuras de Datos", "Git"} |
-| `difficulty` | String | "Inicial" |
-| `focus_duration_default` | Int | 25 |
-| `sound_enabled` | Boolean | true |
-| `vibration_enabled` | Boolean | true |
-| `reduce_motion` | Boolean | false |
-| `game_last_played` | Set<String> | formato: "gameId:timestamp" |
-
----
-
-## 7. Sistema de Temas
-
-### 7.1 AppTheme Data Class
-
-```kotlin
-data class AppTheme(
-    val name: String, val icon: ImageVector, val description: String, val isDark: Boolean,
-    val background: Color, val surface: Color, val surfaceVariant: Color,
-    val primary: Color, val secondary: Color, val tertiary: Color,
-    val onPrimary: Color, val textPrimary: Color, val textSecondary: Color,
-    val accent: Color, val success: Color, val error: Color,
-    val fontFamily: FontFamily = FontFamily.Default,
-    val titleFontFamily: FontFamily = FontFamily.Default,
-    val titleWeight: FontWeight = FontWeight.Bold,
-    val cornerRadius: Dp = 12.dp, val borderWidth: Dp = 1.dp,
-    val usesGradients: Boolean = false, val gradientColors: List<Color> = emptyList()
-)
-```
-
-### 7.2 Temas Disponibles (12 premium)
-
-| # | Tema | Emoji | Dark | Fuente | Esquinas | Gradiente | Icono |
-|:-:|:-----|:-----:|:----:|:-------|:--------:|:---------:|:-----:|
-| 1 | Matrix Green | ðŸ–¥ï¸ | SÃ­ | Monospace | 2dp | âœ… | Code |
-| 2 | GalÃ¡ctico | ðŸŒŒ | SÃ­ | SansSerif | 24dp | âœ… | AutoAwesome |
-| 3 | Cyberpunk | âš¡ | SÃ­ | Monospace | 0dp | âœ… | FlashOn |
-| 4 | Sakura | ðŸŒ¸ | No | Serif | 16dp | âœ… | LocalFlorist |
-| 5 | Minimalista | â—»ï¸ | No | SansSerif | 12dp | â€” | CheckBoxOutlineBlank |
-| 6 | NeÃ³n | ðŸ’œ | SÃ­ | Monospace | 16dp | â€” | Lightbulb |
-| 7 | OcÃ©ano | ðŸŒŠ | SÃ­ | SansSerif | 20dp | âœ… | WaterDrop |
-| 8 | VolcÃ¡nico | ðŸŒ‹ | SÃ­ | Serif | 4dp | âœ… | LocalFireDepartment |
-| 9 | Samurai | âš”ï¸ | SÃ­ | Serif | 0dp | âœ… | Security |
-| 10 | Aurora | âœ¨ | SÃ­ | SansSerif | 24dp | âœ… | Waves |
-| 11 | Nocturno | ðŸŒ™ | SÃ­ | SansSerif | 16dp | â€” | NightsStay |
-| 12 | Retro Pixel ðŸ† | ðŸ‘¾ | SÃ­ | **Press Start 2P** (8-bit) | 0dp | â€” | VideogameAsset |
-
-### 7.3 ThemeRegistry
-
-```kotlin
-object ThemeRegistry {
-    val allThemes = listOf(/* 12 AppTheme objects */)
-
-    fun getTheme(name: String): AppTheme {
-        return allThemes.find { it.name == name } ?: allThemes.first()
-    }
-}
-```
-
-### 7.4 IntegraciÃ³n con Material 3 (Theme.kt)
-
-```kotlin
-val LocalReduceMotion = compositionLocalOf { false }
-val LocalAppTheme = staticCompositionLocalOf { ThemeRegistry.allThemes.first() }
-
-fun AppTheme.toColorScheme(): ColorScheme {
-    val builder: (primary: Color, onPrimary: Color, primaryContainer: Color,
-        onPrimaryContainer: Color, inversePrimary: Color, secondary: Color,
-        onSecondary: Color, secondaryContainer: Color, onSecondaryContainer: Color,
-        tertiary: Color, onTertiary: Color, tertiaryContainer: Color,
-        onTertiaryContainer: Color, background: Color, onBackground: Color,
-        surface: Color, onSurface: Color, surfaceVariant: Color,
-        onSurfaceVariant: Color, surfaceTint: Color, inverseSurface: Color,
-        inverseOnSurface: Color, error: Color, onError: Color,
-        errorContainer: Color, onErrorContainer: Color, outline: Color,
-        outlineVariant: Color, scrim: Color) -> ColorScheme
-    = if (isDark) ::darkColorScheme else ::lightColorScheme
-
-    return builder(
-        primary = primary, onPrimary = onPrimary, primaryContainer = primary.copy(alpha = 0.20f),
-        onPrimaryContainer = textPrimary, inversePrimary = secondary,
-        secondary = secondary, onSecondary = if (isDark) Color.Black else Color.White,
-        secondaryContainer = secondary.copy(alpha = 0.18f), onSecondaryContainer = textPrimary,
-        tertiary = tertiary, onTertiary = if (isDark) Color.Black else Color.White,
-        tertiaryContainer = tertiary.copy(alpha = 0.18f), onTertiaryContainer = textPrimary,
-        background = background, onBackground = textPrimary,
-        surface = surface, onSurface = textPrimary,
-        surfaceVariant = surfaceVariant, onSurfaceVariant = textSecondary,
-        surfaceTint = primary, inverseSurface = if (isDark) Color(0xFFE0E0E0) else Color(0xFF1C1C1C),
-        inverseOnSurface = if (isDark) Color(0xFF1C1C1C) else Color(0xFFE0E0E0),
-        error = error, onError = Color.White, errorContainer = error.copy(alpha = 0.20f),
-        onErrorContainer = textPrimary, outline = textSecondary.copy(alpha = 0.5f),
-        outlineVariant = textSecondary.copy(alpha = 0.25f), scrim = Color.Black,
-    )
-}
-
-@Composable
-fun MyApplicationTheme(
-    appTheme: AppTheme = ThemeRegistry.allThemes.first(),
-    darkTheme: Boolean = isSystemInDarkTheme(), dynamicColor: Boolean = false,
-    reduceMotion: Boolean = false, content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        else -> appTheme.toColorScheme()
-    }
-    val typography = buildTypography(appTheme.fontFamily, appTheme.titleFontFamily, appTheme.titleWeight)
-    CompositionLocalProvider(LocalReduceMotion provides reduceMotion, LocalAppTheme provides appTheme) {
-        MaterialTheme(colorScheme = colorScheme, typography = typography, content = content)
-    }
-}
-```
-
-### 7.5 buildTypography (Type.kt)
-
-```kotlin
-fun buildTypography(bodyFont: FontFamily, titleFont: FontFamily, titleWeight: FontWeight = FontWeight.Bold): Typography = Typography(
-    displayLarge = TextStyle(fontFamily = titleFont, fontWeight = titleWeight, fontSize = 57.sp, lineHeight = 64.sp, letterSpacing = (-0.25).sp),
-    displayMedium = TextStyle(fontFamily = titleFont, fontWeight = titleWeight, fontSize = 45.sp, lineHeight = 52.sp, letterSpacing = 0.sp),
-    headlineLarge = TextStyle(fontFamily = titleFont, fontWeight = titleWeight, fontSize = 32.sp, lineHeight = 40.sp, letterSpacing = 0.sp),
-    titleLarge = TextStyle(fontFamily = titleFont, fontWeight = titleWeight, fontSize = 22.sp, lineHeight = 28.sp, letterSpacing = 0.sp),
-    bodyLarge = TextStyle(fontFamily = bodyFont, fontWeight = FontWeight.Normal, fontSize = 16.sp, lineHeight = 24.sp, letterSpacing = 0.5.sp),
-    bodySmall = TextStyle(fontFamily = bodyFont, fontWeight = FontWeight.Normal, fontSize = 12.sp, lineHeight = 16.sp, letterSpacing = 0.4.sp),
-    labelSmall = TextStyle(fontFamily = bodyFont, fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 16.sp, letterSpacing = 0.5.sp),
-    // ... todos los estilos Material 3
-)
-```
-
----
-
-## 8. Sistema de Retos
-
-### 8.1 CodingChallenge Data Class
-
-```kotlin
-data class CodingChallenge(
-    val id: Int, val language: String, val type: String, // "TRIVIA", "DEBUG"
-    val title: String, val question: String,
-    val codeSnippet: String? = null, val options: List<String>,
-    val correctAnswerIndex: Int, val explanation: String
-)
-```
-
-### 8.2 ChallengesData â€” 90+ Retos
-
-| Lenguaje | Cantidad | Tipos | IDs |
-|:---------|:--------:|:------|:---:|
-| **Kotlin** | 20+ | TRIVIA + DEBUG | 1-3, 12-25, 86-87 |
-| **JavaScript** | 20 | TRIVIA + DEBUG | 4-6, 26-40 |
-| **PHP** | 19 | TRIVIA + DEBUG | 7-9, 41-55 |
-| **Python** | 29+ | TRIVIA + DEBUG | 10-11, 56-85, 88-90 |
-
-### 8.3 SpecialChallengesData â€” 6 Retos de Algoritmos
-
-| ID | TÃ­tulo | Tipo | Concepto |
-|:--:|:-------|:----:|:---------|
-| 101 | Encontrar el Ãšnico | ALGORITHM | Conteo de bits mÃ³dulo 3 |
-| 102 | Problema del Mochilero | ALGORITHM | ProgramaciÃ³n DinÃ¡mica |
-| 103 | Invertir una Lista Enlazada | ALGORITHM | 3 punteros iterativos |
-| 104 | Teorema CAP | ARCHITECTURE | Consistencia, Disponibilidad, ParticiÃ³n |
-| 105 | Detectar Ciclo | ALGORITHM | Floyd's Tortoise and Hare |
-| 106 | Ãrboles AVL | ALGORITHM | Balanceo por diferencia de alturas |
-
-### 8.4 Sistema de Recompensas
-
-```kotlin
-// Reto normal TRIVIA: +25 Bytes, +20 XP, +15% Alimento, +20% Salud
-// Reto normal DEBUG: +30 Bytes, +25 XP, +15% Alimento, +20% Salud
-// Reto especial: +50 Bytes, +10% Salud
-```
-
-### 8.5 LearnScreen â€” QuizPanel
-
-El `QuizPanel` muestra 3 retos aleatorios por lenguaje. Incluye:
-- Tip contextual de Codey (cambiante segÃºn DEBUG/TRIVIA)
-- Snippet de cÃ³digo en Surface oscuro estilo terminal
-- 4 opciones con feedback visual (verde = correcto, rojo = incorrecto)
-- ExplicaciÃ³n educativa tras cada respuesta
-- BotÃ³n "Siguiente acertijo" o "Cargar mÃ¡s retos"
-
-```kotlin
-@Composable
-fun QuizPanel(viewModel: PetViewModel) {
-    val challengesList by viewModel.activeChallenges.collectAsStateWithLifecycle()
-    val currentIndex by viewModel.currentChallengeIndex.collectAsStateWithLifecycle()
-    val feedback by viewModel.challengeFeedback.collectAsStateWithLifecycle()
-    // ... renderiza challenge actual con opciones
-    challenge.options.forEachIndexed { optIndex, optionText ->
-        Surface(onClick = { if (feedback == null) viewModel.submitAnswer(optIndex) }, ...) {
-            Text("[$optIndex] $optionText", ...)
-        }
-    }
-}
-```
-
----
-
-## 9. Minijuegos
-
-### 9.1 GamesScreen â€” Hub Principal
-
-```kotlin
-@Composable
-fun GamesScreen(viewModel: PetViewModel, onNavigateBack: () -> Unit,
-    onNavigateToBugHunt: () -> Unit, onNavigateToGitRescue: () -> Unit,
-    onNavigateToRefactorRush: () -> Unit) {
-
-    fun canPlay(gameId: String): Boolean {
-        val lastPlayed = gameCooldowns[gameId] ?: 0L
-        return System.currentTimeMillis() - lastPlayed >= 24 * 60 * 60 * 1000
-    }
-
-    Scaffold(topBar = { TopAppBar(title = { Text("Arcade") }) }) {
-        Column {
-            GameCard(title = "Bug Hunt", description = "...", canPlay, ...)
-            GameCard(title = "Git Rescue", description = "...", canPlay, ...)
-            GameCard(title = "Refactor Rush", description = "...", canPlay, ...)
-            // Classic Arcade section â†’ MinigamesDialog
-        }
-    }
-}
-```
-
-### 9.2 Bug Hunt â€” Terminal Panic
-
-- 10 snippets de cÃ³digo con bugs (pool)
-- 5 rondas seleccionadas aleatoriamente
-- 60 segundos por partida
-- Sistema de puntuaciÃ³n: `score Ã— 10` Bytes (mÃ¡x 50)
-- ExplicaciÃ³n + humor de Codey tras cada respuesta
-
-```kotlin
-// Cada snippet tiene: lines, bugIndex, explanation, humor
-private val snippetPool = listOf(
-    BugSnippet(listOf("val name = \"Codey\"", "println(name", "age++", "fun greet() { }"),
-        bugIndex = 1, explanation = "Falta el parÃ©ntesis de cierre en println.",
-        humor = "Â¡Era un parÃ©ntesis fugitivo! Se escapÃ³ sin pagar el alquiler."),
-    // ... 9 snippets mÃ¡s
-)
-```
-
-### 9.3 Git Rescue
-
-- 8 escenarios Git en el pool, 5 por partida
-- 3 opciones por escenario (correcta, plausible, absurda)
-- Progreso visual de rama con cÃ­rculos numerados
-- `score Ã— 15` Bytes (mÃ¡x 45)
-- Logro "Git sin pÃ¡nico" si score â‰¥ 3
-
-```kotlin
-private val scenarioPool = listOf(
-    GitScenario(situation = "Acabas de clonar el repo...",
-        options = listOf("git checkout -b feature/nuevo", "git commit -m \"inicio\"", "git push --force"),
-        correctIndex = 0, ...),
-    // ... 7 escenarios mÃ¡s
-)
-```
-
-### 9.4 Refactor Rush
-
-- 12 puzzles de ordenamiento de cÃ³digo
-- Bloques movibles con botones â–²/â–¼
-- Intentos mÃºltiples con penalizaciÃ³n
-- Recompensa: `max(50 - attempts Ã— 5, 10)` Bytes
-
-```kotlin
-private val puzzleBank = listOf(
-    RefactorPuzzle("Calcular total", listOf("fun calculateTotal(...): Int {",
-        "    var total = 0", "    for (item in items) {", "        total += item",
-        "    }", "    return total", "}")),
-    // ... 11 puzzles mÃ¡s
-)
-```
-
-### 9.5 Arcade ClÃ¡sico (Legacy)
-
-Tres minijuegos legacy accesibles via MinigamesDialog:
-
-**BinaryGuessGame:** 5 rondas, adivinar bit secreto (0/1), premio: `score Ã— 4` Bytes
-
-**BugSmasherGame:** CuadrÃ­cula 3Ã—3, 10 segundos, tocar bugs, premio: `score Ã— 2` Bytes
-
-**RockPaperSciGame:** Servidor > Hacker > Script > Servidor, mejor de 3, premio: 20 B (ganar) / 5 B (perder)
-
----
-
-## 10. Sistema de Sonido
-
-### 10.1 SoundManager.kt
-
-```kotlin
-class SoundManager {
-    private var toneGen: ToneGenerator? = null
-
-    init {
-        try { toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 100) } catch (e: Exception) {}
-    }
-
-    fun playSuccess() { toneGen?.startTone(ToneGenerator.TONE_PROP_ACK, 100) }
-    fun playError() { toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP2, 150) }
-    fun playLevelUp() { CoroutineScope(Dispatchers.Default).launch {
-        toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100); delay(150)
-        toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100); delay(150)
-        toneGen?.startTone(ToneGenerator.TONE_PROP_ACK, 200) } }
-    fun playClick() { toneGen?.startTone(ToneGenerator.TONE_DTMF_A, 50) }
-    fun playBuy() { toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100) }
-    fun playSleep() { CoroutineScope(Dispatchers.Default).launch {
-        toneGen?.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100); delay(1000)
-        toneGen?.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100) } }
-    fun release() { toneGen?.release(); toneGen = null }
-}
-```
-
-### 10.2 Mapa de Sonidos
-
-| Evento | MÃ©todo | Tono | DuraciÃ³n |
-|:-------|:-------|:-----|:---------|
-| âœ… Respuesta correcta | `playSuccess()` | TONE_PROP_ACK | 100ms |
-| âŒ Respuesta incorrecta | `playError()` | TONE_PROP_BEEP2 | 150ms |
-| â¬†ï¸ Subida de nivel | `playLevelUp()` | 2Ã— beep + ack | ~500ms |
-| ðŸ‘† Clic / Interfaz | `playClick()` | TONE_DTMF_A | 50ms |
-| ðŸ›’ Comprar | `playBuy()` | TONE_PROP_BEEP | 100ms |
-| ðŸ˜´ Dormir | `playSleep()` | 2Ã— TONE_CDMA_SOFT_ERROR_LITE | ~1100ms |
-
----
-
-## 11. Estados y Animaciones
-
-### 11.1 AnimatedPetSprite.kt (264 lÃ­neas)
-
-El sprite de la mascota tiene mÃºltiples animaciones simultÃ¡neas:
-
-```kotlin
-@Composable
-fun AnimatedPetSprite(status: String, celebrationTrigger: SharedFlow<Unit>,
-    learningEventTrigger: SharedFlow<String>? = null, onClick: () -> Unit, modifier: Modifier = Modifier) {
-
-    val reduceMotion = LocalReduceMotion.current
-
-    // Celebration (Bounce + Wobble)
-    val bounceAnim = remember { Animatable(0f) }
-    val wobbleAnim = remember { Animatable(0f) }
-    val flashAnim = remember { Animatable(1f) }
-
-    // Event subscriptions via LaunchedEffect
-    LaunchedEffect(learningEventTrigger) {
-        learningEventTrigger?.collect { type ->
-            when (type) {
-                "SUCCESS" -> { flashAnim.animateTo(1.5f, tween(100)); flashAnim.animateTo(1f, tween(200)) }
-                "FAILURE" -> { wobbleAnim.animateTo(-10f, tween(50)); wobbleAnim.animateTo(10f, tween(50)); wobbleAnim.animateTo(0f, tween(50)) }
-            }
-        }
-    }
-
-    // Infinite animations
-    val infiniteTransition = rememberInfiniteTransition()
-
-    // Breathing scale (1.0 â†” 1.03, 1800ms)
-    val breathingScale by infiniteTransition.animateFloat(...)
-
-    // Sick tremble (-2 â†” 2, 100ms)
-    val trembleOffset by infiniteTransition.animateFloat(...)
-
-    // Hungry pulse (1.0 â†” 1.05, 800ms)
-    val hungryScale by infiniteTransition.animateFloat(...)
-
-    // Sleep alpha fade (0.8 â†” 1.0, 2500ms)
-    val sleepAlpha by infiniteTransition.animateFloat(...)
-
-    // Idle sway (-3 â†” 3, 3000ms)
-    val swayOffset by infiniteTransition.animateFloat(...)
-
-    // Blink logic (random 3-5s interval)
-    var isBlinking by remember { mutableStateOf(false) }
-    LaunchedEffect(canBlink) { /* random blink loop */ }
-
-    // Render with crossfade
-    Crossfade(targetState = isBlinking && hasBlinkAsset, ...) {
-        Image(painter = painterResource(id = if (blink) blinkResId else baseResId), ...)
-    }
-}
-
-private fun getPetDrawable(status: String): Int = when (status) {
-    "SLEEPING" -> R.drawable.mascota_sleeping; "STUDYING" -> R.drawable.mascota_studying
-    "SICK" -> R.drawable.mascota_sick; "SAD" -> R.drawable.mascota_sad
-    "HUNGRY" -> R.drawable.mascota_hungry; "EXCITED" -> R.drawable.mascota_excited
-    else -> R.drawable.mascota_happy
-}
-```
-
-### 11.2 Animaciones por Estado
-
-| Estado | Eje X | Eje Y | Escala | Velocidad | Drawable |
-|:-------|:-----:|:-----:|:------:|:---------:|:---------|
-| HAPPY | sway Â±3px | breathing Â±3% | 1.0â†”1.03 | 1800ms | mascota_happy |
-| SLEEPING | 0 | 0 | 1.0 | alpha 0.8â†”1.0 (2500ms) | mascota_sleeping |
-| STUDYING | 0 | 0 | 1.0 | â€” | mascota_studying |
-| SICK | tremble Â±2px | 0 | 1.0 | 100ms | mascota_sick |
-| SAD | 0 | 0 | 1.0 | â€” | mascota_sad |
-| HUNGRY | 0 | 0 | 1.0â†”1.05 | 800ms | mascota_hungry |
-| EXCITED | sway Â±3px | breathing Â±3% | 1.0â†”1.03 | 1300ms (rÃ¡pido) | mascota_excited |
-
-### 11.3 PetAnimationConfig.kt
-
-```kotlin
-object PetAnimationConfig {
-    fun petFloatDurationMs(status: String, reduceMotion: Boolean): Int = when {
-        reduceMotion -> 2400; status == "EXCITED" -> 1300
-        status == "HAPPY" -> 1600; status == "SLEEPING" -> 3200; else -> 2200
-    }
-    fun petFloatAmplitudeDp(status: String): Float = when (status) {
-        "EXCITED" -> 8f; "HAPPY" -> 6f; "SLEEPING" -> 4f; else -> 5f
-    }
-    fun bounceDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 220 else 420
-    fun heartDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 900 else 1500
-}
-```
-
-### 11.4 ViewportCard.kt (455 lÃ­neas)
-
-Componente principal que muestra:
-- Nombre + lenguaje + nivel + corazones de salud (5 â¤)
-- Sprite animado con animaciones infinitas + celebraciones
-- Badge de estado actual (HAPPY, SICK, etc.)
-- Frase contextual aleatoria por estado
-- Barra de XP animada
-- 3 meters (Salud, Alimento, EnergÃ­a)
-- Bytes + Racha (streak)
-- BotÃ³n Dormir/Despertar
-- Botones Acariciar, Limpiar, Jugar
-
-```kotlin
-@Composable
-fun ViewportCard(state: PetStateEntity, viewModel: PetViewModel, onRenameClick: () -> Unit, onPlayClick: () -> Unit) {
-    val appTheme = LocalAppTheme.current
-    val reduceMotion = LocalReduceMotion.current
-    val cardShape = RoundedCornerShape(appTheme.cornerRadius)
-    val statusColor = when (state.currentStatus) { ... }
-
-    // Floating heart animation on pet tap
-    fun onPetTap() {
-        viewModel.petThePet(); viewModel.soundManager.playClick()
-        scope.launch {
-            showHeart = true; heartOffsetY.snapTo(0f); heartAlpha.snapTo(1f)
-            launch { heartOffsetY.animateTo(-110f, tween(heartDuration)); heartAlpha.animateTo(0f, tween(heartDuration)) }
-            delay(heartDuration + 120); showHeart = false
-        }
-    }
-
-    Card(shape = cardShape, border = BorderStroke(appTheme.borderWidth, statusColor.copy(alpha = 0.8f))) {
-        Column {
-            // Name + Language + Hearts + Level badge
-            // AnimatedPetSprite with onClick
-            // Quote surface with random quote
-            // XP bar with animateFloatAsState
-            // 3 MeterItems (health, hunger, energy)
-            // Bytes + Streak row
-            // Sleep toggle button
-            // Pet / Clean / Play action buttons
-        }
-    }
-}
-```
-
-### 11.5 MeterItem.kt
-
-```kotlin
-@Composable
-fun MeterItem(label: String, value: Float, icon: ImageVector, activeColor: Color, trackColor: Color, modifier: Modifier = Modifier) {
-    val animatedProgress by animateFloatAsState(targetValue = value / 100f)
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row { Icon(icon, ..., tint = activeColor); Text(label) }
-        LinearProgressIndicator(progress = { animatedProgress }, color = activeColor, trackColor = trackColor, ...)
-        Text("${value.toInt()}%")
-    }
-}
-```
-
-### 11.6 AnimatedThemeBackground.kt (1077 lÃ­neas)
-
-12 fondos animados Ãºnicos renderizados via Canvas de Compose:
-
-| Tema | Efecto visual | LÃ­neas |
-|:-----|:--------------|:------:|
-| **Matrix Green** | Lluvia de 1/0 con bursts de velocidad y mensajes ocultos | ~90 |
-| **GalÃ¡ctico** | Nebulosas + estrellas titilantes + polvo estelar | ~70 |
-| **Cyberpunk** | Rejilla neon + glitch lines horizontales | ~50 |
-| **Sakura** | PÃ©talos de cerezo cayendo con rotaciÃ³n y translucidez | ~50 |
-| **Minimalista** | CÃ­rculos concÃ©ntricos orbitando suavemente | ~35 |
-| **NeÃ³n** | Anillos pulsantes con resplandores radiales | ~70 |
-| **OcÃ©ano** | Olas sinusoidales + burbujas ascendentes | ~55 |
-| **VolcÃ¡nico** | Flujo de lava + ascuas ardientes con gradiente | ~65 |
-| **Samurai** | Mon (escudo) + hojas de bambÃº + katana + hojas rojas | ~120 |
-| **Aurora** | Cortinas polares ondulantes con pulsos de luz | ~50 |
-| **Nocturno** | Cielo estrellado con estrella fugaz periÃ³dica | ~35 |
-| **Retro Pixel ðŸ†** | Mundo 8-bit: cielo pixelado, estrellas, luna, montaÃ±as parallax, Ã¡rboles, suelo, nubes scrolling, luciÃ©rnagas, rejilla CRT, scanlines | ~230 |
-
----
-
-## 12. Widget y Notificaciones
-
-### 12.1 CodePetWidgetProvider.kt
-
-```kotlin
-class CodePetWidgetProvider : AppWidgetProvider() {
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        for (appWidgetId in appWidgetIds) updateAppWidget(context, appWidgetManager, appWidgetId)
-    }
-
-    companion object {
-        fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-            val views = RemoteViews(context.packageName, R.layout.code_pet_widget)
-            views.setTextViewText(R.id.widget_title, "Code Tamagotchi")
-            views.setTextViewText(R.id.widget_subtitle, "Tu mascota estÃ¡ lista")
-            views.setImageViewResource(R.id.widget_pet_image, R.drawable.mascota_happy)
-            val pendingIntent = PendingIntent.getActivity(context, 0,
-                Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
-    }
-}
-```
-
-### 12.2 CodePetWidget.kt (Compose Preview)
-
-```kotlin
-@Composable
-fun CodePetWidget(petState: PetStateEntity?, modifier: Modifier = Modifier) {
-    val status = petState?.currentStatus ?: "HAPPY"
-    val petImageRes = when (status) { ... }
-    Surface(shape = RoundedCornerShape(24.dp), tonalElevation = 3.dp, ...) {
-        Box(modifier = Modifier.background(Color(0xFF12161F)).padding(16.dp)) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Codey estÃ¡ listo", ...); Text("Tu mascota de estudio te espera", ...)
-                Image(painter = painterResource(id = petImageRes), ..., modifier = Modifier.size(96.dp))
-                Text(petState?.name ?: "Codey", ...)
-            }
-        }
-    }
-}
-```
-
-### 12.3 PetCheckWorker.kt â€” Notificaciones WorkManager
-
-```kotlin
-class PetCheckWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result {
-        val dao = get<AppDatabase>(AppDatabase::class.java).petDao()
-        val petState = dao.getPetStateSuspend() ?: return Result.success()
-        val needsAttention = petState.hunger < 20f || petState.health < 20f || petState.energy < 15f
-        if (!needsAttention) return Result.success()
-
-        // Check notification permission (Android 13+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ...) return Result.success()
-
-        val reason = when {
-            petState.hunger < 20f -> "Â¡Tengo hambre! (${petState.hunger.toInt()}%)"
-            petState.health < 20f -> "No me siento bien... (Salud: ${petState.health.toInt()}%)"
-            petState.energy < 15f -> "Estoy muy cansado... (EnergÃ­a: ${petState.energy.toInt()}%)"
-            else -> "Â¡Necesito atenciÃ³n!"
-        }
-
-        val intent = Intent(applicationContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-
-        val notification = NotificationCompat.Builder(applicationContext, CodeTamagotchiApp.NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("${petState.name} te necesita")
-            .setContentText(reason)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true).build()
-
-        NotificationManagerCompat.from(applicationContext).notify(1001, notification)
-        return Result.success()
-    }
-}
-```
-
-### 12.4 CodeTamagotchiApp.kt
-
-```kotlin
-class CodeTamagotchiApp : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        startKoin { androidContext(this@CodeTamagotchiApp); modules(appModule) }
-        createNotificationChannel()
-        schedulePetCheck()
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "Estado de tu mascota",
-                NotificationManager.IMPORTANCE_DEFAULT).apply {
-                description = "Recordatorios sobre el estado de tu mascota virtual" }
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-        }
-    }
-
-    private fun schedulePetCheck() {
-        val request = PeriodicWorkRequestBuilder<PetCheckWorker>(4, TimeUnit.HOURS)
-            .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
-            .setInitialDelay(2, TimeUnit.HOURS).build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("pet_check",
-            ExistingPeriodicWorkPolicy.KEEP, request)
-    }
-
-    companion object { const val NOTIFICATION_CHANNEL_ID = "pet_care_reminder" }
-}
-```
-
----
-
-## 13. InyecciÃ³n de Dependencias
-
-### 13.1 AppModule.kt
+La app usa **Koin** como framework de inyección de dependencias. El módulo `AppModule.kt` declara:
 
 ```kotlin
 val appModule = module {
@@ -1474,7 +233,938 @@ val appModule = module {
 }
 ```
 
-### 13.2 MainActivity.kt
+- `CodeTamagotchiApp` inicia Koin en `onCreate()`
+- `MainActivity` obtiene el ViewModel con `koinViewModel()`
+- `PetViewModel` recibe `PetRepository`, `UserPreferencesRepository` y `AchievementsRepository` por constructor
+
+---
+
+## 4. Flujo Completo de la App
+
+### 4.1 Inicio (MainActivity.kt)
+
+```
+App abierta
+    ↓
+onCreate()
+    ↓
+enableEdgeToEdge()
+    ↓
+setContent {
+    val appTheme = ThemeRegistry.getTheme(currentTheme.value)
+    MyApplicationTheme(appTheme = appTheme, reduceMotion = ...) { ... }
+}
+    ↓
+koinViewModel() → PetViewModel(PetRepository, UserPreferencesRepository, AchievementsRepository)
+    ↓
+init { } del ViewModel:
+    ├── Leer DataStore: hasSeenOnboarding (suspend)
+    ├── Colectar Flow: currentTheme → actualizar tema
+    ├── Colectar Flow: unlockedThemes → actualizar temas
+    ├── Colectar Flow: unlockedAchievements → actualizar logros
+    ├── Colectar Flow: gameCooldowns → control farm de moneda
+    ├── Room: leer petState
+    │   ├── null  → crear PetStateEntity default → loadChallenges("Kotlin")
+    │   └── exist → applyDecay(petState) → loadChallenges(petState.language)
+    └── Room: buscar FocusSession activa
+        ├── null  → nada
+        ├── exist + tiempo restante → reanudar timer
+        └── exist + tiempo agotado → recompensa offline + diálogo
+    ↓
+Composable:
+    ├── hasSeenOnboarding == false → OnboardingScreen (4 pasos: presentación,
+    │   explicación, elegir temas, nombrar mascota)
+    │       ↓
+    │   completeOnboarding(name, topics) → DataStore + Room
+    │       ↓ → recomposición → hasSeenOnboarding = true → AppNavigation
+    │
+    └── hasSeenOnboarding == true → AppNavigation (HomeScreen por defecto)
+```
+
+### 4.2 Mapa de Navegación (Bottom Navigation)
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                        TOP BAR (Material 3)                       │
+│           Code Tamagotchi                    [⚙️ Configuración]  │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│   ┌──────────────────────────────────────────────────────────┐   │
+│   │                   HOME SCREEN                             │   │
+│   │      (ViewportCard: mascota + meters + botones)           │   │
+│   │  ┌──────────────────────────────────────────────────┐     │   │
+│   │  │            🖼️ MASCOTA ANIMADA                    │     │   │
+│   │  │  (bounce + ❤️ flotante al tocarla)               │     │   │
+│   │  └──────────────────────────────────────────────────┘     │   │
+│   │  ▓▓▓▓▓░░░ Salud    ▓▓░░░░░ Hambre  ▓▓▓░░░░ Energía       │   │
+│   │  💰 Bytes   🔥 Racha   😴 Dormir   🧹 Limpiar            │   │
+│   │  [Acariciar] [🎮 Jugar]                                    │   │
+│   └──────────────────────────────────────────────────────────┘   │
+│                                                                   │
+├──────────────────────────────────────────────────────────────────┤
+│  [🏠] Inicio  [💻] Aprender  [⏱️] Focus  [🛒] Tienda            │
+└──────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pantallas adicionales (acceso desde top bar o bottom nav):
+
+┌──────────────────────────────────────────────────────────────────┐
+│  ⚙️ CONFIGURACIÓN (SettingsScreen)                               │
+│  ├─ Perfil: nombre, nivel, renombrar                             │
+│  ├─ Aprendizaje: lenguajes, temas activos, dificultad            │
+│  ├─ Experiencia: 🎨 carrusel de temas, sonido, vibración,        │
+│  │               reducir animaciones                             │
+│  ├─ Recordatorios: estructura local (placeholder)                │
+│  └─ Datos: exportar (mock), restablecer (doble confirmación)     │
+│                                                                   │
+│  🕹️ ARCADE (GamesScreen)                                         │
+│  ├─ Bug Hunt → Encuentra bugs en 5 rondas (con explicaciones)    │
+│  ├─ Git Rescue → 5 decisiones Git con progreso de rama           │
+│  ├─ Refactor Rush → Ordena bloques (12 puzzles aleatorios)       │
+│  └─ Arcade Clásico → Minijuegos antiguos                         │
+│    ⏳ Cooldown diario de 24h por juego                           │
+│                                                                   │
+│  🎓 ONBOARDING (primera apertura)                                │
+│  ├─ Paso 1: "Tu compañero de código" + animación mascota         │
+│  ├─ Paso 2: "Tu práctica la hace evolucionar" + tarjetas         │
+│  ├─ Paso 3: "Elige tu ruta" → FilterChip con 8 temas             │
+│  └─ Paso 4: "Dale nombre a tu copiloto" (máx 15 caracteres)      │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+### 4.3 Manejo de Ciclo de Vida
+
+```kotlin
+onCleared() {
+    soundManager.release()  // Liberar ToneGenerator
+}
+```
+
+**Temporizador persistente:** Al cerrar la app durante un estudio, la `FocusSessionEntity` persiste con estado `RUNNING`. Al reabrir, el ViewModel restaura el temporizador calculando `(plannedDurationMs - (now - startedAt))` y lo reanuda automáticamente.
+
+---
+
+## 5. Sistema de la Mascota
+
+### 5.1 Entidad PetStateEntity
+
+```kotlin
+@Entity(tableName = "pet_state")
+data class PetStateEntity(
+    @PrimaryKey val id: Int = 1,          // Siempre 1 (singleton)
+    val name: String = "Codey",            // Nombre editable
+    val language: String = "Kotlin",       // Lenguaje de especialidad
+    val level: Int = 1,                    // Nivel actual (1+)
+    val xp: Int = 0,                       // Experiencia total
+    val hunger: Float = 100f,              // Hambre (0-100)
+    val health: Float = 100f,              // Salud (0-100)
+    val energy: Float = 100f,              // Energía (0-100)
+    val bytes: Int = 50,                   // Moneda virtual
+    val lastUpdated: Long = now,           // Última interacción (epoch ms)
+    val streak: Int = 0,                   // Días consecutivos de estudio
+    val lastStudyDate: Long = 0,           // Última fecha de estudio
+    val currentStatus: String = "HAPPY"    // HAPPY, SAD, SICK, HUNGRY, SLEEPING, STUDYING, EXCITED
+)
+```
+
+### 5.2 Mapa de Estados y Transiciones
+
+```
+                 ┌──────────┐
+                 │  EXCITED │ ← Desbloquear tema, mucho cariño
+                 └────┬─────┘
+                      │
+        ┌─────────────┼─────────────┐
+        │             │             │
+   ┌────▼────┐  ┌────▼────┐  ┌────▼────┐
+   │  HAPPY  │  │ STUDYING│  │ SLEEPING│
+   └────┬────┘  └────┬────┘  └────┬────┘
+        │             │             │
+   ┌────▼────┐  ┌────▼────┐  ┌────▼────┐
+   │  SAD    │  │  HUNGRY │  │  SICK   │
+   └─────────┘  └─────────┘  └─────────┘
+```
+
+**Transiciones:**
+- `HAPPY ↔ SLEEPING`: toggleSleep()
+- `HAPPY → STUDYING`: startStudyTimer()
+- `STUDYING → HAPPY/SAD/HUNGRY/SICK`: completeStudySession()
+- `SLEEPING → HAPPY`: toggleSleep() o automático al recuperar energía
+- `SAD → HAPPY`: Acariciar, dar comida, mejorar energía
+- `HUNGRY → HAPPY`: Dar comida (hunger > 20)
+- `SICK → HAPPY`: Dar medicina (health > 20)
+- `HAPPY → EXCITED`: Acertar reto, desbloquear tema
+- Cualquier estado → `SLEEPING`: toggleSleep()
+- Cualquier estado → `STUDYING`: startStudyTimer()
+
+### 5.3 Sistema de Decaimiento (applyDecay) — v2.0
+
+Cuando la app se inicia o se reanuda, se calcula el tiempo transcurrido:
+
+```kotlin
+val elapsedMs = now - state.lastUpdated
+val hours = elapsedMs / (1000 * 60 * 60)
+```
+
+**Efectos por hora transcurrida (v2.0 rebalanceado):**
+
+| Condición | Efecto v1.0 | Efecto v2.0 |
+|:----------|:-----------|:-----------|
+| **Despierto** — Hambre | -4%/h | **-2.5%/h** |
+| **Despierto** — Energía | -3%/h | **-2%/h** |
+| **Despierto** — Salud base | -3.64%/h | **-1.5%/h** |
+| **Durmiendo** — Energía | +15%/h | **+12%/h** |
+| **Durmiendo** — Hambre | -1.5%/h | **-1%/h** |
+| **Hambre = 0%** — Salud extra | -5%/h | **-3%/h** |
+| **Energía < 10%** — Salud extra | -2%/h | **-1%/h** |
+| **Sin estudio > 36h** — Streak | = 0 | **> 48h** |
+| **Sin estudio > 48h** — Salud extra | -3%/h | **> 72h: -1.5%/h** |
+
+**Propósito:** El rebalance hace la mascota menos punitiva. Antes moría en ~27h; ahora sobrevive ~67h sin cuidados. La penalización por abandono prolongado se reduce para dar más margen al usuario ocasional.
+
+### 5.4 Cálculo de Nivel
+
+```kotlin
+fun calculateLevel(xp: Int, currentLevel: Int): Int {
+    var level = 1
+    var requiredXp = 100
+    while (xp >= requiredXp) {
+        level++
+        requiredXp += level * 100
+    }
+    return level
+}
+```
+
+| Nivel | XP Requerido | XP Acumulado |
+|:-----:|:------------:|:------------:|
+| 1 | 0 | 0 |
+| 2 | 100 | 100 |
+| 3 | 200 | 300 |
+| 4 | 300 | 600 |
+| 5 | 400 | 1000 |
+| 10 | 1000 | 5500 |
+| n | n × 100 | n(n+1)/2 × 100 |
+
+### 5.5 Fórmula de la Barra de Salud (Visual)
+
+```kotlin
+val currentHearts = (state.health / 20f).toInt().coerceIn(0, 5)
+// 5 corazones = 100% salud
+```
+
+### 5.6 Umbrales de Estados (v2.0)
+
+| Estado | v1.0 | v2.0 |
+|:-------|:----:|:----:|
+| SICK | health < 30 | **health < 20** |
+| HUNGRY | hunger < 30 | **hunger < 20** |
+| SAD | energy < 20 | **energy < 15** |
+
+---
+
+## 6. Módulos y Funcionalidades
+
+### 6.1 Onboarding (`feature/onboarding/OnboardingScreen.kt`)
+
+**Propósito:** Primera experiencia del usuario en 4 pasos con HorizontalPager.
+
+**Flujo:**
+1. **Paso 1 — "Tu compañero de código":** Mascota, animación, terminal `> hola_mundo`
+2. **Paso 2 — "Tu práctica la hace evolucionar":** 3 tarjetas (retos, Focus, cuidados), explicación XP/Bytes
+3. **Paso 3 — "Elige tu ruta":** FilterChip multiselección (8 temas), Ruta inicial, contador (máx 3)
+4. **Paso 4 — "Dale nombre a tu copiloto":** Input (máx 15), preview `> ¡Compilado! Soy {name}`
+5. **Skip:** Diálogo de confirmación → usa "Codey" + Ruta inicial
+6. Al completar: `setOnboardingCompleted()`, `setSelectedTopics()`, crea `PetStateEntity(name)`, navega a Home
+
+### 6.2 Pantalla Principal (`AppNavigation.kt` + `HomeScreen.kt`)
+
+**Propósito:** Centro de toda la interacción con la mascota. Scaffold con bottom navigation y 13 rutas.
+
+**Componentes:**
+
+| Componente | Archivo | Función |
+|:-----------|:--------|:--------|
+| `AppNavigation` | `navigation/AppNavigation.kt` | Scaffold + bottom nav + 13 rutas (when) |
+| `Screen` | `navigation/Screen.kt` | sealed class: Home, Learn, Focus, Shop, Settings, SettingsLanguage, Games, BugHunt, GitRescue, RefactorRush |
+| `HomeScreen` | `feature/home/HomeScreen.kt` | ViewportCard + botones + diálogo offline reward |
+| `ViewportCard` | `ui/components/ViewportCard.kt` | Mascota animada + meters + nombre |
+| `MeterItem` | `ui/components/MeterItem.kt` | Barra de progreso animada |
+| `LearnScreen` | `feature/learn/LearnScreen.kt` | Retos de programación (normales + especiales) |
+| `FocusScreen` | `feature/focus/FocusScreen.kt` | Pomodoro persistente + bitácora de estudio |
+| `ShopScreen` | `feature/shop/ShopScreen.kt` | Tienda con productos y comida |
+| `SettingsScreen` | `feature/settings/SettingsScreen.kt` | Configuración completa con carrusel de temas |
+| `SettingsLanguageScreen` | `feature/settings/SettingsLanguageScreen.kt` | Lenguaje principal, temas activos, dificultad |
+| `GamesScreen` | `feature/games/GamesScreen.kt` | Hub arcade con cooldown diario |
+| `BugHuntScreen` | `feature/games/BugHuntScreen.kt` | Encuentra bugs en código (10 snippets) |
+| `GitRescueScreen` | `feature/games/GitRescueScreen.kt` | Decisiones Git con progreso visual |
+| `RefactorRushScreen` | `feature/games/RefactorRushScreen.kt` | Ordena bloques (12 puzzles) |
+| `MinigamesDialog` | `feature/games/MinigamesDialog.kt` | Arcade clásico (3 juegos legacy) |
+| `BinaryGuessGame` | `feature/games/BinaryGuessGame.kt` | Adivina el bit (legacy) |
+| `BugSmasherGame` | `feature/games/BugSmasherGame.kt` | Caza bugs 3×3 (legacy) |
+| `RockPaperSciGame` | `feature/games/RockPaperSciGame.kt` | Servidor, Script, Hacker (legacy) |
+
+### 6.3 Pet Tap
+
+```
+👆 Touch en la imagen
+    ↓
+onPetTap()
+    ↓
+┌─ viewModel.petThePet() ──────────────────────────┐
+│  +15% Energía · +5% Salud   (v2.0: +50% más)     │
+│  Sonido: click                                    │
+└───────────────────────────────────────────────────┘
+┌─ Animación ───────────────────────────────────────┐
+│  1. bounceScale: 1.0 → 1.25 (100ms)              │
+│  2. bounceScale: 1.25 → 1.0 (spring, 0.3)        │
+│  3. bounceOffsetY: 0 → -20dp (100ms) → 0 (spring)│
+│  4. heartOffsetY: 0 → -120dp (800ms, linear)      │
+│  5. heartAlpha: 1.0 → 0.0 (800ms, linear)         │
+│  6. ❤️ flotante visible (900ms)                   │
+└───────────────────────────────────────────────────┘
+```
+
+### 6.4 Panel LEARN (Retos de Programación) — 88 retos
+
+El banco de retos se expandió de 11 a 88 challenges:
+
+| Lenguaje | Cantidad | Tipos |
+|:---------|:--------:|:------|
+| Kotlin | 20 | TRIVIA, DEBUG |
+| JavaScript | 20 | TRIVIA, DEBUG |
+| PHP | 19 | TRIVIA, DEBUG |
+| Python | 29 | TRIVIA, DEBUG |
+
+**Mecánica:**
+- Se cargan 3 retos aleatorios del lenguaje seleccionado
+- El usuario elige entre 4 opciones
+- Feedback inmediato con explicación
+- Acierto v2.0: +25-30 Bytes, +20-25 XP, +15% Alimento, +20% Salud
+- Error: solo feedback, sin penalización
+
+### 6.5 Panel FOCUS (Pomodoro)
+
+**Configuración:**
+- Temas: Kotlin, JavaScript, PHP, Python, SQL, Clean Code, Git, Estructuras de Datos
+- Duración: 15, 25 o 50 minutos
+
+**Mecánica (v2.0 rebalanceada):**
+
+```kotlin
+startStudyTimer(minutes, topic) {
+    status = "STUDYING"
+    timerSecondsRemaining = minutes * 60
+    // Persiste FocusSessionEntity en Room
+    // Al cerrar app → se reanuda al abrir
+}
+
+completeStudySession() {
+    val baseBytes = minutes * 2      // antes: minutes * 1
+    val baseXP = minutes * 3          // antes: minutes * 2
+    val bonusBytes = if (minutes >= 25) 50 else 0  // antes: 25
+    val bonusXP = if (minutes >= 25) 75 else 0      // antes: 50
+    val energyCost = (minutes * 0.5f).coerceAtMost(30f)  // antes: 0.6 max 40
+}
+```
+
+**Recompensas comparativas para 25 min:**
+
+| Concepto | v1.0 | v2.0 |
+|:---------|:----:|:----:|
+| Bytes base | 25 | **50** |
+| XP base | 50 | **75** |
+| Bonus 25+ | +25 B, +50 XP | **+50 B, +75 XP** |
+| Total | 75 B, 125 XP | **150 B, 225 XP** |
+| Costo energía | -15 | **-12.5** |
+
+### 6.6 Panel SHOP (Tienda)
+
+| Producto | Costo | Efecto |
+|:---------|:-----:|:-------|
+| Café Negro (CPU Booster) | 10 B | +20% Energía |
+| Pizza de Código (Bytes Snack) | 15 B | +35% Alimento |
+| Píldora Desbugueadora | 25 B | +30% Salud |
+| Vacuna Super Compiler | 55 B | +75% Salud, +40% Alimento, +40% Energía |
+
+**Comida adicional:**
+| Comida | Costo | Efecto |
+|:-------|:-----:|:-------|
+| Manzana Binaria | 2 B | +15% Alimento, +2% Energía |
+| Pizza de Bytes | 6 B | +30% Alimento, +5% Energía |
+| Sushi de Datos | 15 B | +55% Alimento, +5% Salud, +15% Energía |
+| Café Espresso CPU | 5 B | -5% Alimento, +35% Energía |
+
+### 6.7 Cuidados Gratuitos (v2.0 buffed)
+
+| Acción | Efecto v1.0 | Efecto v2.0 |
+|:-------|:-----------|:-----------|
+| Acariciar (tocar mascota) | +10% E, +3% S | **+15% E, +5% S** |
+| Limpiar | +6% S, +5% E | **+12% S, +8% E** |
+| Dormir | Recupera energía | Sin cambios |
+| Despertar | Vuelve a HAPPY | Sin cambios |
+
+### 6.8 Configuración (`SettingsScreen.kt`)
+
+**Propósito:** Todas las opciones de personalización y administración.
+
+**Secciones:**
+- **Perfil:** nombre, nivel actual, botón renombrar (diálogo con validación 1-15 chars)
+- **Aprendizaje:** atajo a `SettingsLanguageScreen` (lenguaje principal, temas activos, dificultad)
+- **Experiencia:** 🎨 carrusel de temas visual con LazyRow, toggle sonido/vibración, reducir animaciones
+- **Recordatorios:** estructura visual (placeholder sin lógica de notificaciones)
+- **Datos:** exportar progreso (mock JSON), restablecer todo (doble confirmación con diálogo en dos pasos)
+
+**Temas visuales:**
+- 12 temas premium con emoji, tipografía única, corner radius, gradientes
+- Carrusel con preview de colores, dots de paleta, check en activo, candado en bloqueados
+- Animación suave de borde con `animateColorAsState`
+- Persistencia en DataStore + CompositionLocal (`LocalAppTheme`)
+
+---
+
+## 7. Base de Datos y Persistencia
+
+### 7.1 Room Database
+
+**Archivo:** `AppDatabase.kt` — versión 2 (fallbackToDestructiveMigration)
+
+```kotlin
+@Database(entities = [PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class], version = 2)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun petDao(): PetDao
+
+    companion object {
+        @Volatile private var INSTANCE: AppDatabase? = null
+        fun getDatabase(context: Context): AppDatabase {
+            return INSTANCE ?: synchronized(this) {
+                Room.databaseBuilder(context, AppDatabase::class.java, "code_tamagotchi_db")
+                    .fallbackToDestructiveMigration(false)
+                    .build().also { INSTANCE = it }
+            }
+        }
+    }
+}
+```
+
+**Tablas:**
+| Tabla | Propósito | Filas |
+|:------|:----------|:------|
+| `pet_state` | Estado singleton de la mascota | 1 |
+| `study_sessions` | Historial de sesiones completadas | N |
+| `focus_sessions` | Sesiones de timer (activas y completadas) | N |
+
+### 7.2 FocusSessionEntity
+
+```kotlin
+@Entity(tableName = "focus_sessions")
+data class FocusSessionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val topic: String,
+    val plannedDurationMinutes: Int,
+    val startedAt: Long,          // epoch ms
+    val status: String            // "RUNNING", "COMPLETED", "CANCELLED"
+)
+```
+
+**Queries clave:**
+```kotlin
+@Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' LIMIT 1")
+fun getActiveFocusSession(): Flow<FocusSessionEntity?>
+
+@Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
+fun getLatestFocusSession(): Flow<FocusSessionEntity?>
+```
+
+### 7.3 DataStore (reemplaza SharedPreferences)
+
+**Archivo:** `UserPreferencesRepository.kt`
+
+```kotlin
+private val Context.dataStore by preferencesDataStore(name = "user_preferences")
+
+class UserPreferencesRepository(private val context: Context) {
+    val hasSeenOnboarding: Flow<Boolean>
+    val currentTheme: Flow<String>
+    val unlockedThemes: Flow<Set<String>>
+
+    suspend fun setOnboardingCompleted()
+    suspend fun setTheme(theme: String)
+    suspend fun addUnlockedTheme(theme: String)
+    suspend fun getHasSeenOnboarding(): Boolean
+}
+```
+
+**Keys migradas desde SharedPreferences:**
+| Key | Tipo | Default |
+|:----|:----:|:--------|
+| `has_seen_onboarding` | Boolean | false |
+| `app_theme` | String | "Matrix Green" |
+| `unlocked_themes` | Set<String> | {"Matrix Green"} |
+
+### 7.4 PetDao — Queries Completas
+
+```kotlin
+@Dao
+interface PetDao {
+    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
+    fun getPetState(): Flow<PetStateEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdatePetState(state: PetStateEntity)
+
+    @Query("SELECT * FROM study_sessions ORDER BY timestamp DESC")
+    fun getAllStudySessions(): Flow<List<StudySessionEntity>>
+
+    @Insert
+    suspend fun insertStudySession(session: StudySessionEntity)
+
+    // Focus Sessions
+    @Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
+    fun getLatestFocusSession(): Flow<FocusSessionEntity?>
+
+    @Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' LIMIT 1")
+    suspend fun getActiveFocusSession(): FocusSessionEntity?
+
+    @Insert
+    suspend fun insertFocusSession(session: FocusSessionEntity)
+
+    @Query("UPDATE focus_sessions SET status = :status WHERE id = :id")
+    suspend fun updateFocusSessionStatus(id: Long, status: String)
+}
+```
+
+### 7.5 PetRepository
+
+```kotlin
+class PetRepository(private val petDao: PetDao) {
+    val petState: Flow<PetStateEntity?>
+    val studySessions: Flow<List<StudySessionEntity>>
+    val latestFocusSession: Flow<FocusSessionEntity?>
+
+    suspend fun savePetState(state: PetStateEntity)
+    suspend fun addStudySession(session: StudySessionEntity)
+    suspend fun saveFocusSession(session: FocusSessionEntity)
+    suspend fun getActiveFocusSession(): FocusSessionEntity?
+    suspend fun updateFocusSessionStatus(id: Long, status: String)
+}
+```
+
+### 7.6 Estructura de Carpetas de Assets
+
+```
+app/src/main/assets/pet/
+├── normal/
+│   ├── static/
+│   │   ├── mascota_happy.png
+│   │   ├── mascota_sleeping.png
+│   │   ├── mascota_studying.png
+│   │   ├── mascota_sick.png
+│   │   ├── mascota_sad.png
+│   │   ├── mascota_hungry.png
+│   │   └── mascota_excited.png
+│   └── animations/
+└── pixel_art/
+    ├── static/
+    └── animations/
+```
+
+---
+
+## 8. Sistema de Temas
+
+### 8.1 Estructura
+
+```kotlin
+data class AppTheme(
+    val name: String,           // "Matrix Green"
+    val emoji: String,          // "🖥️"
+    val description: String,    // "Terminal hacker. Código verde sobre negro."
+    val isDark: Boolean,        // true = darkColorScheme, false = lightColorScheme
+
+    // Color palette (12 colores)
+    val background: Color, val surface: Color, val surfaceVariant: Color,
+    val primary: Color, val secondary: Color, val tertiary: Color,
+    val onPrimary: Color, val textPrimary: Color, val textSecondary: Color,
+    val accent: Color, val success: Color, val error: Color,
+
+    // Typography (distinta por tema)
+    val fontFamily: FontFamily,      // body (Monospace, Serif, SansSerif)
+    val titleFontFamily: FontFamily, // títulos (puede diferir del body)
+    val titleWeight: FontWeight,     // Bold, Thin, ExtraBold, Black...
+
+    // Visual style
+    val cornerRadius: Dp,       // 0dp (Retro Pixel) a 20dp (Galáctico)
+    val borderWidth: Dp,        // 0dp a 2dp
+    val usesGradients: Boolean,
+    val gradientColors: List<Color>
+)
+```
+
+### 8.2 Temas Disponibles (12 premium)
+
+| # | Tema | Emoji | Dark | Fuente | Esquinas | Gradiente |
+|:-:|:-----|:-----:|:----:|:-------|:--------:|:---------:|
+| 1 | Matrix Green | 🖥️ | Sí | Monospace | 4dp | — |
+| 2 | Galáctico | 🌌 | Sí | SansSerif | 20dp | ✅ |
+| 3 | Cyberpunk | ⚡ | Sí | Monospace | 2dp | ✅ |
+| 4 | Sakura | 🌸 | No | Serif | 16dp | ✅ |
+| 5 | Minimalista | ◻️ | No | SansSerif | 8dp | — |
+| 6 | Neón | 💜 | Sí | Monospace | 12dp | — |
+| 7 | Océano | 🌊 | Sí | SansSerif | 14dp | ✅ |
+| 8 | Volcánico | 🌋 | Sí | Serif | 6dp | ✅ |
+| 9 | Samurai | ⚔️ | Sí | Serif | 4dp | — |
+| 10 | Aurora | ✨ | Sí | SansSerif | 18dp | ✅ |
+| 11 | Nocturno | 🌙 | Sí | SansSerif | 12dp | — |
+| 12 | Retro Pixel 🏆 | 👾 | Sí | **Press Start 2P** (8-bit) | 0dp | — |
+
+### 8.3 Integración con Material 3
+
+Cada `AppTheme` se convierte a un `ColorScheme` completo de Material 3 mediante:
+
+```kotlin
+fun AppTheme.toColorScheme(): ColorScheme {
+    val builder = if (isDark) ::darkColorScheme else ::lightColorScheme
+    return builder(
+        primary = primary, onPrimary = onPrimary,
+        primaryContainer = primary.copy(alpha = 0.20f),
+        secondary = secondary, tertiary = tertiary,
+        background = background, surface = surface,
+        surfaceVariant = surfaceVariant,
+        error = error, outline = textSecondary.copy(alpha = 0.5f),
+        ...
+    )
+}
+```
+
+Además, la tipografía se construye dinámicamente vía `buildTypography(bodyFont, titleFont, titleWeight)`.
+
+### 8.4 Composición Local
+
+```kotlin
+val LocalAppTheme = staticCompositionLocalOf { ThemeRegistry.allThemes.first() }
+```
+
+Cualquier componente puede leer el tema actual completo con `LocalAppTheme.current` para acceder a propiedades como `cornerRadius`, `emoji`, `borderWidth`, etc.
+
+### 8.5 Selección Visual
+
+Los temas se seleccionan mediante un **carrusel horizontal** (`LazyRow`) en SettingsScreen:
+
+- Cada tarjeta muestra: gradiente de colores, emoji, nombre, descripción, dots de paleta
+- El tema activo tiene borde brillante + check + etiqueta "Activo"
+- Los temas bloqueados muestran candado y están deshabilitados
+- Animación suave de borde (`animateColorAsState`)
+
+### 8.6 Persistencia
+
+- `currentTheme` → Flow vía DataStore (default: "Matrix Green")
+- `unlockedThemes` → Flow vía DataStore (default: {"Matrix Green"})
+- Los temas se desbloquean al acertar retos especiales mediante `addUnlockedTheme()`
+
+---
+
+## 9. Sistema de Retos
+
+### 9.1 Estructura de un Reto
+
+```kotlin
+data class CodingChallenge(
+    val id: Int,
+    val language: String,
+    val type: String,               // "TRIVIA", "DEBUG"
+    val title: String,
+    val question: String,
+    val codeSnippet: String?,
+    val options: List<String>,
+    val correctAnswerIndex: Int,
+    val explanation: String
+)
+```
+
+### 9.2 Banco de Retos (88)
+
+| Lenguaje | IDs | Tipo | Temas cubiertos |
+|:---------|:---:|:-----|:----------------|
+| **Kotlin** (20) | 1-3, 12-25, 86-87 | TRIVIA + DEBUG | val/var, null safety, scope functions, data class, Elvis, extension functions, coroutines, when, sealed class, smart cast, Flow vs LiveData, colecciones, inline, operator overloading, object, lambdas |
+| **JavaScript** (20) | 4-6, 26-40 | TRIVIA + DEBUG | typeof null, === vs ==, closures, let/var, promises, spread, template literals, arrow functions, hoisting, destructuring, map, event loop, falsy, fetch, coerción, this, JSON, null vs undefined |
+| **PHP** (19) | 7-9, 41-55 | TRIVIA + DEBUG | $variables, array_merge, == vs ===, $_POST, foreach, isset/empty, clases, extends, print_r, session_start, include/require, arrays asociativos, concatenación, funciones variables, self::, PDO, setcookie, ternario |
+| **Python** (29) | 10-11, 56-85, 88-90 | TRIVIA + DEBUG | tuplas, list comprehension, PEP 8, list vs tuple, with, mutable defaults, *args/**kwargs, decoradores, range, dict.get, f-strings, try/except, herencia múltiple, generadores, shallow copy, sets, __init__.py, / vs //, @classmethod, zip, global, dict comprehension, lambda, re vs match, assert, enumerate, referencias, sys.argv, JSON, super, virtualenv, type hints, asyncio |
+
+### 9.3 Carga de Retos
+
+```kotlin
+loadChallengesForLanguage("Kotlin") {
+    val filtered = ChallengesData.challenges.filter { language == it.language }
+    _activeChallenges.value = filtered.shuffled().take(3)
+    _currentChallengeIndex.value = 0
+}
+```
+
+Siempre se muestran 3 retos aleatorios por lenguaje. Al completar los 3, se recargan otros 3 aleatorios.
+
+### 9.4 Sistema de Recompensas (v2.0)
+
+```kotlin
+// Reto normal TRIVIA
+earnedBytes = 25     // antes: 20
+earnedXp = 20        // antes: 15
+
+// Reto normal DEBUG
+earnedBytes = 30     // antes: 25
+earnedXp = 25        // antes: 20
+
+// Ambos restauran: hunger +15, health +20 (sin cambios)
+```
+
+---
+
+## 10. Minijuegos
+
+La app tiene 3 juegos originales (Arcade de Depuración) más 3 juegos clásicos (Arcade Clásico legacy). Todos los juegos entregan Bytes y afecto, nunca XP de estudio. Cada juego tiene cooldown diario de 24h.
+
+### 10.1 Bug Hunt — Terminal Panic
+
+**Propósito:** Encontrar la línea con bug en fragmentos de código ficticio.
+
+**Mecánica:**
+- 5 rondas de 60 segundos
+- Se muestra un snippet de 4-5 líneas de código
+- El jugador toca la línea que contiene el bug
+- 10 snippets diferentes en el pool (aleatorio cada partida)
+- Después de responder: explicación técnica + humor de Codey
+
+**Sistema de recompensa:**
+- `score × 10` Bytes (máx 50)
+- `+10%` Salud, `-5%` Energía
+- Logro "Cazador de bugs" si score = 10
+
+**Ejemplo de ronda:**
+```
+Ronda 3 de 5
+⌛ 42s
+
+Codey: ¡Los paréntesis no son decoración! Son parte de la sintaxis.
+
+1. val nums = listOf(1, 2, 3)
+2. for i in nums {          ← BUG (falta paréntesis)
+3.     print(i)
+4. }
+
+Explicación: En Kotlin el for usa paréntesis: for (i in nums).
+```
+
+### 10.2 Git Rescue
+
+**Propósito:** Elegir el comando Git correcto en situaciones de merge, rebase y conflictos.
+
+**Mecánica:**
+- 5 escenarios secuenciales de 8 en el pool
+- Cada escenario: situación narrativa + 3 opciones (correcta, plausible, absurda)
+- Después de responder: explicación + humor
+- Progreso visual de rama con círculos numerados
+
+**Sistema de recompensa:**
+- `score × 15` Bytes (máx 45)
+- `+10%` Salud, `-5%` Energía
+- Logro "Git sin pánico" si score = 3
+
+**Ejemplo:**
+```
+Paso 2 de 5
+
+Codey: revert HEAD es más seguro que reset --hard
+
+Situación: Has hecho cambios locales y rompiste todo.
+> git reset --hard HEAD
+> git revert HEAD                ← CORRECTA
+> git rm -rf .
+
+Explicación: revert crea un nuevo commit preservando la historia.
+```
+
+### 10.3 Refactor Rush
+
+**Propósito:** Ordenar bloques de código en el orden correcto.
+
+**Mecánica:**
+- 1 puzzle aleatorio de 12 en el banco
+- Bloques desordenados, se mueven con botones ▲/▼
+- Múltiples intentos permitidos
+- Penalización por intentos extra (menos Bytes)
+
+**Sistema de recompensa:**
+- `max(50 - attempts × 5, 10)` Bytes
+- `+10%` Salud, `-5%` Energía
+
+### 10.4 Arcade Clásico (Legacy)
+
+Sección secundaria en GamesScreen que conserva los minijuegos originales:
+
+#### 10.4.1 Adivina el Bit
+- 5 rondas, adivinar bit secreto (0/1)
+- Premio: `score × 4` Bytes, `score × 3`% Salud
+
+#### 10.4.2 Caza de Bugs
+- Cuadrícula 3×3, 10 segundos, tocar el bug
+- Premio: `score × 2` Bytes, `score × 1.5`% Salud (máx 30%)
+
+#### 10.4.3 Servidor, Script, Hacker
+- Servidor > Hacker > Script > Servidor, mejor de 3
+- Premio (ganar): 20 Bytes, 25% Salud
+- Premio (perder): 5 Bytes, 10% Salud
+
+### 10.5 Cooldown Diario
+
+Cada juego registra su última fecha de juego en DataStore (`game_last_played`). Un juego solo puede jugarse si pasaron 24h desde la última partida. El cooldown se muestra visualmente: tarjeta atenuada, botón deshabilitado, texto "En enfriamiento".
+
+---
+
+## 11. Sistema de Sonido
+
+### 11.1 SoundManager
+
+Usa `ToneGenerator` del sistema Android (generación de tonos, sin archivos de audio):
+
+```kotlin
+class SoundManager {
+    private var toneGen: ToneGenerator? = null
+
+    init {
+        toneGen = ToneGenerator(AudioManager.STREAM_MUSIC, 100)
+    }
+}
+```
+
+### 11.2 Mapa de Sonidos
+
+| Evento | Método | Tono |
+|:-------|:-------|:-----|
+| ✅ Respuesta correcta | `playSuccess()` | `TONE_PROP_ACK` (100ms) |
+| ❌ Respuesta incorrecta | `playError()` | `TONE_PROP_BEEP2` (150ms) |
+| ⬆️ Subida de nivel / Logro | `playLevelUp()` | 2× beep + ack |
+| 👆 Clic / Interfaz | `playClick()` | `TONE_DTMF_A` (50ms) |
+| 🛒 Comprar | `playBuy()` | `TONE_PROP_BEEP` (100ms) |
+| 😴 Dormir | `playSleep()` | 2× `TONE_CDMA_SOFT_ERROR_LITE` |
+
+### 11.3 Ciclo de Vida
+
+```kotlin
+val soundManager = SoundManager()   // creado en PetViewModel
+
+override fun onCleared() {
+    soundManager.release()
+}
+```
+
+---
+
+## 12. Estados y Animaciones
+
+### 12.1 Animaciones Infinitas (por estado)
+
+| Estado | Eje X | Eje Y | Escala | Velocidad |
+|:-------|:-----:|:-----:|:------:|:---------:|
+| HAPPY | 0 | ±10px flotación | 1.0 | 600ms |
+| SLEEPING | 0 | ±5px flotación lenta | 1.0 | 2000ms |
+| STUDYING | 0 | 0 | 1.0 | — |
+| SICK | ±5px temblor | 0 | 1.0 | 100ms |
+| SAD | 0 | 0 | 1.0 | — |
+| HUNGRY | 0 | 0 | 0.95↔1.05 pulso | 1000ms |
+| EXCITED | 0 | ±10px flotación rápida | 1.0 | 300ms |
+
+### 12.2 Animaciones One-Shot
+
+| Acción | Animación | Duración |
+|:-------|:----------|:---------|
+| Tocar mascota | Bounce (escala 1→1.25→1) + ❤️ flotante | 900ms |
+| Abrir panel | Slide-up + fade-in | 300ms |
+| Cerrar panel | Slide-down + fade-out | 300ms |
+| Feedback reto | Color en opción seleccionada | Instantáneo |
+| Barras de estado | `animateFloatAsState` | 300ms |
+
+### 12.3 Sistema de Quotes
+
+```kotlin
+"HAPPY" → "¡Compilar sin advertencias es mi pasión!"
+"SLEEPING" → "Zzz... if (dream) { sleep() } else { repeat() }... Zzz"
+"SICK" → "Error 500: Necesito desbuguear urgente."
+"HUNGRY" → "NullPointerException en mi estómago."
+"EXCITED" → "¡Podría compilar el kernel de Linux en 1 segundo!"
+```
+
+### 12.4 Fondos Animados por Tema (`AnimatedThemeBackground.kt`)
+
+Cada tema tiene un fondo animado único que se renderiza via `Canvas` de Compose:
+
+| Tema | Efecto visual |
+|:-----|:--------------|
+| Matrix Green | Lluvia de 1/0 con mensajes ocultos y bursts de velocidad |
+| Galáctico | Nebulosas + estrellas titilantes + polvo estelar |
+| Cyberpunk | Rejilla neon + glitch lines horizontales |
+| Sakura | Pétalos de cerezo cayendo con rotación |
+| Minimalista | Círculos concéntricos orbitando suavemente |
+| Neón | Anillos pulsantes con resplandores radiales |
+| Océano | Olas sinusoidales + burbujas ascendentes |
+| Volcánico | Flujo de lava + ascuas ardientes |
+| Samurai | Mon (escudo) + hojas de bambú + katana |
+| Aurora | Cortinas polares ondulantes |
+| Nocturno | Cielo estrellado con estrella fugaz periódica |
+| **Retro Pixel 🏆** | **Mundo 8-bit completo:** cielo pixelado, estrellas, luna, montañas parallax, árboles, suelo con textura, nubes scrolling, luciérnagas, rejilla CRT |
+
+El fondo se pinta a través de `AnimatedThemeBackground()` que lee el `LocalAppTheme` y selecciona la animación correspondiente mediante un `when (theme.name)`.
+
+---
+
+## 13. Notificaciones y Widgets
+
+### 13.1 Estado Actual
+
+**No implementado.** La app actualmente no tiene:
+- ❌ Notificaciones push
+- ❌ Notificaciones locales
+- ❌ Widgets de Android
+- ❌ Recordatorios
+
+### 13.2 Plan para Futuras Versiones
+
+- **Notificaciones locales:** WorkManager para checkear cada 4h si la mascota necesita atención
+- **Widget:** AppWidgetProvider mostrando la mascota + barras de estado
+- **Recordatorio de estudio:** Notificación programada
+
+---
+
+## 14. Inyección de Dependencias
+
+### 14.1 Koin Setup
+
+**Application class** (`CodeTamagotchiApp.kt`):
+```kotlin
+class CodeTamagotchiApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@CodeTamagotchiApp)
+            modules(appModule)
+        }
+    }
+}
+```
+
+**AppModule** (`di/AppModule.kt`):
+```kotlin
+val appModule = module {
+    single { AppDatabase.getDatabase(androidContext()) }
+    single { get<AppDatabase>().petDao() }
+    single { PetRepository(get()) }
+    single { UserPreferencesRepository(androidContext()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
+}
+```
+
+### 14.2 Consumo en MainActivity
 
 ```kotlin
 class MainActivity : ComponentActivity() {
@@ -1482,142 +1172,42 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val petViewModel: PetViewModel = koinViewModel()
-            val reduceMotion = petViewModel.reduceMotion.collectAsStateWithLifecycle()
-            val currentThemeName = petViewModel.currentTheme.value
-            val appTheme = ThemeRegistry.getTheme(currentThemeName)
-            MyApplicationTheme(appTheme = appTheme, reduceMotion = reduceMotion.value) {
-                AppNavigation(viewModel = petViewModel)
+            val appTheme = ThemeRegistry.getTheme(currentTheme.value)
+            MyApplicationTheme(appTheme = appTheme, reduceMotion = ...) {
+                val petViewModel: PetViewModel = koinViewModel()
+                // ...
             }
         }
     }
 }
 ```
 
-### 13.3 AppNavigation.kt (243 lÃ­neas)
+### 14.3 ViewModel con Constructor Injection
 
 ```kotlin
-object Routes {
-    const val HOME = "home"; const val LEARN = "learn"; const val FOCUS = "focus"
-    const val SHOP = "shop"; const val SETTINGS = "settings"; const val SETTINGS_LANGUAGE = "settings_language"
-    const val GAMES = "games"; const val BUG_HUNT = "bug_hunt"; const val GIT_RESCUE = "git_rescue"
-    const val REFACTOR_RUSH = "refactor_rush"
-}
-
-data class BottomNavItem(val label: String, val icon: ImageVector, val route: String)
-
-val bottomNavItems = listOf(
-    BottomNavItem("Inicio", Icons.Default.Home, Routes.HOME),
-    BottomNavItem("Aprender", Icons.Default.Code, Routes.LEARN),
-    BottomNavItem("Estudio", Icons.Default.Timer, Routes.FOCUS),
-    BottomNavItem("Tienda", Icons.Default.ShoppingBag, Routes.SHOP)
-)
-
-@Composable
-fun AppNavigation(viewModel: PetViewModel) {
-    // Onboarding check â†’ OnboardingScreen o NavHost
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    val showBottomBar = currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        AnimatedThemeBackground(theme = appTheme, reduceMotion = reduceMotion)
-        Scaffold(containerColor = Color.Transparent, topBar = { ... },
-            bottomBar = { if (showBottomBar) NavigationBar { bottomNavItems.forEach { item -> NavigationBarItem(...) } } }
-        ) { innerPadding ->
-            NavHost(navController = navController, startDestination = Routes.HOME,
-                modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                composable(Routes.HOME) { HomeScreen(viewModel, ...) }
-                composable(Routes.LEARN) { LearnScreen(viewModel, state) }
-                composable(Routes.FOCUS) { FocusScreen(viewModel, state, studySessions) }
-                composable(Routes.SHOP) { ShopScreen(viewModel, state) }
-                composable(Routes.SETTINGS) { SettingsScreen(viewModel, ...) }
-                composable(Routes.SETTINGS_LANGUAGE) { SettingsLanguageScreen(viewModel, ...) }
-                composable(Routes.GAMES) { GamesScreen(viewModel, ...) }
-                composable(Routes.BUG_HUNT) { BugHuntScreen(viewModel, ...) }
-                composable(Routes.GIT_RESCUE) { GitRescueScreen(viewModel, ...) }
-                composable(Routes.REFACTOR_RUSH) { RefactorRushScreen(viewModel, ...) }
-            }
-        }
-    }
+class PetViewModel(
+    private val repository: PetRepository,
+    private val userPreferences: UserPreferencesRepository,
+    private val achievementsRepository: AchievementsRepository
+) : ViewModel() {
+    // 3 dependencias inyectadas por Koin
+    // DataStore para temas, onboarding, logros, cooldown juegos
+    // Room para estado mascota, sesiones de estudio y focus
 }
 ```
 
 ---
 
-## 14. Pruebas
+## 15. Código Fuente Completo de Cada Archivo
 
-### 14.1 GameEconomyTest.kt (143 lÃ­neas)
+
+A continuación se presenta el código fuente completo de todos los archivos del proyecto, organizados por paquete y funcionalidad.
+
+### 15.1 Configuración del Proyecto
+
 
 ```kotlin
-class GameEconomyTest {
-    @Test fun `XP scales quadratically`() {
-        assertEquals(1, LevelCalculator.calculateLevel(0))
-        assertEquals(2, LevelCalculator.calculateLevel(100))
-        assertEquals(3, LevelCalculator.calculateLevel(300))
-        assertEquals(4, LevelCalculator.calculateLevel(600))
-    }
-
-    @Test fun `challenge rewards vary by type`() {
-        assertEquals(30, RewardCalculator.calculateChallengeReward("DEBUG").bytes)
-        assertEquals(25, RewardCalculator.calculateChallengeReward("TRIVIA").bytes)
-    }
-
-    @Test fun `minigame economy caps rewards`() {
-        assertEquals(50, RewardCalculator.calculateMinigameReward(5, 50))
-        assertEquals(50, RewardCalculator.calculateMinigameReward(10, 50))
-    }
-
-    // ... mÃ¡s tests para difficulty, topics, cooldowns, level calculation, onboarding
-}
-```
-
-### 14.2 GreetingScreenshotTest.kt (Roborazzi)
-
-```kotlin
-@RunWith(RobolectricTestRunner::class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
-class GreetingScreenshotTest {
-    @get:Rule val composeTestRule = createComposeRule()
-
-    @Test fun captureAppNavigation() {
-        composeTestRule.setContent {
-            MyApplicationTheme {
-                val fakePetRepo = PetRepository(mockPetDao)
-                val fakeUserPrefs = UserPreferencesRepository(mockContext)
-                val fakeAchievements = AchievementsRepository(mockContext)
-                val vm = PetViewModel(fakePetRepo, fakeUserPrefs, fakeAchievements)
-                AppNavigation(viewModel = vm)
-            }
-        }
-        // Roborazzi will capture the screenshot
-    }
-}
-```
-
-### 14.3 Cobertura Actual
-
-| Tipo | Archivos | Estado |
-|:-----|:---------|:-------|
-| Unit test | GameEconomyTest (10 tests) | âœ… XP scaling, rewards, economy |
-| Robolectric | ExampleRobolectricTest | âœ… BÃ¡sico |
-| Screenshot | GreetingScreenshotTest | âœ… Roborazzi |
-| Animation | PetAnimationConfigTest | âœ… Reduce motion |
-
----
-
-#
-## 15. CÃ³digo Fuente Completo de Cada Archivo
-
-A continuaciÃ³n se incluye el cÃ³digo fuente completo de cada archivo Kotlin del proyecto, organizado por paquete.
-
-### 15.1 ConfiguraciÃ³n del Proyecto
-
-
-#### build.gradle.kts (raÃ­z)
-
-```kotlin
+// build.gradle.kts
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
   alias(libs.plugins.android.application) apply false
@@ -1625,43 +1215,11 @@ plugins {
   alias(libs.plugins.google.devtools.ksp) apply false
   alias(libs.plugins.roborazzi) apply false
 }
+
 ```
 
-#### settings.gradle.kts
-
 ```kotlin
-pluginManagement {
-  repositories {
-    google {
-      content {
-        includeGroupByRegex("com\\.android.*")
-        includeGroupByRegex("com\\.google.*")
-        includeGroupByRegex("androidx.*")
-      }
-    }
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-
-plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" }
-
-dependencyResolutionManagement {
-  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-  repositories {
-    google()
-    mavenCentral()
-  }
-}
-
-rootProject.name = "Code Tamagotchi"
-
-include(":app")
-```
-
-#### app/build.gradle.kts
-
-```kotlin
+// build.gradle.kts
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.compose)
@@ -1762,11 +1320,43 @@ dependencies {
   debugImplementation(libs.androidx.compose.ui.tooling)
   "ksp"(libs.androidx.room.compiler)
 }
+
 ```
 
-#### gradle/libs.versions.toml
+```kotlin
+// settings.gradle.kts
+pluginManagement {
+  repositories {
+    google {
+      content {
+        includeGroupByRegex("com\\.android.*")
+        includeGroupByRegex("com\\.google.*")
+        includeGroupByRegex("androidx.*")
+      }
+    }
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
 
-```toml
+plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" }
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    google()
+    mavenCentral()
+  }
+}
+
+rootProject.name = "Code Tamagotchi"
+
+include(":app")
+
+```
+
+```kotlin
+// libs.versions.toml
 [versions]
 agp = "9.1.1"
 koin = "4.0.2"
@@ -1841,22 +1431,236 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevtoolsKsp" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
-```
-### 15.2 NÃºcleo de la AplicaciÃ³n
 
- MainActivity.kt
 ```
 
-#### AppNavigation.kt â€
+### 15.2 Núcleo de la Aplicación
 
-```de
+
+```kotlin
+// CodeTamagotchiApp.kt
+package com.tamagotchi.code
+
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.tamagotchi.code.di.appModule
+import com.tamagotchi.code.util.PetCheckWorker
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import java.util.concurrent.TimeUnit
+
+class CodeTamagotchiApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@CodeTamagotchiApp)
+            modules(appModule)
+        }
+        createNotificationChannel()
+        schedulePetCheck()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                "Estado de tu mascota",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "Recordatorios sobre el estado de tu mascota virtual"
+            }
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun schedulePetCheck() {
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val request = PeriodicWorkRequestBuilder<PetCheckWorker>(
+            4, TimeUnit.HOURS
+        )
+            .setConstraints(constraints)
+            .setInitialDelay(2, TimeUnit.HOURS)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "pet_check",
+            ExistingPeriodicWorkPolicy.KEEP,
+            request
+        )
+    }
+
+    companion object {
+        const val NOTIFICATION_CHANNEL_ID = "pet_care_reminder"
+    }
+}
+
 ```
+
+```kotlin
+// MainActivity.kt
+package com.tamagotchi.code
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.navigation.AppNavigation
+import com.tamagotchi.code.ui.theme.MyApplicationTheme
+import com.tamagotchi.code.ui.theme.ThemeRegistry
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import org.koin.androidx.compose.koinViewModel
+
+class MainActivity : ComponentActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    enableEdgeToEdge()
+    setContent {
+      val petViewModel: PetViewModel = koinViewModel()
+      val reduceMotion = petViewModel.reduceMotion.collectAsStateWithLifecycle()
+      val currentThemeName = petViewModel.currentTheme.value
+      val appTheme = ThemeRegistry.getTheme(currentThemeName)
+
+      MyApplicationTheme(
+        appTheme = appTheme,
+        reduceMotion = reduceMotion.value
+      ) {
+        AppNavigation(viewModel = petViewModel)
+      }
+    }
+  }
+}
+
+```
+
 ### 15.3 Base de Datos (Room)
 
 
-#### data/database/AppDatabase.kt
+```kotlin
+// PetStateEntity.kt
+package com.tamagotchi.code.data.database
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "pet_state")
+data class PetStateEntity(
+    @PrimaryKey val id: Int = 1,
+    val name: String = "Codey",
+    val language: String = "Kotlin",
+    val level: Int = 1,
+    val xp: Int = 0,
+    val hunger: Float = 100f,
+    val health: Float = 100f,
+    val energy: Float = 100f,
+    val bytes: Int = 50,
+    val lastUpdated: Long = System.currentTimeMillis(),
+    val streak: Int = 0,
+    val lastStudyDate: Long = 0,
+    val currentStatus: String = "HAPPY",
+    val hasRenamed: Boolean = false
+)
+
+```
 
 ```kotlin
+// StudySessionEntity.kt
+package com.tamagotchi.code.data.database
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "study_sessions")
+data class StudySessionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val topic: String,
+    val durationMinutes: Int,
+    val timestamp: Long = System.currentTimeMillis()
+)
+
+```
+
+```kotlin
+// FocusSessionEntity.kt
+package com.tamagotchi.code.data.database
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "focus_sessions")
+data class FocusSessionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val topic: String,
+    val plannedDurationMinutes: Int,
+    val startedAt: Long,
+    val status: String = "RUNNING"
+)
+
+```
+
+```kotlin
+// PetDao.kt
+package com.tamagotchi.code.data.database
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface PetDao {
+    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
+    fun getPetState(): Flow<PetStateEntity?>
+
+    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
+    suspend fun getPetStateSuspend(): PetStateEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdatePetState(state: PetStateEntity)
+
+    @Query("SELECT * FROM study_sessions ORDER BY timestamp DESC")
+    fun getAllStudySessions(): Flow<List<StudySessionEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudySession(session: StudySessionEntity)
+
+    @Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
+    fun getLatestFocusSession(): Flow<FocusSessionEntity?>
+
+    @Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' ORDER BY id DESC LIMIT 1")
+    suspend fun getActiveFocusSession(): FocusSessionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFocusSession(session: FocusSessionEntity)
+
+    @Query("UPDATE focus_sessions SET status = :status WHERE id = :sessionId")
+    suspend fun updateFocusSessionStatus(sessionId: Long, status: String)
+
+    @Query("SELECT * FROM focus_sessions ORDER BY id DESC")
+    fun getAllFocusSessions(): Flow<List<FocusSessionEntity>>
+
+    @androidx.room.Transaction
+    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
+        updateFocusSessionStatus(sessionId, status)
+        insertOrUpdatePetState(petState)
+    }
+}
+
+```
+
+```kotlin
+// AppDatabase.kt
 package com.tamagotchi.code.data.database
 
 import android.content.Context
@@ -1907,126 +1711,14 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+
 ```
 
-#### data/database/PetDao.kt
-
-```kotlin
-package com.tamagotchi.code.data.database
-
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
-
-@Dao
-interface PetDao {
-    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
-    fun getPetState(): Flow<PetStateEntity?>
-
-    @Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
-    suspend fun getPetStateSuspend(): PetStateEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdatePetState(state: PetStateEntity)
-
-    @Query("SELECT * FROM study_sessions ORDER BY timestamp DESC")
-    fun getAllStudySessions(): Flow<List<StudySessionEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStudySession(session: StudySessionEntity)
-
-    @Query("SELECT * FROM focus_sessions ORDER BY id DESC LIMIT 1")
-    fun getLatestFocusSession(): Flow<FocusSessionEntity?>
-
-    @Query("SELECT * FROM focus_sessions WHERE status = 'RUNNING' ORDER BY id DESC LIMIT 1")
-    suspend fun getActiveFocusSession(): FocusSessionEntity?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFocusSession(session: FocusSessionEntity)
-
-    @Query("UPDATE focus_sessions SET status = :status WHERE id = :sessionId")
-    suspend fun updateFocusSessionStatus(sessionId: Long, status: String)
-
-    @Query("SELECT * FROM focus_sessions ORDER BY id DESC")
-    fun getAllFocusSessions(): Flow<List<FocusSessionEntity>>
-
-    @androidx.room.Transaction
-    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
-        updateFocusSessionStatus(sessionId, status)
-        insertOrUpdatePetState(petState)
-    }
-}
-```
-
-#### data/database/PetStateEntity.kt
-
-```kotlin
-package com.tamagotchi.code.data.database
-
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "pet_state")
-data class PetStateEntity(
-    @PrimaryKey val id: Int = 1,
-    val name: String = "Codey",
-    val language: String = "Kotlin",
-    val level: Int = 1,
-    val xp: Int = 0,
-    val hunger: Float = 100f,
-    val health: Float = 100f,
-    val energy: Float = 100f,
-    val bytes: Int = 50,
-    val lastUpdated: Long = System.currentTimeMillis(),
-    val streak: Int = 0,
-    val lastStudyDate: Long = 0,
-    val currentStatus: String = "HAPPY",
-    val hasRenamed: Boolean = false
-)
-```
-
-#### data/database/FocusSessionEntity.kt
-
-```kotlin
-package com.tamagotchi.code.data.database
-
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "focus_sessions")
-data class FocusSessionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val topic: String,
-    val plannedDurationMinutes: Int,
-    val startedAt: Long,
-    val status: String = "RUNNING"
-)
-```
-
-#### data/database/StudySessionEntity.kt
-
-```kotlin
-package com.tamagotchi.code.data.database
-
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "study_sessions")
-data class StudySessionEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val topic: String,
-    val durationMinutes: Int,
-    val timestamp: Long = System.currentTimeMillis()
-)
-```
 ### 15.4 Repositorios
 
 
-#### data/repository/PetRepository.kt
-
 ```kotlin
+// PetRepository.kt
 package com.tamagotchi.code.data.repository
 
 import com.tamagotchi.code.data.database.FocusSessionEntity
@@ -2066,11 +1758,11 @@ class PetRepository(private val petDao: PetDao) {
         petDao.completeOfflineSession(sessionId, status, petState)
     }
 }
+
 ```
 
-#### data/repository/UserPreferencesRepository.kt
-
 ```kotlin
+// UserPreferencesRepository.kt
 package com.tamagotchi.code.data.repository
 
 import android.content.Context
@@ -2225,11 +1917,11 @@ class UserPreferencesRepository(private val context: Context) {
         }
     }
 }
+
 ```
 
-#### data/repository/AchievementsRepository.kt
-
 ```kotlin
+// AchievementsRepository.kt
 package com.tamagotchi.code.data.repository
 
 import android.content.Context
@@ -2246,18 +1938,18 @@ class AchievementsRepository(private val context: Context) {
         private val KEY_UNLOCKED_ACHIEVEMENTS = stringSetPreferencesKey("unlocked_achievements")
 
         val ALL_ACHIEVEMENTS = listOf(
-            Achievement("primer_build", "Primer build", "CompletÃ¡ tu primera sesiÃ³n Focus"),
-            Achievement("nivel_experto", "Nivel Experto", "SubÃ­ de nivel por primera vez"),
-            Achievement("cazador_de_bugs", "Cazador de bugs", "PuntuaciÃ³n perfecta en Bug Hunt"),
-            Achievement("git_sin_panico", "Git sin pÃ¡nico", "AprobÃ¡ Git Rescue con 3+ aciertos"),
-            Achievement("racha_7", "Racha de 7 dÃ­as", "MantenÃ© una racha de estudio de 7 dÃ­as"),
-            Achievement("racha_30", "Racha de 30 dÃ­as", "MantenÃ© una racha de estudio de 30 dÃ­as"),
-            Achievement("coleccionista", "Coleccionista", "DesbloqueÃ¡ 3 temas visuales"),
-            Achievement("completista", "Completista", "DesbloqueÃ¡ los 12 temas visuales"),
-            Achievement("ahorrador", "Ahorrador", "AcumulÃ¡ 1000 Bytes"),
-            Achievement("primer_acaricie", "Primer mimo", "AcariciÃ¡ a tu mascota por primera vez"),
-            Achievement("duermevela", "Duermevela", "PonÃ© a dormir a tu mascota"),
-            Achievement("limpiador", "Limpieza profunda", "LimpiÃ¡ a tu mascota 10 veces"),
+            Achievement("primer_build", "Primer build", "Completá tu primera sesión Focus"),
+            Achievement("nivel_experto", "Nivel Experto", "Subí de nivel por primera vez"),
+            Achievement("cazador_de_bugs", "Cazador de bugs", "Puntuación perfecta en Bug Hunt"),
+            Achievement("git_sin_panico", "Git sin pánico", "Aprobá Git Rescue con 3+ aciertos"),
+            Achievement("racha_7", "Racha de 7 días", "Mantené una racha de estudio de 7 días"),
+            Achievement("racha_30", "Racha de 30 días", "Mantené una racha de estudio de 30 días"),
+            Achievement("coleccionista", "Coleccionista", "Desbloqueá 3 temas visuales"),
+            Achievement("completista", "Completista", "Desbloqueá los 12 temas visuales"),
+            Achievement("ahorrador", "Ahorrador", "Acumulá 1000 Bytes"),
+            Achievement("primer_acaricie", "Primer mimo", "Acariciá a tu mascota por primera vez"),
+            Achievement("duermevela", "Duermevela", "Poné a dormir a tu mascota"),
+            Achievement("limpiador", "Limpieza profunda", "Limpiá a tu mascota 10 veces"),
         )
     }
 
@@ -2283,13 +1975,14 @@ data class Achievement(
     val name: String,
     val description: String
 )
+
 ```
+
 ### 15.5 Datos de Retos
 
 
-#### data/ChallengesData.kt
-
 ```kotlin
+// ChallengesData.kt
 package com.tamagotchi.code.data
 
 data class CodingChallenge(
@@ -2312,38 +2005,38 @@ object ChallengesData {
             language = "Kotlin",
             type = "TRIVIA",
             title = "Inmutabilidad en Kotlin",
-            question = "Â¿CuÃ¡l es la diferencia principal entre 'val' y 'var'?",
+            question = "¿Cuál es la diferencia principal entre 'val' y 'var'?",
             options = listOf(
                 "val es mutable, var es inmutable",
                 "val define una referencia de solo lectura (inmutable), var es mutable",
-                "val es constante en tiempo de compilaciÃ³n, var se evalÃºa en ejecuciÃ³n",
+                "val es constante en tiempo de compilación, var se evalúa en ejecución",
                 "No hay diferencia, son alias heredados de Java"
             ),
             correctAnswerIndex = 1,
-            explanation = "En Kotlin, 'val' define una variable de solo lectura (su valor no puede ser reasignado), mientras que 'var' define una variable mutable estÃ¡ndar."
+            explanation = "En Kotlin, 'val' define una variable de solo lectura (su valor no puede ser reasignado), mientras que 'var' define una variable mutable estándar."
         ),
         CodingChallenge(
             id = 2,
             language = "Kotlin",
             type = "DEBUG",
             title = "Llamada Segura (Null Safety)",
-            question = "Este cÃ³digo lanza un error de compilaciÃ³n. Â¿CÃ³mo se corrige para permitir llamadas seguras a 'length'?",
+            question = "Este código lanza un error de compilación. ¿Cómo se corrige para permitir llamadas seguras a 'length'?",
             codeSnippet = "val name: String? = null\nval len = name.length",
             options = listOf(
                 "Cambiar a: val len = name?.length",
                 "Cambiar a: val len = name!!?.length",
                 "Cambiar a: val len = name.length()",
-                "Kotlin no permite variables nulas de ningÃºn tipo"
+                "Kotlin no permite variables nulas de ningún tipo"
             ),
             correctAnswerIndex = 0,
-            explanation = "Usar el operador de llamada segura '?.' (name?.length) devuelve el tamaÃ±o de la cadena si no es nula, o 'null' de lo contrario, evitando errores de puntero nulo."
+            explanation = "Usar el operador de llamada segura '?.' (name?.length) devuelve el tamaño de la cadena si no es nula, o 'null' de lo contrario, evitando errores de puntero nulo."
         ),
         CodingChallenge(
             id = 3,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Funciones de Alcance (Scope)",
-            question = "Â¿QuÃ© funciÃ³n de alcance devuelve el resultado del bloque lambda y usa 'this' como receptor?",
+            question = "¿Qué función de alcance devuelve el resultado del bloque lambda y usa 'this' como receptor?",
             options = listOf(
                 "apply",
                 "also",
@@ -2351,60 +2044,60 @@ object ChallengesData {
                 "let"
             ),
             correctAnswerIndex = 2,
-            explanation = "'run' ejecuta el bloque usando 'this' como receptor de llamadas y devuelve el resultado de la Ãºltima expresiÃ³n dentro del bloque lambda."
+            explanation = "'run' ejecuta el bloque usando 'this' como receptor de llamadas y devuelve el resultado de la última expresión dentro del bloque lambda."
         ),
         CodingChallenge(
             id = 12,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Data Class",
-            question = "Â¿QuÃ© genera automÃ¡ticamente la palabra clave 'data' en una clase?",
+            question = "¿Qué genera automáticamente la palabra clave 'data' en una clase?",
             options = listOf(
                 "Solo getters y setters",
                 "equals(), hashCode(), toString(), copy() y componentN()",
-                "Un constructor sin parÃ¡metros",
-                "ImplementaciÃ³n de Serializable"
+                "Un constructor sin parámetros",
+                "Implementación de Serializable"
             ),
             correctAnswerIndex = 1,
-            explanation = "Las 'data class' generan automÃ¡ticamente equals(), hashCode(), toString(), copy(), y funciones componentN() para desestructuraciÃ³n."
+            explanation = "Las 'data class' generan automáticamente equals(), hashCode(), toString(), copy(), y funciones componentN() para desestructuración."
         ),
         CodingChallenge(
             id = 13,
             language = "Kotlin",
             type = "DEBUG",
             title = "Elvis Operator",
-            question = "Â¿QuÃ© imprime este cÃ³digo?",
+            question = "¿Qué imprime este código?",
             codeSnippet = "val name: String? = null\nprintln(name ?: \"Invitado\")",
             options = listOf(
                 "null",
                 "Invitado",
                 "name",
-                "Error de compilaciÃ³n"
+                "Error de compilación"
             ),
             correctAnswerIndex = 1,
-            explanation = "El operador Elvis '?:' devuelve el lado izquierdo si no es nulo, o el derecho si el izquierdo es null. AquÃ­ name es null, asÃ­ que imprime 'Invitado'."
+            explanation = "El operador Elvis '?:' devuelve el lado izquierdo si no es nulo, o el derecho si el izquierdo es null. Aquí name es null, así que imprime 'Invitado'."
         ),
         CodingChallenge(
             id = 14,
             language = "Kotlin",
             type = "TRIVIA",
-            title = "Funciones de ExtensiÃ³n",
-            question = "Â¿QuÃ© permite hacer una funciÃ³n de extensiÃ³n en Kotlin?",
+            title = "Funciones de Extensión",
+            question = "¿Qué permite hacer una función de extensión en Kotlin?",
             options = listOf(
                 "Modificar una clase sellada desde otra clase",
-                "AÃ±adir nuevas funcionalidades a una clase sin heredar de ella",
-                "Crear una funciÃ³n que solo se ejecuta en extensiones de archivo .kt",
-                "Extender el tiempo de ejecuciÃ³n de una funciÃ³n recursiva"
+                "Añadir nuevas funcionalidades a una clase sin heredar de ella",
+                "Crear una función que solo se ejecuta en extensiones de archivo .kt",
+                "Extender el tiempo de ejecución de una función recursiva"
             ),
             correctAnswerIndex = 1,
-            explanation = "Las funciones de extensiÃ³n permiten agregar nuevos mÃ©todos a una clase existente sin modificar su cÃ³digo fuente ni heredar de ella."
+            explanation = "Las funciones de extensión permiten agregar nuevos métodos a una clase existente sin modificar su código fuente ni heredar de ella."
         ),
         CodingChallenge(
             id = 15,
             language = "Kotlin",
             type = "DEBUG",
             title = "Null Safety en Listas",
-            question = "Â¿CÃ³mo obtienes el primer elemento de una lista nullable de forma segura?",
+            question = "¿Cómo obtienes el primer elemento de una lista nullable de forma segura?",
             codeSnippet = "val items: List<String>? = null\nval first = ???",
             options = listOf(
                 "val first = items?.firstOrNull()",
@@ -2413,94 +2106,94 @@ object ChallengesData {
                 "val first = items?.get(0)"
             ),
             correctAnswerIndex = 0,
-            explanation = "'items?.firstOrNull()' es la forma mÃ¡s segura: si items es null, firstOrNull() ni se llama y el resultado es null. Si no es null, devuelve el primer elemento o null si la lista estÃ¡ vacÃ­a."
+            explanation = "'items?.firstOrNull()' es la forma más segura: si items es null, firstOrNull() ni se llama y el resultado es null. Si no es null, devuelve el primer elemento o null si la lista está vacía."
         ),
         CodingChallenge(
             id = 16,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Corrutinas - Dispatchers",
-            question = "Â¿CuÃ¡l es el propÃ³sito de Dispatchers.IO en corrutinas de Kotlin?",
+            question = "¿Cuál es el propósito de Dispatchers.IO en corrutinas de Kotlin?",
             options = listOf(
-                "Ejecutar tareas de actualizaciÃ³n de UI",
+                "Ejecutar tareas de actualización de UI",
                 "Ejecutar operaciones de E/S en segundo plano (archivos, red, BD)",
-                "Ejecutar cÃ³digo de forma secuencial en el hilo principal",
-                "No es un dispatcher real, solo un concepto teÃ³rico"
+                "Ejecutar código de forma secuencial en el hilo principal",
+                "No es un dispatcher real, solo un concepto teórico"
             ),
             correctAnswerIndex = 1,
-            explanation = "Dispatchers.IO estÃ¡ optimizado para operaciones de entrada/salida como lecturas de archivos, llamadas de red o consultas a bases de datos."
+            explanation = "Dispatchers.IO está optimizado para operaciones de entrada/salida como lecturas de archivos, llamadas de red o consultas a bases de datos."
         ),
         CodingChallenge(
             id = 17,
             language = "Kotlin",
             type = "TRIVIA",
             title = "When Expression",
-            question = "Â¿En quÃ© se diferencia 'when' de 'switch' en Java?",
+            question = "¿En qué se diferencia 'when' de 'switch' en Java?",
             options = listOf(
-                "when solo funciona con nÃºmeros enteros",
-                "when puede usarse como expresiÃ³n (devuelve valor) y no necesita break",
+                "when solo funciona con números enteros",
+                "when puede usarse como expresión (devuelve valor) y no necesita break",
                 "when requiere un bloque default obligatorio",
                 "when solo funciona con tipos String"
             ),
             correctAnswerIndex = 1,
-            explanation = "'when' en Kotlin es mÃ¡s potente que 'switch': puede usarse como expresiÃ³n que devuelve valores, no necesita break, y admite cualquier tipo de condiciÃ³n."
+            explanation = "'when' en Kotlin es más potente que 'switch': puede usarse como expresión que devuelve valores, no necesita break, y admite cualquier tipo de condición."
         ),
         CodingChallenge(
             id = 18,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Sealed Class",
-            question = "Â¿Para quÃ© sirve una clase sellada (sealed class) en Kotlin?",
+            question = "¿Para qué sirve una clase sellada (sealed class) en Kotlin?",
             options = listOf(
-                "Para ocultar los detalles de implementaciÃ³n de una clase",
-                "Para restringir la jerarquÃ­a de herencia a un conjunto fijo de subtipos conocidos",
+                "Para ocultar los detalles de implementación de una clase",
+                "Para restringir la jerarquía de herencia a un conjunto fijo de subtipos conocidos",
                 "Para evitar que se pueda crear ninguna instancia de la clase",
                 "Para marcar una clase como obsoleta y no recomendada"
             ),
             correctAnswerIndex = 1,
-            explanation = "Las 'sealed class' definen una jerarquÃ­a de herencia restringida: todos los subtipos directos deben declararse en el mismo archivo, lo que permite when exhaustivo."
+            explanation = "Las 'sealed class' definen una jerarquía de herencia restringida: todos los subtipos directos deben declararse en el mismo archivo, lo que permite when exhaustivo."
         ),
         CodingChallenge(
             id = 19,
             language = "Kotlin",
             type = "DEBUG",
             title = "Smart Cast",
-            question = "Â¿Por quÃ© este cÃ³digo compila sin necesidad de un cast explÃ­cito?",
+            question = "¿Por qué este código compila sin necesidad de un cast explícito?",
             codeSnippet = "fun length(obj: Any): Int {\n    if (obj is String) return obj.length\n    return 0\n}",
             options = listOf(
                 "Porque Kotlin infiere que obj es Object y Object tiene length",
                 "Porque Kotlin aplica smart cast: tras verificar 'is String', trata obj como String",
-                "Porque el compilador convierte Any a String automÃ¡ticamente",
+                "Porque el compilador convierte Any a String automáticamente",
                 "No compila, necesita (obj as String).length"
             ),
             correctAnswerIndex = 1,
-            explanation = "Kotlin realiza 'smart cast': cuando verificas que una variable es de cierto tipo con 'is', el compilador la trata automÃ¡ticamente como ese tipo dentro del bloque."
+            explanation = "Kotlin realiza 'smart cast': cuando verificas que una variable es de cierto tipo con 'is', el compilador la trata automáticamente como ese tipo dentro del bloque."
         ),
         CodingChallenge(
             id = 20,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Flow vs LiveData",
-            question = "Â¿QuÃ© ventaja tiene un Flow de Kotlin sobre LiveData?",
+            question = "¿Qué ventaja tiene un Flow de Kotlin sobre LiveData?",
             options = listOf(
-                "Flow estÃ¡ atado al ciclo de vida de la Activity",
+                "Flow está atado al ciclo de vida de la Activity",
                 "Flow es reactivo sin importar dependencias de Android y tiene operadores como map, filter",
                 "Flow solo funciona en Java",
                 "LiveData ya no se puede usar en Kotlin"
             ),
             correctAnswerIndex = 1,
-            explanation = "Flow es parte de Kotlin (no de Android), por lo que es agnÃ³stico de plataforma y ofrece operadores funcionales como map, filter, transform, etc."
+            explanation = "Flow es parte de Kotlin (no de Android), por lo que es agnóstico de plataforma y ofrece operadores funcionales como map, filter, transform, etc."
         ),
         CodingChallenge(
             id = 21,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Colecciones Inmutables",
-            question = "Â¿CuÃ¡l es la diferencia entre listOf() y mutableListOf()?",
+            question = "¿Cuál es la diferencia entre listOf() y mutableListOf()?",
             options = listOf(
                 "Ambas crean listas iguales, solo cambia el nombre",
                 "listOf() crea una lista de solo lectura, mutableListOf() permite modificar elementos",
-                "listOf() lanza error si la lista tiene mÃ¡s de 10 elementos",
+                "listOf() lanza error si la lista tiene más de 10 elementos",
                 "mutableListOf() no permite elementos nulos"
             ),
             correctAnswerIndex = 1,
@@ -2511,42 +2204,42 @@ object ChallengesData {
             language = "Kotlin",
             type = "TRIVIA",
             title = "Inline Functions",
-            question = "Â¿QuÃ© beneficio principal tienen las funciones 'inline' en Kotlin?",
+            question = "¿Qué beneficio principal tienen las funciones 'inline' en Kotlin?",
             options = listOf(
-                "Permiten usar herencia mÃºltiple",
-                "Eliminan la sobrecarga de crear objetos lambda al copiar el cÃ³digo en el punto de llamada",
+                "Permiten usar herencia múltiple",
+                "Eliminan la sobrecarga de crear objetos lambda al copiar el código en el punto de llamada",
                 "Hacen que las funciones se ejecuten en un hilo separado",
                 "Permiten que las funciones sean visibles globalmente"
             ),
             correctAnswerIndex = 1,
-            explanation = "'inline' copia el cuerpo de la funciÃ³n directamente en el lugar de la llamada, eliminando la creaciÃ³n de objetos lambda y reduciendo la sobrecarga de memoria."
+            explanation = "'inline' copia el cuerpo de la función directamente en el lugar de la llamada, eliminando la creación de objetos lambda y reduciendo la sobrecarga de memoria."
         ),
         CodingChallenge(
             id = 23,
             language = "Kotlin",
             type = "DEBUG",
-            title = "Try como ExpresiÃ³n",
-            question = "Â¿QuÃ© valor imprime este cÃ³digo?",
+            title = "Try como Expresión",
+            question = "¿Qué valor imprime este código?",
             codeSnippet = "val result = try { \"10\".toInt() } catch (e: Exception) { 0 }\nprintln(result)",
             options = listOf(
-                "Error de compilaciÃ³n",
+                "Error de compilación",
                 "10",
                 "0",
                 "\"10\""
             ),
             correctAnswerIndex = 1,
-            explanation = "'try' en Kotlin es una expresiÃ³n y devuelve el valor del Ãºltimo bloque ejecutado. '10'.toInt() tiene Ã©xito, result = 10."
+            explanation = "'try' en Kotlin es una expresión y devuelve el valor del último bloque ejecutado. '10'.toInt() tiene éxito, result = 10."
         ),
         CodingChallenge(
             id = 24,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Operator Overloading",
-            question = "Â¿CÃ³mo se sobrecarga el operador '+' para una clase en Kotlin?",
+            question = "¿Cómo se sobrecarga el operador '+' para una clase en Kotlin?",
             options = listOf(
-                "Definiendo un mÃ©todo llamado add()",
-                "Definiendo una funciÃ³n 'operator fun plus()'",
-                "Usando la anotaciÃ³n @Overload",
+                "Definiendo un método llamado add()",
+                "Definiendo una función 'operator fun plus()'",
+                "Usando la anotación @Overload",
                 "No se puede sobrecargar operadores en Kotlin"
             ),
             correctAnswerIndex = 1,
@@ -2557,27 +2250,27 @@ object ChallengesData {
             language = "Kotlin",
             type = "TRIVIA",
             title = "Scope Functions - also",
-            question = "Â¿QuÃ© hace diferente a 'also' respecto a 'apply'?",
+            question = "¿Qué hace diferente a 'also' respecto a 'apply'?",
             options = listOf(
                 "also usa 'this', apply usa 'it'",
                 "also usa 'it' como receptor, apply usa 'this'",
-                "also es sincrÃ³nico, apply es asÃ­ncrono",
+                "also es sincrónico, apply es asíncrono",
                 "No hay diferencia, son alias"
             ),
             correctAnswerIndex = 1,
-            explanation = "'apply' utiliza 'this' (receptor implÃ­cito) para configurar objetos, mientras que 'also' utiliza 'it' (parÃ¡metro explÃ­cito) y normalmente se usa para efectos secundarios."
+            explanation = "'apply' utiliza 'this' (receptor implícito) para configurar objetos, mientras que 'also' utiliza 'it' (parámetro explícito) y normalmente se usa para efectos secundarios."
         ),
         CodingChallenge(
             id = 86,
             language = "Kotlin",
             type = "TRIVIA",
             title = "Object Keyword",
-            question = "Â¿Para quÃ© sirve la palabra clave 'object' en Kotlin?",
+            question = "¿Para qué sirve la palabra clave 'object' en Kotlin?",
             options = listOf(
                 "Solo para crear nuevos objetos de una clase existente",
-                "Para declarar una clase singleton (Ãºnica instancia global)",
+                "Para declarar una clase singleton (única instancia global)",
                 "Es el equivalente de 'new' en Java",
-                "Para marcar un mÃ©todo como obsoleto"
+                "Para marcar un método como obsoleto"
             ),
             correctAnswerIndex = 1,
             explanation = "'object' declara una clase singleton: solo existe una instancia de ella, creada de forma perezosa y segura al primer acceso."
@@ -2587,13 +2280,13 @@ object ChallengesData {
             language = "Kotlin",
             type = "DEBUG",
             title = "Lambda y fold",
-            question = "Â¿QuÃ© resultado produce esta operaciÃ³n?",
+            question = "¿Qué resultado produce esta operación?",
             codeSnippet = "val nums = listOf(1, 2, 3, 4)\nval sum = nums.fold(0) { acc, i -> acc + i }\nprintln(sum)",
             options = listOf(
                 "10",
                 "0",
                 "1234",
-                "Error de compilaciÃ³n"
+                "Error de compilación"
             ),
             correctAnswerIndex = 0,
             explanation = "fold(0) itera con valor inicial 0: 0+1=1, 1+2=3, 3+3=6, 6+4=10. El resultado es la suma total 10."
@@ -2604,8 +2297,8 @@ object ChallengesData {
             id = 4,
             language = "JavaScript",
             type = "TRIVIA",
-            title = "Tipos de Datos extraÃ±os",
-            question = "Â¿QuÃ© devuelve la expresiÃ³n 'typeof null' en JavaScript?",
+            title = "Tipos de Datos extraños",
+            question = "¿Qué devuelve la expresión 'typeof null' en JavaScript?",
             options = listOf(
                 "\"null\"",
                 "\"undefined\"",
@@ -2613,60 +2306,60 @@ object ChallengesData {
                 "\"string\""
             ),
             correctAnswerIndex = 2,
-            explanation = "HistÃ³ricamente en JavaScript, 'typeof null' devuelve '\"object\"'. Es considerado un error en el diseÃ±o original del lenguaje, pero no se ha cambiado por compatibilidad."
+            explanation = "Históricamente en JavaScript, 'typeof null' devuelve '\"object\"'. Es considerado un error en el diseño original del lenguaje, pero no se ha cambiado por compatibilidad."
         ),
         CodingChallenge(
             id = 5,
             language = "JavaScript",
             type = "DEBUG",
-            title = "ComparaciÃ³n Estricta",
-            question = "Â¿Por quÃ© la comparaciÃ³n estricta '0 === false' da como resultado 'false'?",
+            title = "Comparación Estricta",
+            question = "¿Por qué la comparación estricta '0 === false' da como resultado 'false'?",
             codeSnippet = "console.log(0 == false); // true\nconsole.log(0 === false); // false",
             options = listOf(
-                "Porque === hace coerciÃ³n automÃ¡tica de tipos",
-                "Porque === compara tanto el valor como el tipo sin realizar coerciÃ³n",
+                "Porque === hace coerción automática de tipos",
+                "Porque === compara tanto el valor como el tipo sin realizar coerción",
                 "Porque 0 no es un valor falsy",
-                "El compilador de JS tiene un bug con nÃºmeros"
+                "El compilador de JS tiene un bug con números"
             ),
             correctAnswerIndex = 1,
-            explanation = "El operador '==' convierte ambos lados a un tipo comÃºn (coerciÃ³n), por lo que 0 y false coinciden. El operador '===' es estricto y no hace coerciÃ³n, detectando que Number no es Boolean."
+            explanation = "El operador '==' convierte ambos lados a un tipo común (coerción), por lo que 0 y false coinciden. El operador '===' es estricto y no hace coerción, detectando que Number no es Boolean."
         ),
         CodingChallenge(
             id = 6,
             language = "JavaScript",
             type = "TRIVIA",
             title = "Clausuras (Closures)",
-            question = "Â¿QuÃ© es una Clausura (Closure) en JavaScript?",
+            question = "¿Qué es una Clausura (Closure) en JavaScript?",
             options = listOf(
-                "Una funciÃ³n que cierra la ventana del navegador",
-                "El proceso de comprimir archivos de cÃ³digo para producciÃ³n",
-                "La combinaciÃ³n de una funciÃ³n y el entorno lÃ©xico en el que fue declarada",
-                "Un mÃ©todo reservado para destruir variables locales"
+                "Una función que cierra la ventana del navegador",
+                "El proceso de comprimir archivos de código para producción",
+                "La combinación de una función y el entorno léxico en el que fue declarada",
+                "Un método reservado para destruir variables locales"
             ),
             correctAnswerIndex = 2,
-            explanation = "Un closure le da a una funciÃ³n interna acceso al Ã¡mbito de su funciÃ³n externa, incluso despuÃ©s de que la funciÃ³n externa haya terminado de ejecutarse."
+            explanation = "Un closure le da a una función interna acceso al ámbito de su función externa, incluso después de que la función externa haya terminado de ejecutarse."
         ),
         CodingChallenge(
             id = 26,
             language = "JavaScript",
             type = "TRIVIA",
             title = "let vs var",
-            question = "Â¿CuÃ¡l es la diferencia principal entre 'let' y 'var'?",
+            question = "¿Cuál es la diferencia principal entre 'let' y 'var'?",
             options = listOf(
                 "No hay diferencia, let es solo una alternativa moderna",
-                "let tiene Ã¡mbito de bloque, var tiene Ã¡mbito de funciÃ³n",
+                "let tiene ámbito de bloque, var tiene ámbito de función",
                 "var no puede usarse en navegadores modernos",
                 "let solo funciona dentro de objetos"
             ),
             correctAnswerIndex = 1,
-            explanation = "'let' tiene Ã¡mbito de bloque (solo existe dentro de {}), mientras que 'var' tiene Ã¡mbito de funciÃ³n y sufre hoisting."
+            explanation = "'let' tiene ámbito de bloque (solo existe dentro de {}), mientras que 'var' tiene ámbito de función y sufre hoisting."
         ),
         CodingChallenge(
             id = 27,
             language = "JavaScript",
             type = "DEBUG",
             title = "Promesas - then",
-            question = "Â¿QuÃ© imprime el siguiente cÃ³digo?",
+            question = "¿Qué imprime el siguiente código?",
             codeSnippet = "Promise.resolve(1)\n  .then(x => x + 1)\n  .then(x => console.log(x))",
             options = listOf(
                 "1",
@@ -2682,22 +2375,22 @@ object ChallengesData {
             language = "JavaScript",
             type = "TRIVIA",
             title = "Spread Operator",
-            question = "Â¿QuÃ© hace el operador '...' (spread) en un array?",
+            question = "¿Qué hace el operador '...' (spread) en un array?",
             options = listOf(
-                "Concatena todos los arrays de la aplicaciÃ³n",
+                "Concatena todos los arrays de la aplicación",
                 "Expande un array en sus elementos individuales",
-                "Elimina el Ãºltimo elemento del array",
-                "Crea una copia vacÃ­a del array"
+                "Elimina el último elemento del array",
+                "Crea una copia vacía del array"
             ),
             correctAnswerIndex = 1,
-            explanation = "El spread operator '...' expande un iterable (como un array) en sus elementos individuales, Ãºtil para copiar o combinar arrays."
+            explanation = "El spread operator '...' expande un iterable (como un array) en sus elementos individuales, útil para copiar o combinar arrays."
         ),
         CodingChallenge(
             id = 29,
             language = "JavaScript",
             type = "TRIVIA",
             title = "Template Literals",
-            question = "Â¿CÃ³mo se interpola una variable en un string con template literals?",
+            question = "¿Cómo se interpola una variable en un string con template literals?",
             options = listOf(
                 "\"Hola \" + nombre + \"!\"",
                 "`Hola \${nombre}!`",
@@ -2712,22 +2405,22 @@ object ChallengesData {
             language = "JavaScript",
             type = "TRIVIA",
             title = "Arrow Functions",
-            question = "Â¿QuÃ© diferencia a una arrow function de una funciÃ³n tradicional?",
+            question = "¿Qué diferencia a una arrow function de una función tradicional?",
             options = listOf(
-                "No puede tener parÃ¡metros",
-                "No tiene su propio 'this', hereda del Ã¡mbito padre",
-                "Solo funciona con nÃºmeros",
+                "No puede tener parámetros",
+                "No tiene su propio 'this', hereda del ámbito padre",
+                "Solo funciona con números",
                 "No puede devolver valores"
             ),
             correctAnswerIndex = 1,
-            explanation = "Las arrow functions no tienen su propio 'this', heredÃ¡ndolo del Ã¡mbito circundante. Tampoco tienen 'arguments' ni pueden usarse como constructoras."
+            explanation = "Las arrow functions no tienen su propio 'this', heredándolo del ámbito circundante. Tampoco tienen 'arguments' ni pueden usarse como constructoras."
         ),
         CodingChallenge(
             id = 31,
             language = "JavaScript",
             type = "DEBUG",
             title = "Hoisting en var",
-            question = "Â¿QuÃ© devuelve este cÃ³digo?",
+            question = "¿Qué devuelve este código?",
             codeSnippet = "console.log(x)\nvar x = 5",
             options = listOf(
                 "5",
@@ -2736,14 +2429,14 @@ object ChallengesData {
                 "null"
             ),
             correctAnswerIndex = 1,
-            explanation = "Con 'var', la declaraciÃ³n se eleva (hoisting) al inicio, pero la asignaciÃ³n no. Al llegar al console.log, x estÃ¡ declarada pero su valor es undefined."
+            explanation = "Con 'var', la declaración se eleva (hoisting) al inicio, pero la asignación no. Al llegar al console.log, x está declarada pero su valor es undefined."
         ),
         CodingChallenge(
             id = 32,
             language = "JavaScript",
             type = "TRIVIA",
             title = "Destructuring Assignment",
-            question = "Â¿QuÃ© hace la desestructuraciÃ³n (destructuring) en arrays?",
+            question = "¿Qué hace la desestructuración (destructuring) en arrays?",
             options = listOf(
                 "Elimina elementos no deseados del array",
                 "Extrae valores del array en variables individuales con una sintaxis concisa",
@@ -2751,29 +2444,29 @@ object ChallengesData {
                 "Convierte el array en un objeto"
             ),
             correctAnswerIndex = 1,
-            explanation = "La desestructuraciÃ³n permite extraer valores de arrays u objetos en variables individuales: const [a, b] = [1, 2] asigna 1 a 'a' y 2 a 'b'."
+            explanation = "La desestructuración permite extraer valores de arrays u objetos en variables individuales: const [a, b] = [1, 2] asigna 1 a 'a' y 2 a 'b'."
         ),
         CodingChallenge(
             id = 33,
             language = "JavaScript",
             type = "TRIVIA",
-            title = "MÃ©todo map",
-            question = "Â¿QuÃ© devuelve el mÃ©todo 'map' de un array?",
+            title = "Método map",
+            question = "¿Qué devuelve el método 'map' de un array?",
             options = listOf(
-                "Un nuevo array con el mismo nÃºmero de elementos transformados",
-                "Un nuevo array solo con los elementos que cumplen una condiciÃ³n",
-                "El primer elemento que cumple una condiciÃ³n",
-                "Un booleano indicando si todos los elementos cumplen la condiciÃ³n"
+                "Un nuevo array con el mismo número de elementos transformados",
+                "Un nuevo array solo con los elementos que cumplen una condición",
+                "El primer elemento que cumple una condición",
+                "Un booleano indicando si todos los elementos cumplen la condición"
             ),
             correctAnswerIndex = 0,
-            explanation = "'map' itera sobre cada elemento y aplica una funciÃ³n, devolviendo un nuevo array de la misma longitud con los valores transformados."
+            explanation = "'map' itera sobre cada elemento y aplica una función, devolviendo un nuevo array de la misma longitud con los valores transformados."
         ),
         CodingChallenge(
             id = 34,
             language = "JavaScript",
             type = "DEBUG",
             title = "Event Loop",
-            question = "Â¿En quÃ© orden se imprimen estos mensajes?",
+            question = "¿En qué orden se imprimen estos mensajes?",
             codeSnippet = "console.log('A')\nsetTimeout(() => console.log('B'), 0)\nconsole.log('C')",
             options = listOf(
                 "A, B, C",
@@ -2782,44 +2475,44 @@ object ChallengesData {
                 "C, B, A"
             ),
             correctAnswerIndex = 2,
-            explanation = "A y C son sÃ­ncronos (se ejecutan primero). setTimeout, con delay 0, pasa a la cola de tareas y se ejecuta despuÃ©s de completar el stack sÃ­ncrono."
+            explanation = "A y C son síncronos (se ejecutan primero). setTimeout, con delay 0, pasa a la cola de tareas y se ejecuta después de completar el stack síncrono."
         ),
         CodingChallenge(
             id = 35,
             language = "JavaScript",
             type = "TRIVIA",
             title = "falsy Values",
-            question = "Â¿CuÃ¡ntos de estos valores son falsy en JavaScript? 0, '', false, null, undefined, NaN, []",
+            question = "¿Cuántos de estos valores son falsy en JavaScript? 0, '', false, null, undefined, NaN, []",
             options = listOf(
                 "Todos son falsy",
-                "6 excepto [] (los arrays vacÃ­os son truthy)",
+                "6 excepto [] (los arrays vacíos son truthy)",
                 "4: 0, '', false, null",
                 "Solo 0 y false"
             ),
             correctAnswerIndex = 1,
-            explanation = "Los valores falsy son: 0, '' (string vacÃ­o), false, null, undefined, NaN (6 en total). [] (array vacÃ­o) es truthy."
+            explanation = "Los valores falsy son: 0, '' (string vacío), false, null, undefined, NaN (6 en total). [] (array vacío) es truthy."
         ),
         CodingChallenge(
             id = 36,
             language = "JavaScript",
             type = "TRIVIA",
             title = "Fetch API",
-            question = "Â¿CÃ³mo se maneja la respuesta de una llamada fetch?",
+            question = "¿Cómo se maneja la respuesta de una llamada fetch?",
             options = listOf(
                 "fetch devuelve directamente el JSON",
                 "fetch devuelve una Promise que resuelve a un objeto Response",
-                "fetch es sÃ­ncrono y bloquea el hilo",
+                "fetch es síncrono y bloquea el hilo",
                 "fetch solo funciona con archivos locales"
             ),
             correctAnswerIndex = 1,
-            explanation = "fetch() devuelve una Promise que resuelve a un objeto Response. Para obtener el JSON, debes llamar a response.json() (tambiÃ©n una Promise)."
+            explanation = "fetch() devuelve una Promise que resuelve a un objeto Response. Para obtener el JSON, debes llamar a response.json() (también una Promise)."
         ),
         CodingChallenge(
             id = 37,
             language = "JavaScript",
             type = "TRIVIA",
-            title = "CoerciÃ³n ImplÃ­cita",
-            question = "Â¿QuÃ© devuelve '5' - 3 en JavaScript?",
+            title = "Coerción Implícita",
+            question = "¿Qué devuelve '5' - 3 en JavaScript?",
             options = listOf(
                 "\"53\"",
                 "2",
@@ -2827,14 +2520,14 @@ object ChallengesData {
                 "Error TypeError"
             ),
             correctAnswerIndex = 1,
-            explanation = "Con el operador '-', JavaScript convierte el string '5' a nÃºmero (5) y resta 3, dando 2. En cambio, '5' + 3 darÃ­a \"53\" por concatenaciÃ³n."
+            explanation = "Con el operador '-', JavaScript convierte el string '5' a número (5) y resta 3, dando 2. En cambio, '5' + 3 daría \"53\" por concatenación."
         ),
         CodingChallenge(
             id = 38,
             language = "JavaScript",
             type = "DEBUG",
-            title = "Objeto this en funciÃ³n",
-            question = "Â¿QuÃ© imprime este cÃ³digo (en el navegador)?",
+            title = "Objeto this en función",
+            question = "¿Qué imprime este código (en el navegador)?",
             codeSnippet = "function foo() {\n  console.log(this)\n}\nfoo()",
             options = listOf(
                 "undefined",
@@ -2843,37 +2536,37 @@ object ChallengesData {
                 "El objeto foo"
             ),
             correctAnswerIndex = 1,
-            explanation = "En una funciÃ³n normal no estricta, 'this' dentro de la funciÃ³n hace referencia al objeto global (window en navegador). En strict mode serÃ­a undefined."
+            explanation = "En una función normal no estricta, 'this' dentro de la función hace referencia al objeto global (window en navegador). En strict mode sería undefined."
         ),
         CodingChallenge(
             id = 39,
             language = "JavaScript",
             type = "TRIVIA",
             title = "JSON.stringify",
-            question = "Â¿QuÃ© hace JSON.stringify()?",
+            question = "¿Qué hace JSON.stringify()?",
             options = listOf(
                 "Convierte un string JSON en un objeto JavaScript",
                 "Convierte un objeto JavaScript en un string JSON",
-                "Valida si un string es JSON vÃ¡lido",
+                "Valida si un string es JSON válido",
                 "Minifica un string quitando espacios"
             ),
             correctAnswerIndex = 1,
-            explanation = "JSON.stringify() serializa un objeto JavaScript a su representaciÃ³n en string JSON. Lo opuesto es JSON.parse()."
+            explanation = "JSON.stringify() serializa un objeto JavaScript a su representación en string JSON. Lo opuesto es JSON.parse()."
         ),
         CodingChallenge(
             id = 40,
             language = "JavaScript",
             type = "TRIVIA",
             title = "null vs undefined",
-            question = "Â¿CuÃ¡l es la diferencia entre null y undefined?",
+            question = "¿Cuál es la diferencia entre null y undefined?",
             options = listOf(
-                "Son exactamente iguales, sinÃ³nimos",
-                "undefined significa 'no asignado', null significa 'vacÃ­o intencional'",
+                "Son exactamente iguales, sinónimos",
+                "undefined significa 'no asignado', null significa 'vacío intencional'",
                 "null solo existe en strict mode",
                 "undefined es un string, null es un objeto"
             ),
             correctAnswerIndex = 1,
-            explanation = "undefined indica que una variable se declarÃ³ pero no se le asignÃ³ valor. null es un valor asignado intencionalmente para indicar 'sin valor'."
+            explanation = "undefined indica que una variable se declaró pero no se le asignó valor. null es un valor asignado intencionalmente para indicar 'sin valor'."
         ),
 
         // ========== PHP ==========
@@ -2881,23 +2574,23 @@ object ChallengesData {
             id = 7,
             language = "PHP",
             type = "TRIVIA",
-            title = "Sintaxis BÃ¡sica de Variables",
-            question = "Â¿CuÃ¡l es el prefijo obligatorio para declarar y usar cualquier variable en PHP?",
+            title = "Sintaxis Básica de Variables",
+            question = "¿Cuál es el prefijo obligatorio para declarar y usar cualquier variable en PHP?",
             options = listOf(
                 "El signo de porcentaje (%)",
-                "El signo de dÃ³lar ($)",
+                "El signo de dólar ($)",
                 "La palabra clave 'var'",
                 "No hay prefijo, se define como en C++"
             ),
             correctAnswerIndex = 1,
-            explanation = "En PHP, todas las variables deben comenzar con el sÃ­mbolo '$' seguido del nombre de la variable."
+            explanation = "En PHP, todas las variables deben comenzar con el símbolo '$' seguido del nombre de la variable."
         ),
         CodingChallenge(
             id = 8,
             language = "PHP",
             type = "DEBUG",
-            title = "FusiÃ³n de Arrays",
-            question = "Â¿QuÃ© funciÃ³n nativa de PHP se utiliza para combinar dos arrays indexados preservando valores?",
+            title = "Fusión de Arrays",
+            question = "¿Qué función nativa de PHP se utiliza para combinar dos arrays indexados preservando valores?",
             codeSnippet = "\$array1 = [1, 2];\n\$array2 = [3, 4];\n\$resultado = ???(\$array1, \$array2);",
             options = listOf(
                 "array_combine",
@@ -2906,29 +2599,29 @@ object ChallengesData {
                 "implode"
             ),
             correctAnswerIndex = 1,
-            explanation = "'array_merge()' combina los elementos de uno o mÃ¡s arrays juntos, de modo que los valores de uno se anexan al final del anterior."
+            explanation = "'array_merge()' combina los elementos de uno o más arrays juntos, de modo que los valores de uno se anexan al final del anterior."
         ),
         CodingChallenge(
             id = 9,
             language = "PHP",
             type = "TRIVIA",
-            title = "ComparaciÃ³n Estricta",
-            question = "Â¿CuÃ¡l es el resultado de '123 == \"123\"' versus '123 === \"123\"' en PHP?",
+            title = "Comparación Estricta",
+            question = "¿Cuál es el resultado de '123 == \"123\"' versus '123 === \"123\"' en PHP?",
             options = listOf(
                 "Ambos devuelven true",
                 "Ambos devuelven false",
-                "El primero da true (coerciÃ³n), el segundo da false (estricto)",
+                "El primero da true (coerción), el segundo da false (estricto)",
                 "El primero da false, el segundo da true"
             ),
             correctAnswerIndex = 2,
-            explanation = "Al igual que JS, '==' en PHP hace coerciÃ³n de tipos (convirtiendo el string a nÃºmero para comparar), mientras que '===' valida estrictamente el tipo (int vs string)."
+            explanation = "Al igual que JS, '==' en PHP hace coerción de tipos (convirtiendo el string a número para comparar), mientras que '===' valida estrictamente el tipo (int vs string)."
         ),
         CodingChallenge(
             id = 41,
             language = "PHP",
             type = "TRIVIA",
             title = "Variables Superglobales",
-            question = "Â¿QuÃ© superglobal contiene los datos enviados por un formulario con mÃ©todo POST?",
+            question = "¿Qué superglobal contiene los datos enviados por un formulario con método POST?",
             options = listOf(
                 "\$_GET",
                 "\$_POST",
@@ -2943,7 +2636,7 @@ object ChallengesData {
             language = "PHP",
             type = "TRIVIA",
             title = "foreach con Arrays",
-            question = "Â¿CuÃ¡l es la sintaxis correcta para iterar un array asociativo?",
+            question = "¿Cuál es la sintaxis correcta para iterar un array asociativo?",
             options = listOf(
                 "foreach(\$array as \$value)",
                 "foreach(\$array as \$key => \$value)",
@@ -2958,23 +2651,23 @@ object ChallengesData {
             language = "PHP",
             type = "DEBUG",
             title = "isset vs empty",
-            question = "Â¿QuÃ© funciÃ³n devuelve true si una variable existe y no es null?",
+            question = "¿Qué función devuelve true si una variable existe y no es null?",
             codeSnippet = "\$var = 0;\nvar_dump(isset(\$var)); // true\nvar_dump(empty(\$var)); // ?",
             options = listOf(
-                "true porque 0 es un valor vÃ¡lido",
-                "false porque 0 se considera vacÃ­o",
+                "true porque 0 es un valor válido",
+                "false porque 0 se considera vacío",
                 "true porque empty solo revisa si existe",
                 "Lanza un error de tipo"
             ),
             correctAnswerIndex = 1,
-            explanation = "empty(\$var) devuelve true para valores 'vacÃ­os': \"\", 0, \"0\", null, false, array(), y variables no definidas. Como \$var = 0, empty() devuelve true."
+            explanation = "empty(\$var) devuelve true para valores 'vacíos': \"\", 0, \"0\", null, false, array(), y variables no definidas. Como \$var = 0, empty() devuelve true."
         ),
         CodingChallenge(
             id = 44,
             language = "PHP",
             type = "TRIVIA",
             title = "Clases y Objetos",
-            question = "Â¿CÃ³mo se define una clase en PHP?",
+            question = "¿Cómo se define una clase en PHP?",
             options = listOf(
                 "class Persona { }",
                 "new class Persona() { }",
@@ -2989,7 +2682,7 @@ object ChallengesData {
             language = "PHP",
             type = "TRIVIA",
             title = "Herencia en PHP",
-            question = "Â¿QuÃ© palabra clave se usa para heredar de una clase padre?",
+            question = "¿Qué palabra clave se usa para heredar de una clase padre?",
             options = listOf(
                 "implements",
                 "extends",
@@ -3004,7 +2697,7 @@ object ChallengesData {
             language = "PHP",
             type = "DEBUG",
             title = "echo vs print_r",
-            question = "Â¿QuÃ© funciÃ³n es mÃ¡s adecuada para inspeccionar el contenido de un array?",
+            question = "¿Qué función es más adecuada para inspeccionar el contenido de un array?",
             codeSnippet = "\$datos = ['a' => 1, 'b' => 2];\necho \$datos; // Error\n???",
             options = listOf(
                 "echo solo sirve para strings, usa print_r(\$datos) o var_dump(\$datos)",
@@ -3020,7 +2713,7 @@ object ChallengesData {
             language = "PHP",
             type = "TRIVIA",
             title = "Sesiones en PHP",
-            question = "Â¿QuÃ© funciÃ³n inicia o reanuda una sesiÃ³n en PHP?",
+            question = "¿Qué función inicia o reanuda una sesión en PHP?",
             options = listOf(
                 "start_session()",
                 "session_start()",
@@ -3028,19 +2721,19 @@ object ChallengesData {
                 "init_session()"
             ),
             correctAnswerIndex = 1,
-            explanation = "session_start() inicia una nueva sesiÃ³n o reanuda la existente basada en el ID de sesiÃ³n (en cookie o URL)."
+            explanation = "session_start() inicia una nueva sesión o reanuda la existente basada en el ID de sesión (en cookie o URL)."
         ),
         CodingChallenge(
             id = 48,
             language = "PHP",
             type = "TRIVIA",
             title = "include vs require",
-            question = "Â¿CuÃ¡l es la diferencia entre include y require?",
+            question = "¿Cuál es la diferencia entre include y require?",
             options = listOf(
                 "include incluye el archivo, require lo ejecuta",
                 "require lanza un error fatal si el archivo no existe, include solo una advertencia",
                 "No hay diferencia, son alias",
-                "include carga el archivo de forma asÃ­ncrona"
+                "include carga el archivo de forma asíncrona"
             ),
             correctAnswerIndex = 1,
             explanation = "Ambos incluyen archivos, pero require produce un error fatal (E_COMPILE_ERROR) si falla, deteniendo el script. include solo emite una advertencia (E_WARNING)."
@@ -3050,7 +2743,7 @@ object ChallengesData {
             language = "PHP",
             type = "TRIVIA",
             title = "Arrays Asociativos",
-            question = "Â¿CÃ³mo se accede al valor con clave 'nombre' en un array asociativo?",
+            question = "¿Cómo se accede al valor con clave 'nombre' en un array asociativo?",
             options = listOf(
                 "\$persona->nombre",
                 "\$persona['nombre']",
@@ -3064,8 +2757,8 @@ object ChallengesData {
             id = 50,
             language = "PHP",
             type = "DEBUG",
-            title = "ConcatenaciÃ³n de Strings",
-            question = "Â¿CuÃ¡l es el operador de concatenaciÃ³n en PHP?",
+            title = "Concatenación de Strings",
+            question = "¿Cuál es el operador de concatenación en PHP?",
             codeSnippet = "\$a = 'Hola ';\n\$b = 'Mundo';\n\$c = ???",
             options = listOf(
                 "\$a + \$b",
@@ -3074,14 +2767,14 @@ object ChallengesData {
                 "\$a :: \$b"
             ),
             correctAnswerIndex = 1,
-            explanation = "PHP usa el punto (.) como operador de concatenaciÃ³n de strings: 'Hola ' . 'Mundo' produce 'Hola Mundo'."
+            explanation = "PHP usa el punto (.) como operador de concatenación de strings: 'Hola ' . 'Mundo' produce 'Hola Mundo'."
         ),
         CodingChallenge(
             id = 51,
             language = "PHP",
             type = "TRIVIA",
             title = "Funciones Variables",
-            question = "Â¿CÃ³mo se llama una funciÃ³n cuyo nombre estÃ¡ en una variable?",
+            question = "¿Cómo se llama una función cuyo nombre está en una variable?",
             options = listOf(
                 "\$nombreFuncion()",
                 "call(\$nombreFuncion)",
@@ -3089,14 +2782,14 @@ object ChallengesData {
                 "No es posible en PHP"
             ),
             correctAnswerIndex = 0,
-            explanation = "PHP permite llamar a funciones con nombre dinÃ¡mico: si \$nombreFuncion = 'strlen', entonces \$nombreFuncion('hola') llama a strlen('hola')."
+            explanation = "PHP permite llamar a funciones con nombre dinámico: si \$nombreFuncion = 'strlen', entonces \$nombreFuncion('hola') llama a strlen('hola')."
         ),
         CodingChallenge(
             id = 52,
             language = "PHP",
             type = "TRIVIA",
-            title = "MÃ©todos EstÃ¡ticos",
-            question = "Â¿CÃ³mo se accede a un mÃ©todo estÃ¡tico desde dentro de la misma clase?",
+            title = "Métodos Estáticos",
+            question = "¿Cómo se accede a un método estático desde dentro de la misma clase?",
             options = listOf(
                 "\$this->metodo()",
                 "self::metodo()",
@@ -3104,30 +2797,30 @@ object ChallengesData {
                 "class::metodo()"
             ),
             correctAnswerIndex = 1,
-            explanation = "Dentro de una clase, los mÃ©todos y propiedades estÃ¡ticos se acceden con self:: o static:: (late static binding)."
+            explanation = "Dentro de una clase, los métodos y propiedades estáticos se acceden con self:: o static:: (late static binding)."
         ),
         CodingChallenge(
             id = 53,
             language = "PHP",
             type = "TRIVIA",
             title = "PDO y Prepared Statements",
-            question = "Â¿QuÃ© beneficio principal tienen los prepared statements en PDO?",
+            question = "¿Qué beneficio principal tienen los prepared statements en PDO?",
             options = listOf(
-                "Son mÃ¡s rÃ¡pidos que las consultas normales",
-                "Previenen la inyecciÃ³n SQL separando la estructura SQL de los datos",
-                "Permiten conectar mÃºltiples bases de datos a la vez",
-                "No requieren conexiÃ³n a la base de datos"
+                "Son más rápidos que las consultas normales",
+                "Previenen la inyección SQL separando la estructura SQL de los datos",
+                "Permiten conectar múltiples bases de datos a la vez",
+                "No requieren conexión a la base de datos"
             ),
             correctAnswerIndex = 1,
-            explanation = "Los prepared statements envÃ­an la estructura de la consulta por separado de los datos, evitando que datos maliciosos alteren la intenciÃ³n de la SQL."
+            explanation = "Los prepared statements envían la estructura de la consulta por separado de los datos, evitando que datos maliciosos alteren la intención de la SQL."
         ),
         CodingChallenge(
             id = 54,
             language = "PHP",
             type = "DEBUG",
             title = "Cookies en PHP",
-            question = "Â¿QuÃ© funciÃ³n establece una cookie en PHP?",
-            codeSnippet = "// Â¿CuÃ¡l es la funciÃ³n correcta?\n???('usuario', 'juan', time() + 3600)",
+            question = "¿Qué función establece una cookie en PHP?",
+            codeSnippet = "// ¿Cuál es la función correcta?\n???('usuario', 'juan', time() + 3600)",
             options = listOf(
                 "set_cookie()",
                 "setcookie()",
@@ -3135,14 +2828,14 @@ object ChallengesData {
                 "http_set_cookie()"
             ),
             correctAnswerIndex = 1,
-            explanation = "setcookie() es la funciÃ³n nativa de PHP para establecer cookies. Debe llamarse antes de cualquier salida HTML."
+            explanation = "setcookie() es la función nativa de PHP para establecer cookies. Debe llamarse antes de cualquier salida HTML."
         ),
         CodingChallenge(
             id = 55,
             language = "PHP",
             type = "TRIVIA",
             title = "Operador Ternario",
-            question = "Â¿CuÃ¡l es la sintaxis del operador ternario en PHP?",
+            question = "¿Cuál es la sintaxis del operador ternario en PHP?",
             options = listOf(
                 "cond ? if_true : if_false",
                 "cond :: if_true :: if_false",
@@ -3150,7 +2843,7 @@ object ChallengesData {
                 "cond -> if_true -> if_false"
             ),
             correctAnswerIndex = 0,
-            explanation = "PHP usa la misma sintaxis que C/Java: condiciÃ³n ? valor_si_verdadero : valor_si_falso."
+            explanation = "PHP usa la misma sintaxis que C/Java: condición ? valor_si_verdadero : valor_si_falso."
         ),
 
         // ========== PYTHON ==========
@@ -3159,7 +2852,7 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "Tipos de datos mutables",
-            question = "Â¿CuÃ¡l de las siguientes estructuras de datos en Python es INMUTABLE?",
+            question = "¿Cuál de las siguientes estructuras de datos en Python es INMUTABLE?",
             options = listOf(
                 "Lista [1, 2, 3]",
                 "Diccionario {'a': 1}",
@@ -3167,14 +2860,14 @@ object ChallengesData {
                 "Conjunto {1, 2, 3}"
             ),
             correctAnswerIndex = 2,
-            explanation = "En Python, las tuplas '(1, 2, 3)' son inmutables. Una vez creadas, no se pueden modificar, aÃ±adir o quitar sus elementos."
+            explanation = "En Python, las tuplas '(1, 2, 3)' son inmutables. Una vez creadas, no se pueden modificar, añadir o quitar sus elementos."
         ),
         CodingChallenge(
             id = 11,
             language = "Python",
             type = "DEBUG",
-            title = "ComprensiÃ³n de Listas",
-            question = "Â¿CuÃ¡l es el resultado de la siguiente comprensiÃ³n de listas?",
+            title = "Comprensión de Listas",
+            question = "¿Cuál es el resultado de la siguiente comprensión de listas?",
             codeSnippet = "numeros = [1, 2, 3, 4]\ncuadrados = [x**2 for x in numeros if x % 2 == 0]",
             options = listOf(
                 "[1, 4, 9, 16]",
@@ -3183,14 +2876,14 @@ object ChallengesData {
                 "[2, 4]"
             ),
             correctAnswerIndex = 1,
-            explanation = "El bucle filtra los nÃºmeros pares (2 y 4) usando 'if x % 2 == 0' y luego calcula sus cuadrados (2**2 = 4 y 4**2 = 16), dando [4, 16]."
+            explanation = "El bucle filtra los números pares (2 y 4) usando 'if x % 2 == 0' y luego calcula sus cuadrados (2**2 = 4 y 4**2 = 16), dando [4, 16]."
         ),
         CodingChallenge(
             id = 56,
             language = "Python",
             type = "TRIVIA",
             title = "PEP 8 - Nombres",
-            question = "Â¿CuÃ¡l es la convenciÃ³n PEP 8 para nombrar funciones y variables en Python?",
+            question = "¿Cuál es la convención PEP 8 para nombrar funciones y variables en Python?",
             options = listOf(
                 "camelCase",
                 "snake_case",
@@ -3198,19 +2891,19 @@ object ChallengesData {
                 "kebab-case"
             ),
             correctAnswerIndex = 1,
-            explanation = "PEP 8 recomienda usar snake_case (palabras_separadas_por_guiones_bajos) para funciones, variables y mÃ©todos. PascalCase para clases."
+            explanation = "PEP 8 recomienda usar snake_case (palabras_separadas_por_guiones_bajos) para funciones, variables y métodos. PascalCase para clases."
         ),
         CodingChallenge(
             id = 57,
             language = "Python",
             type = "TRIVIA",
             title = "Listas vs Tuplas",
-            question = "Â¿Por quÃ© las tuplas son mÃ¡s rÃ¡pidas que las listas en ciertos contextos?",
+            question = "¿Por qué las tuplas son más rápidas que las listas en ciertos contextos?",
             options = listOf(
                 "Las tuplas se almacenan en disco, no en memoria",
                 "Las tuplas son inmutables, Python puede optimizar su almacenamiento y acceso",
-                "Las tuplas no tienen mÃ©todos, solo funciones globales",
-                "Las tuplas se compilan a cÃ³digo mÃ¡quina"
+                "Las tuplas no tienen métodos, solo funciones globales",
+                "Las tuplas se compilan a código máquina"
             ),
             correctAnswerIndex = 1,
             explanation = "Al ser inmutables, Python puede hacer optimizaciones en la memoria de las tuplas. No necesitan espacio adicional para posibles modificaciones."
@@ -3220,42 +2913,42 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "with Statement",
-            question = "Â¿Para quÃ© sirve la sentencia 'with' en Python?",
+            question = "¿Para qué sirve la sentencia 'with' en Python?",
             options = listOf(
-                "Para ejecutar bloques de cÃ³digo en paralelo",
-                "Para manejar recursos (archivos, conexiones) asegurando su cierre automÃ¡tico",
-                "Para declarar variables dentro de un Ã¡mbito temporal",
-                "Es sinÃ³nimo de 'if' en versiones modernas"
+                "Para ejecutar bloques de código en paralelo",
+                "Para manejar recursos (archivos, conexiones) asegurando su cierre automático",
+                "Para declarar variables dentro de un ámbito temporal",
+                "Es sinónimo de 'if' en versiones modernas"
             ),
             correctAnswerIndex = 1,
-            explanation = "'with' usa context managers para asegurar que los recursos se limpien correctamente al salir del bloque, como cerrar archivos automÃ¡ticamente."
+            explanation = "'with' usa context managers para asegurar que los recursos se limpien correctamente al salir del bloque, como cerrar archivos automáticamente."
         ),
         CodingChallenge(
             id = 59,
             language = "Python",
             type = "DEBUG",
             title = "Mutable como default",
-            question = "Â¿QuÃ© problema tiene esta funciÃ³n?",
+            question = "¿Qué problema tiene esta función?",
             codeSnippet = "def add_item(item, lista=[]):\n    lista.append(item)\n    return lista",
             options = listOf(
                 "No hay problema, funciona correctamente",
                 "El argumento default mutable se comparte entre todas las llamadas",
                 "append no existe para listas",
-                "No se puede asignar un default a un parÃ¡metro"
+                "No se puede asignar un default a un parámetro"
             ),
             correctAnswerIndex = 1,
-            explanation = "Los argumentos default se evalÃºan una vez al definir la funciÃ³n. Si el default es mutable, todas las llamadas comparten la misma lista."
+            explanation = "Los argumentos default se evalúan una vez al definir la función. Si el default es mutable, todas las llamadas comparten la misma lista."
         ),
         CodingChallenge(
             id = 60,
             language = "Python",
             type = "TRIVIA",
             title = "args y kwargs",
-            question = "Â¿QuÃ© hace *args en una funciÃ³n de Python?",
+            question = "¿Qué hace *args en una función de Python?",
             options = listOf(
                 "Convierte los argumentos en un array de NumPy",
-                "Permite pasar un nÃºmero variable de argumentos posicionales como una tupla",
-                "Indica que la funciÃ³n es privada",
+                "Permite pasar un número variable de argumentos posicionales como una tupla",
+                "Indica que la función es privada",
                 "Multiplica los valores de los argumentos"
             ),
             correctAnswerIndex = 1,
@@ -3266,22 +2959,22 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "Decoradores",
-            question = "Â¿QuÃ© es un decorador en Python?",
+            question = "¿Qué es un decorador en Python?",
             options = listOf(
-                "Una funciÃ³n que modifica el comportamiento de otra funciÃ³n",
-                "Un mÃ©todo especial como __init__",
+                "Una función que modifica el comportamiento de otra función",
+                "Un método especial como __init__",
                 "Una clase que extiende funcionalidades del sistema",
                 "Una sintaxis para declarar variables constantes"
             ),
             correctAnswerIndex = 0,
-            explanation = "Un decorador es una funciÃ³n que recibe otra funciÃ³n y extiende su comportamiento sin modificar su cÃ³digo fuente, usando @nombre_decorador."
+            explanation = "Un decorador es una función que recibe otra función y extiende su comportamiento sin modificar su código fuente, usando @nombre_decorador."
         ),
         CodingChallenge(
             id = 62,
             language = "Python",
             type = "DEBUG",
             title = "range en bucles",
-            question = "Â¿QuÃ© imprime este cÃ³digo?",
+            question = "¿Qué imprime este código?",
             codeSnippet = "for i in range(3):\n    print(i, end=' ')",
             options = listOf(
                 "1 2 3",
@@ -3290,14 +2983,14 @@ object ChallengesData {
                 "1 2"
             ),
             correctAnswerIndex = 1,
-            explanation = "range(3) genera los nÃºmeros 0, 1, 2 (stop exclusivo). Por defecto empieza en 0. Imprime '0 1 2'."
+            explanation = "range(3) genera los números 0, 1, 2 (stop exclusivo). Por defecto empieza en 0. Imprime '0 1 2'."
         ),
         CodingChallenge(
             id = 63,
             language = "Python",
             type = "TRIVIA",
             title = "Diccionarios",
-            question = "Â¿CÃ³mo se obtiene un valor de un diccionario de forma segura (sin KeyError)?",
+            question = "¿Cómo se obtiene un valor de un diccionario de forma segura (sin KeyError)?",
             options = listOf(
                 "dict.valor('clave')",
                 "dict.get('clave', default)",
@@ -3305,14 +2998,14 @@ object ChallengesData {
                 "dict.fetch('clave')"
             ),
             correctAnswerIndex = 1,
-            explanation = "dict.get('clave', default) devuelve el valor si la clave existe, o el default (None si no se especifica) sin lanzar excepciÃ³n."
+            explanation = "dict.get('clave', default) devuelve el valor si la clave existe, o el default (None si no se especifica) sin lanzar excepción."
         ),
         CodingChallenge(
             id = 64,
             language = "Python",
             type = "TRIVIA",
             title = "F-Strings",
-            question = "Â¿CuÃ¡l es la sintaxis correcta de un f-string?",
+            question = "¿Cuál es la sintaxis correcta de un f-string?",
             options = listOf(
                 "f'Hola {nombre}'",
                 "F('Hola %s', nombre)",
@@ -3327,7 +3020,7 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "Excepciones",
-            question = "Â¿CuÃ¡l es la sintaxis correcta para capturar una excepciÃ³n?",
+            question = "¿Cuál es la sintaxis correcta para capturar una excepción?",
             options = listOf(
                 "try { } catch (e) { }",
                 "try: ... except Exception as e: ...",
@@ -3335,33 +3028,33 @@ object ChallengesData {
                 "attempt: ... except: ..."
             ),
             correctAnswerIndex = 1,
-            explanation = "Python usa 'try: ... except TipoError as e: ...' para el manejo de excepciones. No usa llaves, sino indentaciÃ³n."
+            explanation = "Python usa 'try: ... except TipoError as e: ...' para el manejo de excepciones. No usa llaves, sino indentación."
         ),
         CodingChallenge(
             id = 66,
             language = "Python",
             type = "TRIVIA",
-            title = "Herencia MÃºltiple",
-            question = "Â¿Python soporta herencia mÃºltiple?",
+            title = "Herencia Múltiple",
+            question = "¿Python soporta herencia múltiple?",
             options = listOf(
-                "No, Python no permite herencia mÃºltiple",
-                "SÃ­, class Hijo(Padre1, Padre2):",
+                "No, Python no permite herencia múltiple",
+                "Sí, class Hijo(Padre1, Padre2):",
                 "Solo si se usa el decorador @multiple",
-                "SÃ­, pero solo con clases abstractas"
+                "Sí, pero solo con clases abstractas"
             ),
             correctAnswerIndex = 1,
-            explanation = "Python soporta herencia mÃºltiple: class Hijo(Padre1, Padre2):. El MRO (Method Resolution Order) determina el orden de bÃºsqueda."
+            explanation = "Python soporta herencia múltiple: class Hijo(Padre1, Padre2):. El MRO (Method Resolution Order) determina el orden de búsqueda."
         ),
         CodingChallenge(
             id = 67,
             language = "Python",
             type = "TRIVIA",
             title = "Generadores y yield",
-            question = "Â¿QuÃ© diferencia a un generador de una funciÃ³n normal?",
+            question = "¿Qué diferencia a un generador de una función normal?",
             options = listOf(
-                "Los generadores no pueden tener parÃ¡metros",
+                "Los generadores no pueden tener parámetros",
                 "Los generadores usan yield y devuelven un iterador que produce valores bajo demanda",
-                "Los generadores solo funcionan con nÃºmeros enteros",
+                "Los generadores solo funcionan con números enteros",
                 "No hay diferencia, son lo mismo"
             ),
             correctAnswerIndex = 1,
@@ -3372,7 +3065,7 @@ object ChallengesData {
             language = "Python",
             type = "DEBUG",
             title = "Copias superficiales",
-            question = "Â¿QuÃ© sucede al modificar una lista dentro de una copia con list()?",
+            question = "¿Qué sucede al modificar una lista dentro de una copia con list()?",
             codeSnippet = "original = [[1, 2], [3, 4]]\ncopia = list(original)\ncopia[0][0] = 99\nprint(original[0][0])",
             options = listOf(
                 "1 (la copia es independiente)",
@@ -3388,22 +3081,22 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "Sets en Python",
-            question = "Â¿QuÃ© caracterÃ­stica define a un set (conjunto) en Python?",
+            question = "¿Qué característica define a un set (conjunto) en Python?",
             options = listOf(
-                "Mantiene el orden de inserciÃ³n y permite duplicados",
+                "Mantiene el orden de inserción y permite duplicados",
                 "No permite elementos duplicados y no tiene orden definido",
                 "Solo puede contener strings",
-                "Es lo mismo que una lista pero con mÃ©todos adicionales"
+                "Es lo mismo que una lista pero con métodos adicionales"
             ),
             correctAnswerIndex = 1,
-            explanation = "Un set es una colecciÃ³n no ordenada de elementos Ãºnicos. Se usa para pruebas de pertenencia y operaciones de conjuntos (uniÃ³n, intersecciÃ³n)."
+            explanation = "Un set es una colección no ordenada de elementos únicos. Se usa para pruebas de pertenencia y operaciones de conjuntos (unión, intersección)."
         ),
         CodingChallenge(
             id = 70,
             language = "Python",
             type = "TRIVIA",
-            title = "MÃ³dulos y Paquetes",
-            question = "Â¿QuÃ© archivo necesita un directorio para ser considerado un paquete en Python?",
+            title = "Módulos y Paquetes",
+            question = "¿Qué archivo necesita un directorio para ser considerado un paquete en Python?",
             options = listOf(
                 "package.json",
                 "__init__.py",
@@ -3411,35 +3104,35 @@ object ChallengesData {
                 "setup.py"
             ),
             correctAnswerIndex = 1,
-            explanation = "El archivo __init__.py (que puede estar vacÃ­o) indica que un directorio es un paquete de Python, permitiendo importar sus mÃ³dulos."
+            explanation = "El archivo __init__.py (que puede estar vacío) indica que un directorio es un paquete de Python, permitiendo importar sus módulos."
         ),
         CodingChallenge(
             id = 71,
             language = "Python",
             type = "DEBUG",
-            title = "DivisiÃ³n en Python 3",
-            question = "Â¿CuÃ¡l es el resultado de 5 / 2 en Python 3?",
+            title = "División en Python 3",
+            question = "¿Cuál es el resultado de 5 / 2 en Python 3?",
             codeSnippet = "resultado = 5 / 2\nprint(resultado)",
             options = listOf(
                 "2",
                 "2.5",
                 "2.0",
-                "Error: divisiÃ³n no permitida"
+                "Error: división no permitida"
             ),
             correctAnswerIndex = 1,
-            explanation = "En Python 3, '/' siempre devuelve un float (2.5). Para divisiÃ³n entera se usa '//' (5 // 2 = 2)."
+            explanation = "En Python 3, '/' siempre devuelve un float (2.5). Para división entera se usa '//' (5 // 2 = 2)."
         ),
         CodingChallenge(
             id = 72,
             language = "Python",
             type = "TRIVIA",
-            title = "MÃ©todos de Clase",
-            question = "Â¿CÃ³mo se define un mÃ©todo de clase en Python?",
+            title = "Métodos de Clase",
+            question = "¿Cómo se define un método de clase en Python?",
             options = listOf(
                 "Con el decorador @staticmethod",
-                "Con el decorador @classmethod y 'cls' como primer parÃ¡metro",
-                "Con la palabra clave 'class' dentro del mÃ©todo",
-                "No se pueden definir mÃ©todos de clase"
+                "Con el decorador @classmethod y 'cls' como primer parámetro",
+                "Con la palabra clave 'class' dentro del método",
+                "No se pueden definir métodos de clase"
             ),
             correctAnswerIndex = 1,
             explanation = "@classmethod recibe la clase (cls) como primer argumento, a diferencia de @staticmethod que no recibe ni cls ni self."
@@ -3449,37 +3142,37 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "zip function",
-            question = "Â¿QuÃ© hace la funciÃ³n zip() en Python?",
+            question = "¿Qué hace la función zip() en Python?",
             options = listOf(
                 "Comprime archivos en formato ZIP",
                 "Combina varios iterables en tuplas, paralelamente",
                 "Ordena los elementos de una lista",
-                "Convierte strings a nÃºmeros"
+                "Convierte strings a números"
             ),
             correctAnswerIndex = 1,
-            explanation = "zip() toma varios iterables y devuelve un iterador de tuplas, donde la i-Ã©sima tupla contiene el i-Ã©simo elemento de cada iterable."
+            explanation = "zip() toma varios iterables y devuelve un iterador de tuplas, donde la i-ésima tupla contiene el i-ésimo elemento de cada iterable."
         ),
         CodingChallenge(
             id = 74,
             language = "Python",
             type = "TRIVIA",
             title = "Variables Globales",
-            question = "Â¿CÃ³mo se modifica una variable global dentro de una funciÃ³n?",
+            question = "¿Cómo se modifica una variable global dentro de una función?",
             options = listOf(
-                "Simplemente asignÃ¡ndole un nuevo valor",
+                "Simplemente asignándole un nuevo valor",
                 "Usando la palabra clave 'global' seguida del nombre de la variable",
                 "Usando 'var' delante del nombre",
                 "No se puede modificar variables globales desde funciones"
             ),
             correctAnswerIndex = 1,
-            explanation = "Para modificar una variable global dentro de una funciÃ³n, debe declararse con 'global nombre_variable' antes de asignarle un valor."
+            explanation = "Para modificar una variable global dentro de una función, debe declararse con 'global nombre_variable' antes de asignarle un valor."
         ),
         CodingChallenge(
             id = 75,
             language = "Python",
             type = "TRIVIA",
-            title = "ComprensiÃ³n de Diccionarios",
-            question = "Â¿CuÃ¡l es la sintaxis de una comprensiÃ³n de diccionarios?",
+            title = "Comprensión de Diccionarios",
+            question = "¿Cuál es la sintaxis de una comprensión de diccionarios?",
             options = listOf(
                 "{k.upper(): v for k, v in dict.items()}",
                 "[k: v for k, v in dict.items()]",
@@ -3487,29 +3180,29 @@ object ChallengesData {
                 "for k, v in dict.items(): {k: v}"
             ),
             correctAnswerIndex = 0,
-            explanation = "La comprensiÃ³n de diccionarios usa llaves {} con clave: valor: {clave: valor for elemento in iterable}. Similar a listas pero con :."
+            explanation = "La comprensión de diccionarios usa llaves {} con clave: valor: {clave: valor for elemento in iterable}. Similar a listas pero con :."
         ),
         CodingChallenge(
             id = 76,
             language = "Python",
             type = "TRIVIA",
             title = "lambda",
-            question = "Â¿QuÃ© es una funciÃ³n lambda en Python?",
+            question = "¿Qué es una función lambda en Python?",
             options = listOf(
-                "Una funciÃ³n anÃ³nima de una sola expresiÃ³n",
-                "Una funciÃ³n que puede tener mÃºltiples lÃ­neas y decoradores",
-                "El operador de la divisiÃ³n de enteros",
-                "Una funciÃ³n asÃ­ncrona con await"
+                "Una función anónima de una sola expresión",
+                "Una función que puede tener múltiples líneas y decoradores",
+                "El operador de la división de enteros",
+                "Una función asíncrona con await"
             ),
             correctAnswerIndex = 0,
-            explanation = "lambda crea funciones anÃ³nimas de una sola lÃ­nea: lambda args: expresiÃ³n. Equivale a una funciÃ³n pequeÃ±a y descartable."
+            explanation = "lambda crea funciones anónimas de una sola línea: lambda args: expresión. Equivale a una función pequeña y descartable."
         ),
         CodingChallenge(
             id = 77,
             language = "Python",
             type = "TRIVIA",
             title = "re.match vs re.search",
-            question = "Â¿CuÃ¡l es la diferencia entre re.match() y re.search()?",
+            question = "¿Cuál es la diferencia entre re.match() y re.search()?",
             options = listOf(
                 "match busca en todo el string, search busca solo al inicio",
                 "match solo busca al inicio del string, search busca en todo el string",
@@ -3524,37 +3217,37 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "assert en Python",
-            question = "Â¿QuÃ© hace la sentencia 'assert'?",
+            question = "¿Qué hace la sentencia 'assert'?",
             options = listOf(
-                "Detiene la ejecuciÃ³n si la condiciÃ³n es verdadera",
-                "Lanza AssertionError si la condiciÃ³n es falsa, usado para depuraciÃ³n",
-                "Afirma que una variable existe en el Ã¡mbito global",
+                "Detiene la ejecución si la condición es verdadera",
+                "Lanza AssertionError si la condición es falsa, usado para depuración",
+                "Afirma que una variable existe en el ámbito global",
                 "Declara una variable como constante"
             ),
             correctAnswerIndex = 1,
-            explanation = "assert condiciÃ³n, mensaje lanza AssertionError con el mensaje si la condiciÃ³n es falsa. Se usa para validar invariantes en tiempo de desarrollo."
+            explanation = "assert condición, mensaje lanza AssertionError con el mensaje si la condición es falsa. Se usa para validar invariantes en tiempo de desarrollo."
         ),
         CodingChallenge(
             id = 79,
             language = "Python",
             type = "TRIVIA",
             title = "enumerate en Bucles",
-            question = "Â¿QuÃ© hace la funciÃ³n enumerate() en un bucle for?",
+            question = "¿Qué hace la función enumerate() en un bucle for?",
             options = listOf(
-                "Devuelve el Ã­ndice y el valor de cada elemento",
-                "Cuenta cuÃ¡ntos elementos hay en el iterable",
-                "Asigna un nÃºmero Ãºnico a cada elemento",
-                "Ordena los elementos numÃ©ricamente"
+                "Devuelve el índice y el valor de cada elemento",
+                "Cuenta cuántos elementos hay en el iterable",
+                "Asigna un número único a cada elemento",
+                "Ordena los elementos numéricamente"
             ),
             correctAnswerIndex = 0,
-            explanation = "enumerate() devuelve tuplas (Ã­ndice, valor) para cada elemento, evitando tener que usar una variable contadora manual."
+            explanation = "enumerate() devuelve tuplas (índice, valor) para cada elemento, evitando tener que usar una variable contadora manual."
         ),
         CodingChallenge(
             id = 80,
             language = "Python",
             type = "DEBUG",
             title = "Mutable vs Inmutable",
-            question = "Â¿QuÃ© imprime este cÃ³digo?",
+            question = "¿Qué imprime este código?",
             codeSnippet = "a = [1, 2, 3]\nb = a\na.append(4)\nprint(b)",
             options = listOf(
                 "[1, 2, 3]",
@@ -3570,22 +3263,22 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "sys.argv",
-            question = "Â¿QuÃ© contiene sys.argv?",
+            question = "¿Qué contiene sys.argv?",
             options = listOf(
-                "Los argumentos de lÃ­nea de comandos pasados al script",
+                "Los argumentos de línea de comandos pasados al script",
                 "Las variables de entorno del sistema",
-                "Los mÃ³dulos importados actualmente",
-                "Las rutas de bÃºsqueda de Python"
+                "Los módulos importados actualmente",
+                "Las rutas de búsqueda de Python"
             ),
             correctAnswerIndex = 0,
-            explanation = "sys.argv es una lista con los argumentos de lÃ­nea de comandos. sys.argv[0] es el nombre del script, sys.argv[1:] son los argumentos."
+            explanation = "sys.argv es una lista con los argumentos de línea de comandos. sys.argv[0] es el nombre del script, sys.argv[1:] son los argumentos."
         ),
         CodingChallenge(
             id = 82,
             language = "Python",
             type = "TRIVIA",
             title = "Python y JSON",
-            question = "Â¿QuÃ© funciÃ³n convierte un string JSON a un objeto Python?",
+            question = "¿Qué función convierte un string JSON a un objeto Python?",
             options = listOf(
                 "json.stringify()",
                 "json.loads()",
@@ -3593,44 +3286,44 @@ object ChallengesData {
                 "json.decode()"
             ),
             correctAnswerIndex = 1,
-            explanation = "json.loads() (load string) convierte un string JSON en un objeto Python. json.dumps() hace la operaciÃ³n inversa (objeto a string)."
+            explanation = "json.loads() (load string) convierte un string JSON en un objeto Python. json.dumps() hace la operación inversa (objeto a string)."
         ),
         CodingChallenge(
             id = 83,
             language = "Python",
             type = "TRIVIA",
             title = "Herencia y super()",
-            question = "Â¿Para quÃ© sirve super() en Python?",
+            question = "¿Para qué sirve super() en Python?",
             options = listOf(
-                "Para llamar a la versiÃ³n de la clase padre de un mÃ©todo",
-                "Para declarar una clase como superior en jerarquÃ­a",
-                "Para mejorar el rendimiento de los mÃ©todos",
+                "Para llamar a la versión de la clase padre de un método",
+                "Para declarar una clase como superior en jerarquía",
+                "Para mejorar el rendimiento de los métodos",
                 "No existe super() en Python"
             ),
             correctAnswerIndex = 0,
-            explanation = "super() devuelve un objeto proxy que delega las llamadas de mÃ©todos a la clase padre, siguiendo el MRO (Method Resolution Order)."
+            explanation = "super() devuelve un objeto proxy que delega las llamadas de métodos a la clase padre, siguiendo el MRO (Method Resolution Order)."
         ),
         CodingChallenge(
             id = 84,
             language = "Python",
             type = "TRIVIA",
             title = "Virtualenv",
-            question = "Â¿CuÃ¡l es el propÃ³sito de un entorno virtual (virtualenv)?",
+            question = "¿Cuál es el propósito de un entorno virtual (virtualenv)?",
             options = listOf(
-                "Crear una mÃ¡quina virtual para ejecutar Python",
+                "Crear una máquina virtual para ejecutar Python",
                 "Aislar las dependencias de un proyecto Python del sistema global",
-                "Simular un entorno de producciÃ³n en local",
-                "Acelerar la ejecuciÃ³n del cÃ³digo Python"
+                "Simular un entorno de producción en local",
+                "Acelerar la ejecución del código Python"
             ),
             correctAnswerIndex = 1,
-            explanation = "Un entorno virtual aÃ­sla las dependencias de Python de cada proyecto, evitando conflictos entre versiones de bibliotecas."
+            explanation = "Un entorno virtual aísla las dependencias de Python de cada proyecto, evitando conflictos entre versiones de bibliotecas."
         ),
         CodingChallenge(
             id = 85,
             language = "Python",
             type = "TRIVIA",
             title = "Type Hints",
-            question = "Â¿CÃ³mo se indica el tipo de retorno de una funciÃ³n con type hints?",
+            question = "¿Cómo se indica el tipo de retorno de una función con type hints?",
             options = listOf(
                 "def suma(a: int, b: int) -> int:",
                 "def suma(int a, int b) returns int:",
@@ -3638,20 +3331,20 @@ object ChallengesData {
                 "@typedef suma(a: int, b: int) -> int"
             ),
             correctAnswerIndex = 0,
-            explanation = "Los type hints usan ': tipo' para parÃ¡metros y '-> tipo' para el retorno: def suma(a: int, b: int) -> int:"
+            explanation = "Los type hints usan ': tipo' para parámetros y '-> tipo' para el retorno: def suma(a: int, b: int) -> int:"
         ),
         CodingChallenge(
             id = 88,
             language = "Python",
             type = "DEBUG",
-            title = "ExcepciÃ³n en divisiÃ³n",
-            question = "Â¿QuÃ© excepciÃ³n lanza Python al dividir por cero?",
+            title = "Excepción en división",
+            question = "¿Qué excepción lanza Python al dividir por cero?",
             codeSnippet = "resultado = 10 / 0",
             options = listOf(
                 "ValueError",
                 "ZeroDivisionError",
                 "TypeError",
-                "ArithmeticError (genÃ©rica)"
+                "ArithmeticError (genérica)"
             ),
             correctAnswerIndex = 1,
             explanation = "Python lanza ZeroDivisionError cuando se intenta dividir por cero. Es un subtipo de ArithmeticError."
@@ -3661,7 +3354,7 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "Paquetes con pip",
-            question = "Â¿QuÃ© comando instala un paquete desde PyPI?",
+            question = "¿Qué comando instala un paquete desde PyPI?",
             options = listOf(
                 "python get package_name",
                 "pip install package_name",
@@ -3676,7 +3369,7 @@ object ChallengesData {
             language = "Python",
             type = "TRIVIA",
             title = "asyncio",
-            question = "Â¿QuÃ© palabra clave se usa para definir una funciÃ³n asÃ­ncrona en Python?",
+            question = "¿Qué palabra clave se usa para definir una función asíncrona en Python?",
             options = listOf(
                 "async def",
                 "async function",
@@ -3684,99 +3377,99 @@ object ChallengesData {
                 "def async"
             ),
             correctAnswerIndex = 0,
-            explanation = "Las funciones asÃ­ncronas se definen con 'async def'. Dentro de ellas se usa 'await' para llamar a otras funciones asÃ­ncronas."
+            explanation = "Las funciones asíncronas se definen con 'async def'. Dentro de ellas se usa 'await' para llamar a otras funciones asíncronas."
         ),
     )
 }
+
 ```
 
-#### data/SpecialChallengesData.kt
-
 ```kotlin
+// SpecialChallengesData.kt
 package com.tamagotchi.code.data
 
 object SpecialChallengesData {
     val challenges = listOf(
         CodingChallenge(
             id = 101,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ALGORITHM",
-            title = "Encontrar el Ãšnico",
-            question = "Dado un array de enteros donde cada elemento aparece tres veces excepto uno que aparece exactamente una vez. Encuentra ese elemento Ãºnico usando O(1) de memoria extra y O(N) de tiempo.",
+            title = "Encontrar el Único",
+            question = "Dado un array de enteros donde cada elemento aparece tres veces excepto uno que aparece exactamente una vez. Encuentra ese elemento único usando O(1) de memoria extra y O(N) de tiempo.",
             options = listOf(
                 "Usar una tabla hash (Hash Map)",
                 "Ordenar el array y buscar linealmente",
-                "Usar conteo de bits mÃ³dulo 3 en cada posiciÃ³n",
+                "Usar conteo de bits módulo 3 en cada posición",
                 "XOR de todos los elementos"
             ),
             correctAnswerIndex = 2,
-            explanation = "La forma Ã³ptima de resolver esto es contar el nÃºmero de bits seteados en cada posiciÃ³n i para todos los nÃºmeros. Si aplicamos mÃ³dulo 3 a esta suma, obtendremos el bit en la posiciÃ³n i del nÃºmero Ãºnico."
+            explanation = "La forma óptima de resolver esto es contar el número de bits seteados en cada posición i para todos los números. Si aplicamos módulo 3 a esta suma, obtendremos el bit en la posición i del número único."
         ),
         CodingChallenge(
             id = 102,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ALGORITHM",
             title = "Problema del Mochilero",
-            question = "Â¿CuÃ¡l es el enfoque clÃ¡sico para resolver el Problema de la Mochila (Knapsack) 0/1 con precisiÃ³n?",
+            question = "¿Cuál es el enfoque clásico para resolver el Problema de la Mochila (Knapsack) 0/1 con precisión?",
             options = listOf(
                 "Algoritmo Codicioso (Greedy) tomando por mayor ratio valor/peso",
-                "ProgramaciÃ³n DinÃ¡mica con una tabla 2D o vector 1D",
-                "BÃºsqueda Binaria",
-                "Ordenamiento TopolÃ³gico"
+                "Programación Dinámica con una tabla 2D o vector 1D",
+                "Búsqueda Binaria",
+                "Ordenamiento Topológico"
             ),
             correctAnswerIndex = 1,
-            explanation = "El Knapsack 0/1 no se puede resolver con Greedy con precisiÃ³n garantizada. Requiere ProgramaciÃ³n DinÃ¡mica evaluando subproblemas de capacidades menores y objetos disponibles."
+            explanation = "El Knapsack 0/1 no se puede resolver con Greedy con precisión garantizada. Requiere Programación Dinámica evaluando subproblemas de capacidades menores y objetos disponibles."
         ),
         CodingChallenge(
             id = 103,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ALGORITHM",
             title = "Invertir una Lista Enlazada",
-            question = "Â¿CuÃ¡ntos punteros se necesitan normalmente (como mÃ­nimo) para invertir de forma iterativa una lista enlazada simple in-place?",
+            question = "¿Cuántos punteros se necesitan normalmente (como mínimo) para invertir de forma iterativa una lista enlazada simple in-place?",
             options = listOf("1", "2", "3", "4"),
             correctAnswerIndex = 2,
             explanation = "Se necesitan 3 punteros: prev (para apuntar al nodo anterior procesado), current (el nodo actual) y next (para no perder el resto de la lista al romper el enlace)."
         ),
         CodingChallenge(
             id = 104,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ARCHITECTURE",
             title = "Teorema CAP",
-            question = "En sistemas distribuidos, el Teorema CAP dice que solo puedes garantizar simultÃ¡neamente 2 de 3 propiedades. Â¿CuÃ¡les son?",
+            question = "En sistemas distribuidos, el Teorema CAP dice que solo puedes garantizar simultáneamente 2 de 3 propiedades. ¿Cuáles son?",
             options = listOf(
-                "Consistencia, AsincronÃ­a, ParticiÃ³n",
+                "Consistencia, Asincronía, Partición",
                 "Consistencia, Disponibilidad (Availability), Tolerancia a Particiones",
-                "Control, Accesibilidad, PrecisiÃ³n",
-                "CachÃ©, API, Persistencia"
+                "Control, Accesibilidad, Precisión",
+                "Caché, API, Persistencia"
             ),
             correctAnswerIndex = 1,
             explanation = "CAP significa Consistency, Availability, y Partition Tolerance. Debido a que las particiones de red (P) son inevitables, un sistema debe elegir entre C y A."
         ),
         CodingChallenge(
             id = 105,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ALGORITHM",
             title = "Detectar Ciclo",
-            question = "Â¿QuÃ© algoritmo de dos punteros (uno rÃ¡pido y uno lento) se usa para detectar si hay un ciclo en una lista enlazada?",
+            question = "¿Qué algoritmo de dos punteros (uno rápido y uno lento) se usa para detectar si hay un ciclo en una lista enlazada?",
             options = listOf(
                 "Algoritmo de Dijkstra",
                 "Algoritmo de la Tortuga y la Liebre (Floyd)",
-                "BÃºsqueda en Profundidad (DFS)",
+                "Búsqueda en Profundidad (DFS)",
                 "A* Search"
             ),
             correctAnswerIndex = 1,
-            explanation = "El algoritmo de detecciÃ³n de ciclos de Floyd (Tortuga y Liebre) utiliza dos punteros avanzando a distintas velocidades. Si hay un ciclo, eventualmente se encontrarÃ¡n."
+            explanation = "El algoritmo de detección de ciclos de Floyd (Tortuga y Liebre) utiliza dos punteros avanzando a distintas velocidades. Si hay un ciclo, eventualmente se encontrarán."
         ),
         CodingChallenge(
             id = 106,
-            language = "LÃ³gica Especial",
+            language = "Lógica Especial",
             type = "ALGORITHM",
-            title = "Ãrboles AVL",
-            question = "Â¿QuÃ© condiciÃ³n debe cumplirse siempre en un Ãrbol AVL para estar balanceado?",
+            title = "Árboles AVL",
+            question = "¿Qué condición debe cumplirse siempre en un Árbol AVL para estar balanceado?",
             options = listOf(
                 "Todos los nodos hoja deben estar en el mismo nivel",
-                "La diferencia de alturas entre los subÃ¡rboles izquierdo y derecho de cualquier nodo debe ser como mÃ¡ximo 1",
-                "El subÃ¡rbol izquierdo debe tener siempre mÃ¡s nodos que el derecho",
+                "La diferencia de alturas entre los subárboles izquierdo y derecho de cualquier nodo debe ser como máximo 1",
+                "El subárbol izquierdo debe tener siempre más nodos que el derecho",
                 "El color de los nodos no debe repetir rojo en secuencia"
             ),
             correctAnswerIndex = 1,
@@ -3784,13 +3477,14 @@ object SpecialChallengesData {
         )
     )
 }
+
 ```
+
 ### 15.6 ViewModel
 
 
-#### ui/viewmodel/PetViewModel.kt
-
 ```kotlin
+// PetViewModel.kt
 package com.tamagotchi.code.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
@@ -3903,10 +3597,10 @@ class PetViewModel(
             userPreferences.setDifficulty(newDifficulty)
             difficulty.value = newDifficulty
             
-            // LÃ³gica para dificultad principiante
+            // Lógica para dificultad principiante
             if (newDifficulty.contains("Principiante", ignoreCase = true) || 
                 newDifficulty.contains("experiencia", ignoreCase = true)) {
-                // PodrÃ­amos cargar un set de retos ultra-bÃ¡sicos aquÃ­
+                // Podríamos cargar un set de retos ultra-básicos aquí
             }
         }
     }
@@ -4518,13 +4212,14 @@ class PetViewModel(
         }
     }
 }
+
 ```
+
 ### 15.7 Utilidades
 
 
-#### util/DecayCalculator.kt
-
 ```kotlin
+// DecayCalculator.kt
 package com.tamagotchi.code.util
 
 import com.tamagotchi.code.data.database.PetStateEntity
@@ -4592,11 +4287,11 @@ object DecayCalculator {
         )
     }
 }
+
 ```
 
-#### util/LevelCalculator.kt
-
 ```kotlin
+// LevelCalculator.kt
 package com.tamagotchi.code.util
 
 object LevelCalculator {
@@ -4612,11 +4307,11 @@ object LevelCalculator {
 
     fun xpForNextLevel(level: Int) = level * 100
 }
+
 ```
 
-#### util/RewardCalculator.kt
-
 ```kotlin
+// RewardCalculator.kt
 package com.tamagotchi.code.util
 
 import com.tamagotchi.code.data.database.PetStateEntity
@@ -4688,11 +4383,11 @@ object RewardCalculator {
         return maxOf(50 - attempts * 5, 10)
     }
 }
+
 ```
 
-#### util/StatusCalculator.kt
-
 ```kotlin
+// StatusCalculator.kt
 package com.tamagotchi.code.util
 
 object StatusCalculator {
@@ -4711,11 +4406,11 @@ object StatusCalculator {
         }
     }
 }
+
 ```
 
-#### util/SoundManager.kt
-
 ```kotlin
+// SoundManager.kt
 package com.tamagotchi.code.util
 
 import android.media.AudioManager
@@ -4775,11 +4470,11 @@ class SoundManager {
         toneGen = null
     }
 }
+
 ```
 
-#### util/PetCheckWorker.kt
-
 ```kotlin
+// PetCheckWorker.kt
 package com.tamagotchi.code.util
 
 import android.Manifest
@@ -4820,16 +4515,16 @@ class PetCheckWorker(
         ) return Result.success()
 
         val reason = when {
-            petState.hunger < 20f -> "Â¡Tengo hambre! (${
+            petState.hunger < 20f -> "¡Tengo hambre! (${
                 petState.hunger.toInt()
             }%)"
             petState.health < 20f -> "No me siento bien... (Salud: ${
                 petState.health.toInt()
             }%)"
-            petState.energy < 15f -> "Estoy muy cansado... (EnergÃ­a: ${
+            petState.energy < 15f -> "Estoy muy cansado... (Energía: ${
                 petState.energy.toInt()
             }%)"
-            else -> "Â¡Necesito atenciÃ³n!"
+            else -> "¡Necesito atención!"
         }
 
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
@@ -4857,28 +4552,419 @@ class PetCheckWorker(
     }
 }
 ```
+
 ### 15.8 Sistema de Temas (UI/Theme)
 
 
-#### ui/theme/Color.kt
-
 ```kotlin
+// ThemeConfig.kt
 package com.tamagotchi.code.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import com.tamagotchi.code.R
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.graphics.vector.ImageVector
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+/**
+ * Complete theme definition that goes beyond colors to give each theme
+ * its own personality through typography, shape style, and visual details.
+ */
+data class AppTheme(
+    // Identity
+    val name: String,
+    val icon: ImageVector,
+    val description: String,
+    val isDark: Boolean,
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+    // Color palette
+    val background: Color,
+    val surface: Color,
+    val surfaceVariant: Color,
+    val primary: Color,
+    val secondary: Color,
+    val tertiary: Color,
+    val onPrimary: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val accent: Color,
+    val success: Color,
+    val error: Color,
+
+    // Typography
+    val fontFamily: FontFamily = FontFamily.Default,
+    val titleFontFamily: FontFamily = FontFamily.Default,
+    val titleWeight: FontWeight = FontWeight.Bold,
+
+    // Visual style
+    val cornerRadius: Dp = 12.dp,
+    val borderWidth: Dp = 1.dp,
+    val usesGradients: Boolean = false,
+    val gradientColors: List<Color> = emptyList()
+)
+
+object ThemeRegistry {
+    val allThemes = listOf(
+
+        // ──────────────────────────────────────────────────────────
+        // 1. MATRIX GREEN – Terminal hacker, monospace puro
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Matrix Green",
+            icon = Icons.Default.Code,
+            description = "Terminal hacker. Código verde sobre negro.",
+            isDark = true,
+            background = Color(0xFF040A06),
+            surface = Color(0xFF0A140C),
+            surfaceVariant = Color(0xFF122416),
+            primary = Color(0xFF00FF41),
+            secondary = Color(0xFF008F11),
+            tertiary = Color(0xFF4AF626),
+            onPrimary = Color(0xFF001A06),
+            textPrimary = Color(0xFFD1FFD7),
+            textSecondary = Color(0xFF5AC66A),
+            accent = Color(0xFF00FF41),
+            success = Color(0xFF00FF41),
+            error = Color(0xFFFF1744),
+            fontFamily = FontFamily.Monospace,
+            titleFontFamily = FontFamily.Monospace,
+            titleWeight = FontWeight.Bold,
+            cornerRadius = 2.dp,
+            borderWidth = 1.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF0A140C), Color(0xFF040A06))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 2. GALÁCTICO – Etéreo, profundo, espacial
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Galáctico",
+            icon = Icons.Default.AutoAwesome,
+            description = "Viaja entre estrellas. Púrpuras profundos y destellos cósmicos.",
+            isDark = true,
+            background = Color(0xFF05030D),
+            surface = Color(0xFF0E091C),
+            surfaceVariant = Color(0xFF181030),
+            primary = Color(0xFFB57AFF),
+            secondary = Color(0xFF755BB4),
+            tertiary = Color(0xFF4C3B7F),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFFF2EDFF),
+            textSecondary = Color(0xFFA192D1),
+            accent = Color(0xFFD946EF),
+            success = Color(0xFF2DD4BF),
+            error = Color(0xFFFB7185),
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.Medium,
+            cornerRadius = 24.dp,
+            borderWidth = 0.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF181030), Color(0xFF0E091C), Color(0xFF05030D))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 3. CYBERPUNK – Neón agresivo, glitch urbano
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Cyberpunk",
+            icon = Icons.Default.FlashOn,
+            description = "Ciudad neón. Rosa eléctrico y cian contra la oscuridad.",
+            isDark = true,
+            background = Color(0xFF08040C),
+            surface = Color(0xFF140A21),
+            surfaceVariant = Color(0xFF200F36),
+            primary = Color(0xFFFF0055),
+            secondary = Color(0xFF00F0FF),
+            tertiary = Color(0xFFFFD600),
+            onPrimary = Color.Black,
+            textPrimary = Color(0xFFF8F4FF),
+            textSecondary = Color(0xFF75E6F0),
+            accent = Color(0xFFFFD600),
+            success = Color(0xFF00E676),
+            error = Color(0xFFFF1744),
+            fontFamily = FontFamily.Monospace,
+            titleFontFamily = FontFamily.Monospace,
+            titleWeight = FontWeight.Black,
+            cornerRadius = 0.dp,
+            borderWidth = 3.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF200F36), Color(0xFF140A21), Color(0xFF08040C))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 4. SAKURA – Delicado, cálido, japonés
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Sakura",
+            icon = Icons.Default.LocalFlorist,
+            description = "Pétalos al viento. Elegancia japonesa en rosa suave.",
+            isDark = false,
+            background = Color(0xFFFFFBFB),
+            surface = Color(0xFFFFFFFF),
+            surfaceVariant = Color(0xFFF7ECF0),
+            primary = Color(0xFFE88EA2),
+            secondary = Color(0xFFF4B8C8),
+            tertiary = Color(0xFFDCA6B4),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFF4A3B3E),
+            textSecondary = Color(0xFF968388),
+            accent = Color(0xFFE88EA2),
+            success = Color(0xFF4E9E81),
+            error = Color(0xFFD15C5C),
+            fontFamily = FontFamily.Serif,
+            titleFontFamily = FontFamily.Serif,
+            titleWeight = FontWeight.Medium,
+            cornerRadius = 16.dp,
+            borderWidth = 0.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFFFFFBFB), Color(0xFFFDF5F7), Color(0xFFF7ECF0))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 5. MINIMALISTA – Limpio, espacioso, sin ruido
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Minimalista",
+            icon = Icons.Default.CheckBoxOutlineBlank,
+            description = "Menos es más. Blanco puro con acentos sutiles.",
+            isDark = false,
+            background = Color(0xFFF7F7F7),
+            surface = Color(0xFFFFFFFF),
+            surfaceVariant = Color(0xFFEEEEEE),
+            primary = Color(0xFF111111),
+            secondary = Color(0xFF666666),
+            tertiary = Color(0xFFE0E0E0),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFF111111),
+            textSecondary = Color(0xFF777777),
+            accent = Color(0xFF333333),
+            success = Color(0xFF333333),
+            error = Color(0xFFD32F2F),
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.Normal,
+            cornerRadius = 12.dp,
+            borderWidth = 1.dp,
+            usesGradients = false
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 6. NEÓN – Negro absoluto con destellos vibrantes
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Neón",
+            icon = Icons.Default.Lightbulb,
+            description = "Oscuridad total. Destellos que cortan la noche.",
+            isDark = true,
+            background = Color(0xFF000000),
+            surface = Color(0xFF080808),
+            surfaceVariant = Color(0xFF121212),
+            primary = Color(0xFFD000FF),
+            secondary = Color(0xFF00FFD1),
+            tertiary = Color(0xFFFF003C),
+            onPrimary = Color.Black,
+            textPrimary = Color(0xFFFFFFFF),
+            textSecondary = Color(0xFF888888),
+            accent = Color(0xFF00FFD1),
+            success = Color(0xFF00FF00),
+            error = Color(0xFFFF003C),
+            fontFamily = FontFamily.Monospace,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.Bold,
+            cornerRadius = 16.dp,
+            borderWidth = 1.dp,
+            usesGradients = false
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 7. OCÉANO – Azules profundos, calma submarina
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Océano",
+            icon = Icons.Default.WaterDrop,
+            description = "Sumérgete en la calma. Azules profundos y espuma marina.",
+            isDark = true,
+            background = Color(0xFF020B14),
+            surface = Color(0xFF061524),
+            surfaceVariant = Color(0xFF0C2238),
+            primary = Color(0xFF00B4D8),
+            secondary = Color(0xFF48CAE4),
+            tertiary = Color(0xFF90E0EF),
+            onPrimary = Color(0xFF001A29),
+            textPrimary = Color(0xFFE0F7FA),
+            textSecondary = Color(0xFF81B2C4),
+            accent = Color(0xFF00B4D8),
+            success = Color(0xFF00E676),
+            error = Color(0xFFFF5252),
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.Medium,
+            cornerRadius = 20.dp,
+            borderWidth = 0.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF0C2238), Color(0xFF061524), Color(0xFF020B14))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 8. VOLCÁNICO – Intenso, magma oscuro
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Volcánico",
+            icon = Icons.Default.LocalFireDepartment,
+            description = "Fuego bajo la superficie. Poder y fuerza bruta.",
+            isDark = true,
+            background = Color(0xFF0D0300),
+            surface = Color(0xFF1A0600),
+            surfaceVariant = Color(0xFF260A00),
+            primary = Color(0xFFFF4500),
+            secondary = Color(0xFFFF8C00),
+            tertiary = Color(0xFF8B0000),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFFFFF0E6),
+            textSecondary = Color(0xFFB88673),
+            accent = Color(0xFFFF8C00),
+            success = Color(0xFF76FF03),
+            error = Color(0xFFFF1744),
+            fontFamily = FontFamily.Serif,
+            titleFontFamily = FontFamily.Serif,
+            titleWeight = FontWeight.Black,
+            cornerRadius = 4.dp,
+            borderWidth = 1.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF260A00), Color(0xFF1A0600), Color(0xFF0D0300))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 9. SAMURAI – Elegante, rojo/negro/oro
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Samurai",
+            icon = Icons.Default.Security,
+            description = "Honor y disciplina. Acero, sangre y oro antiguo.",
+            isDark = true,
+            background = Color(0xFF0A0A0A),
+            surface = Color(0xFF141414),
+            surfaceVariant = Color(0xFF211C1C),
+            primary = Color(0xFFD32F2F),
+            secondary = Color(0xFFC0A080),
+            tertiary = Color(0xFF8B0000),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFFEBEBEB),
+            textSecondary = Color(0xFF8C8683),
+            accent = Color(0xFFC0A080),
+            success = Color(0xFF43A047),
+            error = Color(0xFFD50000),
+            fontFamily = FontFamily.Serif,
+            titleFontFamily = FontFamily.Serif,
+            titleWeight = FontWeight.SemiBold,
+            cornerRadius = 0.dp,
+            borderWidth = 1.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF211C1C), Color(0xFF141414), Color(0xFF0A0A0A))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 10. AURORA – Gradientes polares, mágico
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Aurora",
+            icon = Icons.Default.Waves,
+            description = "Luces del norte. Gradientes que danzan en el cielo oscuro.",
+            isDark = true,
+            background = Color(0xFF030814),
+            surface = Color(0xFF081226),
+            surfaceVariant = Color(0xFF0D1D3A),
+            primary = Color(0xFF00FFA3),
+            secondary = Color(0xFF8A2BE2),
+            tertiary = Color(0xFF00BFFF),
+            onPrimary = Color(0xFF01140D),
+            textPrimary = Color(0xFFE6FFFA),
+            textSecondary = Color(0xFF849CA8),
+            accent = Color(0xFF8A2BE2),
+            success = Color(0xFF00FFA3),
+            error = Color(0xFFFF5252),
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.Light,
+            cornerRadius = 24.dp,
+            borderWidth = 0.dp,
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF0D1D3A), Color(0xFF081226), Color(0xFF030814))
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 11. NOCTURNO – iOS-style, elegante modo oscuro
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Nocturno",
+            icon = Icons.Default.NightsStay,
+            description = "Noche elegante. Inspiración iOS con azul profundo.",
+            isDark = true,
+            background = Color(0xFF000000),
+            surface = Color(0xFF1C1C1E),
+            surfaceVariant = Color(0xFF2C2C2E),
+            primary = Color(0xFF0A84FF),
+            secondary = Color(0xFF30D158),
+            tertiary = Color(0xFFFF9F0A),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFFFFFFFF),
+            textSecondary = Color(0xFFEBEBF5).copy(alpha = 0.6f),
+            accent = Color(0xFF0A84FF),
+            success = Color(0xFF30D158),
+            error = Color(0xFFFF453A),
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
+            titleWeight = FontWeight.SemiBold,
+            cornerRadius = 16.dp,
+            borderWidth = 0.dp,
+            usesGradients = false
+        ),
+
+        // ──────────────────────────────────────────────────────────
+        // 12. RETRO PIXEL – 8-bit, pixelado, nostálgico — THEME FINAL
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Retro Pixel",
+            icon = Icons.Default.VideogameAsset,
+            description = "8-bit forever. Experiencia pixel art definitiva.",
+            isDark = true,
+            background = Color(0xFF0B0B3B),
+            surface = Color(0xFF1A1A5E),
+            surfaceVariant = Color(0xFF28287A),
+            primary = Color(0xFFFF4136),
+            secondary = Color(0xFF2ECC40),
+            tertiary = Color(0xFFFFDC00),
+            onPrimary = Color(0xFFFFFFFF),
+            textPrimary = Color(0xFFF0F0F0),
+            textSecondary = Color(0xFFAAAAAA),
+            accent = Color(0xFF00E5FF),
+            success = Color(0xFF2ECC40),
+            error = Color(0xFFFF4136),
+            fontFamily = FontFamily(Font(R.font.codepet_pixel_font)),
+            titleFontFamily = FontFamily(Font(R.font.codepet_pixel_font)),
+            titleWeight = FontWeight.ExtraBold,
+            cornerRadius = 0.dp,
+            borderWidth = 3.dp,
+            usesGradients = false
+        )
+    )
+
+    fun getTheme(name: String): AppTheme {
+        return allThemes.find { it.name == name } ?: allThemes.first()
+    }
+}
+
 ```
 
-#### ui/theme/Theme.kt
-
 ```kotlin
+// Theme.kt
 package com.tamagotchi.code.ui.theme
 
 import android.os.Build
@@ -5011,418 +5097,11 @@ fun MyApplicationTheme(
         )
     }
 }
+
 ```
 
-#### ui/theme/ThemeConfig.kt
-
 ```kotlin
-package com.tamagotchi.code.ui.theme
-
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import com.tamagotchi.code.R
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.graphics.vector.ImageVector
-
-/**
- * Complete theme definition that goes beyond colors to give each theme
- * its own personality through typography, shape style, and visual details.
- */
-data class AppTheme(
-    // Identity
-    val name: String,
-    val icon: ImageVector,
-    val description: String,
-    val isDark: Boolean,
-
-    // Color palette
-    val background: Color,
-    val surface: Color,
-    val surfaceVariant: Color,
-    val primary: Color,
-    val secondary: Color,
-    val tertiary: Color,
-    val onPrimary: Color,
-    val textPrimary: Color,
-    val textSecondary: Color,
-    val accent: Color,
-    val success: Color,
-    val error: Color,
-
-    // Typography
-    val fontFamily: FontFamily = FontFamily.Default,
-    val titleFontFamily: FontFamily = FontFamily.Default,
-    val titleWeight: FontWeight = FontWeight.Bold,
-
-    // Visual style
-    val cornerRadius: Dp = 12.dp,
-    val borderWidth: Dp = 1.dp,
-    val usesGradients: Boolean = false,
-    val gradientColors: List<Color> = emptyList()
-)
-
-object ThemeRegistry {
-    val allThemes = listOf(
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 1. MATRIX GREEN â€“ Terminal hacker, monospace puro
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Matrix Green",
-            icon = Icons.Default.Code,
-            description = "Terminal hacker. CÃ³digo verde sobre negro.",
-            isDark = true,
-            background = Color(0xFF040A06),
-            surface = Color(0xFF0A140C),
-            surfaceVariant = Color(0xFF122416),
-            primary = Color(0xFF00FF41),
-            secondary = Color(0xFF008F11),
-            tertiary = Color(0xFF4AF626),
-            onPrimary = Color(0xFF001A06),
-            textPrimary = Color(0xFFD1FFD7),
-            textSecondary = Color(0xFF5AC66A),
-            accent = Color(0xFF00FF41),
-            success = Color(0xFF00FF41),
-            error = Color(0xFFFF1744),
-            fontFamily = FontFamily.Monospace,
-            titleFontFamily = FontFamily.Monospace,
-            titleWeight = FontWeight.Bold,
-            cornerRadius = 2.dp,
-            borderWidth = 1.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF0A140C), Color(0xFF040A06))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 2. GALÃCTICO â€“ EtÃ©reo, profundo, espacial
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "GalÃ¡ctico",
-            icon = Icons.Default.AutoAwesome,
-            description = "Viaja entre estrellas. PÃºrpuras profundos y destellos cÃ³smicos.",
-            isDark = true,
-            background = Color(0xFF05030D),
-            surface = Color(0xFF0E091C),
-            surfaceVariant = Color(0xFF181030),
-            primary = Color(0xFFB57AFF),
-            secondary = Color(0xFF755BB4),
-            tertiary = Color(0xFF4C3B7F),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFFF2EDFF),
-            textSecondary = Color(0xFFA192D1),
-            accent = Color(0xFFD946EF),
-            success = Color(0xFF2DD4BF),
-            error = Color(0xFFFB7185),
-            fontFamily = FontFamily.SansSerif,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.Medium,
-            cornerRadius = 24.dp,
-            borderWidth = 0.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF181030), Color(0xFF0E091C), Color(0xFF05030D))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 3. CYBERPUNK â€“ NeÃ³n agresivo, glitch urbano
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Cyberpunk",
-            icon = Icons.Default.FlashOn,
-            description = "Ciudad neÃ³n. Rosa elÃ©ctrico y cian contra la oscuridad.",
-            isDark = true,
-            background = Color(0xFF08040C),
-            surface = Color(0xFF140A21),
-            surfaceVariant = Color(0xFF200F36),
-            primary = Color(0xFFFF0055),
-            secondary = Color(0xFF00F0FF),
-            tertiary = Color(0xFFFFD600),
-            onPrimary = Color.Black,
-            textPrimary = Color(0xFFF8F4FF),
-            textSecondary = Color(0xFF75E6F0),
-            accent = Color(0xFFFFD600),
-            success = Color(0xFF00E676),
-            error = Color(0xFFFF1744),
-            fontFamily = FontFamily.Monospace,
-            titleFontFamily = FontFamily.Monospace,
-            titleWeight = FontWeight.Black,
-            cornerRadius = 0.dp,
-            borderWidth = 3.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF200F36), Color(0xFF140A21), Color(0xFF08040C))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 4. SAKURA â€“ Delicado, cÃ¡lido, japonÃ©s
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Sakura",
-            icon = Icons.Default.LocalFlorist,
-            description = "PÃ©talos al viento. Elegancia japonesa en rosa suave.",
-            isDark = false,
-            background = Color(0xFFFFFBFB),
-            surface = Color(0xFFFFFFFF),
-            surfaceVariant = Color(0xFFF7ECF0),
-            primary = Color(0xFFE88EA2),
-            secondary = Color(0xFFF4B8C8),
-            tertiary = Color(0xFFDCA6B4),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFF4A3B3E),
-            textSecondary = Color(0xFF968388),
-            accent = Color(0xFFE88EA2),
-            success = Color(0xFF4E9E81),
-            error = Color(0xFFD15C5C),
-            fontFamily = FontFamily.Serif,
-            titleFontFamily = FontFamily.Serif,
-            titleWeight = FontWeight.Medium,
-            cornerRadius = 16.dp,
-            borderWidth = 0.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFFFFFBFB), Color(0xFFFDF5F7), Color(0xFFF7ECF0))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 5. MINIMALISTA â€“ Limpio, espacioso, sin ruido
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Minimalista",
-            icon = Icons.Default.CheckBoxOutlineBlank,
-            description = "Menos es mÃ¡s. Blanco puro con acentos sutiles.",
-            isDark = false,
-            background = Color(0xFFF7F7F7),
-            surface = Color(0xFFFFFFFF),
-            surfaceVariant = Color(0xFFEEEEEE),
-            primary = Color(0xFF111111),
-            secondary = Color(0xFF666666),
-            tertiary = Color(0xFFE0E0E0),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFF111111),
-            textSecondary = Color(0xFF777777),
-            accent = Color(0xFF333333),
-            success = Color(0xFF333333),
-            error = Color(0xFFD32F2F),
-            fontFamily = FontFamily.SansSerif,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.Normal,
-            cornerRadius = 12.dp,
-            borderWidth = 1.dp,
-            usesGradients = false
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 6. NEÃ“N â€“ Negro absoluto con destellos vibrantes
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "NeÃ³n",
-            icon = Icons.Default.Lightbulb,
-            description = "Oscuridad total. Destellos que cortan la noche.",
-            isDark = true,
-            background = Color(0xFF000000),
-            surface = Color(0xFF080808),
-            surfaceVariant = Color(0xFF121212),
-            primary = Color(0xFFD000FF),
-            secondary = Color(0xFF00FFD1),
-            tertiary = Color(0xFFFF003C),
-            onPrimary = Color.Black,
-            textPrimary = Color(0xFFFFFFFF),
-            textSecondary = Color(0xFF888888),
-            accent = Color(0xFF00FFD1),
-            success = Color(0xFF00FF00),
-            error = Color(0xFFFF003C),
-            fontFamily = FontFamily.Monospace,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.Bold,
-            cornerRadius = 16.dp,
-            borderWidth = 1.dp,
-            usesGradients = false
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 7. OCÃ‰ANO â€“ Azules profundos, calma submarina
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "OcÃ©ano",
-            icon = Icons.Default.WaterDrop,
-            description = "SumÃ©rgete en la calma. Azules profundos y espuma marina.",
-            isDark = true,
-            background = Color(0xFF020B14),
-            surface = Color(0xFF061524),
-            surfaceVariant = Color(0xFF0C2238),
-            primary = Color(0xFF00B4D8),
-            secondary = Color(0xFF48CAE4),
-            tertiary = Color(0xFF90E0EF),
-            onPrimary = Color(0xFF001A29),
-            textPrimary = Color(0xFFE0F7FA),
-            textSecondary = Color(0xFF81B2C4),
-            accent = Color(0xFF00B4D8),
-            success = Color(0xFF00E676),
-            error = Color(0xFFFF5252),
-            fontFamily = FontFamily.SansSerif,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.Medium,
-            cornerRadius = 20.dp,
-            borderWidth = 0.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF0C2238), Color(0xFF061524), Color(0xFF020B14))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 8. VOLCÃNICO â€“ Intenso, magma oscuro
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "VolcÃ¡nico",
-            icon = Icons.Default.LocalFireDepartment,
-            description = "Fuego bajo la superficie. Poder y fuerza bruta.",
-            isDark = true,
-            background = Color(0xFF0D0300),
-            surface = Color(0xFF1A0600),
-            surfaceVariant = Color(0xFF260A00),
-            primary = Color(0xFFFF4500),
-            secondary = Color(0xFFFF8C00),
-            tertiary = Color(0xFF8B0000),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFFFFF0E6),
-            textSecondary = Color(0xFFB88673),
-            accent = Color(0xFFFF8C00),
-            success = Color(0xFF76FF03),
-            error = Color(0xFFFF1744),
-            fontFamily = FontFamily.Serif,
-            titleFontFamily = FontFamily.Serif,
-            titleWeight = FontWeight.Black,
-            cornerRadius = 4.dp,
-            borderWidth = 1.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF260A00), Color(0xFF1A0600), Color(0xFF0D0300))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 9. SAMURAI â€“ Elegante, rojo/negro/oro
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Samurai",
-            icon = Icons.Default.Security,
-            description = "Honor y disciplina. Acero, sangre y oro antiguo.",
-            isDark = true,
-            background = Color(0xFF0A0A0A),
-            surface = Color(0xFF141414),
-            surfaceVariant = Color(0xFF211C1C),
-            primary = Color(0xFFD32F2F),
-            secondary = Color(0xFFC0A080),
-            tertiary = Color(0xFF8B0000),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFFEBEBEB),
-            textSecondary = Color(0xFF8C8683),
-            accent = Color(0xFFC0A080),
-            success = Color(0xFF43A047),
-            error = Color(0xFFD50000),
-            fontFamily = FontFamily.Serif,
-            titleFontFamily = FontFamily.Serif,
-            titleWeight = FontWeight.SemiBold,
-            cornerRadius = 0.dp,
-            borderWidth = 1.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF211C1C), Color(0xFF141414), Color(0xFF0A0A0A))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 10. AURORA â€“ Gradientes polares, mÃ¡gico
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Aurora",
-            icon = Icons.Default.Waves,
-            description = "Luces del norte. Gradientes que danzan en el cielo oscuro.",
-            isDark = true,
-            background = Color(0xFF030814),
-            surface = Color(0xFF081226),
-            surfaceVariant = Color(0xFF0D1D3A),
-            primary = Color(0xFF00FFA3),
-            secondary = Color(0xFF8A2BE2),
-            tertiary = Color(0xFF00BFFF),
-            onPrimary = Color(0xFF01140D),
-            textPrimary = Color(0xFFE6FFFA),
-            textSecondary = Color(0xFF849CA8),
-            accent = Color(0xFF8A2BE2),
-            success = Color(0xFF00FFA3),
-            error = Color(0xFFFF5252),
-            fontFamily = FontFamily.SansSerif,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.Light,
-            cornerRadius = 24.dp,
-            borderWidth = 0.dp,
-            usesGradients = true,
-            gradientColors = listOf(Color(0xFF0D1D3A), Color(0xFF081226), Color(0xFF030814))
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 11. NOCTURNO â€“ iOS-style, elegante modo oscuro
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Nocturno",
-            icon = Icons.Default.NightsStay,
-            description = "Noche elegante. InspiraciÃ³n iOS con azul profundo.",
-            isDark = true,
-            background = Color(0xFF000000),
-            surface = Color(0xFF1C1C1E),
-            surfaceVariant = Color(0xFF2C2C2E),
-            primary = Color(0xFF0A84FF),
-            secondary = Color(0xFF30D158),
-            tertiary = Color(0xFFFF9F0A),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFFFFFFFF),
-            textSecondary = Color(0xFFEBEBF5).copy(alpha = 0.6f),
-            accent = Color(0xFF0A84FF),
-            success = Color(0xFF30D158),
-            error = Color(0xFFFF453A),
-            fontFamily = FontFamily.SansSerif,
-            titleFontFamily = FontFamily.SansSerif,
-            titleWeight = FontWeight.SemiBold,
-            cornerRadius = 16.dp,
-            borderWidth = 0.dp,
-            usesGradients = false
-        ),
-
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // 12. RETRO PIXEL â€“ 8-bit, pixelado, nostÃ¡lgico â€” THEME FINAL
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        AppTheme(
-            name = "Retro Pixel",
-            icon = Icons.Default.VideogameAsset,
-            description = "8-bit forever. Experiencia pixel art definitiva.",
-            isDark = true,
-            background = Color(0xFF0B0B3B),
-            surface = Color(0xFF1A1A5E),
-            surfaceVariant = Color(0xFF28287A),
-            primary = Color(0xFFFF4136),
-            secondary = Color(0xFF2ECC40),
-            tertiary = Color(0xFFFFDC00),
-            onPrimary = Color(0xFFFFFFFF),
-            textPrimary = Color(0xFFF0F0F0),
-            textSecondary = Color(0xFFAAAAAA),
-            accent = Color(0xFF00E5FF),
-            success = Color(0xFF2ECC40),
-            error = Color(0xFFFF4136),
-            fontFamily = FontFamily(Font(R.font.codepet_pixel_font)),
-            titleFontFamily = FontFamily(Font(R.font.codepet_pixel_font)),
-            titleWeight = FontWeight.ExtraBold,
-            cornerRadius = 0.dp,
-            borderWidth = 3.dp,
-            usesGradients = false
-        )
-    )
-
-    fun getTheme(name: String): AppTheme {
-        return allThemes.find { it.name == name } ?: allThemes.first()
-    }
-}
-```
-
-#### ui/theme/Type.kt
-
-```kotlin
+// Type.kt
 package com.tamagotchi.code.ui.theme
 
 import androidx.compose.material3.Typography
@@ -5569,1558 +5248,30 @@ fun buildTypography(
         letterSpacing = 0.5.sp
     )
 )
+
 ```
+
+```kotlin
+// Color.kt
+package com.tamagotchi.code.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+val Purple80 = Color(0xFFD0BCFF)
+val PurpleGrey80 = Color(0xFFCCC2DC)
+val Pink80 = Color(0xFFEFB8C8)
+
+val Purple40 = Color(0xFF6650a4)
+val PurpleGrey40 = Color(0xFF625b71)
+val Pink40 = Color(0xFF7D5260)
+
+```
+
 ### 15.9 Componentes Compartidos (UI/Components)
 
 
-#### ui/components/AnimatedPetSprite.kt
-
 ```kotlin
-package com.tamagotchi.code.ui.components
-
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.theme.LocalReduceMotion
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
-import kotlin.random.Random
-
-/**
- * Componente que renderiza la mascota Codey con micro-animaciones nativas de Compose.
- *
- * @param status El estado actual de la mascota (ej. "HAPPY", "SICK", "SLEEPING").
- * @param celebrationTrigger Flujo que dispara la animaciÃ³n de celebraciÃ³n.
- * @param onClick AcciÃ³n al pulsar sobre la mascota.
- * @param modifier Modificador para el contenedor.
- */
-@Composable
-fun AnimatedPetSprite(
-    status: String,
-    celebrationTrigger: SharedFlow<Unit>,
-    learningEventTrigger: SharedFlow<String>? = null,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val reduceMotion = LocalReduceMotion.current
-    
-    // --- ESTADOS DE ANIMACIÃ“N ---
-    
-    // AnimaciÃ³n de celebraciÃ³n (Bounce + Wobble)
-    val bounceAnim = remember { Animatable(0f) }
-    val wobbleAnim = remember { Animatable(0f) }
-    val flashAnim = remember { Animatable(1f) }
-
-    // SuscripciÃ³n al trigger de aprendizaje
-    LaunchedEffect(learningEventTrigger) {
-        learningEventTrigger?.collect { type ->
-            if (!reduceMotion) {
-                when (type) {
-                    "SUCCESS" -> {
-                        launch {
-                            flashAnim.animateTo(1.5f, tween(100))
-                            flashAnim.animateTo(1f, tween(200))
-                        }
-                    }
-                    "FAILURE" -> {
-                        launch {
-                            wobbleAnim.animateTo(-10f, tween(50))
-                            wobbleAnim.animateTo(10f, tween(50))
-                            wobbleAnim.animateTo(0f, tween(50))
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    // SuscripciÃ³n al trigger de celebraciÃ³n
-    LaunchedEffect(celebrationTrigger) {
-        celebrationTrigger.collect {
-            if (!reduceMotion) {
-                launch {
-                    bounceAnim.animateTo(
-                        targetValue = -20f,
-                        animationSpec = tween(150, easing = FastOutSlowInEasing)
-                    )
-                    bounceAnim.animateTo(
-                        targetValue = 0f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    )
-                }
-                launch {
-                    wobbleAnim.animateTo(4f, tween(100))
-                    wobbleAnim.animateTo(-4f, tween(200))
-                    wobbleAnim.animateTo(0f, spring(stiffness = Spring.StiffnessMedium))
-                }
-            }
-        }
-    }
-
-    // --- ANIMACIONES INFINITAS (LOOPS) ---
-    val infiniteTransition = rememberInfiniteTransition(label = "PetLoop")
-
-    // Idle Breathing (RespiraciÃ³n)
-    val breathingScale by infiniteTransition.animateFloat(
-        initialValue = 1.0f,
-        targetValue = if (status != "SLEEPING" && !reduceMotion) 1.03f else 1.0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1800, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "Breathing"
-    )
-
-    // Sick Tremble (Temblor por enfermedad)
-    val trembleOffset by infiniteTransition.animateFloat(
-        initialValue = -2f,
-        targetValue = 2f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(100, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "Tremble"
-    )
-
-    // Hungry Pulse (Pulso por hambre)
-    val hungryScale by infiniteTransition.animateFloat(
-        initialValue = 1.0f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(800, easing = LinearOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "HungryPulse"
-    )
-
-    // Sleeping Opacity (Fade de respiraciÃ³n dormido)
-    val sleepAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.8f,
-        targetValue = 1.0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2500, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "SleepAlpha"
-    )
-
-    // --- LÃ“GICA DE PARPADEO (BLINK) ---
-    var isBlinking by remember { mutableStateOf(false) }
-    
-    // El parpadeo solo aplica en estados donde tiene sentido y no hay reducciÃ³n de movimiento
-    val canBlink = remember(status, reduceMotion) {
-        !reduceMotion && (status == "HAPPY" || status == "EXCITED" || status == "STUDYING")
-    }
-
-    LaunchedEffect(canBlink) {
-        if (canBlink) {
-            while (true) {
-                delay(Random.nextLong(3000, 5000))
-                isBlinking = true
-                delay(180)
-                isBlinking = false
-            }
-        }
-    }
-
-    // --- RESOLUCIÃ“N DE RECURSOS ---
-    val context = LocalContext.current
-    
-    val baseResId = remember(status) { getPetDrawable(status) }
-    val blinkResId = remember(status) { getPetBlinkDrawable(status) }
-    
-    val interactionSource = remember { MutableInteractionSource() }
-    
-    // Verificamos si el asset de blink existe realmente
-    val hasBlinkAsset = remember(blinkResId) {
-        try {
-            context.resources.getResourceName(blinkResId)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    // Idle Sway (PequeÃ±o balanceo lateral aleatorio para dar mÃ¡s vida)
-    val swayOffset by infiniteTransition.animateFloat(
-        initialValue = -3f,
-        targetValue = 3f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "Sway"
-    )
-
-    // --- COMPOSICIÃ“N FINAL ---
-    Box(
-        modifier = modifier
-            .offset(
-                x = when {
-                    status == "SICK" && !reduceMotion -> trembleOffset.dp
-                    !reduceMotion -> swayOffset.dp
-                    else -> 0.dp
-                },
-                y = bounceAnim.value.dp
-            )
-            .scale(
-                when {
-                    status == "HUNGRY" && !reduceMotion -> hungryScale
-                    status != "SLEEPING" && !reduceMotion -> breathingScale * flashAnim.value
-                    else -> 1.0f * flashAnim.value
-                }
-            )
-            .graphicsLayer {
-                rotationZ = wobbleAnim.value
-                alpha = if (status == "SLEEPING" && !reduceMotion) sleepAlpha else 1.0f
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Crossfade(
-            targetState = isBlinking && hasBlinkAsset,
-            animationSpec = tween(100),
-            label = "BlinkCrossfade"
-        ) { blink ->
-            val resToDraw = if (blink) blinkResId else baseResId
-            Image(
-                painter = painterResource(id = resToDraw),
-                contentDescription = "Codey Status: $status",
-                modifier = Modifier
-                    .size(170.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) { onClick() },
-                contentScale = ContentScale.Fit
-            )
-        }
-    }
-}
-
-/**
- * Mapea el estado a su drawable base.
- */
-private fun getPetDrawable(status: String): Int = when (status) {
-    "SLEEPING" -> R.drawable.mascota_sleeping
-    "STUDYING" -> R.drawable.mascota_studying
-    "SICK" -> R.drawable.mascota_sick
-    "SAD" -> R.drawable.mascota_sad
-    "HUNGRY" -> R.drawable.mascota_hungry
-    "EXCITED" -> R.drawable.mascota_excited
-    else -> R.drawable.mascota_happy
-}
-
-/**
- * Mapea el estado a su drawable de parpadeo (Blink).
- * TODO: Generar estos assets y aÃ±adirlos a res/drawable/
- */
-private fun getPetBlinkDrawable(status: String): Int = when (status) {
-    "HAPPY" -> try { R.drawable::class.java.getField("mascota_happy_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_happy }
-    "EXCITED" -> try { R.drawable::class.java.getField("mascota_excited_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_excited }
-    "STUDYING" -> try { R.drawable::class.java.getField("mascota_studying_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_studying }
-    else -> getPetDrawable(status)
-}
-```
-
-#### ui/components/AnimatedThemeBackground.kt
-
-```kotlin
-package com.tamagotchi.code.ui.components
-
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
-import android.graphics.Paint
-import androidx.compose.animation.core.*
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.unit.sp
-import com.tamagotchi.code.ui.theme.AppTheme
-import kotlin.math.sin
-import kotlin.math.cos
-import kotlin.math.abs
-import kotlin.math.PI
-import kotlin.random.Random
-
-@Composable
-fun AnimatedThemeBackground(
-    theme: AppTheme,
-    reduceMotion: Boolean = false,
-    modifier: Modifier = Modifier
-) {
-    val bgModifier = if (theme.usesGradients && theme.gradientColors.size > 1) {
-        Modifier.background(brush = Brush.verticalGradient(theme.gradientColors))
-    } else {
-        Modifier.background(color = theme.background)
-    }
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .then(bgModifier)
-    ) {
-        if (!reduceMotion) {
-            when (theme.name) {
-                "Matrix Green" -> MatrixBackground(theme.primary, theme.accent)
-                "GalÃ¡ctico" -> GalacticBackground()
-                "Cyberpunk" -> CyberpunkBackground(theme.primary, theme.secondary, theme.tertiary)
-                "Sakura" -> SakuraBackground()
-                "Minimalista" -> MinimalistBackground()
-                "NeÃ³n" -> NeonBackground(theme.primary, theme.secondary, theme.tertiary)
-                "OcÃ©ano" -> OceanBackground()
-                "VolcÃ¡nico" -> VolcanicBackground()
-                "Samurai" -> SamuraiBackground()
-                "Aurora" -> AuroraBackground(theme.primary, theme.secondary, theme.tertiary)
-                "Nocturno" -> NightBackground()
-                "Retro Pixel" -> RetroPixelBackground()
-            }
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 1. Matrix Green â€” 1/0 rain with hidden pet messages & speed bursts
-// ---------------------------------------------------------
-@Composable
-fun MatrixBackground(primary: Color, accent: Color) {
-    val infiniteTransition = rememberInfiniteTransition(label = "matrix")
-
-    val baseTime by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(320000, easing = LinearEasing)),
-        label = "baseTime"
-    )
-
-    // AnimaciÃ³n de apariciÃ³n progresiva (intro fade)
-    val introAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(3000, easing = LinearOutSlowInEasing),
-        label = "matrix_intro"
-    )
-
-    val burstFactor by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 320000
-                0f at 0 with LinearEasing
-                0f at 60000 with LinearEasing
-                1f at 84000 with FastOutSlowInEasing
-                1f at 104000 with LinearEasing
-                0f at 128000 with LinearEasing
-                0f at 320000 with LinearEasing
-            }
-        ),
-        label = "burst"
-    )
-
-    // Usamos un pool de caracteres fijo para evitar Random excesivo en el loop de dibujo
-    val characters = remember { charArrayOf('0', '1') }
-    
-    // Optimizamos usando NativeCanvas para evitar el overhead de TextMeasurer en loops grandes
-    val paint = remember {
-        Paint().apply {
-            textAlign = Paint.Align.CENTER
-            isAntiAlias = false // Matrix es pixelado, desactivar AA ahorra CPU
-            isFakeBoldText = true
-        }
-    }
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val numColumns = (size.width / 32f).toInt()
-        val random = java.util.Random(42)
-        val speedMultiplier = 1f + burstFactor * 0.5f
-        
-        drawIntoCanvas { canvas ->
-            val nativeCanvas = canvas.nativeCanvas
-            
-            for (i in 0 until numColumns) {
-                val speed = (8f + random.nextFloat() * 12f) * speedMultiplier
-                val yOffset = (baseTime * speed + random.nextFloat() * 2000f) % (size.height + 200f) - 100f
-                val length = 6 + random.nextInt(6)
-                val columnSize = 24f + random.nextFloat() * 24f // TamaÃ±o variable por columna para efecto de profundidad
-
-                // Staggered column appearance based on horizontal position
-                val columnIntroFactor = (introAlpha * 1.5f - (i.toFloat() / numColumns)).coerceIn(0f, 1f)
-                if (columnIntroFactor <= 0f) continue
-
-                for (j in 0 until length) {
-                    val alpha = (1f - (j.toFloat() / length)) * columnIntroFactor
-                    val char = characters[random.nextInt(characters.size)]
-                    
-                    val y = yOffset - j * 32f
-                    if (y in -40f..size.height + 40f) {
-                        paint.color = (if (j == 0) primary else primary.copy(alpha = 0.4f))
-                            .copy(alpha = alpha.coerceIn(0f, 1f))
-                            .toArgb()
-                        paint.textSize = columnSize
-                        
-                        nativeCanvas.drawText(
-                            char.toString(),
-                            i * 32f + 16f,
-                            y,
-                            paint
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 2. GalÃ¡ctico â€” Nebulae, stardust, deep space
-// ---------------------------------------------------------
-@Composable
-fun GalacticBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "galaxy")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(60000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    val nebulaColors = remember {
-        listOf(
-            listOf(Color(0xFF6C2BD9).copy(alpha = 0.12f), Color.Transparent),
-            listOf(Color(0xFFE040FB).copy(alpha = 0.08f), Color.Transparent),
-            listOf(Color(0xFF1A237E).copy(alpha = 0.10f), Color.Transparent),
-        )
-    }
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(100)
-        val cx = size.width / 2f
-        val cy = size.height / 2f
-
-        nebulaColors.forEachIndexed { index, colors ->
-            drawCircle(
-                brush = Brush.radialGradient(colors),
-                radius = size.width * 0.7f,
-                center = Offset(
-                    cx + sin(time * 0.3f + index * 2f) * size.width * 0.25f,
-                    cy + cos(time * 0.4f + index * 2.5f) * size.height * 0.2f
-                )
-            )
-        }
-
-        for (i in 0..120) {
-            val x = random.nextFloat() * size.width
-            val y = random.nextFloat() * size.height
-            val r = random.nextFloat() * 2.5f + 0.5f
-            val phase = random.nextFloat() * 2f * PI.toFloat()
-            val alpha = (sin(time * 0.7f + phase) + 1f) / 2f * 0.7f + 0.2f
-            val starColor = when {
-                random.nextFloat() > 0.8f -> Color(0xFFFFE0B2)
-                random.nextFloat() > 0.6f -> Color(0xFFB3E5FC)
-                else -> Color.White
-            }
-            drawCircle(starColor.copy(alpha = alpha), radius = r, center = Offset(x, y))
-        }
-
-        val sparkleRandom = java.util.Random(200)
-        for (i in 0..8) {
-            val sx = sparkleRandom.nextFloat() * size.width
-            val sy = sparkleRandom.nextFloat() * size.height
-            val sparkleAlpha = (sin(time * 1.2f + sparkleRandom.nextFloat() * 10f) + 1f) / 2f
-            drawCircle(
-                color = Color.White.copy(alpha = sparkleAlpha * 0.9f),
-                radius = 1.5f + sparkleAlpha * 2f,
-                center = Offset(sx, sy)
-            )
-        }
-
-        for (i in 0..40) {
-            val dx = random.nextFloat() * size.width
-            val dy = random.nextFloat() * size.height
-            val dotAlpha = random.nextFloat() * 0.3f
-            drawCircle(Color.White.copy(alpha = dotAlpha), radius = 0.5f, center = Offset(dx, dy))
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 3. Cyberpunk (Improved grid + glitch lines)
-// ---------------------------------------------------------
-@Composable
-fun CyberpunkBackground(color1: Color, color2: Color, color3: Color) {
-    val infiniteTransition = rememberInfiniteTransition(label = "cyberpunk")
-    val offset by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 100f,
-        animationSpec = infiniteRepeatable(tween(16000, easing = LinearEasing)),
-        label = "grid"
-    )
-    val glitchPhase by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(24000, easing = LinearEasing)),
-        label = "glitch"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val spacing = 80f
-
-        for (i in 0..(size.width / spacing).toInt() + 1) {
-            drawLine(
-                color = color2.copy(alpha = 0.2f),
-                start = Offset(i * spacing, 0f),
-                end = Offset(i * spacing, size.height),
-                strokeWidth = 1.5f
-            )
-        }
-
-        var y = offset
-        while (y < size.height) {
-            drawLine(
-                color = color1.copy(alpha = 0.35f),
-                start = Offset(0f, y),
-                end = Offset(size.width, y),
-                strokeWidth = 2f
-            )
-            y += spacing
-        }
-
-        val glitchCount = (sin(glitchPhase * PI.toFloat() * 4f) * 3f + 4f).toInt()
-        val glitchRandom = java.util.Random(99)
-        for (g in 0 until glitchCount) {
-            val gy = glitchRandom.nextFloat() * size.height
-            val gx = glitchRandom.nextFloat() * size.width * 0.5f
-            val gw = 20f + glitchRandom.nextFloat() * 80f
-            drawRect(
-                color = color3.copy(alpha = 0.15f),
-                topLeft = Offset(gx, gy),
-                size = Size(gw, 2f)
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 4. Sakura â€” Slow, calm falling petals
-// ---------------------------------------------------------
-@Composable
-fun SakuraBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "sakura")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(140000, easing = LinearEasing)),
-        label = "fall"
-    )
-
-    val petalColors = listOf(
-        Color(0xFFFFB7C5),
-        Color(0xFFFFCDD6),
-        Color(0xFFFFA0B4),
-        Color(0xFFF8BBD0),
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(200)
-        for (i in 0..25) {
-            val speedY = 10f + random.nextFloat() * 18f
-            val speedX = 4f + random.nextFloat() * 8f
-            val phaseX = random.nextFloat() * 2f * PI.toFloat()
-            val phaseRot = random.nextFloat() * 2f * PI.toFloat()
-
-            val yOffset = (time * speedY + random.nextFloat() * 3000f) % (size.height + 150f) - 75f
-            val xOffset = (random.nextFloat() * (size.width + 100f) - 50f) +
-                    sin(time * 0.05f + phaseX) * speedX * 3f
-
-            withTransform({
-                translate(xOffset.toFloat(), yOffset)
-                rotate((time * (3f + random.nextFloat() * 5f) + phaseRot * 50f) % 360f)
-            }) {
-                val petalColor = petalColors[random.nextInt(petalColors.size)]
-                drawOval(
-                    color = petalColor.copy(alpha = 0.5f),
-                    topLeft = Offset(-6f, -10f),
-                    size = Size(12f, 20f)
-                )
-                drawOval(
-                    color = petalColor.copy(alpha = 0.3f),
-                    topLeft = Offset(-4f, -8f),
-                    size = Size(8f, 16f)
-                )
-            }
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 5. Minimalista (refined â€” cleaner, softer)
-// ---------------------------------------------------------
-@Composable
-fun MinimalistBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "minimal")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
-        label = "orbit"
-    )
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        drawCircle(
-            color = Color.Black.copy(alpha = 0.025f),
-            radius = size.width * 0.6f,
-            center = Offset(
-                size.width / 2 + sin(time * 0.7f) * 80f,
-                size.height / 3 + cos(time * 0.7f) * 80f
-            )
-        )
-        drawCircle(
-            color = Color.Black.copy(alpha = 0.02f),
-            radius = size.width * 0.5f,
-            center = Offset(
-                size.width / 2 + cos(time * 0.5f + 1f) * 120f,
-                size.height / 1.5f + sin(time * 0.5f + 1f) * 120f
-            )
-        )
-        drawCircle(
-            color = Color.Black.copy(alpha = 0.015f),
-            radius = size.width * 0.35f,
-            center = Offset(
-                size.width / 2 + sin(time * 0.3f + 2f) * 160f,
-                size.height / 2f + cos(time * 0.3f + 2f) * 100f
-            )
-        )
-    }
-}
-
-// ---------------------------------------------------------
-// 6. NeÃ³n â€” Multiple glowing rings + pulsing
-// ---------------------------------------------------------
-@Composable
-fun NeonBackground(color1: Color, color2: Color, color3: Color) {
-    val infiniteTransition = rememberInfiniteTransition(label = "neon")
-    val pulse1 by infiniteTransition.animateFloat(
-        initialValue = 0.3f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(15000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "pulse1"
-    )
-    val pulse2 by infiniteTransition.animateFloat(
-        initialValue = 0.5f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(22000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "pulse2"
-    )
-    val pulse3 by infiniteTransition.animateFloat(
-        initialValue = 0.4f, targetValue = 0.9f,
-        animationSpec = infiniteRepeatable(tween(17000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
-        label = "pulse3"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val cx = size.width / 2f
-        val cy = size.height / 2f
-
-        drawRect(
-            brush = Brush.radialGradient(
-                colors = listOf(Color.Transparent, color1.copy(alpha = 0.08f * pulse1), color2.copy(alpha = 0.15f * pulse1)),
-                center = Offset(cx, cy),
-                radius = size.width
-            ),
-            size = size
-        )
-
-        drawCircle(
-            color = color1.copy(alpha = 0.12f * pulse2),
-            radius = size.width * 0.15f,
-            center = Offset(cx - size.width * 0.2f + sin(pulse3 * 3f) * 30f, cy - size.height * 0.15f)
-        )
-
-        drawCircle(
-            color = color2.copy(alpha = 0.10f * pulse3),
-            radius = size.width * 0.1f,
-            center = Offset(cx + size.width * 0.25f + cos(pulse2 * 2f) * 20f, cy + size.height * 0.2f)
-        )
-
-        drawCircle(
-            color = color3.copy(alpha = 0.08f * pulse1),
-            radius = size.width * 0.08f,
-            center = Offset(cx - size.width * 0.1f, cy + size.height * 0.25f)
-        )
-
-        drawCircle(
-            color = color1.copy(alpha = 0.15f * pulse3),
-            radius = size.width * 0.4f,
-            style = Stroke(width = 1.5f),
-            center = Offset(cx, cy)
-        )
-        drawCircle(
-            color = color2.copy(alpha = 0.1f * pulse2),
-            radius = size.width * 0.3f,
-            style = Stroke(width = 1f),
-            center = Offset(cx, cy)
-        )
-        drawCircle(
-            color = color3.copy(alpha = 0.12f * pulse1),
-            radius = size.width * 0.2f,
-            style = Stroke(width = 0.8f),
-            center = Offset(cx, cy)
-        )
-    }
-}
-
-// ---------------------------------------------------------
-// 7. OcÃ©ano â€” Full-screen waves with bubbles
-// ---------------------------------------------------------
-@Composable
-fun OceanBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "ocean")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(70000, easing = LinearEasing)),
-        label = "wave"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val waveColors = listOf(
-            Color(0xFF00B4D8),
-            Color(0xFF48CAE4),
-            Color(0xFF90E0EF),
-            Color(0xFF03045E)
-        )
-
-        for (w in waveColors.indices) {
-            val path = Path()
-            val baseY = size.height * (0.5f + w * 0.12f)
-            val waveHeight = 30f + w * 12f
-            val freq = 80f + w * 30f
-            val phase = w * 1.2f
-
-            path.moveTo(0f, size.height)
-            for (i in 0..size.width.toInt() step 8) {
-                val x = i.toFloat()
-                val y = baseY + sin((x / freq) + time * 0.8f + phase) * waveHeight
-                path.lineTo(x, y)
-            }
-            path.lineTo(size.width, size.height)
-            path.close()
-
-            drawPath(
-                path,
-                color = waveColors[w].copy(alpha = 0.25f - w * 0.04f)
-            )
-        }
-
-        val bubbleRandom = java.util.Random(500)
-        for (i in 0..12) {
-            val bx = bubbleRandom.nextFloat() * size.width
-            val by = (size.height * 0.3f + (time * 20f + bubbleRandom.nextFloat() * 500f) %
-                    (size.height * 0.7f))
-            val br = 2f + bubbleRandom.nextFloat() * 5f
-            drawCircle(
-                color = Color.White.copy(alpha = 0.15f),
-                radius = br,
-                center = Offset(bx, by),
-                style = Stroke(width = 1f)
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 8. VolcÃ¡nico â€” Lava flow, embers, glow
-// ---------------------------------------------------------
-@Composable
-fun VolcanicBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "volcano")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val lavaPath = Path()
-        val lavaBaseY = size.height * 0.85f
-        lavaPath.moveTo(0f, size.height)
-        for (i in 0..size.width.toInt() step 6) {
-            val x = i.toFloat()
-            val y = lavaBaseY + sin((x / 50f) + time * 0.5f) * 20f +
-                    sin((x / 30f) + time * 0.3f) * 10f
-            lavaPath.lineTo(x, y)
-        }
-        lavaPath.lineTo(size.width, size.height)
-        lavaPath.close()
-        drawPath(lavaPath, color = Color(0xFFFF4500).copy(alpha = 0.3f))
-
-        val glowPath = Path()
-        glowPath.moveTo(0f, size.height)
-        for (i in 0..size.width.toInt() step 6) {
-            val x = i.toFloat()
-            val y = lavaBaseY + 15f + sin((x / 50f) + time * 0.5f + 1f) * 20f +
-                    sin((x / 30f) + time * 0.3f + 1f) * 10f
-            glowPath.lineTo(x, y)
-        }
-        glowPath.lineTo(size.width, size.height)
-        glowPath.close()
-        drawPath(glowPath, color = Color(0xFFFF8C00).copy(alpha = 0.2f))
-
-        drawRect(
-            brush = Brush.verticalGradient(
-                listOf(Color.Transparent, Color(0xFFFF4500).copy(alpha = 0.2f)),
-                startY = size.height * 0.7f,
-                endY = size.height
-            ),
-            size = size
-        )
-
-        val random = java.util.Random(300)
-        for (i in 0..50) {
-            val speed = 15f + random.nextFloat() * 50f
-            val yOffset = size.height + 50f - ((time * speed + random.nextFloat() * 2000f) % (size.height + 100f))
-            val xOffset = random.nextFloat() * size.width + sin(time * 0.3f + random.nextFloat() * PI.toFloat()) * 40f
-            val r = random.nextFloat() * 5f + 1.5f
-            val alpha = ((size.height - yOffset) / size.height).coerceIn(0f, 1f) * 0.9f
-
-            val emberColor = when {
-                alpha > 0.6f -> Color(0xFFFFD700)
-                alpha > 0.3f -> Color(0xFFFF4500)
-                else -> Color(0xFFFF8C00)
-            }
-            drawCircle(
-                color = emberColor.copy(alpha = alpha),
-                radius = r,
-                center = Offset(xOffset.toFloat(), yOffset)
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 9. Samurai â€” Katana, mon (family crest), bamboo
-// ---------------------------------------------------------
-@Composable
-fun SamuraiBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "samurai")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(78000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(400)
-        val cx = size.width / 2f
-        val cy = size.height / 2f
-
-        val monRadius = size.width * 0.12f
-        drawCircle(
-            color = Color(0xFFC0A080).copy(alpha = 0.08f),
-            radius = monRadius,
-            center = Offset(cx, cy)
-        )
-        drawCircle(
-            color = Color(0xFFC0A080).copy(alpha = 0.06f),
-            radius = monRadius * 0.8f,
-            style = Stroke(width = 1.5f),
-            center = Offset(cx, cy)
-        )
-        for (i in 0..7) {
-            val angle = (i * PI.toFloat()) / 4f
-            val innerR = monRadius * 0.3f
-            val outerR = monRadius * 0.9f
-            drawLine(
-                color = Color(0xFFC0A080).copy(alpha = 0.06f),
-                start = Offset(cx + cos(angle) * innerR, cy + sin(angle) * innerR),
-                end = Offset(cx + cos(angle) * outerR, cy + sin(angle) * outerR),
-                strokeWidth = 1f
-            )
-        }
-
-        val xBase = size.width * 0.15f
-        for (b in 0..4) {
-            val bx = xBase + b * 18f
-            val by = size.height * 0.2f + sin(time * 0.1f + b * 0.5f) * 5f
-            drawLine(
-                color = Color(0xFF4A7C59).copy(alpha = 0.2f),
-                start = Offset(bx, by),
-                end = Offset(bx, size.height * 0.9f),
-                strokeWidth = 3f
-            )
-            for (k in 0..5) {
-                val knotY = by + (size.height * 0.7f) * (k / 5f)
-                val knotX = bx + 10f + sin(knotY * 0.1f) * 6f
-                drawLine(
-                    color = Color(0xFF4A7C59).copy(alpha = 0.15f),
-                    start = Offset(bx, knotY),
-                    end = Offset(knotX, knotY - 10f),
-                    strokeWidth = 1.5f
-                )
-                drawLine(
-                    color = Color(0xFF4A7C59).copy(alpha = 0.15f),
-                    start = Offset(bx, knotY),
-                    end = Offset(knotX, knotY + 10f),
-                    strokeWidth = 1.5f
-                )
-            }
-        }
-
-        for (i in 0..12) {
-            val speedY = 15f + random.nextFloat() * 25f
-            val speedX = 25f + random.nextFloat() * 35f
-            val yOffset = (time * speedY + random.nextFloat() * 3000f) % (size.height + 100f) - 50f
-            val xOffset = (time * speedX + random.nextFloat() * 2000f) % (size.width + 100f) - 50f
-
-            withTransform({
-                translate(xOffset, yOffset)
-                rotate(time * 6f + random.nextFloat() * 360f)
-            }) {
-                val leafPath = Path().apply {
-                    moveTo(0f, -12f)
-                    quadraticBezierTo(8f, 0f, 0f, 12f)
-                    quadraticBezierTo(-8f, 0f, 0f, -12f)
-                }
-                drawPath(leafPath, color = Color(0xFF8B0000).copy(alpha = 0.25f))
-            }
-        }
-
-        val katanaX = size.width * 0.75f
-        val katanaY = size.height * 0.3f
-        val bladeLength = size.height * 0.35f
-        val bladeAngle = sin(time * 0.05f) * 0.1f
-
-        withTransform({
-            rotate(bladeAngle * 180f / PI.toFloat(), pivot = Offset(katanaX, katanaY))
-        }) {
-            val bladePath = Path().apply {
-                moveTo(katanaX - 3f, katanaY)
-                lineTo(katanaX - 1f, katanaY + bladeLength)
-                lineTo(katanaX + 1f, katanaY + bladeLength)
-                lineTo(katanaX + 3f, katanaY)
-                close()
-            }
-            drawPath(bladePath, color = Color(0xFFE0E0E0).copy(alpha = 0.12f))
-
-            drawLine(
-                color = Color(0xFFE0E0E0).copy(alpha = 0.15f),
-                start = Offset(katanaX, katanaY),
-                end = Offset(katanaX, katanaY + bladeLength),
-                strokeWidth = 1f
-            )
-
-            val tsubaR = 8f
-            drawCircle(
-                color = Color(0xFFC0A080).copy(alpha = 0.15f),
-                radius = tsubaR,
-                center = Offset(katanaX, katanaY + bladeLength * 0.15f)
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 10. Aurora â€” Curtain-like aurora borealis
-// ---------------------------------------------------------
-@Composable
-fun AuroraBackground(color1: Color, color2: Color, color3: Color) {
-    val infiniteTransition = rememberInfiniteTransition(label = "aurora")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val bands = listOf(
-            color1 to 0f,
-            color2 to 0.3f,
-            color3 to 0.6f,
-            color1 to 0.9f
-        )
-
-        bands.forEach { (color, phaseOffset) ->
-            val path = Path()
-            val baseY = size.height * 0.15f
-            val amp = 40f + sin(time * 0.5f + phaseOffset * 3f) * 20f
-
-            path.moveTo(0f, size.height)
-            for (i in 0..size.width.toInt() step 6) {
-                val x = i.toFloat()
-                val y = baseY + sin((x / 120f) + time + phaseOffset * 2f) * amp +
-                        sin((x / 60f) + time * 1.5f + phaseOffset) * amp * 0.5f
-                path.lineTo(x, y)
-            }
-            path.lineTo(size.width, size.height)
-            path.close()
-
-            drawPath(
-                path,
-                color = color.copy(alpha = 0.08f + sin(time * 0.3f + phaseOffset) * 0.04f)
-            )
-        }
-
-        val pulseAlpha = (sin(time * 0.7f) + 1f) / 2f * 0.12f + 0.04f
-        drawRect(
-            brush = Brush.verticalGradient(
-                colors = listOf(
-                    color1.copy(alpha = pulseAlpha),
-                    color2.copy(alpha = pulseAlpha * 0.5f),
-                    Color.Transparent
-                )
-            ),
-            size = size
-        )
-    }
-}
-
-// ---------------------------------------------------------
-// 11. Nocturno â€” Refined night sky with more stars
-// ---------------------------------------------------------
-@Composable
-fun NightBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "night")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(56000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(500)
-
-        for (i in 0..60) {
-            val x = random.nextFloat() * size.width
-            val y = random.nextFloat() * size.height * 0.6f
-            val r = random.nextFloat() * 2f + 0.3f
-            val twinkle = (sin(time * 0.02f + random.nextFloat() * 10f) + 1f) / 2f
-            val alpha = twinkle * 0.3f + 0.2f
-            drawCircle(Color.White.copy(alpha = alpha), radius = r, center = Offset(x, y))
-        }
-
-        val shootPhase = time % 1000f
-        if (shootPhase < 150f) {
-            val startX = size.width * 0.8f - shootPhase * 4f
-            val startY = size.height * 0.1f + shootPhase * 3f
-            val progress = shootPhase / 150f
-            drawLine(
-                color = Color.White.copy(alpha = 1f - progress),
-                start = Offset(startX, startY),
-                end = Offset(startX - 50f, startY + 50f),
-                strokeWidth = 2f - progress
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 12. RETRO PIXEL â€” Experiencia 8-bit definitiva
-// ---------------------------------------------------------
-private data class RetroCloudDef(
-    val startY: Float, val size: Int, val speed: Float, val alpha: Float
-)
-
-private val retroStarSeeds = listOf(
-    floatArrayOf(0.08f, 0.12f), floatArrayOf(0.22f, 0.05f), floatArrayOf(0.35f, 0.18f),
-    floatArrayOf(0.45f, 0.08f), floatArrayOf(0.55f, 0.15f), floatArrayOf(0.68f, 0.06f),
-    floatArrayOf(0.78f, 0.20f), floatArrayOf(0.88f, 0.10f), floatArrayOf(0.15f, 0.25f),
-    floatArrayOf(0.50f, 0.22f), floatArrayOf(0.72f, 0.28f), floatArrayOf(0.92f, 0.03f),
-    floatArrayOf(0.05f, 0.30f), floatArrayOf(0.40f, 0.32f), floatArrayOf(0.62f, 0.12f),
-    floatArrayOf(0.82f, 0.35f), floatArrayOf(0.30f, 0.38f), floatArrayOf(0.95f, 0.40f),
-    floatArrayOf(0.10f, 0.42f), floatArrayOf(0.58f, 0.36f), floatArrayOf(0.75f, 0.08f),
-    floatArrayOf(0.48f, 0.28f), floatArrayOf(0.02f, 0.08f), floatArrayOf(0.98f, 0.15f),
-    floatArrayOf(0.20f, 0.35f), floatArrayOf(0.65f, 0.30f), floatArrayOf(0.38f, 0.14f),
-    floatArrayOf(0.85f, 0.24f), floatArrayOf(0.12f, 0.18f), floatArrayOf(0.52f, 0.34f)
-)
-
-private val retroMountData = listOf(
-    0.08f to 0.35f, 0.20f to 0.50f, 0.32f to 0.30f,
-    0.45f to 0.55f, 0.55f to 0.25f, 0.68f to 0.45f,
-    0.78f to 0.38f, 0.92f to 0.52f
-)
-
-private val retroTreePositions = listOf(0.08f, 0.18f, 0.28f, 0.40f, 0.52f, 0.62f, 0.75f, 0.88f, 0.95f)
-
-private val retroClouds = listOf(
-    RetroCloudDef(0.08f, 4, 12f, 0.15f),
-    RetroCloudDef(0.15f, 3, 18f, 0.12f),
-    RetroCloudDef(0.05f, 5, 8f, 0.18f),
-    RetroCloudDef(0.20f, 3, 22f, 0.10f),
-    RetroCloudDef(0.12f, 4, 14f, 0.14f),
-    RetroCloudDef(0.18f, 2, 28f, 0.08f)
-)
-
-private val retroMoonPattern = listOf(
-    "   1111   ",
-    "  111111  ",
-    " 11111111 ",
-    "1111111111",
-    "1111111111",
-    "1111111111",
-    "1111111111",
-    " 11111111 ",
-    "  111111  ",
-    "   1111   "
-)
-
-@Composable
-fun RetroPixelBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "retro")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(180000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    val cloudTime by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
-        label = "clouds"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val pw = 8f
-        val groundY = size.height * 0.82f
-
-        // â”€â”€ 1. SKY GRADIENT (pixelated bands) â”€â”€
-        val skyBands = 32
-        val bandHeight = groundY / skyBands
-        for (band in 0 until skyBands) {
-            val t = band.toFloat() / skyBands
-            drawRect(
-                color = Color(
-                    (11 + t * 22).toInt().coerceIn(0, 255),
-                    (11 + t * 38).toInt().coerceIn(0, 255),
-                    (59 + t * 55).toInt().coerceIn(0, 255)
-                ),
-                topLeft = Offset(0f, band * bandHeight),
-                size = Size(size.width, bandHeight + 1f)
-            )
-        }
-
-        // â”€â”€ 2. STARS â”€â”€
-        for (seed in retroStarSeeds) {
-            val sx = seed[0] * size.width
-            val sy = seed[1] * groundY * 0.7f
-            val twinkle = (sin(time * 0.03f + sx * 0.1f + sy * 0.1f) + 1f) / 2f
-            val alpha = 0.15f + twinkle * 0.6f
-            val starSize = if (seed[1] > 0.2f) 2f else 3f
-            drawRect(
-                color = Color.White.copy(alpha = alpha.coerceIn(0f, 1f)),
-                topLeft = Offset(sx, sy),
-                size = Size(starSize, starSize)
-            )
-            if (starSize > 2f && twinkle > 0.7f) {
-                drawRect(
-                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
-                    topLeft = Offset(sx - 2f, sy), size = Size(7f, 1f)
-                )
-                drawRect(
-                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
-                    topLeft = Offset(sx, sy - 2f), size = Size(1f, 7f)
-                )
-            }
-        }
-
-        // â”€â”€ 3. PIXEL MOON â”€â”€
-        val moonX = size.width * 0.78f
-        val moonY = groundY * 0.12f
-        val moonR = size.width * 0.045f
-        for (my in retroMoonPattern.indices) {
-            for (mx in retroMoonPattern[my].indices) {
-                if (retroMoonPattern[my][mx] == '1') {
-                    drawRect(
-                        color = Color(0xFFFFFDE7),
-                        topLeft = Offset(
-                            moonX - moonR + mx * (moonR * 2f / retroMoonPattern[0].length),
-                            moonY - moonR + my * (moonR * 2f / retroMoonPattern.size)
-                        ),
-                        size = Size(moonR * 0.22f, moonR * 0.22f)
-                    )
-                }
-            }
-        }
-        drawRect(
-            color = Color(0xFFFFFDE7).copy(alpha = 0.06f),
-            topLeft = Offset(moonX - moonR * 1.5f, moonY - moonR * 1.5f),
-            size = Size(moonR * 3f, moonR * 3f)
-        )
-
-        // â”€â”€ 4. MOUNTAINS â”€â”€
-        val mountPath1 = Path().apply {
-            moveTo(0f, groundY)
-            for (seg in 0..size.width.toInt() step 4) {
-                val x = seg.toFloat()
-                var y = groundY
-                for ((mx, my) in retroMountData) {
-                    val cx = mx * size.width
-                    val cy = my * groundY * 0.35f
-                    val dist = abs(x - cx)
-                    if (dist < size.width * 0.25f) {
-                        y = minOf(y, groundY * 0.65f - cy * (1f - dist / (size.width * 0.25f)))
-                    }
-                }
-                lineTo(x, y)
-            }
-            lineTo(size.width, groundY); close()
-        }
-        drawPath(mountPath1, color = Color(0xFF1A1A3E))
-
-        val mountPath2 = Path().apply {
-            moveTo(0f, groundY)
-            for (seg in 0..size.width.toInt() step 4) {
-                val x = seg.toFloat()
-                var y = groundY
-                for ((i, pair) in retroMountData.withIndex()) {
-                    val cx = (i.toFloat() / retroMountData.size) * size.width +
-                            sin(time * 0.005f + i) * 10f
-                    val cy = pair.second * groundY * 0.25f
-                    val dist = abs(x - cx)
-                    if (dist < size.width * 0.20f) {
-                        y = minOf(y, groundY * 0.75f - cy * (1f - dist / (size.width * 0.20f)))
-                    }
-                }
-                lineTo(x, y.coerceAtMost(groundY * 0.75f))
-            }
-            lineTo(size.width, groundY); close()
-        }
-        drawPath(mountPath2, color = Color(0xFF12122E))
-
-        // â”€â”€ 5. PIXEL TREES â”€â”€
-        for (pos in retroTreePositions) {
-            val tx = pos * size.width
-            val treeH = 30f + (pos * 40f) % 35f
-            drawRect(
-                color = Color(0xFF5D4037),
-                topLeft = Offset(tx - 3f, groundY - treeH),
-                size = Size(6f, treeH)
-            )
-            for (ly in 0..4) {
-                for (lx in 0..6) {
-                    val shade = when {
-                        (ly == 1 && lx in 1..5) || (ly == 2 && lx in 0..6) ||
-                                (ly == 3 && lx in 1..5) -> 1
-                        (ly == 0 && lx in 2..4) || (ly == 1 && lx == 3) ||
-                                (ly == 2 && lx in 2..4) -> 2
-                        else -> 0
-                    }
-                    if (shade > 0) {
-                        drawRect(
-                            color = if (shade == 2) Color(0xFF1B5E20) else Color(0xFF2E7D32),
-                            topLeft = Offset(tx - 14f + lx * 5f, groundY - treeH - 20f + ly * 5f),
-                            size = Size(5f, 5f)
-                        )
-                    }
-                }
-            }
-        }
-
-        // â”€â”€ 6. GROUND â”€â”€
-        val grassRand = java.util.Random(123)
-        for (gx in 0..(size.width / pw).toInt()) {
-            val shade = grassRand.nextInt(3)
-            drawRect(
-                color = when (shade) {
-                    0 -> Color(0xFF1B5E20)
-                    1 -> Color(0xFF2E7D32)
-                    else -> Color(0xFF388E3C)
-                }.copy(alpha = 0.7f + grassRand.nextFloat() * 0.3f),
-                topLeft = Offset(gx * pw, groundY),
-                size = Size(pw, size.height - groundY)
-            )
-        }
-
-        // â”€â”€ 7. GRASS TEXTURE â”€â”€
-        for (gx in 0..(size.width / 4f).toInt()) {
-            val grassH = 2f + (sin(gx * 1.7f + time * 0.01f) + 1f) * 3f
-            drawRect(
-                color = listOf(Color(0xFF4CAF50), Color(0xFF66BB6A), Color(0xFF81C784))
-                    .random(kotlin.random.Random(gx.hashCode().toLong())).copy(alpha = 0.5f),
-                topLeft = Offset(gx * 4f, groundY - grassH),
-                size = Size(2f, grassH)
-            )
-        }
-
-        // â”€â”€ 8. PIXEL CLOUDS â”€â”€
-        for (cloud in retroClouds) {
-            val cw = cloud.size * 8f
-            val ch = cloud.size * 4f
-            val cx = (cloudTime * cloud.speed + cloud.startY * 2000f) %
-                    (size.width + cw * 2f) - cw
-            val cy = cloud.startY * groundY * 0.5f
-            val cols = 7
-            val rows = 5
-            for (iy in 0 until rows) {
-                for (ix in 0 until cols) {
-                    val isFilled = when {
-                        iy == 0 -> ix in 2..4
-                        iy == 1 -> ix in 1..5
-                        iy == 2 -> ix in 0..6
-                        iy == 3 -> ix in 1..5
-                        else -> ix in 2..4
-                    }
-                    if (isFilled) {
-                        drawRect(
-                            color = Color.White.copy(alpha = cloud.alpha),
-                            topLeft = Offset(cx + ix * (cw / cols), cy + iy * (ch / rows)),
-                            size = Size(cw / cols, ch / rows)
-                        )
-                    }
-                }
-            }
-        }
-
-        // â”€â”€ 9. FIREFLIES â”€â”€
-        val fireflyRandom = java.util.Random(456)
-        for (i in 0..8) {
-            val fx = fireflyRandom.nextFloat() * size.width
-            val fy = groundY * 0.4f + (time * (5f + i * 2f) + fireflyRandom.nextFloat() * 2000f) %
-                    (groundY * 0.5f)
-            val flicker = (sin(time * 0.1f + i * 2.5f) + 1f) / 2f
-            val a = (flicker * 0.4f + 0.1f).coerceIn(0f, 1f)
-            drawRect(color = Color(0xFFFFE600).copy(alpha = a), topLeft = Offset(fx, fy), size = Size(3f, 3f))
-            drawRect(color = Color(0xFFFFE600).copy(alpha = a * 0.3f), topLeft = Offset(fx - 2f, fy - 2f), size = Size(7f, 7f))
-        }
-
-        // â”€â”€ 10. GRID OVERLAY â”€â”€
-        val gridSpacing = 16f
-        for (gx in 0..(size.width / gridSpacing).toInt()) {
-            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(gx * gridSpacing, 0f), size = Size(1f, size.height))
-        }
-        for (gy in 0..(size.height / gridSpacing).toInt()) {
-            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(0f, gy * gridSpacing), size = Size(size.width, 1f))
-        }
-
-        // â”€â”€ 11. SCANLINES â”€â”€
-        for (scanY in 0..(size.height / 4f).toInt()) {
-            drawRect(color = Color.Black.copy(alpha = 0.04f), topLeft = Offset(0f, scanY * 4f), size = Size(size.width, 1f))
-        }
-    }
-}
-```
-
-#### ui/components/CodePetWidget.kt
-
-```kotlin
-package com.tamagotchi.code.ui.components
-
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.tamagotchi.code.R
-import com.tamagotchi.code.data.database.PetStateEntity
-
-@Composable
-fun CodePetWidget(
-    petState: PetStateEntity?,
-    modifier: Modifier = Modifier
-) {
-    val status = petState?.currentStatus ?: "HAPPY"
-    val petImageRes = when (status) {
-        "SLEEPING" -> R.drawable.mascota_sleeping
-        "STUDYING" -> R.drawable.mascota_studying
-        "SICK" -> R.drawable.mascota_sick
-        "SAD" -> R.drawable.mascota_sad
-        "HUNGRY" -> R.drawable.mascota_hungry
-        "EXCITED" -> R.drawable.mascota_excited
-        else -> R.drawable.mascota_happy
-    }
-
-    Surface(
-        shape = RoundedCornerShape(24.dp),
-        tonalElevation = 3.dp,
-        shadowElevation = 6.dp,
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.95f),
-        modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
-    ) {
-        Box(
-            modifier = Modifier
-                .background(Color(0xFF12161F))
-                .padding(16.dp)
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Codey estÃ¡ listo",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Tu mascota de estudio te espera",
-                    color = Color(0xFFB7C2D9),
-                    fontSize = 12.sp
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Image(
-                    painter = painterResource(id = petImageRes),
-                    contentDescription = "Mascota Code Pet",
-                    modifier = Modifier.size(96.dp),
-                    contentScale = ContentScale.Fit
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = petState?.name ?: "Codey",
-                    color = Color.White,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 14.sp
-                )
-            }
-        }
-    }
-}
-```
-
-#### ui/components/MeterItem.kt
-
-```kotlin
-package com.tamagotchi.code.ui.components
-
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.tamagotchi.code.ui.theme.LocalAppTheme
-
-@Composable
-fun MeterItem(
-    label: String,
-    value: Float,
-    icon: ImageVector,
-    activeColor: Color,
-    trackColor: Color,
-    modifier: Modifier = Modifier
-) {
-    val animatedProgress by animateFloatAsState(targetValue = value / 100f)
-    val appTheme = LocalAppTheme.current
-
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = activeColor,
-                modifier = Modifier.size(14.dp)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        LinearProgressIndicator(
-            progress = { animatedProgress },
-            color = activeColor,
-            trackColor = trackColor,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(8.dp)
-                .clip(RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(4.dp)))
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = "${value.toInt()}%",
-            fontSize = 10.sp,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-```
-
-#### ui/components/PetAnimationConfig.kt
-
-```kotlin
-package com.tamagotchi.code.ui.components
-
-object PetAnimationConfig {
-    fun petFloatDurationMs(status: String, reduceMotion: Boolean): Int = when {
-        reduceMotion -> 2400
-        status == "EXCITED" -> 1300
-        status == "HAPPY" -> 1600
-        status == "SLEEPING" -> 3200
-        else -> 2200
-    }
-
-    fun petFloatAmplitudeDp(status: String): Float = when (status) {
-        "EXCITED" -> 8f
-        "HAPPY" -> 6f
-        "SLEEPING" -> 4f
-        else -> 5f
-    }
-
-    fun bounceDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 220 else 420
-
-    fun heartDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 900 else 1500
-}
-```
-
-#### ui/components/ViewportCard.kt
-
-```kotlin
+// ViewportCard.kt
 package com.tamagotchi.code.ui.components
 
 import androidx.compose.animation.core.*
@@ -7198,55 +5349,55 @@ fun ViewportCard(
         val quotes = when (state.currentStatus) {
             "SLEEPING" -> listOf(
                 "Zzz... if (dream) { sleep() } else { repeat() }... Zzz",
-                "Cargando baterÃ­as... no interrumpas mi hilo principal.",
-                "SoÃ±ando con compiladores veloces y cero NullPointers...",
-                "Mi CPU estÃ¡ en modo ahorro. Vuelve en un ciclo de reloj.",
-                "Zzz... Â¿viste ese commit? Fue... legendario..."
+                "Cargando baterías... no interrumpas mi hilo principal.",
+                "Soñando con compiladores veloces y cero NullPointers...",
+                "Mi CPU está en modo ahorro. Vuelve en un ciclo de reloj.",
+                "Zzz... ¿viste ese commit? Fue... legendario..."
             )
             "STUDYING" -> listOf(
-                "Â¡Shhh! Estoy optimizando algoritmos en mi cerebro.",
+                "¡Shhh! Estoy optimizando algoritmos en mi cerebro.",
                 "Compilando... codeando a 1000 WPM.",
-                "Siento cÃ³mo se incrementa mi sinapsis neuronal binaria.",
-                "Â¿SabÃ­as que el primer bug fue una polilla real? Yo prefiero los digitales.",
-                "Mi cÃ³digo es arte. Tu cÃ³digo... bueno, funciona.",
-                "ConcentraciÃ³n total. No me hagas un force push ahora."
+                "Siento cómo se incrementa mi sinapsis neuronal binaria.",
+                "¿Sabías que el primer bug fue una polilla real? Yo prefiero los digitales.",
+                "Mi código es arte. Tu código... bueno, funciona.",
+                "Concentración total. No me hagas un force push ahora."
             )
             "SICK" -> listOf(
-                "Error 500: Necesito desbuguear urgente. Â¡Dame una pÃ­ldora!",
+                "Error 500: Necesito desbuguear urgente. ¡Dame una píldora!",
                 "Demasiados bugs acumulados en mi stack... me siento mal.",
-                "Siento mi CPU sobrecalentada. Â¿Podemos repasar un poco?",
-                "Mi recolector de basura no estÃ¡ funcionando. Me siento... sucio.",
-                "Â¿Me formateas? No, mejor dame cariÃ±o, es menos traumÃ¡tico."
+                "Siento mi CPU sobrecalentada. ¿Podemos repasar un poco?",
+                "Mi recolector de basura no está funcionando. Me siento... sucio.",
+                "¿Me formateas? No, mejor dame cariño, es menos traumático."
             )
             "SAD" -> listOf(
                 "Tengo flojera... me siento un poco depre.",
-                "Mi baterÃ­a de motivaciÃ³n estÃ¡ por debajo del 20%.",
-                "Â¿Procrastinando otra vez? Mi cÃ³digo se llena de advertencias.",
+                "Mi batería de motivación está por debajo del 20%.",
+                "¿Procrastinando otra vez? Mi código se llena de advertencias.",
                 "Siento que mi arquitectura se desmorona. Necesito un refactor emocional.",
                 "Ni siquiera un 'Hello World' me anima hoy."
             )
             "HUNGRY" -> listOf(
-                "Â¡NullPointerException en mi estÃ³mago! Necesito bytes.",
-                "Mi cachÃ© de energÃ­a estÃ¡ vacÃ­a, Â¿me das de comer?",
+                "¡NullPointerException en mi estómago! Necesito bytes.",
+                "Mi caché de energía está vacía, ¿me das de comer?",
                 "Sin comida, mi rendimiento cae a O(n^2).",
-                "Mi estÃ³mago estÃ¡ haciendo un loop infinito de ruidos.",
-                "AlimÃ©ntame o empezarÃ© a borrar tus archivos temporales. Es broma... Â¿o no?"
+                "Mi estómago está haciendo un loop infinito de ruidos.",
+                "Aliméntame o empezaré a borrar tus archivos temporales. Es broma... ¿o no?"
             )
             "EXCITED" -> listOf(
-                "Â¡Wiii! Â¡Mi cÃ³digo es O(1) y mi corazÃ³n tambiÃ©n!",
-                "Â¡Nivel de felicidad al MÃXIMO! Gracias por quererme.",
-                "Â¡Siento que podrÃ­a compilar el kernel de Linux en 1 segundo!",
-                "Â¡Soy el root de tu corazÃ³n! Â¡Wiiiii!",
-                "Â¡Todo compila a la primera! Â¡Esto es magia negra!"
+                "¡Wiii! ¡Mi código es O(1) y mi corazón también!",
+                "¡Nivel de felicidad al MÁXIMO! Gracias por quererme.",
+                "¡Siento que podría compilar el kernel de Linux en 1 segundo!",
+                "¡Soy el root de tu corazón! ¡Wiiiii!",
+                "¡Todo compila a la primera! ¡Esto es magia negra!"
             )
             else -> listOf(
-                "Â¡Compilar sin advertencias es mi pasiÃ³n!",
-                "Â¿Listo para tirar unas lÃ­neas de cÃ³digo limpias hoy?",
-                "Â¡Siento el poder de un refactor exitoso!",
-                "Me agradas, haces que mi arquitectura sea modular y sÃ³lida.",
-                "Â¿Has probado a apagarlo y volverlo a encender? A mÃ­ me funciona.",
-                "Tu cÃ³digo es tan limpio que puedo ver mi reflejo en Ã©l.",
-                "Oye, Â¿has visto mis logs? EstÃ¡n llenos de amor por ti."
+                "¡Compilar sin advertencias es mi pasión!",
+                "¿Listo para tirar unas líneas de código limpias hoy?",
+                "¡Siento el poder de un refactor exitoso!",
+                "Me agradas, haces que mi arquitectura sea modular y sólida.",
+                "¿Has probado a apagarlo y volverlo a encender? A mí me funciona.",
+                "Tu código es tan limpio que puedo ver mi reflejo en él.",
+                "Oye, ¿has visto mis logs? Están llenos de amor por ti."
             )
         }
         quotes.random()
@@ -7307,7 +5458,7 @@ fun ViewportCard(
                             val isFilled = i <= currentHearts
                             Icon(
                                 imageVector = if (isFilled) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "CorazÃ³n $i",
+                                contentDescription = "Corazón $i",
                                 tint = if (isFilled) MaterialTheme.colorScheme.error else Color.Gray,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -7483,7 +5634,7 @@ fun ViewportCard(
                     modifier = Modifier.weight(1f).testTag("hunger_bar")
                 )
                 MeterItem(
-                    label = "EnergÃ­a", value = state.energy,
+                    label = "Energía", value = state.energy,
                     icon = Icons.Default.FlashOn, activeColor = MaterialTheme.colorScheme.tertiary,
                     trackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("energy_bar")
@@ -7506,7 +5657,7 @@ fun ViewportCard(
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${state.streak} dÃ­as", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = MaterialTheme.colorScheme.error)
+                    Text("${state.streak} días", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = MaterialTheme.colorScheme.error)
                 }
                 Button(
                     onClick = { viewModel.toggleSleep() },
@@ -7576,13 +5727,1559 @@ fun ViewportCard(
         }
     }
 }
+
 ```
+
+```kotlin
+// MeterItem.kt
+package com.tamagotchi.code.ui.components
+
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.ui.theme.LocalAppTheme
+
+@Composable
+fun MeterItem(
+    label: String,
+    value: Float,
+    icon: ImageVector,
+    activeColor: Color,
+    trackColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val animatedProgress by animateFloatAsState(targetValue = value / 100f)
+    val appTheme = LocalAppTheme.current
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = activeColor,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = label,
+                fontSize = 11.sp,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+        Spacer(modifier = Modifier.height(4.dp))
+        LinearProgressIndicator(
+            progress = { animatedProgress },
+            color = activeColor,
+            trackColor = trackColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(4.dp)))
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = "${value.toInt()}%",
+            fontSize = 10.sp,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+```
+
+```kotlin
+// AnimatedPetSprite.kt
+package com.tamagotchi.code.ui.components
+
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.theme.LocalReduceMotion
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
+import kotlin.random.Random
+
+/**
+ * Componente que renderiza la mascota Codey con micro-animaciones nativas de Compose.
+ *
+ * @param status El estado actual de la mascota (ej. "HAPPY", "SICK", "SLEEPING").
+ * @param celebrationTrigger Flujo que dispara la animación de celebración.
+ * @param onClick Acción al pulsar sobre la mascota.
+ * @param modifier Modificador para el contenedor.
+ */
+@Composable
+fun AnimatedPetSprite(
+    status: String,
+    celebrationTrigger: SharedFlow<Unit>,
+    learningEventTrigger: SharedFlow<String>? = null,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val reduceMotion = LocalReduceMotion.current
+    
+    // --- ESTADOS DE ANIMACIÓN ---
+    
+    // Animación de celebración (Bounce + Wobble)
+    val bounceAnim = remember { Animatable(0f) }
+    val wobbleAnim = remember { Animatable(0f) }
+    val flashAnim = remember { Animatable(1f) }
+
+    // Suscripción al trigger de aprendizaje
+    LaunchedEffect(learningEventTrigger) {
+        learningEventTrigger?.collect { type ->
+            if (!reduceMotion) {
+                when (type) {
+                    "SUCCESS" -> {
+                        launch {
+                            flashAnim.animateTo(1.5f, tween(100))
+                            flashAnim.animateTo(1f, tween(200))
+                        }
+                    }
+                    "FAILURE" -> {
+                        launch {
+                            wobbleAnim.animateTo(-10f, tween(50))
+                            wobbleAnim.animateTo(10f, tween(50))
+                            wobbleAnim.animateTo(0f, tween(50))
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Suscripción al trigger de celebración
+    LaunchedEffect(celebrationTrigger) {
+        celebrationTrigger.collect {
+            if (!reduceMotion) {
+                launch {
+                    bounceAnim.animateTo(
+                        targetValue = -20f,
+                        animationSpec = tween(150, easing = FastOutSlowInEasing)
+                    )
+                    bounceAnim.animateTo(
+                        targetValue = 0f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                }
+                launch {
+                    wobbleAnim.animateTo(4f, tween(100))
+                    wobbleAnim.animateTo(-4f, tween(200))
+                    wobbleAnim.animateTo(0f, spring(stiffness = Spring.StiffnessMedium))
+                }
+            }
+        }
+    }
+
+    // --- ANIMACIONES INFINITAS (LOOPS) ---
+    val infiniteTransition = rememberInfiniteTransition(label = "PetLoop")
+
+    // Idle Breathing (Respiración)
+    val breathingScale by infiniteTransition.animateFloat(
+        initialValue = 1.0f,
+        targetValue = if (status != "SLEEPING" && !reduceMotion) 1.03f else 1.0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1800, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "Breathing"
+    )
+
+    // Sick Tremble (Temblor por enfermedad)
+    val trembleOffset by infiniteTransition.animateFloat(
+        initialValue = -2f,
+        targetValue = 2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(100, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "Tremble"
+    )
+
+    // Hungry Pulse (Pulso por hambre)
+    val hungryScale by infiniteTransition.animateFloat(
+        initialValue = 1.0f,
+        targetValue = 1.05f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "HungryPulse"
+    )
+
+    // Sleeping Opacity (Fade de respiración dormido)
+    val sleepAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.8f,
+        targetValue = 1.0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "SleepAlpha"
+    )
+
+    // --- LÓGICA DE PARPADEO (BLINK) ---
+    var isBlinking by remember { mutableStateOf(false) }
+    
+    // El parpadeo solo aplica en estados donde tiene sentido y no hay reducción de movimiento
+    val canBlink = remember(status, reduceMotion) {
+        !reduceMotion && (status == "HAPPY" || status == "EXCITED" || status == "STUDYING")
+    }
+
+    LaunchedEffect(canBlink) {
+        if (canBlink) {
+            while (true) {
+                delay(Random.nextLong(3000, 5000))
+                isBlinking = true
+                delay(180)
+                isBlinking = false
+            }
+        }
+    }
+
+    // --- RESOLUCIÓN DE RECURSOS ---
+    val context = LocalContext.current
+    
+    val baseResId = remember(status) { getPetDrawable(status) }
+    val blinkResId = remember(status) { getPetBlinkDrawable(status) }
+    
+    val interactionSource = remember { MutableInteractionSource() }
+    
+    // Verificamos si el asset de blink existe realmente
+    val hasBlinkAsset = remember(blinkResId) {
+        try {
+            context.resources.getResourceName(blinkResId)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    // Idle Sway (Pequeño balanceo lateral aleatorio para dar más vida)
+    val swayOffset by infiniteTransition.animateFloat(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "Sway"
+    )
+
+    // --- COMPOSICIÓN FINAL ---
+    Box(
+        modifier = modifier
+            .offset(
+                x = when {
+                    status == "SICK" && !reduceMotion -> trembleOffset.dp
+                    !reduceMotion -> swayOffset.dp
+                    else -> 0.dp
+                },
+                y = bounceAnim.value.dp
+            )
+            .scale(
+                when {
+                    status == "HUNGRY" && !reduceMotion -> hungryScale
+                    status != "SLEEPING" && !reduceMotion -> breathingScale * flashAnim.value
+                    else -> 1.0f * flashAnim.value
+                }
+            )
+            .graphicsLayer {
+                rotationZ = wobbleAnim.value
+                alpha = if (status == "SLEEPING" && !reduceMotion) sleepAlpha else 1.0f
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Crossfade(
+            targetState = isBlinking && hasBlinkAsset,
+            animationSpec = tween(100),
+            label = "BlinkCrossfade"
+        ) { blink ->
+            val resToDraw = if (blink) blinkResId else baseResId
+            Image(
+                painter = painterResource(id = resToDraw),
+                contentDescription = "Codey Status: $status",
+                modifier = Modifier
+                    .size(170.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) { onClick() },
+                contentScale = ContentScale.Fit
+            )
+        }
+    }
+}
+
+/**
+ * Mapea el estado a su drawable base.
+ */
+private fun getPetDrawable(status: String): Int = when (status) {
+    "SLEEPING" -> R.drawable.mascota_sleeping
+    "STUDYING" -> R.drawable.mascota_studying
+    "SICK" -> R.drawable.mascota_sick
+    "SAD" -> R.drawable.mascota_sad
+    "HUNGRY" -> R.drawable.mascota_hungry
+    "EXCITED" -> R.drawable.mascota_excited
+    else -> R.drawable.mascota_happy
+}
+
+/**
+ * Mapea el estado a su drawable de parpadeo (Blink).
+ * TODO: Generar estos assets y añadirlos a res/drawable/
+ */
+private fun getPetBlinkDrawable(status: String): Int = when (status) {
+    "HAPPY" -> try { R.drawable::class.java.getField("mascota_happy_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_happy }
+    "EXCITED" -> try { R.drawable::class.java.getField("mascota_excited_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_excited }
+    "STUDYING" -> try { R.drawable::class.java.getField("mascota_studying_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_studying }
+    else -> getPetDrawable(status)
+}
+
+```
+
+```kotlin
+// AnimatedThemeBackground.kt
+package com.tamagotchi.code.ui.components
+
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import android.graphics.Paint
+import androidx.compose.animation.core.*
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.ui.theme.AppTheme
+import kotlin.math.sin
+import kotlin.math.cos
+import kotlin.math.abs
+import kotlin.math.PI
+import kotlin.random.Random
+
+@Composable
+fun AnimatedThemeBackground(
+    theme: AppTheme,
+    reduceMotion: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    val bgModifier = if (theme.usesGradients && theme.gradientColors.size > 1) {
+        Modifier.background(brush = Brush.verticalGradient(theme.gradientColors))
+    } else {
+        Modifier.background(color = theme.background)
+    }
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .then(bgModifier)
+    ) {
+        if (!reduceMotion) {
+            when (theme.name) {
+                "Matrix Green" -> MatrixBackground(theme.primary, theme.accent)
+                "Galáctico" -> GalacticBackground()
+                "Cyberpunk" -> CyberpunkBackground(theme.primary, theme.secondary, theme.tertiary)
+                "Sakura" -> SakuraBackground()
+                "Minimalista" -> MinimalistBackground()
+                "Neón" -> NeonBackground(theme.primary, theme.secondary, theme.tertiary)
+                "Océano" -> OceanBackground()
+                "Volcánico" -> VolcanicBackground()
+                "Samurai" -> SamuraiBackground()
+                "Aurora" -> AuroraBackground(theme.primary, theme.secondary, theme.tertiary)
+                "Nocturno" -> NightBackground()
+                "Retro Pixel" -> RetroPixelBackground()
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 1. Matrix Green — 1/0 rain with hidden pet messages & speed bursts
+// ---------------------------------------------------------
+@Composable
+fun MatrixBackground(primary: Color, accent: Color) {
+    val infiniteTransition = rememberInfiniteTransition(label = "matrix")
+
+    val baseTime by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(320000, easing = LinearEasing)),
+        label = "baseTime"
+    )
+
+    // Animación de aparición progresiva (intro fade)
+    val introAlpha by animateFloatAsState(
+        targetValue = 1f,
+        animationSpec = tween(3000, easing = LinearOutSlowInEasing),
+        label = "matrix_intro"
+    )
+
+    val burstFactor by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 320000
+                0f at 0 with LinearEasing
+                0f at 60000 with LinearEasing
+                1f at 84000 with FastOutSlowInEasing
+                1f at 104000 with LinearEasing
+                0f at 128000 with LinearEasing
+                0f at 320000 with LinearEasing
+            }
+        ),
+        label = "burst"
+    )
+
+    // Usamos un pool de caracteres fijo para evitar Random excesivo en el loop de dibujo
+    val characters = remember { charArrayOf('0', '1') }
+    
+    // Optimizamos usando NativeCanvas para evitar el overhead de TextMeasurer en loops grandes
+    val paint = remember {
+        Paint().apply {
+            textAlign = Paint.Align.CENTER
+            isAntiAlias = false // Matrix es pixelado, desactivar AA ahorra CPU
+            isFakeBoldText = true
+        }
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val numColumns = (size.width / 32f).toInt()
+        val random = java.util.Random(42)
+        val speedMultiplier = 1f + burstFactor * 0.5f
+        
+        drawIntoCanvas { canvas ->
+            val nativeCanvas = canvas.nativeCanvas
+            
+            for (i in 0 until numColumns) {
+                val speed = (8f + random.nextFloat() * 12f) * speedMultiplier
+                val yOffset = (baseTime * speed + random.nextFloat() * 2000f) % (size.height + 200f) - 100f
+                val length = 6 + random.nextInt(6)
+                val columnSize = 24f + random.nextFloat() * 24f // Tamaño variable por columna para efecto de profundidad
+
+                // Staggered column appearance based on horizontal position
+                val columnIntroFactor = (introAlpha * 1.5f - (i.toFloat() / numColumns)).coerceIn(0f, 1f)
+                if (columnIntroFactor <= 0f) continue
+
+                for (j in 0 until length) {
+                    val alpha = (1f - (j.toFloat() / length)) * columnIntroFactor
+                    val char = characters[random.nextInt(characters.size)]
+                    
+                    val y = yOffset - j * 32f
+                    if (y in -40f..size.height + 40f) {
+                        paint.color = (if (j == 0) primary else primary.copy(alpha = 0.4f))
+                            .copy(alpha = alpha.coerceIn(0f, 1f))
+                            .toArgb()
+                        paint.textSize = columnSize
+                        
+                        nativeCanvas.drawText(
+                            char.toString(),
+                            i * 32f + 16f,
+                            y,
+                            paint
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 2. Galáctico — Nebulae, stardust, deep space
+// ---------------------------------------------------------
+@Composable
+fun GalacticBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "galaxy")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 2f * PI.toFloat(),
+        animationSpec = infiniteRepeatable(tween(60000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    val nebulaColors = remember {
+        listOf(
+            listOf(Color(0xFF6C2BD9).copy(alpha = 0.12f), Color.Transparent),
+            listOf(Color(0xFFE040FB).copy(alpha = 0.08f), Color.Transparent),
+            listOf(Color(0xFF1A237E).copy(alpha = 0.10f), Color.Transparent),
+        )
+    }
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val random = java.util.Random(100)
+        val cx = size.width / 2f
+        val cy = size.height / 2f
+
+        nebulaColors.forEachIndexed { index, colors ->
+            drawCircle(
+                brush = Brush.radialGradient(colors),
+                radius = size.width * 0.7f,
+                center = Offset(
+                    cx + sin(time * 0.3f + index * 2f) * size.width * 0.25f,
+                    cy + cos(time * 0.4f + index * 2.5f) * size.height * 0.2f
+                )
+            )
+        }
+
+        for (i in 0..120) {
+            val x = random.nextFloat() * size.width
+            val y = random.nextFloat() * size.height
+            val r = random.nextFloat() * 2.5f + 0.5f
+            val phase = random.nextFloat() * 2f * PI.toFloat()
+            val alpha = (sin(time * 0.7f + phase) + 1f) / 2f * 0.7f + 0.2f
+            val starColor = when {
+                random.nextFloat() > 0.8f -> Color(0xFFFFE0B2)
+                random.nextFloat() > 0.6f -> Color(0xFFB3E5FC)
+                else -> Color.White
+            }
+            drawCircle(starColor.copy(alpha = alpha), radius = r, center = Offset(x, y))
+        }
+
+        val sparkleRandom = java.util.Random(200)
+        for (i in 0..8) {
+            val sx = sparkleRandom.nextFloat() * size.width
+            val sy = sparkleRandom.nextFloat() * size.height
+            val sparkleAlpha = (sin(time * 1.2f + sparkleRandom.nextFloat() * 10f) + 1f) / 2f
+            drawCircle(
+                color = Color.White.copy(alpha = sparkleAlpha * 0.9f),
+                radius = 1.5f + sparkleAlpha * 2f,
+                center = Offset(sx, sy)
+            )
+        }
+
+        for (i in 0..40) {
+            val dx = random.nextFloat() * size.width
+            val dy = random.nextFloat() * size.height
+            val dotAlpha = random.nextFloat() * 0.3f
+            drawCircle(Color.White.copy(alpha = dotAlpha), radius = 0.5f, center = Offset(dx, dy))
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 3. Cyberpunk (Improved grid + glitch lines)
+// ---------------------------------------------------------
+@Composable
+fun CyberpunkBackground(color1: Color, color2: Color, color3: Color) {
+    val infiniteTransition = rememberInfiniteTransition(label = "cyberpunk")
+    val offset by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 100f,
+        animationSpec = infiniteRepeatable(tween(16000, easing = LinearEasing)),
+        label = "grid"
+    )
+    val glitchPhase by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(24000, easing = LinearEasing)),
+        label = "glitch"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val spacing = 80f
+
+        for (i in 0..(size.width / spacing).toInt() + 1) {
+            drawLine(
+                color = color2.copy(alpha = 0.2f),
+                start = Offset(i * spacing, 0f),
+                end = Offset(i * spacing, size.height),
+                strokeWidth = 1.5f
+            )
+        }
+
+        var y = offset
+        while (y < size.height) {
+            drawLine(
+                color = color1.copy(alpha = 0.35f),
+                start = Offset(0f, y),
+                end = Offset(size.width, y),
+                strokeWidth = 2f
+            )
+            y += spacing
+        }
+
+        val glitchCount = (sin(glitchPhase * PI.toFloat() * 4f) * 3f + 4f).toInt()
+        val glitchRandom = java.util.Random(99)
+        for (g in 0 until glitchCount) {
+            val gy = glitchRandom.nextFloat() * size.height
+            val gx = glitchRandom.nextFloat() * size.width * 0.5f
+            val gw = 20f + glitchRandom.nextFloat() * 80f
+            drawRect(
+                color = color3.copy(alpha = 0.15f),
+                topLeft = Offset(gx, gy),
+                size = Size(gw, 2f)
+            )
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 4. Sakura — Slow, calm falling petals
+// ---------------------------------------------------------
+@Composable
+fun SakuraBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "sakura")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(140000, easing = LinearEasing)),
+        label = "fall"
+    )
+
+    val petalColors = listOf(
+        Color(0xFFFFB7C5),
+        Color(0xFFFFCDD6),
+        Color(0xFFFFA0B4),
+        Color(0xFFF8BBD0),
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val random = java.util.Random(200)
+        for (i in 0..25) {
+            val speedY = 10f + random.nextFloat() * 18f
+            val speedX = 4f + random.nextFloat() * 8f
+            val phaseX = random.nextFloat() * 2f * PI.toFloat()
+            val phaseRot = random.nextFloat() * 2f * PI.toFloat()
+
+            val yOffset = (time * speedY + random.nextFloat() * 3000f) % (size.height + 150f) - 75f
+            val xOffset = (random.nextFloat() * (size.width + 100f) - 50f) +
+                    sin(time * 0.05f + phaseX) * speedX * 3f
+
+            withTransform({
+                translate(xOffset.toFloat(), yOffset)
+                rotate((time * (3f + random.nextFloat() * 5f) + phaseRot * 50f) % 360f)
+            }) {
+                val petalColor = petalColors[random.nextInt(petalColors.size)]
+                drawOval(
+                    color = petalColor.copy(alpha = 0.5f),
+                    topLeft = Offset(-6f, -10f),
+                    size = Size(12f, 20f)
+                )
+                drawOval(
+                    color = petalColor.copy(alpha = 0.3f),
+                    topLeft = Offset(-4f, -8f),
+                    size = Size(8f, 16f)
+                )
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 5. Minimalista (refined — cleaner, softer)
+// ---------------------------------------------------------
+@Composable
+fun MinimalistBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "minimal")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 2f * PI.toFloat(),
+        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
+        label = "orbit"
+    )
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.025f),
+            radius = size.width * 0.6f,
+            center = Offset(
+                size.width / 2 + sin(time * 0.7f) * 80f,
+                size.height / 3 + cos(time * 0.7f) * 80f
+            )
+        )
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.02f),
+            radius = size.width * 0.5f,
+            center = Offset(
+                size.width / 2 + cos(time * 0.5f + 1f) * 120f,
+                size.height / 1.5f + sin(time * 0.5f + 1f) * 120f
+            )
+        )
+        drawCircle(
+            color = Color.Black.copy(alpha = 0.015f),
+            radius = size.width * 0.35f,
+            center = Offset(
+                size.width / 2 + sin(time * 0.3f + 2f) * 160f,
+                size.height / 2f + cos(time * 0.3f + 2f) * 100f
+            )
+        )
+    }
+}
+
+// ---------------------------------------------------------
+// 6. Neón — Multiple glowing rings + pulsing
+// ---------------------------------------------------------
+@Composable
+fun NeonBackground(color1: Color, color2: Color, color3: Color) {
+    val infiniteTransition = rememberInfiniteTransition(label = "neon")
+    val pulse1 by infiniteTransition.animateFloat(
+        initialValue = 0.3f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(15000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        label = "pulse1"
+    )
+    val pulse2 by infiniteTransition.animateFloat(
+        initialValue = 0.5f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(22000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        label = "pulse2"
+    )
+    val pulse3 by infiniteTransition.animateFloat(
+        initialValue = 0.4f, targetValue = 0.9f,
+        animationSpec = infiniteRepeatable(tween(17000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+        label = "pulse3"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val cx = size.width / 2f
+        val cy = size.height / 2f
+
+        drawRect(
+            brush = Brush.radialGradient(
+                colors = listOf(Color.Transparent, color1.copy(alpha = 0.08f * pulse1), color2.copy(alpha = 0.15f * pulse1)),
+                center = Offset(cx, cy),
+                radius = size.width
+            ),
+            size = size
+        )
+
+        drawCircle(
+            color = color1.copy(alpha = 0.12f * pulse2),
+            radius = size.width * 0.15f,
+            center = Offset(cx - size.width * 0.2f + sin(pulse3 * 3f) * 30f, cy - size.height * 0.15f)
+        )
+
+        drawCircle(
+            color = color2.copy(alpha = 0.10f * pulse3),
+            radius = size.width * 0.1f,
+            center = Offset(cx + size.width * 0.25f + cos(pulse2 * 2f) * 20f, cy + size.height * 0.2f)
+        )
+
+        drawCircle(
+            color = color3.copy(alpha = 0.08f * pulse1),
+            radius = size.width * 0.08f,
+            center = Offset(cx - size.width * 0.1f, cy + size.height * 0.25f)
+        )
+
+        drawCircle(
+            color = color1.copy(alpha = 0.15f * pulse3),
+            radius = size.width * 0.4f,
+            style = Stroke(width = 1.5f),
+            center = Offset(cx, cy)
+        )
+        drawCircle(
+            color = color2.copy(alpha = 0.1f * pulse2),
+            radius = size.width * 0.3f,
+            style = Stroke(width = 1f),
+            center = Offset(cx, cy)
+        )
+        drawCircle(
+            color = color3.copy(alpha = 0.12f * pulse1),
+            radius = size.width * 0.2f,
+            style = Stroke(width = 0.8f),
+            center = Offset(cx, cy)
+        )
+    }
+}
+
+// ---------------------------------------------------------
+// 7. Océano — Full-screen waves with bubbles
+// ---------------------------------------------------------
+@Composable
+fun OceanBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "ocean")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 2f * PI.toFloat(),
+        animationSpec = infiniteRepeatable(tween(70000, easing = LinearEasing)),
+        label = "wave"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val waveColors = listOf(
+            Color(0xFF00B4D8),
+            Color(0xFF48CAE4),
+            Color(0xFF90E0EF),
+            Color(0xFF03045E)
+        )
+
+        for (w in waveColors.indices) {
+            val path = Path()
+            val baseY = size.height * (0.5f + w * 0.12f)
+            val waveHeight = 30f + w * 12f
+            val freq = 80f + w * 30f
+            val phase = w * 1.2f
+
+            path.moveTo(0f, size.height)
+            for (i in 0..size.width.toInt() step 8) {
+                val x = i.toFloat()
+                val y = baseY + sin((x / freq) + time * 0.8f + phase) * waveHeight
+                path.lineTo(x, y)
+            }
+            path.lineTo(size.width, size.height)
+            path.close()
+
+            drawPath(
+                path,
+                color = waveColors[w].copy(alpha = 0.25f - w * 0.04f)
+            )
+        }
+
+        val bubbleRandom = java.util.Random(500)
+        for (i in 0..12) {
+            val bx = bubbleRandom.nextFloat() * size.width
+            val by = (size.height * 0.3f + (time * 20f + bubbleRandom.nextFloat() * 500f) %
+                    (size.height * 0.7f))
+            val br = 2f + bubbleRandom.nextFloat() * 5f
+            drawCircle(
+                color = Color.White.copy(alpha = 0.15f),
+                radius = br,
+                center = Offset(bx, by),
+                style = Stroke(width = 1f)
+            )
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 8. Volcánico — Lava flow, embers, glow
+// ---------------------------------------------------------
+@Composable
+fun VolcanicBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "volcano")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(90000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val lavaPath = Path()
+        val lavaBaseY = size.height * 0.85f
+        lavaPath.moveTo(0f, size.height)
+        for (i in 0..size.width.toInt() step 6) {
+            val x = i.toFloat()
+            val y = lavaBaseY + sin((x / 50f) + time * 0.5f) * 20f +
+                    sin((x / 30f) + time * 0.3f) * 10f
+            lavaPath.lineTo(x, y)
+        }
+        lavaPath.lineTo(size.width, size.height)
+        lavaPath.close()
+        drawPath(lavaPath, color = Color(0xFFFF4500).copy(alpha = 0.3f))
+
+        val glowPath = Path()
+        glowPath.moveTo(0f, size.height)
+        for (i in 0..size.width.toInt() step 6) {
+            val x = i.toFloat()
+            val y = lavaBaseY + 15f + sin((x / 50f) + time * 0.5f + 1f) * 20f +
+                    sin((x / 30f) + time * 0.3f + 1f) * 10f
+            glowPath.lineTo(x, y)
+        }
+        glowPath.lineTo(size.width, size.height)
+        glowPath.close()
+        drawPath(glowPath, color = Color(0xFFFF8C00).copy(alpha = 0.2f))
+
+        drawRect(
+            brush = Brush.verticalGradient(
+                listOf(Color.Transparent, Color(0xFFFF4500).copy(alpha = 0.2f)),
+                startY = size.height * 0.7f,
+                endY = size.height
+            ),
+            size = size
+        )
+
+        val random = java.util.Random(300)
+        for (i in 0..50) {
+            val speed = 15f + random.nextFloat() * 50f
+            val yOffset = size.height + 50f - ((time * speed + random.nextFloat() * 2000f) % (size.height + 100f))
+            val xOffset = random.nextFloat() * size.width + sin(time * 0.3f + random.nextFloat() * PI.toFloat()) * 40f
+            val r = random.nextFloat() * 5f + 1.5f
+            val alpha = ((size.height - yOffset) / size.height).coerceIn(0f, 1f) * 0.9f
+
+            val emberColor = when {
+                alpha > 0.6f -> Color(0xFFFFD700)
+                alpha > 0.3f -> Color(0xFFFF4500)
+                else -> Color(0xFFFF8C00)
+            }
+            drawCircle(
+                color = emberColor.copy(alpha = alpha),
+                radius = r,
+                center = Offset(xOffset.toFloat(), yOffset)
+            )
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 9. Samurai — Katana, mon (family crest), bamboo
+// ---------------------------------------------------------
+@Composable
+fun SamuraiBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "samurai")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(78000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val random = java.util.Random(400)
+        val cx = size.width / 2f
+        val cy = size.height / 2f
+
+        val monRadius = size.width * 0.12f
+        drawCircle(
+            color = Color(0xFFC0A080).copy(alpha = 0.08f),
+            radius = monRadius,
+            center = Offset(cx, cy)
+        )
+        drawCircle(
+            color = Color(0xFFC0A080).copy(alpha = 0.06f),
+            radius = monRadius * 0.8f,
+            style = Stroke(width = 1.5f),
+            center = Offset(cx, cy)
+        )
+        for (i in 0..7) {
+            val angle = (i * PI.toFloat()) / 4f
+            val innerR = monRadius * 0.3f
+            val outerR = monRadius * 0.9f
+            drawLine(
+                color = Color(0xFFC0A080).copy(alpha = 0.06f),
+                start = Offset(cx + cos(angle) * innerR, cy + sin(angle) * innerR),
+                end = Offset(cx + cos(angle) * outerR, cy + sin(angle) * outerR),
+                strokeWidth = 1f
+            )
+        }
+
+        val xBase = size.width * 0.15f
+        for (b in 0..4) {
+            val bx = xBase + b * 18f
+            val by = size.height * 0.2f + sin(time * 0.1f + b * 0.5f) * 5f
+            drawLine(
+                color = Color(0xFF4A7C59).copy(alpha = 0.2f),
+                start = Offset(bx, by),
+                end = Offset(bx, size.height * 0.9f),
+                strokeWidth = 3f
+            )
+            for (k in 0..5) {
+                val knotY = by + (size.height * 0.7f) * (k / 5f)
+                val knotX = bx + 10f + sin(knotY * 0.1f) * 6f
+                drawLine(
+                    color = Color(0xFF4A7C59).copy(alpha = 0.15f),
+                    start = Offset(bx, knotY),
+                    end = Offset(knotX, knotY - 10f),
+                    strokeWidth = 1.5f
+                )
+                drawLine(
+                    color = Color(0xFF4A7C59).copy(alpha = 0.15f),
+                    start = Offset(bx, knotY),
+                    end = Offset(knotX, knotY + 10f),
+                    strokeWidth = 1.5f
+                )
+            }
+        }
+
+        for (i in 0..12) {
+            val speedY = 15f + random.nextFloat() * 25f
+            val speedX = 25f + random.nextFloat() * 35f
+            val yOffset = (time * speedY + random.nextFloat() * 3000f) % (size.height + 100f) - 50f
+            val xOffset = (time * speedX + random.nextFloat() * 2000f) % (size.width + 100f) - 50f
+
+            withTransform({
+                translate(xOffset, yOffset)
+                rotate(time * 6f + random.nextFloat() * 360f)
+            }) {
+                val leafPath = Path().apply {
+                    moveTo(0f, -12f)
+                    quadraticBezierTo(8f, 0f, 0f, 12f)
+                    quadraticBezierTo(-8f, 0f, 0f, -12f)
+                }
+                drawPath(leafPath, color = Color(0xFF8B0000).copy(alpha = 0.25f))
+            }
+        }
+
+        val katanaX = size.width * 0.75f
+        val katanaY = size.height * 0.3f
+        val bladeLength = size.height * 0.35f
+        val bladeAngle = sin(time * 0.05f) * 0.1f
+
+        withTransform({
+            rotate(bladeAngle * 180f / PI.toFloat(), pivot = Offset(katanaX, katanaY))
+        }) {
+            val bladePath = Path().apply {
+                moveTo(katanaX - 3f, katanaY)
+                lineTo(katanaX - 1f, katanaY + bladeLength)
+                lineTo(katanaX + 1f, katanaY + bladeLength)
+                lineTo(katanaX + 3f, katanaY)
+                close()
+            }
+            drawPath(bladePath, color = Color(0xFFE0E0E0).copy(alpha = 0.12f))
+
+            drawLine(
+                color = Color(0xFFE0E0E0).copy(alpha = 0.15f),
+                start = Offset(katanaX, katanaY),
+                end = Offset(katanaX, katanaY + bladeLength),
+                strokeWidth = 1f
+            )
+
+            val tsubaR = 8f
+            drawCircle(
+                color = Color(0xFFC0A080).copy(alpha = 0.15f),
+                radius = tsubaR,
+                center = Offset(katanaX, katanaY + bladeLength * 0.15f)
+            )
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 10. Aurora — Curtain-like aurora borealis
+// ---------------------------------------------------------
+@Composable
+fun AuroraBackground(color1: Color, color2: Color, color3: Color) {
+    val infiniteTransition = rememberInfiniteTransition(label = "aurora")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 2f * PI.toFloat(),
+        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val bands = listOf(
+            color1 to 0f,
+            color2 to 0.3f,
+            color3 to 0.6f,
+            color1 to 0.9f
+        )
+
+        bands.forEach { (color, phaseOffset) ->
+            val path = Path()
+            val baseY = size.height * 0.15f
+            val amp = 40f + sin(time * 0.5f + phaseOffset * 3f) * 20f
+
+            path.moveTo(0f, size.height)
+            for (i in 0..size.width.toInt() step 6) {
+                val x = i.toFloat()
+                val y = baseY + sin((x / 120f) + time + phaseOffset * 2f) * amp +
+                        sin((x / 60f) + time * 1.5f + phaseOffset) * amp * 0.5f
+                path.lineTo(x, y)
+            }
+            path.lineTo(size.width, size.height)
+            path.close()
+
+            drawPath(
+                path,
+                color = color.copy(alpha = 0.08f + sin(time * 0.3f + phaseOffset) * 0.04f)
+            )
+        }
+
+        val pulseAlpha = (sin(time * 0.7f) + 1f) / 2f * 0.12f + 0.04f
+        drawRect(
+            brush = Brush.verticalGradient(
+                colors = listOf(
+                    color1.copy(alpha = pulseAlpha),
+                    color2.copy(alpha = pulseAlpha * 0.5f),
+                    Color.Transparent
+                )
+            ),
+            size = size
+        )
+    }
+}
+
+// ---------------------------------------------------------
+// 11. Nocturno — Refined night sky with more stars
+// ---------------------------------------------------------
+@Composable
+fun NightBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "night")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(56000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val random = java.util.Random(500)
+
+        for (i in 0..60) {
+            val x = random.nextFloat() * size.width
+            val y = random.nextFloat() * size.height * 0.6f
+            val r = random.nextFloat() * 2f + 0.3f
+            val twinkle = (sin(time * 0.02f + random.nextFloat() * 10f) + 1f) / 2f
+            val alpha = twinkle * 0.3f + 0.2f
+            drawCircle(Color.White.copy(alpha = alpha), radius = r, center = Offset(x, y))
+        }
+
+        val shootPhase = time % 1000f
+        if (shootPhase < 150f) {
+            val startX = size.width * 0.8f - shootPhase * 4f
+            val startY = size.height * 0.1f + shootPhase * 3f
+            val progress = shootPhase / 150f
+            drawLine(
+                color = Color.White.copy(alpha = 1f - progress),
+                start = Offset(startX, startY),
+                end = Offset(startX - 50f, startY + 50f),
+                strokeWidth = 2f - progress
+            )
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// 12. RETRO PIXEL — Experiencia 8-bit definitiva
+// ---------------------------------------------------------
+private data class RetroCloudDef(
+    val startY: Float, val size: Int, val speed: Float, val alpha: Float
+)
+
+private val retroStarSeeds = listOf(
+    floatArrayOf(0.08f, 0.12f), floatArrayOf(0.22f, 0.05f), floatArrayOf(0.35f, 0.18f),
+    floatArrayOf(0.45f, 0.08f), floatArrayOf(0.55f, 0.15f), floatArrayOf(0.68f, 0.06f),
+    floatArrayOf(0.78f, 0.20f), floatArrayOf(0.88f, 0.10f), floatArrayOf(0.15f, 0.25f),
+    floatArrayOf(0.50f, 0.22f), floatArrayOf(0.72f, 0.28f), floatArrayOf(0.92f, 0.03f),
+    floatArrayOf(0.05f, 0.30f), floatArrayOf(0.40f, 0.32f), floatArrayOf(0.62f, 0.12f),
+    floatArrayOf(0.82f, 0.35f), floatArrayOf(0.30f, 0.38f), floatArrayOf(0.95f, 0.40f),
+    floatArrayOf(0.10f, 0.42f), floatArrayOf(0.58f, 0.36f), floatArrayOf(0.75f, 0.08f),
+    floatArrayOf(0.48f, 0.28f), floatArrayOf(0.02f, 0.08f), floatArrayOf(0.98f, 0.15f),
+    floatArrayOf(0.20f, 0.35f), floatArrayOf(0.65f, 0.30f), floatArrayOf(0.38f, 0.14f),
+    floatArrayOf(0.85f, 0.24f), floatArrayOf(0.12f, 0.18f), floatArrayOf(0.52f, 0.34f)
+)
+
+private val retroMountData = listOf(
+    0.08f to 0.35f, 0.20f to 0.50f, 0.32f to 0.30f,
+    0.45f to 0.55f, 0.55f to 0.25f, 0.68f to 0.45f,
+    0.78f to 0.38f, 0.92f to 0.52f
+)
+
+private val retroTreePositions = listOf(0.08f, 0.18f, 0.28f, 0.40f, 0.52f, 0.62f, 0.75f, 0.88f, 0.95f)
+
+private val retroClouds = listOf(
+    RetroCloudDef(0.08f, 4, 12f, 0.15f),
+    RetroCloudDef(0.15f, 3, 18f, 0.12f),
+    RetroCloudDef(0.05f, 5, 8f, 0.18f),
+    RetroCloudDef(0.20f, 3, 22f, 0.10f),
+    RetroCloudDef(0.12f, 4, 14f, 0.14f),
+    RetroCloudDef(0.18f, 2, 28f, 0.08f)
+)
+
+private val retroMoonPattern = listOf(
+    "   1111   ",
+    "  111111  ",
+    " 11111111 ",
+    "1111111111",
+    "1111111111",
+    "1111111111",
+    "1111111111",
+    " 11111111 ",
+    "  111111  ",
+    "   1111   "
+)
+
+@Composable
+fun RetroPixelBackground() {
+    val infiniteTransition = rememberInfiniteTransition(label = "retro")
+    val time by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(180000, easing = LinearEasing)),
+        label = "time"
+    )
+
+    val cloudTime by infiniteTransition.animateFloat(
+        initialValue = 0f, targetValue = 1000f,
+        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
+        label = "clouds"
+    )
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val pw = 8f
+        val groundY = size.height * 0.82f
+
+        // ── 1. SKY GRADIENT (pixelated bands) ──
+        val skyBands = 32
+        val bandHeight = groundY / skyBands
+        for (band in 0 until skyBands) {
+            val t = band.toFloat() / skyBands
+            drawRect(
+                color = Color(
+                    (11 + t * 22).toInt().coerceIn(0, 255),
+                    (11 + t * 38).toInt().coerceIn(0, 255),
+                    (59 + t * 55).toInt().coerceIn(0, 255)
+                ),
+                topLeft = Offset(0f, band * bandHeight),
+                size = Size(size.width, bandHeight + 1f)
+            )
+        }
+
+        // ── 2. STARS ──
+        for (seed in retroStarSeeds) {
+            val sx = seed[0] * size.width
+            val sy = seed[1] * groundY * 0.7f
+            val twinkle = (sin(time * 0.03f + sx * 0.1f + sy * 0.1f) + 1f) / 2f
+            val alpha = 0.15f + twinkle * 0.6f
+            val starSize = if (seed[1] > 0.2f) 2f else 3f
+            drawRect(
+                color = Color.White.copy(alpha = alpha.coerceIn(0f, 1f)),
+                topLeft = Offset(sx, sy),
+                size = Size(starSize, starSize)
+            )
+            if (starSize > 2f && twinkle > 0.7f) {
+                drawRect(
+                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
+                    topLeft = Offset(sx - 2f, sy), size = Size(7f, 1f)
+                )
+                drawRect(
+                    color = Color.White.copy(alpha = (twinkle - 0.7f) * 0.5f),
+                    topLeft = Offset(sx, sy - 2f), size = Size(1f, 7f)
+                )
+            }
+        }
+
+        // ── 3. PIXEL MOON ──
+        val moonX = size.width * 0.78f
+        val moonY = groundY * 0.12f
+        val moonR = size.width * 0.045f
+        for (my in retroMoonPattern.indices) {
+            for (mx in retroMoonPattern[my].indices) {
+                if (retroMoonPattern[my][mx] == '1') {
+                    drawRect(
+                        color = Color(0xFFFFFDE7),
+                        topLeft = Offset(
+                            moonX - moonR + mx * (moonR * 2f / retroMoonPattern[0].length),
+                            moonY - moonR + my * (moonR * 2f / retroMoonPattern.size)
+                        ),
+                        size = Size(moonR * 0.22f, moonR * 0.22f)
+                    )
+                }
+            }
+        }
+        drawRect(
+            color = Color(0xFFFFFDE7).copy(alpha = 0.06f),
+            topLeft = Offset(moonX - moonR * 1.5f, moonY - moonR * 1.5f),
+            size = Size(moonR * 3f, moonR * 3f)
+        )
+
+        // ── 4. MOUNTAINS ──
+        val mountPath1 = Path().apply {
+            moveTo(0f, groundY)
+            for (seg in 0..size.width.toInt() step 4) {
+                val x = seg.toFloat()
+                var y = groundY
+                for ((mx, my) in retroMountData) {
+                    val cx = mx * size.width
+                    val cy = my * groundY * 0.35f
+                    val dist = abs(x - cx)
+                    if (dist < size.width * 0.25f) {
+                        y = minOf(y, groundY * 0.65f - cy * (1f - dist / (size.width * 0.25f)))
+                    }
+                }
+                lineTo(x, y)
+            }
+            lineTo(size.width, groundY); close()
+        }
+        drawPath(mountPath1, color = Color(0xFF1A1A3E))
+
+        val mountPath2 = Path().apply {
+            moveTo(0f, groundY)
+            for (seg in 0..size.width.toInt() step 4) {
+                val x = seg.toFloat()
+                var y = groundY
+                for ((i, pair) in retroMountData.withIndex()) {
+                    val cx = (i.toFloat() / retroMountData.size) * size.width +
+                            sin(time * 0.005f + i) * 10f
+                    val cy = pair.second * groundY * 0.25f
+                    val dist = abs(x - cx)
+                    if (dist < size.width * 0.20f) {
+                        y = minOf(y, groundY * 0.75f - cy * (1f - dist / (size.width * 0.20f)))
+                    }
+                }
+                lineTo(x, y.coerceAtMost(groundY * 0.75f))
+            }
+            lineTo(size.width, groundY); close()
+        }
+        drawPath(mountPath2, color = Color(0xFF12122E))
+
+        // ── 5. PIXEL TREES ──
+        for (pos in retroTreePositions) {
+            val tx = pos * size.width
+            val treeH = 30f + (pos * 40f) % 35f
+            drawRect(
+                color = Color(0xFF5D4037),
+                topLeft = Offset(tx - 3f, groundY - treeH),
+                size = Size(6f, treeH)
+            )
+            for (ly in 0..4) {
+                for (lx in 0..6) {
+                    val shade = when {
+                        (ly == 1 && lx in 1..5) || (ly == 2 && lx in 0..6) ||
+                                (ly == 3 && lx in 1..5) -> 1
+                        (ly == 0 && lx in 2..4) || (ly == 1 && lx == 3) ||
+                                (ly == 2 && lx in 2..4) -> 2
+                        else -> 0
+                    }
+                    if (shade > 0) {
+                        drawRect(
+                            color = if (shade == 2) Color(0xFF1B5E20) else Color(0xFF2E7D32),
+                            topLeft = Offset(tx - 14f + lx * 5f, groundY - treeH - 20f + ly * 5f),
+                            size = Size(5f, 5f)
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── 6. GROUND ──
+        val grassRand = java.util.Random(123)
+        for (gx in 0..(size.width / pw).toInt()) {
+            val shade = grassRand.nextInt(3)
+            drawRect(
+                color = when (shade) {
+                    0 -> Color(0xFF1B5E20)
+                    1 -> Color(0xFF2E7D32)
+                    else -> Color(0xFF388E3C)
+                }.copy(alpha = 0.7f + grassRand.nextFloat() * 0.3f),
+                topLeft = Offset(gx * pw, groundY),
+                size = Size(pw, size.height - groundY)
+            )
+        }
+
+        // ── 7. GRASS TEXTURE ──
+        for (gx in 0..(size.width / 4f).toInt()) {
+            val grassH = 2f + (sin(gx * 1.7f + time * 0.01f) + 1f) * 3f
+            drawRect(
+                color = listOf(Color(0xFF4CAF50), Color(0xFF66BB6A), Color(0xFF81C784))
+                    .random(kotlin.random.Random(gx.hashCode().toLong())).copy(alpha = 0.5f),
+                topLeft = Offset(gx * 4f, groundY - grassH),
+                size = Size(2f, grassH)
+            )
+        }
+
+        // ── 8. PIXEL CLOUDS ──
+        for (cloud in retroClouds) {
+            val cw = cloud.size * 8f
+            val ch = cloud.size * 4f
+            val cx = (cloudTime * cloud.speed + cloud.startY * 2000f) %
+                    (size.width + cw * 2f) - cw
+            val cy = cloud.startY * groundY * 0.5f
+            val cols = 7
+            val rows = 5
+            for (iy in 0 until rows) {
+                for (ix in 0 until cols) {
+                    val isFilled = when {
+                        iy == 0 -> ix in 2..4
+                        iy == 1 -> ix in 1..5
+                        iy == 2 -> ix in 0..6
+                        iy == 3 -> ix in 1..5
+                        else -> ix in 2..4
+                    }
+                    if (isFilled) {
+                        drawRect(
+                            color = Color.White.copy(alpha = cloud.alpha),
+                            topLeft = Offset(cx + ix * (cw / cols), cy + iy * (ch / rows)),
+                            size = Size(cw / cols, ch / rows)
+                        )
+                    }
+                }
+            }
+        }
+
+        // ── 9. FIREFLIES ──
+        val fireflyRandom = java.util.Random(456)
+        for (i in 0..8) {
+            val fx = fireflyRandom.nextFloat() * size.width
+            val fy = groundY * 0.4f + (time * (5f + i * 2f) + fireflyRandom.nextFloat() * 2000f) %
+                    (groundY * 0.5f)
+            val flicker = (sin(time * 0.1f + i * 2.5f) + 1f) / 2f
+            val a = (flicker * 0.4f + 0.1f).coerceIn(0f, 1f)
+            drawRect(color = Color(0xFFFFE600).copy(alpha = a), topLeft = Offset(fx, fy), size = Size(3f, 3f))
+            drawRect(color = Color(0xFFFFE600).copy(alpha = a * 0.3f), topLeft = Offset(fx - 2f, fy - 2f), size = Size(7f, 7f))
+        }
+
+        // ── 10. GRID OVERLAY ──
+        val gridSpacing = 16f
+        for (gx in 0..(size.width / gridSpacing).toInt()) {
+            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(gx * gridSpacing, 0f), size = Size(1f, size.height))
+        }
+        for (gy in 0..(size.height / gridSpacing).toInt()) {
+            drawRect(color = Color.White.copy(alpha = 0.015f), topLeft = Offset(0f, gy * gridSpacing), size = Size(size.width, 1f))
+        }
+
+        // ── 11. SCANLINES ──
+        for (scanY in 0..(size.height / 4f).toInt()) {
+            drawRect(color = Color.Black.copy(alpha = 0.04f), topLeft = Offset(0f, scanY * 4f), size = Size(size.width, 1f))
+        }
+    }
+}
+
+```
+
+```kotlin
+// CodePetWidget.kt
+package com.tamagotchi.code.ui.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
+import com.tamagotchi.code.data.database.PetStateEntity
+
+@Composable
+fun CodePetWidget(
+    petState: PetStateEntity?,
+    modifier: Modifier = Modifier
+) {
+    val status = petState?.currentStatus ?: "HAPPY"
+    val petImageRes = when (status) {
+        "SLEEPING" -> R.drawable.mascota_sleeping
+        "STUDYING" -> R.drawable.mascota_studying
+        "SICK" -> R.drawable.mascota_sick
+        "SAD" -> R.drawable.mascota_sad
+        "HUNGRY" -> R.drawable.mascota_hungry
+        "EXCITED" -> R.drawable.mascota_excited
+        else -> R.drawable.mascota_happy
+    }
+
+    Surface(
+        shape = RoundedCornerShape(24.dp),
+        tonalElevation = 3.dp,
+        shadowElevation = 6.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.95f),
+        modifier = modifier
+            .clip(RoundedCornerShape(24.dp))
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color(0xFF12161F))
+                .padding(16.dp)
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Codey está listo",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Tu mascota de estudio te espera",
+                    color = Color(0xFFB7C2D9),
+                    fontSize = 12.sp
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Image(
+                    painter = painterResource(id = petImageRes),
+                    contentDescription = "Mascota Code Pet",
+                    modifier = Modifier.size(96.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = petState?.name ?: "Codey",
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp
+                )
+            }
+        }
+    }
+}
+
+```
+
+```kotlin
+// PetAnimationConfig.kt
+package com.tamagotchi.code.ui.components
+
+object PetAnimationConfig {
+    fun petFloatDurationMs(status: String, reduceMotion: Boolean): Int = when {
+        reduceMotion -> 2400
+        status == "EXCITED" -> 1300
+        status == "HAPPY" -> 1600
+        status == "SLEEPING" -> 3200
+        else -> 2200
+    }
+
+    fun petFloatAmplitudeDp(status: String): Float = when (status) {
+        "EXCITED" -> 8f
+        "HAPPY" -> 6f
+        "SLEEPING" -> 4f
+        else -> 5f
+    }
+
+    fun bounceDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 220 else 420
+
+    fun heartDurationMs(reduceMotion: Boolean): Int = if (reduceMotion) 900 else 1500
+}
+
+```
+
 ### 15.10 Pantallas (Feature)
 
 
-#### feature/home/HomeScreen.kt
-
 ```kotlin
+// HomeScreen.kt
 package com.tamagotchi.code.feature.home
 
 import androidx.compose.foundation.layout.*
@@ -7631,8 +7328,8 @@ fun HomeScreen(
         if (viewModel.showOfflineRewardDialog.value) {
             AlertDialog(
                 onDismissRequest = { viewModel.dismissOfflineRewardDialog() },
-                title = { Text("SesiÃ³n completada mientras estabas fuera") },
-                text = { Text("Â¡Felicidades! Has ganado ${viewModel.offlineRewardXp.value} XP y ${viewModel.offlineRewardBytes.value} Bytes por tu sesiÃ³n de Focus.") },
+                title = { Text("Sesión completada mientras estabas fuera") },
+                text = { Text("¡Felicidades! Has ganado ${viewModel.offlineRewardXp.value} XP y ${viewModel.offlineRewardBytes.value} Bytes por tu sesión de Focus.") },
                 confirmButton = {
                     TextButton(onClick = { viewModel.dismissOfflineRewardDialog() }) {
                         Text("Aceptar")
@@ -7649,11 +7346,11 @@ fun HomeScreen(
         }
     }
 }
+
 ```
 
-#### feature/learn/LearnScreen.kt
-
 ```kotlin
+// LearnScreen.kt
 package com.tamagotchi.code.feature.learn
 
 import androidx.compose.foundation.BorderStroke
@@ -7706,7 +7403,7 @@ fun LearnScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = if (activeTab == 0) "Estudiando con ${state.name}" else "DesafÃ­os de Ã©lite",
+                    text = if (activeTab == 0) "Estudiando con ${state.name}" else "Desafíos de élite",
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray
@@ -7766,7 +7463,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> DESAFÃO DE PROGRAMACIÃ“N: Arena $currentLang",
+            text = ">>> DESAFÍO DE PROGRAMACIÓN: Arena $currentLang",
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -7785,12 +7482,12 @@ fun QuizPanel(viewModel: PetViewModel) {
         } else if (currentIndex < challengesList.size) {
             val challenge = challengesList[currentIndex]
             
-            // Comentario dinÃ¡mico de la mascota
+            // Comentario dinámico de la mascota
             val petTip = remember(challenge.id) {
                 when(challenge.type) {
-                    "DEBUG" -> "Â¡Cuidado! Ese bug muerde. Revisa bien los puntos y coma."
-                    "TRIVIA" -> "Esta es fÃ¡cil... si has leÃ­do la documentaciÃ³n."
-                    else -> "ConcÃ©ntrate, mi CPU depende de tu respuesta."
+                    "DEBUG" -> "¡Cuidado! Ese bug muerde. Revisa bien los puntos y coma."
+                    "TRIVIA" -> "Esta es fácil... si has leído la documentación."
+                    else -> "Concéntrate, mi CPU depende de tu respuesta."
                 }
             }
 
@@ -7810,7 +7507,7 @@ fun QuizPanel(viewModel: PetViewModel) {
             }
 
             Text(
-                text = "DesafÃ­o ${currentIndex + 1} de ${challengesList.size} (${if (challenge.type == "DEBUG") "Desbuguear" else "Trivia"}):",
+                text = "Desafío ${currentIndex + 1} de ${challengesList.size} (${if (challenge.type == "DEBUG") "Desbuguear" else "Trivia"}):",
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray
@@ -7924,7 +7621,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = if (fb == "CORRECT") "Â¡ACERTADO! +Alimento +Bytes +XP" else "RESPUESTA INCORRECTA",
+                                text = if (fb == "CORRECT") "¡ACERTADO! +Alimento +Bytes +XP" else "RESPUESTA INCORRECTA",
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp,
@@ -7954,7 +7651,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                         .testTag("quiz_next_button")
                 ) {
                     Text(
-                        text = if (currentIndex + 1 < challengesList.size) "SIGUIENTE ACERTIJO" else "CARGAR MÃS RETOS",
+                        text = if (currentIndex + 1 < challengesList.size) "SIGUIENTE ACERTIJO" else "CARGAR MÁS RETOS",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -7997,7 +7694,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
         }
 
         Text(
-            text = "Resuelve ejercicios avanzados de lÃ³gica y algoritmos para desbloquear nuevos temas visuales exclusivos.",
+            text = "Resuelve ejercicios avanzados de lógica y algoritmos para desbloquear nuevos temas visuales exclusivos.",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurface,
             fontFamily = FontFamily.Monospace
@@ -8073,7 +7770,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                                         unlockedThemeName = randomTheme
                                         viewModel.unlockTheme(randomTheme)
                                     } else {
-                                        unlockedThemeName = "Â¡Ya tienes todos!"
+                                        unlockedThemeName = "¡Ya tienes todos!"
                                     }
                                 } else {
                                     showFeedback = false
@@ -8099,7 +7796,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
         }
 
         if (isAnswered) {
-            val message = if (showFeedback == true) "Â¡Respuesta Correcta!" else "Incorrecto."
+            val message = if (showFeedback == true) "¡Respuesta Correcta!" else "Incorrecto."
             val color = if (showFeedback == true) Color(0xFF4CAF50) else Color(0xFFEF5350)
 
             Column(
@@ -8123,10 +7820,10 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                     textAlign = TextAlign.Center
                 )
 
-                if (showFeedback == true && unlockedThemeName != null && unlockedThemeName != "Â¡Ya tienes todos!") {
+                if (showFeedback == true && unlockedThemeName != null && unlockedThemeName != "¡Ya tienes todos!") {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Â¡Nuevo tema desbloqueado: $unlockedThemeName!",
+                        text = "¡Nuevo tema desbloqueado: $unlockedThemeName!",
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -8152,11 +7849,11 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
         }
     }
 }
+
 ```
 
-#### feature/focus/FocusScreen.kt
-
 ```kotlin
+// FocusScreen.kt
 package com.tamagotchi.code.feature.focus
 
 import androidx.compose.animation.AnimatedVisibility
@@ -8195,7 +7892,7 @@ fun FocusScreen(
     studySessions: List<StudySessionEntity>
 ) {
     var activeTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Temporizador", "BitÃ¡cora")
+    val tabs = listOf("Temporizador", "Bitácora")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -8262,7 +7959,7 @@ fun TimerPanel(
     ) {
         if (!isRunning) {
             Text(
-                text = ">>> INICIAR BITÃCORA DE ESTUDIO",
+                text = ">>> INICIAR BITÁCORA DE ESTUDIO",
                 fontSize = 13.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFF81C784),
@@ -8386,7 +8083,7 @@ fun TimerPanel(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Al estudiar: El Tamagotchi entrarÃ¡ en modo concentrado. Completar la sesiÃ³n te recompensa con Bytes y XP de estudio, pero drenarÃ¡ energÃ­a mental.",
+                text = "Al estudiar: El Tamagotchi entrará en modo concentrado. Completar la sesión te recompensa con Bytes y XP de estudio, pero drenará energía mental.",
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray,
@@ -8410,7 +8107,7 @@ fun TimerPanel(
                     .testTag("timer_start_button")
             ) {
                 Text(
-                    text = "EMPEZAR COMPILACIÃ“N",
+                    text = "EMPEZAR COMPILACIÓN",
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace
@@ -8449,7 +8146,7 @@ fun TimerPanel(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "Mascota: ${state.name} estÃ¡ estudiando contigo...",
+                    text = "Mascota: ${state.name} está estudiando contigo...",
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray,
@@ -8473,7 +8170,7 @@ fun TimerPanel(
                         .testTag("timer_cancel_button")
                 ) {
                     Text(
-                        text = "CANCELAR COMPILACIÃ“N",
+                        text = "CANCELAR COMPILACIÓN",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -8495,7 +8192,7 @@ fun LogsPanel(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> BITÃCORA DE COMPILACIÃ“N (ESTUDIOS)",
+            text = ">>> BITÁCORA DE COMPILACIÓN (ESTUDIOS)",
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -8512,7 +8209,7 @@ fun LogsPanel(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "[Sin registros de estudio aÃºn]\nÂ¡Empieza un temporizador para compilar tus primeras horas!",
+                    text = "[Sin registros de estudio aún]\n¡Empieza un temporizador para compilar tus primeras horas!",
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray,
@@ -8586,7 +8283,7 @@ fun LogsPanel(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Si dejas de registrar sesiones por mÃ¡s de 36 horas, tu racha de estudio se reiniciarÃ¡ a 0, y tu mascota perderÃ¡ salud por falta de mantenimiento.",
+                    text = "Si dejas de registrar sesiones por más de 36 horas, tu racha de estudio se reiniciará a 0, y tu mascota perderá salud por falta de mantenimiento.",
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.LightGray,
@@ -8597,11 +8294,11 @@ fun LogsPanel(
         }
     }
 }
+
 ```
 
-#### feature/shop/ShopScreen.kt
-
 ```kotlin
+// ShopScreen.kt
 package com.tamagotchi.code.feature.shop
 
 import androidx.compose.foundation.BorderStroke
@@ -8653,10 +8350,10 @@ fun ShopPanel(
     val appTheme = LocalAppTheme.current
     
     val shopItems = listOf(
-        ShopItemData("CafÃ© Negro (CPU Booster)", 10, "Restaura +20 EnergÃ­a mental", 0f, 0f, 20f, Icons.Default.Coffee),
-        ShopItemData("Pizza de CÃ³digo (Bytes Snack)", 15, "Restaura +35 Alimento", 35f, 0f, 0f, Icons.Default.LocalPizza),
-        ShopItemData("PÃ­ldora Desbugueadora", 25, "Cura de infecciones y sana +30 Salud", 0f, 30f, 0f, Icons.Default.Medication),
-        ShopItemData("Vacuna Super Compiler", 55, "Restaura +75 Salud, +40 Alimento, +40 EnergÃ­a", 40f, 75f, 40f, Icons.Default.Shield)
+        ShopItemData("Café Negro (CPU Booster)", 10, "Restaura +20 Energía mental", 0f, 0f, 20f, Icons.Default.Coffee),
+        ShopItemData("Pizza de Código (Bytes Snack)", 15, "Restaura +35 Alimento", 35f, 0f, 0f, Icons.Default.LocalPizza),
+        ShopItemData("Píldora Desbugueadora", 25, "Cura de infecciones y sana +30 Salud", 0f, 30f, 0f, Icons.Default.Medication),
+        ShopItemData("Vacuna Super Compiler", 55, "Restaura +75 Salud, +40 Alimento, +40 Energía", 40f, 75f, 40f, Icons.Default.Shield)
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -8751,11 +8448,1060 @@ data class ShopItemData(
     val energyRestore: Float,
     val icon: ImageVector
 )
+
 ```
 
-#### feature/onboarding/OnboardingScreen.kt
+```kotlin
+// GamesScreen.kt
+package com.tamagotchi.code.feature.games
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GamesScreen(
+    viewModel: PetViewModel,
+    onNavigateBack: () -> Unit,
+    onNavigateToBugHunt: () -> Unit,
+    onNavigateToGitRescue: () -> Unit,
+    onNavigateToRefactorRush: () -> Unit
+) {
+    var showClassicDialog by remember { mutableStateOf(false) }
+    val gameCooldowns by viewModel.gameCooldowns.collectAsStateWithLifecycle()
+
+    fun canPlay(gameId: String): Boolean {
+        val lastPlayed = gameCooldowns[gameId] ?: 0L
+        return System.currentTimeMillis() - lastPlayed >= 24 * 60 * 60 * 1000
+    }
+
+    fun handleGameClick(gameId: String, navigate: () -> Unit) {
+        if (canPlay(gameId)) {
+            navigate()
+        }
+    }
+
+    if (showClassicDialog) {
+        val petState = viewModel.petState.collectAsState().value
+        if (petState != null) {
+            MinigamesDialog(
+                state = petState,
+                viewModel = viewModel,
+                onDismiss = { showClassicDialog = false }
+            )
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.games_title), fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Text("<", style = MaterialTheme.typography.titleLarge)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Game 1: Bug Hunt
+            GameCard(
+                title = stringResource(R.string.games_bug_hunt_title),
+                description = stringResource(R.string.games_bug_hunt_desc),
+                canPlay = canPlay("bug_hunt"),
+                onCooldownText = stringResource(R.string.games_cooldown),
+                onClick = { handleGameClick("bug_hunt", onNavigateToBugHunt) }
+            )
+
+            // Game 2: Git Rescue
+            GameCard(
+                title = stringResource(R.string.games_git_rescue_title),
+                description = stringResource(R.string.games_git_rescue_desc),
+                canPlay = canPlay("git_rescue"),
+                onCooldownText = stringResource(R.string.games_cooldown),
+                onClick = { handleGameClick("git_rescue", onNavigateToGitRescue) }
+            )
+
+            // Game 3: Refactor Rush
+            GameCard(
+                title = stringResource(R.string.games_refactor_rush_title),
+                description = stringResource(R.string.games_refactor_rush_desc),
+                canPlay = canPlay("refactor_rush"),
+                onCooldownText = stringResource(R.string.games_cooldown),
+                onClick = { handleGameClick("refactor_rush", onNavigateToRefactorRush) }
+            )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+            // Classic Arcade Section
+            Text(
+                text = stringResource(R.string.games_classic_arcade),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = stringResource(R.string.games_classic_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Button(
+                onClick = { showClassicDialog = true },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Text(stringResource(R.string.games_play))
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+fun GameCard(
+    title: String,
+    description: String,
+    canPlay: Boolean,
+    onCooldownText: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { if (canPlay) onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = if (canPlay) MaterialTheme.colorScheme.secondaryContainer
+                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        enabled = canPlay
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f))
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { if (canPlay) onClick() },
+                modifier = Modifier.align(Alignment.End),
+                enabled = canPlay
+            ) {
+                Text(if (canPlay) stringResource(R.string.games_play) else onCooldownText)
+            }
+        }
+    }
+}
+
+```
 
 ```kotlin
+// BugHuntScreen.kt
+package com.tamagotchi.code.feature.games
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import kotlinx.coroutines.delay
+
+private data class BugSnippet(
+    val lines: List<String>,
+    val bugIndex: Int,
+    val explanation: String,
+    val humor: String
+)
+
+private val snippetPool = listOf(
+    BugSnippet(
+        listOf("val name = \"Codey\"", "println(name", "age++", "fun greet() { }"),
+        bugIndex = 1,
+        explanation = "Falta el paréntesis de cierre en println.",
+        humor = "¡Era un paréntesis fugitivo! Se escapó sin pagar el alquiler."
+    ),
+    BugSnippet(
+        listOf("if (x = 5) {", "print(\"Cinco\")", "} else {", "print(\"Otro\")", "}"),
+        bugIndex = 0,
+        explanation = "En Kotlin la comparación es == no =. = es asignación.",
+        humor = "Codey: ¡Un solo = es asignación, doble == es comparación! No confundas al compilador."
+    ),
+    BugSnippet(
+        listOf("fun add(a: Int, b: Int): Int {", "return a + b", "}", "add(2, 3)"),
+        bugIndex = 1,
+        explanation = "Falta el tipo de retorno explícito, debería ser ': Int'.",
+        humor = "Codey: Hasta una calculadora de bolsillo sabe qué va a devolver."
+    ),
+    BugSnippet(
+        listOf("val nums = listOf(1, 2, 3)", "for i in nums {", "print(i)", "}"),
+        bugIndex = 1,
+        explanation = "En Kotlin el for usa paréntesis: for (i in nums).",
+        humor = "Codey: ¡Los paréntesis no son decoración! Son parte de la sintaxis."
+    ),
+    BugSnippet(
+        listOf("fun main() {", "val msg = \"Hola\"", "println(msg)", "}//fin"),
+        bugIndex = 0,
+        explanation = "main no necesita paréntesis vacíos si es la entrada.",
+        humor = "Codey: En realidad main() está bien, ¡pero este bug es tramposo!"
+    ),
+    BugSnippet(
+        listOf("val count = 0", "while (count < 5) {", "println(count)", "count--", "}"),
+        bugIndex = 3,
+        explanation = "Está decrementando count en vez de incrementarlo. Bucle infinito.",
+        humor = "Codey: ¡Así nunca llegarás a 5! Es como correr hacia atrás."
+    ),
+    BugSnippet(
+        listOf("val data = \"123\"", "val number: Int = data", "println(number + 1)"),
+        bugIndex = 1,
+        explanation = "No se puede asignar un String directamente a Int. Usa toInt().",
+        humor = "Codey: ¡No puedes convertir strings a Int por ósmosis! Usa .toInt()."
+    ),
+    BugSnippet(
+        listOf("fun isEven(n: Int) {", "return n % 2 == 0", "}", "val r = isEven(4)"),
+        bugIndex = 0,
+        explanation = "La función debe declarar tipo de retorno: fun isEven(n: Int): Boolean.",
+        humor = "Codey: El compilador no es adivino. Dile qué vas a devolver."
+    ),
+    BugSnippet(
+        listOf("val items = listOf(1, 2, 3)", "items.add(4)", "println(items)"),
+        bugIndex = 1,
+        explanation = "listOf crea una lista inmutable. Usa mutableListOf.",
+        humor = "Codey: ¡No puedes modificar una lista inmutable! Es como intentar cambiar el pasado."
+    ),
+    BugSnippet(
+        listOf("fun greet() {", "println(\"Hola\")", "", "", "", "}"),
+        bugIndex = 2,
+        explanation = "Líneas vacías innecesarias. El código debe ser limpio.",
+        humor = "Codey: ¿Estás escribiendo código o una novela? Muy poético pero poco práctico."
+    )
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BugHuntScreen(
+    viewModel: PetViewModel,
+    onNavigateBack: () -> Unit
+) {
+    val snippets = remember { snippetPool.shuffled().take(5) }
+
+    var currentRound by remember { mutableStateOf(1) }
+    val totalRounds = snippets.size
+    var timeRemaining by remember { mutableStateOf(60) }
+    var score by remember { mutableStateOf(0) }
+    var isGameOver by remember { mutableStateOf(false) }
+    var codeyReaction by remember { mutableStateOf("¡Encuentra el bug antes de que el compilador explote!") }
+    var lastExplanation by remember { mutableStateOf<String?>(null) }
+    var lastHumor by remember { mutableStateOf<String?>(null) }
+    var answeredRound by remember { mutableStateOf(false) }
+
+    val currentSnippet = snippets.getOrNull(currentRound - 1)
+
+    LaunchedEffect(isGameOver) {
+        if (!isGameOver) {
+            while (timeRemaining > 0) {
+                delay(1000)
+                timeRemaining--
+            }
+            isGameOver = true
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.bug_hunt_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Text("<", style = MaterialTheme.typography.titleLarge)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (isGameOver) {
+                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
+                Spacer(modifier = Modifier.height(16.dp))
+                val bytesEarned = score * 10
+                Text(stringResource(R.string.game_result_reward, bytesEarned))
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Acertaste $score de $totalRounds",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(onClick = {
+                    viewModel.recordGamePlay("bug_hunt")
+                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
+                    onNavigateBack()
+                }) {
+                    Text(stringResource(R.string.game_result_finish))
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(stringResource(R.string.bug_hunt_round, currentRound, totalRounds), fontWeight = FontWeight.Bold)
+                    Text("⌛ ${timeRemaining}s", color = if (timeRemaining < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(stringResource(R.string.bug_hunt_instruction), fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                if (currentSnippet != null) {
+                    currentSnippet.lines.forEachIndexed { index, line ->
+                        val isCorrectLine = index == currentSnippet.bugIndex && answeredRound && lastExplanation != null
+                        val isWrongPick = answeredRound && lastExplanation != null && index != currentSnippet.bugIndex
+
+                        Surface(
+                            color = when {
+                                isCorrectLine -> Color(0xFF1B5E20).copy(alpha = 0.3f)
+                                isWrongPick -> Color(0xFFB71C1C).copy(alpha = 0.1f)
+                                else -> MaterialTheme.colorScheme.surfaceVariant
+                            },
+                            shape = RoundedCornerShape(4.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .clickable(enabled = !answeredRound) {
+                                    if (index == currentSnippet.bugIndex) {
+                                        score++
+                                        codeyReaction = currentSnippet.humor
+                                    } else {
+                                        codeyReaction = "¡Esa línea está bien! Sigue buscando..."
+                                    }
+                                    lastExplanation = currentSnippet.explanation
+                                    lastHumor = currentSnippet.humor
+                                    answeredRound = true
+                                }
+                        ) {
+                            Text(
+                                text = "${index + 1}. $line",
+                                fontFamily = FontFamily.Monospace,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+
+                    if (answeredRound && lastExplanation != null) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Surface(
+                            color = if (lastHumor != null && score > 0) Color(0xFF1B5E20).copy(alpha = 0.15f) else Color(0xFFB71C1C).copy(alpha = 0.1f),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Explicación: ${lastExplanation}",
+                                modifier = Modifier.padding(12.dp),
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(onClick = {
+                            if (currentRound < totalRounds) {
+                                currentRound++
+                                answeredRound = false
+                                lastExplanation = null
+                                lastHumor = null
+                                codeyReaction = "¡Siguiente ronda! ¿Dónde se esconde el bug?"
+                            } else {
+                                isGameOver = true
+                            }
+                        }) {
+                            Text(if (currentRound < totalRounds) "Siguiente ronda" else "Ver resultados")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+```
+
+```kotlin
+// GitRescueScreen.kt
+package com.tamagotchi.code.feature.games
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import kotlinx.coroutines.delay
+
+private data class GitScenario(
+    val situation: String,
+    val options: List<String>,
+    val correctIndex: Int,
+    val explanation: String,
+    val humor: String
+)
+
+private val scenarioPool = listOf(
+    GitScenario(
+        situation = "Acabas de clonar el repo y vas a trabajar en un nuevo feature. ¿Qué haces primero?",
+        options = listOf(
+            "git checkout -b feature/nuevo",
+            "git commit -m \"inicio\"",
+            "git push --force"
+        ),
+        correctIndex = 0,
+        explanation = "Crear una rama nueva desde main es la forma correcta de empezar un feature.",
+        humor = "Codey: ¡Nunca pushes a main sin antes crear una rama! Eres un cowboy."
+    ),
+    GitScenario(
+        situation = "Has hecho cambios locales y te das cuenta de que rompiste todo. Quieres volver al último commit limpio.",
+        options = listOf(
+            "git reset --hard HEAD",
+            "git revert HEAD",
+            "git rm -rf ."
+        ),
+        correctIndex = 1,
+        explanation = "revert crea un nuevo commit que deshace los cambios, preservando la historia.",
+        humor = "Codey: reset --hard es como una máquina del tiempo sin frenos. revert es más seguro."
+    ),
+    GitScenario(
+        situation = "Tienes un conflicto en un merge. ¿Cuál es el siguiente paso?",
+        options = listOf(
+            "Resolver el conflicto en el editor y luego git add",
+            "git commit --amend",
+            "git push --force origin main"
+        ),
+        correctIndex = 0,
+        explanation = "Los conflictos se resuelven editando los archivos, luego git add y git commit.",
+        humor = "Codey: push --force no resuelve conflictos, los empeora. Es como echar gasolina al fuego."
+    ),
+    GitScenario(
+        situation = "Trabajas en equipo y necesitas traerte los cambios más recientes de la rama main a tu rama feature.",
+        options = listOf(
+            "git pull origin main",
+            "git merge feature main",
+            "git branch -d main"
+        ),
+        correctIndex = 0,
+        explanation = "git pull trae los cambios de main a tu rama actual. merge lo haría al revés.",
+        humor = "Codey: No borres main. Nunca borres main. Es como borrar el diccionario."
+    ),
+    GitScenario(
+        situation = "Hiciste un commit pero olvidaste incluir un archivo. ¿Cómo lo arreglas?",
+        options = listOf(
+            "git add archivo && git commit --amend",
+            "git reset --hard HEAD~1",
+            "git commit --allow-empty"
+        ),
+        correctIndex = 0,
+        explanation = "Con amend puedes agregar archivos al commit anterior sin crear uno nuevo.",
+        humor = "Codey: --allow-empty no arregla nada. Es como poner un post-it en una puerta cerrada."
+    ),
+    GitScenario(
+        situation = "Quieres ver qué archivos modificaste antes de hacer commit. ¿Qué comando usas?",
+        options = listOf(
+            "git diff",
+            "git status",
+            "git show"
+        ),
+        correctIndex = 1,
+        explanation = "git status muestra el estado actual: archivos modificados, nuevos y eliminados.",
+        humor = "Codey: diff es para ver el contenido exacto, status te da el resumen. Dos herramientas diferentes."
+    ),
+    GitScenario(
+        situation = "El historial de commits está lleno de mensajes como 'fix' y 'update'. Quieres limpiarlo antes de hacer merge.",
+        options = listOf(
+            "git rebase -i HEAD~5",
+            "git reset --hard origin/main",
+            "git commit --fixup"
+        ),
+        correctIndex = 0,
+        explanation = "rebase interactivo te permite squash, reordenar y renombrar commits.",
+        humor = "Codey: Los mensajes 'fix' y 'update' son como decir 'cosa' en un examen. Sé descriptivo."
+    ),
+    GitScenario(
+        situation = "Tu rama feature quedó atrás de main y necesitas actualizarla sin crear commits de merge.",
+        options = listOf(
+            "git rebase main",
+            "git merge main",
+            "git pull --rebase"
+        ),
+        correctIndex = 2,
+        explanation = "pull --rebase trae cambios y los aplica encima de tus commits locales.",
+        humor = "Codey: El histórico lineal es como una carretera recta. Los merges son rotondas."
+    )
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GitRescueScreen(
+    viewModel: PetViewModel,
+    onNavigateBack: () -> Unit
+) {
+    val scenarios = remember { scenarioPool.shuffled().take(5) }
+
+    var currentStep by remember { mutableStateOf(0) }
+    var score by remember { mutableStateOf(0) }
+    var isGameOver by remember { mutableStateOf(false) }
+    var codeyReaction by remember { mutableStateOf("¡Rápido, el repo está en llamas!") }
+    var lastExplanation by remember { mutableStateOf<String?>(null) }
+    var answeredStep by remember { mutableStateOf(false) }
+    var branchPosition by remember { mutableStateOf(0f) }
+    var maxBranchSteps by remember { mutableStateOf(scenarios.size.toFloat()) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.git_rescue_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Text("<", style = MaterialTheme.typography.titleLarge)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (isGameOver) {
+                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
+                Spacer(modifier = Modifier.height(16.dp))
+                val bytesEarned = score * 15
+                Text(stringResource(R.string.game_result_reward, bytesEarned))
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Decisiones correctas: $score de ${scenarios.size}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(onClick = {
+                    viewModel.recordGamePlay("git_rescue")
+                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
+                    onNavigateBack()
+                }) {
+                    Text(stringResource(R.string.game_result_finish))
+                }
+            } else {
+                // Branch visual progress
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text("Progreso de la rama:", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            scenarios.forEachIndexed { index, _ ->
+                                val isDone = index < currentStep
+                                val isCurrent = index == currentStep
+                                Surface(
+                                    shape = RoundedCornerShape(50),
+                                    color = when {
+                                        isDone -> MaterialTheme.colorScheme.primary
+                                        isCurrent -> MaterialTheme.colorScheme.secondary
+                                        else -> MaterialTheme.colorScheme.surfaceVariant
+                                    },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Text(
+                                            text = "${index + 1}",
+                                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                                            color = if (isDone || isCurrent) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                                if (index < scenarios.size - 1) {
+                                    Surface(
+                                        modifier = Modifier
+                                            .height(4.dp)
+                                            .weight(1f),
+                                        color = if (isDone) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
+                                    ) {}
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text("Paso ${currentStep + 1} de ${scenarios.size}", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(scenarios[currentStep].situation, style = MaterialTheme.typography.bodyLarge)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                scenarios[currentStep].options.forEachIndexed { index, option ->
+                    val isCorrect = answeredStep && index == scenarios[currentStep].correctIndex
+                    val isWrong = answeredStep && index != scenarios[currentStep].correctIndex
+
+                    Surface(
+                        color = when {
+                            isCorrect -> Color(0xFF1B5E20).copy(alpha = 0.3f)
+                            isWrong -> Color(0xFFB71C1C).copy(alpha = 0.1f)
+                            else -> MaterialTheme.colorScheme.surfaceVariant
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                            .clickable(enabled = !answeredStep) {
+                                if (index == scenarios[currentStep].correctIndex) {
+                                    score++
+                                    codeyReaction = scenarios[currentStep].humor
+                                } else {
+                                    codeyReaction = "¡Esa no era la mejor opción!"
+                                }
+                                lastExplanation = scenarios[currentStep].explanation
+                                answeredStep = true
+                            }
+                    ) {
+                        Text(
+                            text = "> $option",
+                            fontFamily = FontFamily.Monospace,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+
+                if (answeredStep && lastExplanation != null) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Surface(
+                        color = Color(0xFF1B5E20).copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = lastExplanation!!,
+                            modifier = Modifier.padding(12.dp),
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = {
+                        if (currentStep < scenarios.size - 1) {
+                            currentStep++
+                            answeredStep = false
+                            lastExplanation = null
+                            codeyReaction = "¡Siguiente decisión! El repo te necesita."
+                        } else {
+                            isGameOver = true
+                        }
+                    }) {
+                        Text(if (currentStep < scenarios.size - 1) "Siguiente decisión" else "Ver resultados")
+                    }
+                }
+            }
+        }
+    }
+}
+
+```
+
+```kotlin
+// RefactorRushScreen.kt
+package com.tamagotchi.code.feature.games
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+
+private data class RefactorPuzzle(
+    val title: String,
+    val blocks: List<String>
+)
+
+private val puzzleBank = listOf(
+    RefactorPuzzle(
+        "Calcular total",
+        listOf(
+            "fun calculateTotal(items: List<Int>): Int {",
+            "    var total = 0",
+            "    for (item in items) {",
+            "        total += item",
+            "    }",
+            "    return total",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Filtrar pares",
+        listOf(
+            "fun filterEven(numbers: List<Int>): List<Int> {",
+            "    val result = mutableListOf<Int>()",
+            "    for (n in numbers) {",
+            "        if (n % 2 == 0) {",
+            "            result.add(n)",
+            "        }",
+            "    }",
+            "    return result",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Saludo personalizado",
+        listOf(
+            "fun greet(name: String, age: Int): String {",
+            "    val greeting = \"Hola, \$name\"",
+            "    val ageMsg = if (age >= 18) \"Eres mayor\" else \"Eres menor\"",
+            "    return \"\$greeting. \$ageMsg\"",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Buscar máximo",
+        listOf(
+            "fun findMax(values: List<Int>): Int? {",
+            "    if (values.isEmpty()) return null",
+            "    var max = values[0]",
+            "    for (v in values) {",
+            "        if (v > max) max = v",
+            "    }",
+            "    return max",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Contar vocales",
+        listOf(
+            "fun countVowels(text: String): Int {",
+            "    val vowels = setOf('a', 'e', 'i', 'o', 'u')",
+            "    var count = 0",
+            "    for (ch in text.lowercase()) {",
+            "        if (ch in vowels) count++",
+            "    }",
+            "    return count",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Invertir lista",
+        listOf(
+            "fun reverseList<T>(items: List<T>): List<T> {",
+            "    val result = mutableListOf<T>()",
+            "    for (i in items.indices.reversed()) {",
+            "        result.add(items[i])",
+            "    }",
+            "    return result",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Es palíndromo",
+        listOf(
+            "fun isPalindrome(word: String): Boolean {",
+            "    val cleaned = word.lowercase().filter { it.isLetter() }",
+            "    return cleaned == cleaned.reversed()",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Promedio de notas",
+        listOf(
+            "fun average(grades: List<Double>): Double {",
+            "    if (grades.isEmpty()) return 0.0",
+            "    val sum = grades.sum()",
+            "    return sum / grades.size",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Generar rango",
+        listOf(
+            "fun generateRange(start: Int, end: Int): List<Int> {",
+            "    val range = mutableListOf<Int>()",
+            "    for (i in start..end) {",
+            "        range.add(i)",
+            "    }",
+            "    return range",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Validar email",
+        listOf(
+            "fun isValidEmail(email: String): Boolean {",
+            "    if (!email.contains('@')) return false",
+            "    val parts = email.split('@')",
+            "    if (parts.size != 2) return false",
+            "    return parts[1].contains('.')",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Fibonacci",
+        listOf(
+            "fun fibonacci(n: Int): List<Int> {",
+            "    if (n <= 0) return emptyList()",
+            "    val fib = mutableListOf(0, 1)",
+            "    for (i in 2 until n) {",
+            "        fib.add(fib[i - 1] + fib[i - 2])",
+            "    }",
+            "    return fib.take(n)",
+            "}"
+        )
+    ),
+    RefactorPuzzle(
+        "Capitalizar palabras",
+        listOf(
+            "fun capitalizeWords(sentence: String): String {",
+            "    return sentence.split(\" \")",
+            "        .joinToString(\" \") { word ->",
+            "            word.replaceFirstChar { it.uppercase() }",
+            "        }",
+            "}"
+        )
+    )
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RefactorRushScreen(
+    viewModel: PetViewModel,
+    onNavigateBack: () -> Unit
+) {
+    val puzzle = remember { puzzleBank.random() }
+    val originalBlocks = remember { puzzle.blocks }
+
+    var isGameOver by remember { mutableStateOf(false) }
+    var codeyReaction by remember { mutableStateOf("¡Ordena este desastre!") }
+    var currentBlocks by remember { mutableStateOf(originalBlocks.shuffled()) }
+    var attempts by remember { mutableStateOf(0) }
+
+    fun moveUp(index: Int) {
+        if (index > 0) {
+            val newList = currentBlocks.toMutableList()
+            val temp = newList[index - 1]
+            newList[index - 1] = newList[index]
+            newList[index] = temp
+            currentBlocks = newList
+        }
+    }
+
+    fun moveDown(index: Int) {
+        if (index < currentBlocks.size - 1) {
+            val newList = currentBlocks.toMutableList()
+            val temp = newList[index + 1]
+            newList[index + 1] = newList[index]
+            newList[index] = temp
+            currentBlocks = newList
+        }
+    }
+
+    fun checkResult() {
+        attempts++
+        if (currentBlocks == originalBlocks) {
+            codeyReaction = "¡Excelente! Código limpio y ordenado en $attempts intento(s)."
+            isGameOver = true
+        } else {
+            codeyReaction = "Sigue intentando, todavía no compila (intento $attempts)."
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.refactor_rush_title)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Text("<", style = MaterialTheme.typography.titleLarge)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (isGameOver) {
+                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(16.dp))
+                val bytesEarned = maxOf(50 - (attempts * 5), 10)
+                Text(stringResource(R.string.game_result_reward, bytesEarned))
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(onClick = {
+                    viewModel.recordGamePlay("refactor_rush")
+                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
+                    onNavigateBack()
+                }) {
+                    Text(stringResource(R.string.game_result_finish))
+                }
+            } else {
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(stringResource(R.string.refactor_rush_instruction), style = MaterialTheme.typography.bodyMedium)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                currentBlocks.forEachIndexed { index, block ->
+                    Surface(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Column {
+                                IconButton(onClick = { moveUp(index) }, enabled = index > 0) {
+                                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Up")
+                                }
+                                IconButton(onClick = { moveDown(index) }, enabled = index < currentBlocks.size - 1) {
+                                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Down")
+                                }
+                            }
+                            Text(
+                                text = block,
+                                fontFamily = FontFamily.Monospace,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .weight(1f)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(onClick = { checkResult() }) {
+                    Text("Verificar")
+                }
+            }
+        }
+    }
+}
+
+```
+
+```kotlin
+// OnboardingScreen.kt
 package com.tamagotchi.code.feature.onboarding
 
 import androidx.compose.animation.AnimatedVisibility
@@ -8879,7 +9625,7 @@ fun Step1() {
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "(^â€¿^)",
+                    text = "(^‿^)",
                     fontSize = 72.sp,
                     fontFamily = FontFamily.Monospace,
                     color = MaterialTheme.colorScheme.primary
@@ -9023,7 +9769,7 @@ fun Step3(selectedTopics: Set<String>, onTopicsChange: (Set<String>) -> Unit) {
                     onClick = {
                         val newSelection = selectedTopics.toMutableSet()
                         if (newSelection.contains(topic)) {
-                            if (newSelection.size > 1) { // MÃ­nimo un tema
+                            if (newSelection.size > 1) { // Mínimo un tema
                                 newSelection.remove(topic)
                             }
                         } else {
@@ -9069,7 +9815,7 @@ fun Step4(petName: String, onNameChange: (String) -> Unit, onComplete: () -> Uni
         OutlinedTextField(
             value = petName,
             onValueChange = { if (it.length <= 15) onNameChange(it) },
-            label = { Text("Nombre (mÃ¡x 15)") },
+            label = { Text("Nombre (máx 15)") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -9099,11 +9845,11 @@ fun Step4(petName: String, onNameChange: (String) -> Unit, onComplete: () -> Uni
         }
     }
 }
+
 ```
 
-#### feature/settings/SettingsScreen.kt
-
 ```kotlin
+// SettingsScreen.kt
 package com.tamagotchi.code.feature.settings
 
 import androidx.compose.animation.animateColorAsState
@@ -9291,7 +10037,7 @@ fun SettingsScreen(
             // C. Experiencia
             SettingsSectionTitle(stringResource(R.string.settings_section_experience))
 
-            // Theme selector â€” visual card carousel
+            // Theme selector — visual card carousel
             Text(
                 text = stringResource(R.string.settings_experience_theme),
                 style = MaterialTheme.typography.bodyLarge,
@@ -9350,7 +10096,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (isUnlocked) "ðŸ†" else "ðŸ”’",
+                            text = if (isUnlocked) "🏆" else "🔒",
                             fontSize = 16.sp
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -9395,9 +10141,9 @@ fun SettingsScreen(
     }
 }
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// Theme Carousel â€“ horizontal scrolling theme cards with previews
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─────────────────────────────────────────────────────────────────
+// Theme Carousel – horizontal scrolling theme cards with previews
+// ─────────────────────────────────────────────────────────────────
 
 @Composable
 fun ThemeCarousel(
@@ -9651,11 +10397,11 @@ fun SettingsItemSwitch(
         Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
+
 ```
 
-#### feature/settings/SettingsLanguageScreen.kt
-
 ```kotlin
+// SettingsLanguageScreen.kt
 package com.tamagotchi.code.feature.settings
 
 import androidx.compose.foundation.layout.*
@@ -9788,7 +10534,7 @@ fun SettingsLanguageScreen(
                         onClick = {
                             val newSelection = selectedTopics.toMutableSet()
                             if (newSelection.contains(topic)) {
-                                if (newSelection.size > 1) { // MÃ­nimo un tema
+                                if (newSelection.size > 1) { // Mínimo un tema
                                     newSelection.remove(topic)
                                 }
                             } else {
@@ -9822,1062 +10568,261 @@ fun SettingsLanguageScreen(
         }
     }
 }
+
 ```
+
+```kotlin
+// AppNavigation.kt
+package com.tamagotchi.code.navigation
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.tamagotchi.code.feature.focus.FocusScreen
+import com.tamagotchi.code.feature.home.HomeScreen
+import com.tamagotchi.code.feature.learn.LearnScreen
+import com.tamagotchi.code.feature.shop.ShopScreen
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+
+object Routes {
+    const val HOME = "home"
+    const val LEARN = "learn"
+    const val FOCUS = "focus"
+    const val SHOP = "shop"
+    const val SETTINGS = "settings"
+    const val SETTINGS_LANGUAGE = "settings_language"
+    const val GAMES = "games"
+    const val BUG_HUNT = "bug_hunt"
+    const val GIT_RESCUE = "git_rescue"
+    const val REFACTOR_RUSH = "refactor_rush"
+}
+
+data class BottomNavItem(
+    val label: String,
+    val icon: ImageVector,
+    val route: String
+)
+
+val bottomNavItems = listOf(
+    BottomNavItem("Inicio", Icons.Default.Home, Routes.HOME),
+    BottomNavItem("Aprender", Icons.Default.Code, Routes.LEARN),
+    BottomNavItem("Estudio", Icons.Default.Timer, Routes.FOCUS),
+    BottomNavItem("Tienda", Icons.Default.ShoppingBag, Routes.SHOP)
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppNavigation(viewModel: PetViewModel) {
+    if (!viewModel.hasSeenOnboarding.value) {
+        com.tamagotchi.code.feature.onboarding.OnboardingScreen(
+            onComplete = { name, topics -> viewModel.completeOnboarding(name, topics) },
+            onSkip = { viewModel.skipOnboarding() }
+        )
+        return
+    }
+
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val showBottomBar = currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)
+    val appTheme = com.tamagotchi.code.ui.theme.LocalAppTheme.current
+    val reduceMotion by viewModel.reduceMotion.collectAsStateWithLifecycle()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        com.tamagotchi.code.ui.components.AnimatedThemeBackground(
+            theme = appTheme,
+            reduceMotion = reduceMotion
+        )
+
+        Scaffold(
+            containerColor = androidx.compose.ui.graphics.Color.Transparent,
+        topBar = {
+            if (currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)) {
+                TopAppBar(
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.DeveloperMode,
+                                contentDescription = "Code Tamagotchi Icon",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            Text(
+                                text = "Code Tamagotchi",
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontSize = 20.sp
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                    ),
+                    actions = {
+                        IconButton(
+                            onClick = { navController.navigate(Routes.SETTINGS) },
+                            modifier = Modifier.testTag("action_edit_pet")
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = "Configurar Mascota",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                )
+            }
+        },
+        bottomBar = {
+            if (showBottomBar) {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ) {
+                    bottomNavItems.forEach { item ->
+                        NavigationBarItem(
+                            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == item.route } == true,
+                            onClick = {
+                                navController.navigate(item.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = { Icon(item.icon, contentDescription = item.label) },
+                            label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
+                        )
+                    }
+                }
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Routes.HOME,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            composable(Routes.HOME) {
+                HomeScreen(
+                    viewModel = viewModel,
+                    onRenameClick = { navController.navigate(Routes.SETTINGS) },
+                    onPlayClick = { navController.navigate(Routes.GAMES) }
+                )
+            }
+            composable(Routes.LEARN) {
+                val petState by viewModel.petState.collectAsStateWithLifecycle()
+                petState?.let { state ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        LearnScreen(viewModel = viewModel, state = state)
+                    }
+                }
+            }
+            composable(Routes.FOCUS) {
+                val petState by viewModel.petState.collectAsStateWithLifecycle()
+                val studySessions by viewModel.studySessions.collectAsStateWithLifecycle()
+                petState?.let { state ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        FocusScreen(
+                            viewModel = viewModel,
+                            state = state,
+                            studySessions = studySessions
+                        )
+                    }
+                }
+            }
+            composable(Routes.SHOP) {
+                val petState by viewModel.petState.collectAsStateWithLifecycle()
+                petState?.let { state ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        ShopScreen(viewModel = viewModel, state = state)
+                    }
+                }
+            }
+            composable(Routes.SETTINGS) {
+                com.tamagotchi.code.feature.settings.SettingsScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToLanguage = { navController.navigate(Routes.SETTINGS_LANGUAGE) }
+                )
+            }
+            composable(Routes.SETTINGS_LANGUAGE) {
+                com.tamagotchi.code.feature.settings.SettingsLanguageScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.GAMES) {
+                com.tamagotchi.code.feature.games.GamesScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToBugHunt = { navController.navigate(Routes.BUG_HUNT) },
+                    onNavigateToGitRescue = { navController.navigate(Routes.GIT_RESCUE) },
+                    onNavigateToRefactorRush = { navController.navigate(Routes.REFACTOR_RUSH) }
+                )
+            }
+            composable(Routes.BUG_HUNT) {
+                com.tamagotchi.code.feature.games.BugHuntScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.GIT_RESCUE) {
+                com.tamagotchi.code.feature.games.GitRescueScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.REFACTOR_RUSH) {
+                com.tamagotchi.code.feature.games.RefactorRushScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+    }
+}
+}
+```
+
 ### 15.11 Juegos (Feature/Games)
 
 
-#### feature/games/GamesScreen.kt
-
 ```kotlin
-package com.tamagotchi.code.feature.games
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.viewmodel.PetViewModel
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GamesScreen(
-    viewModel: PetViewModel,
-    onNavigateBack: () -> Unit,
-    onNavigateToBugHunt: () -> Unit,
-    onNavigateToGitRescue: () -> Unit,
-    onNavigateToRefactorRush: () -> Unit
-) {
-    var showClassicDialog by remember { mutableStateOf(false) }
-    val gameCooldowns by viewModel.gameCooldowns.collectAsStateWithLifecycle()
-
-    fun canPlay(gameId: String): Boolean {
-        val lastPlayed = gameCooldowns[gameId] ?: 0L
-        return System.currentTimeMillis() - lastPlayed >= 24 * 60 * 60 * 1000
-    }
-
-    fun handleGameClick(gameId: String, navigate: () -> Unit) {
-        if (canPlay(gameId)) {
-            navigate()
-        }
-    }
-
-    if (showClassicDialog) {
-        val petState = viewModel.petState.collectAsState().value
-        if (petState != null) {
-            MinigamesDialog(
-                state = petState,
-                viewModel = viewModel,
-                onDismiss = { showClassicDialog = false }
-            )
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.games_title), fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Text("<", style = MaterialTheme.typography.titleLarge)
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Game 1: Bug Hunt
-            GameCard(
-                title = stringResource(R.string.games_bug_hunt_title),
-                description = stringResource(R.string.games_bug_hunt_desc),
-                canPlay = canPlay("bug_hunt"),
-                onCooldownText = stringResource(R.string.games_cooldown),
-                onClick = { handleGameClick("bug_hunt", onNavigateToBugHunt) }
-            )
-
-            // Game 2: Git Rescue
-            GameCard(
-                title = stringResource(R.string.games_git_rescue_title),
-                description = stringResource(R.string.games_git_rescue_desc),
-                canPlay = canPlay("git_rescue"),
-                onCooldownText = stringResource(R.string.games_cooldown),
-                onClick = { handleGameClick("git_rescue", onNavigateToGitRescue) }
-            )
-
-            // Game 3: Refactor Rush
-            GameCard(
-                title = stringResource(R.string.games_refactor_rush_title),
-                description = stringResource(R.string.games_refactor_rush_desc),
-                canPlay = canPlay("refactor_rush"),
-                onCooldownText = stringResource(R.string.games_cooldown),
-                onClick = { handleGameClick("refactor_rush", onNavigateToRefactorRush) }
-            )
-
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-
-            // Classic Arcade Section
-            Text(
-                text = stringResource(R.string.games_classic_arcade),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = stringResource(R.string.games_classic_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            
-            Button(
-                onClick = { showClassicDialog = true },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            ) {
-                Text(stringResource(R.string.games_play))
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-    }
-}
-
-@Composable
-fun GameCard(
-    title: String,
-    description: String,
-    canPlay: Boolean,
-    onCooldownText: String,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = { if (canPlay) onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = if (canPlay) MaterialTheme.colorScheme.secondaryContainer
-                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        ),
-        enabled = canPlay
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f))
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { if (canPlay) onClick() },
-                modifier = Modifier.align(Alignment.End),
-                enabled = canPlay
-            ) {
-                Text(if (canPlay) stringResource(R.string.games_play) else onCooldownText)
-            }
-        }
-    }
-}
-```
-
-#### feature/games/BugHuntScreen.kt
-
-```kotlin
-package com.tamagotchi.code.feature.games
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.viewmodel.PetViewModel
-import kotlinx.coroutines.delay
-
-private data class BugSnippet(
-    val lines: List<String>,
-    val bugIndex: Int,
-    val explanation: String,
-    val humor: String
-)
-
-private val snippetPool = listOf(
-    BugSnippet(
-        listOf("val name = \"Codey\"", "println(name", "age++", "fun greet() { }"),
-        bugIndex = 1,
-        explanation = "Falta el parÃ©ntesis de cierre en println.",
-        humor = "Â¡Era un parÃ©ntesis fugitivo! Se escapÃ³ sin pagar el alquiler."
-    ),
-    BugSnippet(
-        listOf("if (x = 5) {", "print(\"Cinco\")", "} else {", "print(\"Otro\")", "}"),
-        bugIndex = 0,
-        explanation = "En Kotlin la comparaciÃ³n es == no =. = es asignaciÃ³n.",
-        humor = "Codey: Â¡Un solo = es asignaciÃ³n, doble == es comparaciÃ³n! No confundas al compilador."
-    ),
-    BugSnippet(
-        listOf("fun add(a: Int, b: Int): Int {", "return a + b", "}", "add(2, 3)"),
-        bugIndex = 1,
-        explanation = "Falta el tipo de retorno explÃ­cito, deberÃ­a ser ': Int'.",
-        humor = "Codey: Hasta una calculadora de bolsillo sabe quÃ© va a devolver."
-    ),
-    BugSnippet(
-        listOf("val nums = listOf(1, 2, 3)", "for i in nums {", "print(i)", "}"),
-        bugIndex = 1,
-        explanation = "En Kotlin el for usa parÃ©ntesis: for (i in nums).",
-        humor = "Codey: Â¡Los parÃ©ntesis no son decoraciÃ³n! Son parte de la sintaxis."
-    ),
-    BugSnippet(
-        listOf("fun main() {", "val msg = \"Hola\"", "println(msg)", "}//fin"),
-        bugIndex = 0,
-        explanation = "main no necesita parÃ©ntesis vacÃ­os si es la entrada.",
-        humor = "Codey: En realidad main() estÃ¡ bien, Â¡pero este bug es tramposo!"
-    ),
-    BugSnippet(
-        listOf("val count = 0", "while (count < 5) {", "println(count)", "count--", "}"),
-        bugIndex = 3,
-        explanation = "EstÃ¡ decrementando count en vez de incrementarlo. Bucle infinito.",
-        humor = "Codey: Â¡AsÃ­ nunca llegarÃ¡s a 5! Es como correr hacia atrÃ¡s."
-    ),
-    BugSnippet(
-        listOf("val data = \"123\"", "val number: Int = data", "println(number + 1)"),
-        bugIndex = 1,
-        explanation = "No se puede asignar un String directamente a Int. Usa toInt().",
-        humor = "Codey: Â¡No puedes convertir strings a Int por Ã³smosis! Usa .toInt()."
-    ),
-    BugSnippet(
-        listOf("fun isEven(n: Int) {", "return n % 2 == 0", "}", "val r = isEven(4)"),
-        bugIndex = 0,
-        explanation = "La funciÃ³n debe declarar tipo de retorno: fun isEven(n: Int): Boolean.",
-        humor = "Codey: El compilador no es adivino. Dile quÃ© vas a devolver."
-    ),
-    BugSnippet(
-        listOf("val items = listOf(1, 2, 3)", "items.add(4)", "println(items)"),
-        bugIndex = 1,
-        explanation = "listOf crea una lista inmutable. Usa mutableListOf.",
-        humor = "Codey: Â¡No puedes modificar una lista inmutable! Es como intentar cambiar el pasado."
-    ),
-    BugSnippet(
-        listOf("fun greet() {", "println(\"Hola\")", "", "", "", "}"),
-        bugIndex = 2,
-        explanation = "LÃ­neas vacÃ­as innecesarias. El cÃ³digo debe ser limpio.",
-        humor = "Codey: Â¿EstÃ¡s escribiendo cÃ³digo o una novela? Muy poÃ©tico pero poco prÃ¡ctico."
-    )
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BugHuntScreen(
-    viewModel: PetViewModel,
-    onNavigateBack: () -> Unit
-) {
-    val snippets = remember { snippetPool.shuffled().take(5) }
-
-    var currentRound by remember { mutableStateOf(1) }
-    val totalRounds = snippets.size
-    var timeRemaining by remember { mutableStateOf(60) }
-    var score by remember { mutableStateOf(0) }
-    var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("Â¡Encuentra el bug antes de que el compilador explote!") }
-    var lastExplanation by remember { mutableStateOf<String?>(null) }
-    var lastHumor by remember { mutableStateOf<String?>(null) }
-    var answeredRound by remember { mutableStateOf(false) }
-
-    val currentSnippet = snippets.getOrNull(currentRound - 1)
-
-    LaunchedEffect(isGameOver) {
-        if (!isGameOver) {
-            while (timeRemaining > 0) {
-                delay(1000)
-                timeRemaining--
-            }
-            isGameOver = true
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.bug_hunt_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Text("<", style = MaterialTheme.typography.titleLarge)
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (isGameOver) {
-                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(16.dp))
-                val bytesEarned = score * 10
-                Text(stringResource(R.string.game_result_reward, bytesEarned))
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Acertaste $score de $totalRounds",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(onClick = {
-                    viewModel.recordGamePlay("bug_hunt")
-                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
-                    onNavigateBack()
-                }) {
-                    Text(stringResource(R.string.game_result_finish))
-                }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(stringResource(R.string.bug_hunt_round, currentRound, totalRounds), fontWeight = FontWeight.Bold)
-                    Text("âŒ› ${timeRemaining}s", color = if (timeRemaining < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(stringResource(R.string.bug_hunt_instruction), fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(12.dp))
-
-                if (currentSnippet != null) {
-                    currentSnippet.lines.forEachIndexed { index, line ->
-                        val isCorrectLine = index == currentSnippet.bugIndex && answeredRound && lastExplanation != null
-                        val isWrongPick = answeredRound && lastExplanation != null && index != currentSnippet.bugIndex
-
-                        Surface(
-                            color = when {
-                                isCorrectLine -> Color(0xFF1B5E20).copy(alpha = 0.3f)
-                                isWrongPick -> Color(0xFFB71C1C).copy(alpha = 0.1f)
-                                else -> MaterialTheme.colorScheme.surfaceVariant
-                            },
-                            shape = RoundedCornerShape(4.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                                .clickable(enabled = !answeredRound) {
-                                    if (index == currentSnippet.bugIndex) {
-                                        score++
-                                        codeyReaction = currentSnippet.humor
-                                    } else {
-                                        codeyReaction = "Â¡Esa lÃ­nea estÃ¡ bien! Sigue buscando..."
-                                    }
-                                    lastExplanation = currentSnippet.explanation
-                                    lastHumor = currentSnippet.humor
-                                    answeredRound = true
-                                }
-                        ) {
-                            Text(
-                                text = "${index + 1}. $line",
-                                fontFamily = FontFamily.Monospace,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
-                    }
-
-                    if (answeredRound && lastExplanation != null) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Surface(
-                            color = if (lastHumor != null && score > 0) Color(0xFF1B5E20).copy(alpha = 0.15f) else Color(0xFFB71C1C).copy(alpha = 0.1f),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "ExplicaciÃ³n: ${lastExplanation}",
-                                modifier = Modifier.padding(12.dp),
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Button(onClick = {
-                            if (currentRound < totalRounds) {
-                                currentRound++
-                                answeredRound = false
-                                lastExplanation = null
-                                lastHumor = null
-                                codeyReaction = "Â¡Siguiente ronda! Â¿DÃ³nde se esconde el bug?"
-                            } else {
-                                isGameOver = true
-                            }
-                        }) {
-                            Text(if (currentRound < totalRounds) "Siguiente ronda" else "Ver resultados")
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-#### feature/games/GitRescueScreen.kt
-
-```kotlin
-package com.tamagotchi.code.feature.games
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.viewmodel.PetViewModel
-import kotlinx.coroutines.delay
-
-private data class GitScenario(
-    val situation: String,
-    val options: List<String>,
-    val correctIndex: Int,
-    val explanation: String,
-    val humor: String
-)
-
-private val scenarioPool = listOf(
-    GitScenario(
-        situation = "Acabas de clonar el repo y vas a trabajar en un nuevo feature. Â¿QuÃ© haces primero?",
-        options = listOf(
-            "git checkout -b feature/nuevo",
-            "git commit -m \"inicio\"",
-            "git push --force"
-        ),
-        correctIndex = 0,
-        explanation = "Crear una rama nueva desde main es la forma correcta de empezar un feature.",
-        humor = "Codey: Â¡Nunca pushes a main sin antes crear una rama! Eres un cowboy."
-    ),
-    GitScenario(
-        situation = "Has hecho cambios locales y te das cuenta de que rompiste todo. Quieres volver al Ãºltimo commit limpio.",
-        options = listOf(
-            "git reset --hard HEAD",
-            "git revert HEAD",
-            "git rm -rf ."
-        ),
-        correctIndex = 1,
-        explanation = "revert crea un nuevo commit que deshace los cambios, preservando la historia.",
-        humor = "Codey: reset --hard es como una mÃ¡quina del tiempo sin frenos. revert es mÃ¡s seguro."
-    ),
-    GitScenario(
-        situation = "Tienes un conflicto en un merge. Â¿CuÃ¡l es el siguiente paso?",
-        options = listOf(
-            "Resolver el conflicto en el editor y luego git add",
-            "git commit --amend",
-            "git push --force origin main"
-        ),
-        correctIndex = 0,
-        explanation = "Los conflictos se resuelven editando los archivos, luego git add y git commit.",
-        humor = "Codey: push --force no resuelve conflictos, los empeora. Es como echar gasolina al fuego."
-    ),
-    GitScenario(
-        situation = "Trabajas en equipo y necesitas traerte los cambios mÃ¡s recientes de la rama main a tu rama feature.",
-        options = listOf(
-            "git pull origin main",
-            "git merge feature main",
-            "git branch -d main"
-        ),
-        correctIndex = 0,
-        explanation = "git pull trae los cambios de main a tu rama actual. merge lo harÃ­a al revÃ©s.",
-        humor = "Codey: No borres main. Nunca borres main. Es como borrar el diccionario."
-    ),
-    GitScenario(
-        situation = "Hiciste un commit pero olvidaste incluir un archivo. Â¿CÃ³mo lo arreglas?",
-        options = listOf(
-            "git add archivo && git commit --amend",
-            "git reset --hard HEAD~1",
-            "git commit --allow-empty"
-        ),
-        correctIndex = 0,
-        explanation = "Con amend puedes agregar archivos al commit anterior sin crear uno nuevo.",
-        humor = "Codey: --allow-empty no arregla nada. Es como poner un post-it en una puerta cerrada."
-    ),
-    GitScenario(
-        situation = "Quieres ver quÃ© archivos modificaste antes de hacer commit. Â¿QuÃ© comando usas?",
-        options = listOf(
-            "git diff",
-            "git status",
-            "git show"
-        ),
-        correctIndex = 1,
-        explanation = "git status muestra el estado actual: archivos modificados, nuevos y eliminados.",
-        humor = "Codey: diff es para ver el contenido exacto, status te da el resumen. Dos herramientas diferentes."
-    ),
-    GitScenario(
-        situation = "El historial de commits estÃ¡ lleno de mensajes como 'fix' y 'update'. Quieres limpiarlo antes de hacer merge.",
-        options = listOf(
-            "git rebase -i HEAD~5",
-            "git reset --hard origin/main",
-            "git commit --fixup"
-        ),
-        correctIndex = 0,
-        explanation = "rebase interactivo te permite squash, reordenar y renombrar commits.",
-        humor = "Codey: Los mensajes 'fix' y 'update' son como decir 'cosa' en un examen. SÃ© descriptivo."
-    ),
-    GitScenario(
-        situation = "Tu rama feature quedÃ³ atrÃ¡s de main y necesitas actualizarla sin crear commits de merge.",
-        options = listOf(
-            "git rebase main",
-            "git merge main",
-            "git pull --rebase"
-        ),
-        correctIndex = 2,
-        explanation = "pull --rebase trae cambios y los aplica encima de tus commits locales.",
-        humor = "Codey: El histÃ³rico lineal es como una carretera recta. Los merges son rotondas."
-    )
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GitRescueScreen(
-    viewModel: PetViewModel,
-    onNavigateBack: () -> Unit
-) {
-    val scenarios = remember { scenarioPool.shuffled().take(5) }
-
-    var currentStep by remember { mutableStateOf(0) }
-    var score by remember { mutableStateOf(0) }
-    var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("Â¡RÃ¡pido, el repo estÃ¡ en llamas!") }
-    var lastExplanation by remember { mutableStateOf<String?>(null) }
-    var answeredStep by remember { mutableStateOf(false) }
-    var branchPosition by remember { mutableStateOf(0f) }
-    var maxBranchSteps by remember { mutableStateOf(scenarios.size.toFloat()) }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.git_rescue_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Text("<", style = MaterialTheme.typography.titleLarge)
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (isGameOver) {
-                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(16.dp))
-                val bytesEarned = score * 15
-                Text(stringResource(R.string.game_result_reward, bytesEarned))
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Decisiones correctas: $score de ${scenarios.size}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(onClick = {
-                    viewModel.recordGamePlay("git_rescue")
-                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
-                    onNavigateBack()
-                }) {
-                    Text(stringResource(R.string.game_result_finish))
-                }
-            } else {
-                // Branch visual progress
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Progreso de la rama:", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            scenarios.forEachIndexed { index, _ ->
-                                val isDone = index < currentStep
-                                val isCurrent = index == currentStep
-                                Surface(
-                                    shape = RoundedCornerShape(50),
-                                    color = when {
-                                        isDone -> MaterialTheme.colorScheme.primary
-                                        isCurrent -> MaterialTheme.colorScheme.secondary
-                                        else -> MaterialTheme.colorScheme.surfaceVariant
-                                    },
-                                    modifier = Modifier.size(24.dp)
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = "${index + 1}",
-                                            fontSize = MaterialTheme.typography.labelSmall.fontSize,
-                                            color = if (isDone || isCurrent) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-                                if (index < scenarios.size - 1) {
-                                    Surface(
-                                        modifier = Modifier
-                                            .height(4.dp)
-                                            .weight(1f),
-                                        color = if (isDone) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant
-                                    ) {}
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Surface(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("Paso ${currentStep + 1} de ${scenarios.size}", fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(scenarios[currentStep].situation, style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                scenarios[currentStep].options.forEachIndexed { index, option ->
-                    val isCorrect = answeredStep && index == scenarios[currentStep].correctIndex
-                    val isWrong = answeredStep && index != scenarios[currentStep].correctIndex
-
-                    Surface(
-                        color = when {
-                            isCorrect -> Color(0xFF1B5E20).copy(alpha = 0.3f)
-                            isWrong -> Color(0xFFB71C1C).copy(alpha = 0.1f)
-                            else -> MaterialTheme.colorScheme.surfaceVariant
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .clickable(enabled = !answeredStep) {
-                                if (index == scenarios[currentStep].correctIndex) {
-                                    score++
-                                    codeyReaction = scenarios[currentStep].humor
-                                } else {
-                                    codeyReaction = "Â¡Esa no era la mejor opciÃ³n!"
-                                }
-                                lastExplanation = scenarios[currentStep].explanation
-                                answeredStep = true
-                            }
-                    ) {
-                        Text(
-                            text = "> $option",
-                            fontFamily = FontFamily.Monospace,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-
-                if (answeredStep && lastExplanation != null) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Surface(
-                        color = Color(0xFF1B5E20).copy(alpha = 0.1f),
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = lastExplanation!!,
-                            modifier = Modifier.padding(12.dp),
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = {
-                        if (currentStep < scenarios.size - 1) {
-                            currentStep++
-                            answeredStep = false
-                            lastExplanation = null
-                            codeyReaction = "Â¡Siguiente decisiÃ³n! El repo te necesita."
-                        } else {
-                            isGameOver = true
-                        }
-                    }) {
-                        Text(if (currentStep < scenarios.size - 1) "Siguiente decisiÃ³n" else "Ver resultados")
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-#### feature/games/RefactorRushScreen.kt
-
-```kotlin
-package com.tamagotchi.code.feature.games
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.viewmodel.PetViewModel
-
-private data class RefactorPuzzle(
-    val title: String,
-    val blocks: List<String>
-)
-
-private val puzzleBank = listOf(
-    RefactorPuzzle(
-        "Calcular total",
-        listOf(
-            "fun calculateTotal(items: List<Int>): Int {",
-            "    var total = 0",
-            "    for (item in items) {",
-            "        total += item",
-            "    }",
-            "    return total",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Filtrar pares",
-        listOf(
-            "fun filterEven(numbers: List<Int>): List<Int> {",
-            "    val result = mutableListOf<Int>()",
-            "    for (n in numbers) {",
-            "        if (n % 2 == 0) {",
-            "            result.add(n)",
-            "        }",
-            "    }",
-            "    return result",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Saludo personalizado",
-        listOf(
-            "fun greet(name: String, age: Int): String {",
-            "    val greeting = \"Hola, \$name\"",
-            "    val ageMsg = if (age >= 18) \"Eres mayor\" else \"Eres menor\"",
-            "    return \"\$greeting. \$ageMsg\"",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Buscar mÃ¡ximo",
-        listOf(
-            "fun findMax(values: List<Int>): Int? {",
-            "    if (values.isEmpty()) return null",
-            "    var max = values[0]",
-            "    for (v in values) {",
-            "        if (v > max) max = v",
-            "    }",
-            "    return max",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Contar vocales",
-        listOf(
-            "fun countVowels(text: String): Int {",
-            "    val vowels = setOf('a', 'e', 'i', 'o', 'u')",
-            "    var count = 0",
-            "    for (ch in text.lowercase()) {",
-            "        if (ch in vowels) count++",
-            "    }",
-            "    return count",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Invertir lista",
-        listOf(
-            "fun reverseList<T>(items: List<T>): List<T> {",
-            "    val result = mutableListOf<T>()",
-            "    for (i in items.indices.reversed()) {",
-            "        result.add(items[i])",
-            "    }",
-            "    return result",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Es palÃ­ndromo",
-        listOf(
-            "fun isPalindrome(word: String): Boolean {",
-            "    val cleaned = word.lowercase().filter { it.isLetter() }",
-            "    return cleaned == cleaned.reversed()",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Promedio de notas",
-        listOf(
-            "fun average(grades: List<Double>): Double {",
-            "    if (grades.isEmpty()) return 0.0",
-            "    val sum = grades.sum()",
-            "    return sum / grades.size",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Generar rango",
-        listOf(
-            "fun generateRange(start: Int, end: Int): List<Int> {",
-            "    val range = mutableListOf<Int>()",
-            "    for (i in start..end) {",
-            "        range.add(i)",
-            "    }",
-            "    return range",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Validar email",
-        listOf(
-            "fun isValidEmail(email: String): Boolean {",
-            "    if (!email.contains('@')) return false",
-            "    val parts = email.split('@')",
-            "    if (parts.size != 2) return false",
-            "    return parts[1].contains('.')",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Fibonacci",
-        listOf(
-            "fun fibonacci(n: Int): List<Int> {",
-            "    if (n <= 0) return emptyList()",
-            "    val fib = mutableListOf(0, 1)",
-            "    for (i in 2 until n) {",
-            "        fib.add(fib[i - 1] + fib[i - 2])",
-            "    }",
-            "    return fib.take(n)",
-            "}"
-        )
-    ),
-    RefactorPuzzle(
-        "Capitalizar palabras",
-        listOf(
-            "fun capitalizeWords(sentence: String): String {",
-            "    return sentence.split(\" \")",
-            "        .joinToString(\" \") { word ->",
-            "            word.replaceFirstChar { it.uppercase() }",
-            "        }",
-            "}"
-        )
-    )
-)
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RefactorRushScreen(
-    viewModel: PetViewModel,
-    onNavigateBack: () -> Unit
-) {
-    val puzzle = remember { puzzleBank.random() }
-    val originalBlocks = remember { puzzle.blocks }
-
-    var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("Â¡Ordena este desastre!") }
-    var currentBlocks by remember { mutableStateOf(originalBlocks.shuffled()) }
-    var attempts by remember { mutableStateOf(0) }
-
-    fun moveUp(index: Int) {
-        if (index > 0) {
-            val newList = currentBlocks.toMutableList()
-            val temp = newList[index - 1]
-            newList[index - 1] = newList[index]
-            newList[index] = temp
-            currentBlocks = newList
-        }
-    }
-
-    fun moveDown(index: Int) {
-        if (index < currentBlocks.size - 1) {
-            val newList = currentBlocks.toMutableList()
-            val temp = newList[index + 1]
-            newList[index + 1] = newList[index]
-            newList[index] = temp
-            currentBlocks = newList
-        }
-    }
-
-    fun checkResult() {
-        attempts++
-        if (currentBlocks == originalBlocks) {
-            codeyReaction = "Â¡Excelente! CÃ³digo limpio y ordenado en $attempts intento(s)."
-            isGameOver = true
-        } else {
-            codeyReaction = "Sigue intentando, todavÃ­a no compila (intento $attempts)."
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.refactor_rush_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Text("<", style = MaterialTheme.typography.titleLarge)
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (isGameOver) {
-                Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(16.dp))
-                val bytesEarned = maxOf(50 - (attempts * 5), 10)
-                Text(stringResource(R.string.game_result_reward, bytesEarned))
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(onClick = {
-                    viewModel.recordGamePlay("refactor_rush")
-                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
-                    onNavigateBack()
-                }) {
-                    Text(stringResource(R.string.game_result_finish))
-                }
-            } else {
-                Surface(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(stringResource(R.string.refactor_rush_instruction), style = MaterialTheme.typography.bodyMedium)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                currentBlocks.forEachIndexed { index, block ->
-                    Surface(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Column {
-                                IconButton(onClick = { moveUp(index) }, enabled = index > 0) {
-                                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Up")
-                                }
-                                IconButton(onClick = { moveDown(index) }, enabled = index < currentBlocks.size - 1) {
-                                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Down")
-                                }
-                            }
-                            Text(
-                                text = block,
-                                fontFamily = FontFamily.Monospace,
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .weight(1f)
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(onClick = { checkResult() }) {
-                    Text("Verificar")
-                }
-            }
-        }
-    }
-}
-```
-
-#### feature/games/MinigamesDialog.kt
-
-```kotlin
+// MinigamesDialog.kt
 package com.tamagotchi.code.feature.games
 
 import androidx.compose.foundation.BorderStroke
@@ -10966,7 +10911,7 @@ fun MinigamesDialog(
 
                         GameOptionCard(
                             title = "Adivina el Bit",
-                            description = "Intenta predecir el siguiente bit binario (0 o 1). Juego rÃ¡pido de 5 rondas.",
+                            description = "Intenta predecir el siguiente bit binario (0 o 1). Juego rápido de 5 rondas.",
                             icon = Icons.Default.Code,
                             onClick = { selectedGame = "BINARY_GUESS" }
                         )
@@ -10974,7 +10919,7 @@ fun MinigamesDialog(
 
                         GameOptionCard(
                             title = "Caza de Bugs",
-                            description = "Â¡RÃ¡pido! Los bugs se estÃ¡n escapando. Atrapa todos los que puedas en 10 segundos.",
+                            description = "¡Rápido! Los bugs se están escapando. Atrapa todos los que puedas en 10 segundos.",
                             icon = Icons.Default.BugReport,
                             onClick = { selectedGame = "BUG_SMASHER" }
                         )
@@ -10982,7 +10927,7 @@ fun MinigamesDialog(
 
                         GameOptionCard(
                             title = "Servidor, Script, Hacker",
-                            description = "Piedra, Papel o Tijera versiÃ³n informÃ¡tica. Â¡Derrota al compilador!",
+                            description = "Piedra, Papel o Tijera versión informática. ¡Derrota al compilador!",
                             icon = Icons.Default.Security,
                             onClick = { selectedGame = "ROCK_PAPER_SCI" }
                         )
@@ -11058,11 +11003,11 @@ fun GameOptionCard(
         }
     }
 }
+
 ```
 
-#### feature/games/BinaryGuessGame.kt
-
 ```kotlin
+// BinaryGuessGame.kt
 package com.tamagotchi.code.feature.games
 
 import androidx.compose.foundation.BorderStroke
@@ -11094,7 +11039,7 @@ fun BinaryGuessGame(
     var round by remember { mutableStateOf(1) }
     var score by remember { mutableStateOf(0) }
     var currentSecretBit by remember { mutableStateOf((0..1).random()) }
-    var feedbackMessage by remember { mutableStateOf("Â¿CuÃ¡l crees que es el bit secreto?") }
+    var feedbackMessage by remember { mutableStateOf("¿Cuál crees que es el bit secreto?") }
     var showNextButton by remember { mutableStateOf(false) }
     var isGameOver by remember { mutableStateOf(false) }
 
@@ -11141,7 +11086,7 @@ fun BinaryGuessGame(
             val bytesReward = score * 4
             val healthReward = score * 3f
             Text(
-                text = "Â¡Juego Terminado!\nAcertaste: $score de 5\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = "¡Juego Terminado!\nAcertaste: $score de 5\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -11166,7 +11111,7 @@ fun BinaryGuessGame(
                     if (round < 5) {
                         round += 1
                         currentSecretBit = (0..1).random()
-                        feedbackMessage = "Â¿CuÃ¡l crees que es el bit secreto?"
+                        feedbackMessage = "¿Cuál crees que es el bit secreto?"
                         showNextButton = false
                     } else {
                         isGameOver = true
@@ -11188,7 +11133,7 @@ fun BinaryGuessGame(
                         val isCorrect = currentSecretBit == 0
                         if (isCorrect) {
                             score += 1
-                            feedbackMessage = "Â¡Excelente! El bit secreto era 0."
+                            feedbackMessage = "¡Excelente! El bit secreto era 0."
                         } else {
                             feedbackMessage = "Incorrecto. El bit secreto era 1."
                         }
@@ -11207,7 +11152,7 @@ fun BinaryGuessGame(
                         val isCorrect = currentSecretBit == 1
                         if (isCorrect) {
                             score += 1
-                            feedbackMessage = "Â¡Excelente! El bit secreto era 1."
+                            feedbackMessage = "¡Excelente! El bit secreto era 1."
                         } else {
                             feedbackMessage = "Incorrecto. El bit secreto era 0."
                         }
@@ -11224,11 +11169,11 @@ fun BinaryGuessGame(
         }
     }
 }
+
 ```
 
-#### feature/games/BugSmasherGame.kt
-
 ```kotlin
+// BugSmasherGame.kt
 package com.tamagotchi.code.feature.games
 
 import androidx.compose.foundation.BorderStroke
@@ -11285,7 +11230,7 @@ fun BugSmasherGame(
 
         if (!isStarted) {
             Text(
-                text = "Toca los bugs que aparecen en la cuadrÃ­cula de 3x3 tan rÃ¡pido como puedas. Â¡Tienes 10 segundos!",
+                text = "Toca los bugs que aparecen en la cuadrícula de 3x3 tan rápido como puedas. ¡Tienes 10 segundos!",
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.White,
@@ -11299,13 +11244,13 @@ fun BugSmasherGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Â¡Comenzar!", fontFamily = FontFamily.Monospace)
+                Text("¡Comenzar!", fontFamily = FontFamily.Monospace)
             }
         } else if (timeRemaining <= 0) {
             val bytesReward = score * 2
             val healthReward = (score * 1.5f).coerceAtMost(30f)
             Text(
-                text = "Â¡Tiempo Agotado!\nBugs atrapados: $score\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = "¡Tiempo Agotado!\nBugs atrapados: $score\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -11389,11 +11334,11 @@ fun BugSmasherGame(
         }
     }
 }
+
 ```
 
-#### feature/games/RockPaperSciGame.kt
-
 ```kotlin
+// RockPaperSciGame.kt
 package com.tamagotchi.code.feature.games
 
 import androidx.compose.foundation.BorderStroke
@@ -11450,7 +11395,7 @@ fun RockPaperSciGame(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "TÃš: $userWins | CPU: $cpuWins (Mejor de 3)",
+            text = "TÚ: $userWins | CPU: $cpuWins (Mejor de 3)",
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -11468,7 +11413,7 @@ fun RockPaperSciGame(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("TÃš", fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
+                Text("TÚ", fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
                 Spacer(modifier = Modifier.height(4.dp))
                 Icon(
                     imageVector = icons[userChoice] ?: Icons.Default.QuestionMark,
@@ -11513,7 +11458,7 @@ fun RockPaperSciGame(
             val bytesReward = if (playerWon) 20 else 5
             val healthReward = if (playerWon) 25f else 10f
             Text(
-                text = if (playerWon) "Â¡Felicidades! Derrotaste al compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad" else "Has perdido contra el compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = if (playerWon) "¡Felicidades! Derrotaste al compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad" else "Has perdido contra el compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -11552,7 +11497,7 @@ fun RockPaperSciGame(
                                 (choice == "Hacker" && selectedCpu == "Script")
                             ) {
                                 userWins += 1
-                                roundMessage = "Â¡Ganaste la ronda! $choice vence a $selectedCpu."
+                                roundMessage = "¡Ganaste la ronda! $choice vence a $selectedCpu."
                             } else {
                                 cpuWins += 1
                                 roundMessage = "Perdiste la ronda. $selectedCpu vence a $choice."
@@ -11560,7 +11505,7 @@ fun RockPaperSciGame(
 
                             if (userWins >= 2 || cpuWins >= 2) {
                                 isGameOver = true
-                                roundMessage = if (userWins >= 2) "Â¡Has ganado la partida!" else "El compilador ha ganado la partida."
+                                roundMessage = if (userWins >= 2) "¡Has ganado la partida!" else "El compilador ha ganado la partida."
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF151D16)),
@@ -11576,13 +11521,14 @@ fun RockPaperSciGame(
         }
     }
 }
+
 ```
+
 ### 15.12 Widget
 
 
-#### widget/CodePetWidgetProvider.kt
-
 ```kotlin
+// CodePetWidgetProvider.kt
 package com.tamagotchi.code.widget
 
 import android.app.PendingIntent
@@ -11618,7 +11564,7 @@ class CodePetWidgetProvider : AppWidgetProvider() {
         ) {
             val views = RemoteViews(context.packageName, R.layout.code_pet_widget)
             views.setTextViewText(R.id.widget_title, "Code Tamagotchi")
-            views.setTextViewText(R.id.widget_subtitle, "Tu mascota estÃ¡ lista")
+            views.setTextViewText(R.id.widget_subtitle, "Tu mascota está lista")
             views.setImageViewResource(R.id.widget_pet_image, R.drawable.mascota_happy)
 
             val launchIntent = Intent(context, MainActivity::class.java)
@@ -11634,13 +11580,14 @@ class CodePetWidgetProvider : AppWidgetProvider() {
         }
     }
 }
+
 ```
+
 ### 15.13 Recursos (strings.xml)
 
 
-#### res/values/strings.xml
-
 ```xml
+<!-- strings.xml -->
 <resources>
     <string name="app_name">Code Tamagotchi</string>
     
@@ -11649,16 +11596,16 @@ class CodePetWidgetProvider : AppWidgetProvider() {
     <string name="onboarding_next">Siguiente</string>
     
     <!-- Step 1 -->
-    <string name="onboarding_step1_title">Tu compaÃ±ero de cÃ³digo</string>
-    <string name="onboarding_step1_desc">Tu mascota virtual que te acompaÃ±a mientras practicas programaciÃ³n.</string>
+    <string name="onboarding_step1_title">Tu compañero de código</string>
+    <string name="onboarding_step1_desc">Tu mascota virtual que te acompaña mientras practicas programación.</string>
     <string name="onboarding_step1_terminal">\> hola_mundo</string>
     
     <!-- Step 2 -->
-    <string name="onboarding_step2_title">Tu prÃ¡ctica la hace evolucionar</string>
+    <string name="onboarding_step2_title">Tu práctica la hace evolucionar</string>
     <string name="onboarding_step2_card1">Resuelve retos</string>
     <string name="onboarding_step2_card2">Completa Focus</string>
     <string name="onboarding_step2_card3">Cuida a tu mascota</string>
-    <string name="onboarding_step2_desc">Los retos y Focus entregan XP; los Bytes sirven para cuidado, juegos y estÃ©tica.</string>
+    <string name="onboarding_step2_desc">Los retos y Focus entregan XP; los Bytes sirven para cuidado, juegos y estética.</string>
     
     <!-- Step 3 -->
     <string name="onboarding_step3_title">Elige tu ruta</string>
@@ -11675,29 +11622,29 @@ class CodePetWidgetProvider : AppWidgetProvider() {
     
     <!-- Step 4 -->
     <string name="onboarding_step4_title">Dale nombre a tu copiloto</string>
-    <string name="onboarding_step4_preview">\> Â¡Compilado! Soy %1$s.</string>
+    <string name="onboarding_step4_preview">\> ¡Compilado! Soy %1$s.</string>
     <string name="onboarding_step4_cta">Crear a %1$s</string>
     <string name="default_pet_name">Codey</string>
     
     <!-- Dialog Skip -->
-    <string name="dialog_skip_title">Â¿Omitir configuraciÃ³n?</string>
-    <string name="dialog_skip_desc">Tu mascota se llamarÃ¡ Codey y usarÃ¡ la Ruta Inicial.</string>
-    <string name="dialog_skip_confirm">SÃ­, omitir</string>
+    <string name="dialog_skip_title">¿Omitir configuración?</string>
+    <string name="dialog_skip_desc">Tu mascota se llamará Codey y usará la Ruta Inicial.</string>
+    <string name="dialog_skip_confirm">Sí, omitir</string>
     <string name="dialog_skip_cancel">No, volver</string>
 
     <!-- Settings Screen -->
-    <string name="settings_title">ConfiguraciÃ³n</string>
+    <string name="settings_title">Configuración</string>
     <string name="settings_section_profile">Perfil</string>
     <string name="settings_profile_name">Nombre de mascota</string>
     <string name="settings_profile_level">Nivel actual: %1$d</string>
     <string name="settings_section_learning">Aprendizaje</string>
     <string name="settings_learning_languages">Lenguajes y temas</string>
-    <string name="settings_learning_focus_duration">DuraciÃ³n Focus predeterminada</string>
+    <string name="settings_learning_focus_duration">Duración Focus predeterminada</string>
     <string name="settings_learning_focus_duration_value">Configurado en pantalla Focus</string>
     <string name="settings_section_experience">Experiencia</string>
     <string name="settings_experience_theme">Tema visual</string>
     <string name="settings_experience_sound">Sonido</string>
-    <string name="settings_experience_vibration">VibraciÃ³n</string>
+    <string name="settings_experience_vibration">Vibración</string>
     <string name="settings_experience_reduce_motion">Reducir animaciones</string>
     <string name="settings_experience_theme_active">Activo</string>
     <string name="settings_section_achievements">Logros</string>
@@ -11709,17 +11656,17 @@ class CodePetWidgetProvider : AppWidgetProvider() {
     <string name="settings_data_about">Acerca de</string>
 
     <!-- Reset Dialog -->
-    <string name="dialog_reset_title">Â¿Restablecer todo el progreso?</string>
-    <string name="dialog_reset_desc">Esta acciÃ³n borrarÃ¡ permanentemente tu mascota, nivel, XP, Bytes y configuraciÃ³n. Esta acciÃ³n no se puede deshacer.</string>
-    <string name="dialog_reset_confirm">SÃ­, restablecer</string>
+    <string name="dialog_reset_title">¿Restablecer todo el progreso?</string>
+    <string name="dialog_reset_desc">Esta acción borrará permanentemente tu mascota, nivel, XP, Bytes y configuración. Esta acción no se puede deshacer.</string>
+    <string name="dialog_reset_confirm">Sí, restablecer</string>
     <string name="dialog_reset_cancel">Cancelar</string>
-    <string name="dialog_reset_confirm2_title">Â¿EstÃ¡s seguro?</string>
-    <string name="dialog_reset_confirm2_desc">Esta es tu Ãºltima oportunidad. Todo tu progreso se perderÃ¡ para siempre. Â¿Confirmas?</string>
-    <string name="dialog_reset_confirm2_confirm">SÃ­, estoy seguro</string>
+    <string name="dialog_reset_confirm2_title">¿Estás seguro?</string>
+    <string name="dialog_reset_confirm2_desc">Esta es tu última oportunidad. Todo tu progreso se perderá para siempre. ¿Confirmas?</string>
+    <string name="dialog_reset_confirm2_confirm">Sí, estoy seguro</string>
 
     <!-- Rename Dialog -->
     <string name="dialog_rename_title">Renombrar mascota</string>
-    <string name="dialog_rename_label">Nuevo nombre (mÃ¡x 15)</string>
+    <string name="dialog_rename_label">Nuevo nombre (máx 15)</string>
     <string name="dialog_rename_confirm">Guardar</string>
 
     <!-- Settings Language Screen -->
@@ -11731,24 +11678,24 @@ class CodePetWidgetProvider : AppWidgetProvider() {
     <string name="settings_lang_diff_initial">Inicial</string>
     <string name="settings_lang_diff_intermediate">Intermedia</string>
     <string name="settings_lang_diff_mixed">Mixta</string>
-    <string name="settings_lang_preview">RotaciÃ³n actual: %1$d temas en dificultad %2$s.</string>
+    <string name="settings_lang_preview">Rotación actual: %1$d temas en dificultad %2$s.</string>
 
     <!-- Games Screen -->
-    <string name="games_title">Arcade de DepuraciÃ³n</string>
+    <string name="games_title">Arcade de Depuración</string>
     <string name="games_bug_hunt_title">Bug Hunt</string>
-    <string name="games_bug_hunt_desc">Encuentra el punto y coma fugitivo y otros horrores sintÃ¡cticos.</string>
+    <string name="games_bug_hunt_desc">Encuentra el punto y coma fugitivo y otros horrores sintácticos.</string>
     <string name="games_git_rescue_title">Git Rescue</string>
-    <string name="games_git_rescue_desc">Una rama estÃ¡ a punto del colapso. Toma las decisiones correctas.</string>
+    <string name="games_git_rescue_desc">Una rama está a punto del colapso. Toma las decisiones correctas.</string>
     <string name="games_refactor_rush_title">Refactor Rush</string>
-    <string name="games_refactor_rush_desc">Ordena el cÃ³digo para que tenga sentido antes de que falle el build.</string>
-    <string name="games_classic_arcade">Arcade ClÃ¡sico</string>
+    <string name="games_refactor_rush_desc">Ordena el código para que tenga sentido antes de que falle el build.</string>
+    <string name="games_classic_arcade">Arcade Clásico</string>
     <string name="games_classic_desc">Minijuegos antiguos para pasar el rato.</string>
-    <string name="games_cooldown">En enfriamiento (Vuelve mÃ¡s tarde para ganar mÃ¡s recompensa)</string>
+    <string name="games_cooldown">En enfriamiento (Vuelve más tarde para ganar más recompensa)</string>
     <string name="games_play">Jugar</string>
 
     <!-- Bug Hunt -->
     <string name="bug_hunt_title">Terminal Panic</string>
-    <string name="bug_hunt_instruction">Encuentra la lÃ­nea con el bug.</string>
+    <string name="bug_hunt_instruction">Encuentra la línea con el bug.</string>
     <string name="bug_hunt_round">Ronda %1$d / %2$d</string>
 
     <!-- Git Rescue -->
@@ -11757,21 +11704,22 @@ class CodePetWidgetProvider : AppWidgetProvider() {
 
     <!-- Refactor Rush -->
     <string name="refactor_rush_title">Refactor Rush</string>
-    <string name="refactor_rush_instruction">Ordena los bloques lÃ³gicos de la funciÃ³n.</string>
+    <string name="refactor_rush_instruction">Ordena los bloques lógicos de la función.</string>
     
     <!-- Game Results -->
-    <string name="game_result_title">Â¡Build completado!</string>
+    <string name="game_result_title">¡Build completado!</string>
     <string name="game_result_reward">Ganaste %1$d Bytes.</string>
     <string name="game_result_finish">Finalizar</string>
 
 </resources>
+
 ```
+
 ### 15.14 Tests
 
 
-#### test/ExampleUnitTest.kt
-
 ```kotlin
+// ExampleUnitTest.kt
 package com.tamagotchi.code
 
 import org.junit.Assert.*
@@ -11783,11 +11731,11 @@ class ExampleUnitTest {
     assertEquals(4, 2 + 2)
   }
 }
+
 ```
 
-#### test/ExampleRobolectricTest.kt
-
 ```kotlin
+// ExampleRobolectricTest.kt
 package com.tamagotchi.code
 
 import android.content.Context
@@ -11808,32 +11756,11 @@ class ExampleRobolectricTest {
     assertEquals("Code Tamagotchi", appName)
   }
 }
+
 ```
 
-#### test/ExampleInstrumentedTest.kt
-
 ```kotlin
-package com.tamagotchi.code
-
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.*
-import org.junit.Test
-import org.junit.runner.RunWith
-
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-  @Test
-  fun useAppContext() {
-    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-    assertEquals("com.tamagotchi.code", appContext.packageName)
-  }
-}
-```
-
-#### test/GameEconomyTest.kt
-
-```kotlin
+// GameEconomyTest.kt
 package com.tamagotchi.code
 
 import org.junit.Assert.*
@@ -11977,11 +11904,11 @@ class GameEconomyTest {
         return level
     }
 }
+
 ```
 
-#### test/GreetingScreenshotTest.kt
-
 ```kotlin
+// GreetingScreenshotTest.kt
 package com.tamagotchi.code
 
 import android.app.Application
@@ -12023,11 +11950,11 @@ class GreetingScreenshotTest {
     composeTestRule.onRoot().captureRoboImage(filePath = "src/test/screenshots/greeting.png")
   }
 }
+
 ```
 
-#### test/PetAnimationConfigTest.kt
-
 ```kotlin
+// PetAnimationConfigTest.kt
 package com.tamagotchi.code.ui.components
 
 import org.junit.Assert.assertTrue
@@ -12041,38 +11968,70 @@ class PetAnimationConfigTest {
         assertTrue(PetAnimationConfig.heartDurationMs(false) > PetAnimationConfig.heartDurationMs(true))
     }
 }
+
 ```
 
- 16. Dependencias Externas
+### 15.15 Módulo de Inyección de Dependencias
 
-| LibrerÃ­a | VersiÃ³n | PropÃ³sito |
-|:---------|:-------:|:----------|
-| Kotlin | 2.2.10 | Lenguaje principal |
-| AGP | 9.1.1 | Android Gradle Plugin |
-| Compose BOM | 2024.09.00 | UI declarativa |
-| Material 3 | via BOM | Componentes Material Design 3 |
-| Room | 2.7.0 | Persistencia SQLite |
-| Room Compiler (KSP) | 2.7.0 | GeneraciÃ³n de cÃ³digo Room |
-| Lifecycle (ViewModel) | 2.8.7 | Arquitectura MVVM |
-| Activity Compose | 1.10.1 | IntegraciÃ³n Activity + Compose |
-| Coroutines | 1.10.2 | Async |
-| **Koin Android** | **4.0.2** | InyecciÃ³n de dependencias |
-| **Koin Compose** | **4.0.2** | IntegraciÃ³n Koin + Compose |
-| **DataStore Prefs** | **1.1.7** | Persistencia de preferencias |
-| **Navigation Compose** | 2.8.9 | NavegaciÃ³n entre pantallas |
-| **WorkManager** | 2.10.0 | Notificaciones periÃ³dicas |
-| Robolectric | 4.16.1 | Tests unitarios de Android |
-| Roborazzi | 1.59.0 | Screenshot tests |
-| Retrofit | 2.11.0 (declarada) | HTTP client (no usada aÃºn) |
-| OkHttp | 4.12.0 (declarada) | HTTP engine (no usada aÃºn) |
-| Moshi | 1.15.2 (declarada) | JSON parsing (no usada aÃºn) |
-| Firebase BOM | 33.0.0 (declarada) | Firebase suite (opcional) |
+
+```kotlin
+// AppModule.kt
+package com.tamagotchi.code.di
+
+import com.tamagotchi.code.data.database.AppDatabase
+import com.tamagotchi.code.data.repository.PetRepository
+import com.tamagotchi.code.data.repository.UserPreferencesRepository
+import com.tamagotchi.code.data.repository.AchievementsRepository
+import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val appModule = module {
+    single { AppDatabase.getDatabase(androidContext()) }
+    single { get<AppDatabase>().petDao() }
+    single { PetRepository(get()) }
+    single { UserPreferencesRepository(androidContext()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
+}
+
+```
+
+## 16. Pruebas
+
+### 16.1 Tests Unitarios
+
+**Archivo:** `ExampleUnitTest.kt` — test básico de prueba.
+
+### 16.2 Tests Robolectric
+
+**Archivo:** `ExampleRobolectricTest.kt` — verifica carga de `app_name`.
+
+### 16.3 Screenshot Tests (Roborazzi)
+
+**Archivo:** `GreetingScreenshotTest.kt`
+
+Actualizado en v2.0: ahora recibe `PetRepository`, `UserPreferencesRepository` y `AchievementsRepository` por constructor (mockeado con `fakePetState`).
+
+### 16.4 Tests de Instrumentación
+
+**Archivo:** `ExampleInstrumentedTest.kt` — verifica `packageName`.
+
+### 16.5 Cobertura Actual
+
+| Tipo | Archivos | Estado |
+|:-----|:---------|:-------|
+| Unit test | 1 | ✅ Básico |
+| Robolectric | 2 | ✅ Funcional |
+| Screenshot | 1 | ✅ Actualizado |
+| Instrumentación | 1 | ✅ Básico |
 
 ---
 
-## 16. Dependencias Externas
+## 17. Dependencias Externas
 
-### 16.1 Lista Completa
+### 17.1 Lista Completa
 
 | Librería | Versión | Propósito |
 |:---------|:-------:|:----------|
@@ -12116,148 +12075,174 @@ class PetAnimationConfigTest {
 
 ---
 
-## 17. GuÃ­a para Desarrolladores
+## 18. Guía para Desarrolladores
 
-### 17.1 CÃ³mo Compilar
+### 18.1 Cómo Compilar
+
+**Requisitos:**
+- Android Studio Hedgehog+
+- JDK 17+
+- SDK Android 24+
+- Gradle 8.x (wrapper incluido)
 
 ```bash
 # Compilar debug APK
 ./gradlew clean assembleDebug
-# APK en: app/build/outputs/apk/debug/app-debug.apk
 
-# Compilar release APK (requiere keystore)
-./gradlew clean assembleRelease
-# APK en: app/build/outputs/apk/release/app-release.apk
+# APK generado en:
+# app/build/outputs/apk/debug/app-debug.apk
 ```
 
-**Nota sobre Firebase:** El archivo `google-services.json` no estÃ¡ incluido. El build advierte pero no falla.
+**Nota sobre Firebase:** El archivo `google-services.json` no está incluido. El build advierte pero no falla.
 
-### 17.2 CÃ³mo Probar
+### 18.2 Cómo Probar
 
 ```bash
 # Tests unitarios
 ./gradlew testDebugUnitTest
 
-# Tests de instrumentaciÃ³n (requiere emulador/dispositivo)
+# Tests de instrumentación (requiere emulador/dispositivo)
 ./gradlew connectedDebugAndroidTest
 
-# Screenshot test (Roborazzi)
+# Screenshot test
 ./gradlew testDebugUnitTest --tests "*.GreetingScreenshotTest"
 ```
 
-### 17.3 CÃ³mo Agregar un Nuevo Reto
+### 18.3 Cómo Agregar un Nuevo Reto
+
+1. Abrir `ChallengesData.kt`
+2. Agregar un nuevo `CodingChallenge` a la lista:
 
 ```kotlin
-// 1. Abrir ChallengesData.kt
-// 2. Agregar un nuevo CodingChallenge a la lista:
 CodingChallenge(
-    id = 91, language = "Kotlin", type = "TRIVIA",
-    title = "Tu Nuevo Reto", question = "Â¿Pregunta?",
-    options = listOf("OpciÃ³n A", "OpciÃ³n B", "OpciÃ³n C", "OpciÃ³n D"),
-    correctAnswerIndex = 2, explanation = "ExplicaciÃ³n detallada..."
+    id = 91,
+    language = "Kotlin",
+    type = "TRIVIA",
+    title = "Tu Nuevo Reto",
+    question = "¿Pregunta?",
+    options = listOf("Opción A", "Opción B", "Opción C", "Opción D"),
+    correctAnswerIndex = 2,
+    explanation = "Explicación detallada..."
 )
 ```
 
-### 17.4 CÃ³mo Agregar un Nuevo Tema
+### 18.4 Cómo Agregar un Nuevo Tema
 
-```kotlin
-// 1. Abrir ThemeConfig.kt
-// 2. Agregar un nuevo AppTheme a ThemeRegistry.allThemes:
-AppTheme(
-    name = "Mi Tema", icon = Icons.Default.Star,
-    description = "DescripciÃ³n...", isDark = true,
-    background = Color(0xFF000000), /* ... 12 colores */,
-    fontFamily = FontFamily.Monospace, cornerRadius = 8.dp,
-    usesGradients = true, gradientColors = listOf(...)
-)
-```
+1. Abrir `ThemeConfig.kt`
+2. Agregar a `ThemeRegistry.allThemes` un `AppThemeColors`
 
-### 17.5 CÃ³mo Agregar un Nuevo Minijuego
+### 18.5 Cómo Agregar un Nuevo Minijuego
 
 1. Crear el composable en `feature/games/`
-2. Agregar la opciÃ³n en `GamesScreen.kt` (o `MinigamesDialog`)
-3. El juego debe llamar a `viewModel.completeMinigame(bytes, health, energy)` al terminar
-4. Registrar ruta en `Routes` object y `AppNavigation.kt`
+2. Agregar la opción en `MinigamesDialog`
+3. El juego debe llamar a `viewModel.completeMinigame(bytes, happiness, energy)` al terminar
 
-### 17.6 CÃ³mo Agregar una Nueva Feature Screen
+### 18.6 Cómo Agregar una Nueva Feature Screen
 
 1. Crear el archivo en `feature/mi-feature/`
-2. Agregar ruta en `Routes` object en `AppNavigation.kt`
-3. Agregar el `composable()` branch en `AppNavigation.kt`
-4. Agregar el botÃ³n en la bottom navigation bar si es necesario
+2. Agregar el destino en `Screen.kt` (sealed class)
+3. Agregar el `when` branch en `AppNavigation.kt`
+4. Agregar el botón en la bottom navigation bar
 
-### 17.7 Convenciones de CÃ³digo
+### 18.7 Convenciones de Código
 
-- **Idioma:** EspaÃ±ol (strings, comentarios)
+- **Idioma:** Español (código, strings, comentarios)
 - **UI:** Jetpack Compose con Material 3
 - **Estado:** ViewModel con `StateFlow` + `mutableStateOf`
-- **DI:** Koin (mÃ³dulos en `di/`)
+- **DI:** Koin (módulos en `di/`)
 - **Persistencia:** Room para datos complejos, DataStore para preferencias
 - **Async:** Corrutinas en `viewModelScope`
 - **Tests:** Robolectric + Roborazzi
-- **TipografÃ­a:** `FontFamily.Monospace` para textos de terminal
+- **Tipografía:** `FontFamily.Monospace` para textos de terminal
 - **Animaciones:** `rememberInfiniteTransition` para loops, `Animatable` para one-shot
-- **NavegaciÃ³n:** NavHost con `Routes` object (constantes string)
+- **Navegación:** sealed class `Screen` con `when` exhaustivo (sin NavHost)
 
 ---
 
-## 18. Changelog
+## 19. Changelog
 
-### v2.0.0 â€” RefactorizaciÃ³n Mayor
+### v2.0.0 — Refactorización Mayor
 
-#### ðŸ—ï¸ Arquitectura
-- **ModularizaciÃ³n:** CÃ³digo monolÃ­tico (~2925 lÃ­neas) dividido en `feature/{home,learn,focus,shop,games,settings}/`, `navigation/AppNavigation.kt` y `ui/components/`
-- **NavegaciÃ³n:** Sistema de NavHost con `Routes` object (10 rutas)
-- **DI:** MigraciÃ³n a **Koin 4.0.2** (compatible con AGP 9.x)
-- **DataStore:** SharedPreferences migrado a **DataStore Preferences** + nuevo `AchievementsRepository`
-- **Room v3:** Migraciones M1â†’2 y M2â†’3 para `focus_sessions` y `hasRenamed`
+#### 🏗️ Arquitectura
+- **Modularización:** `CodeTamagotchiScreen.kt` (~2925 líneas) dividido en `feature/{home,learn,focus,shop,games,settings}/`, `navigation/AppNavigation.kt` y `ui/components/`
+- **Navegación:** Sistema de bottom nav con sealed class `Screen` (sin NavHost), 13 rutas total
+- **DI:** Migración a **Koin 4.0.2** (no usa Gradle plugin, compatible con AGP 9.x)
+- **DataStore:** SharedPreferences migrado a **DataStore Preferences** (`UserPreferencesRepository`) + nuevo `AchievementsRepository`
+- **GreetingScreenshotTest:** actualizado con 3 parámetros en constructor
 
-#### ðŸŽ® Nuevos Juegos (Arcade de DepuraciÃ³n)
-- **Bug Hunt â€” Terminal Panic:** 10 snippets, 5 rondas, explicaciones con humor
-- **Git Rescue:** 8 escenarios, 5 decisiones, progreso visual de rama
-- **Refactor Rush:** 12 puzzles, penalizaciÃ³n por intentos
-- **Cooldown diario de 24h:** persistido en DataStore
+#### 🎮 Nuevos Juegos (Arcade de Depuración)
+- **Bug Hunt — Terminal Panic:** 10 snippets de código, 5 rondas, explicaciones con humor de Codey
+- **Git Rescue:** 8 escenarios Git, 5 decisiones, progreso visual de rama
+- **Refactor Rush:** 12 puzzles de ordenamiento, aleatorio por partida, penalización por intentos
+- **Cooldown diario de 24h por juego:** persistido en DataStore, UI atenuada + botón deshabilitado
 
-#### ðŸŽ¨ Sistema de Temas Premium (12)
-- `AppTheme` con emoji, tipografÃ­a Ãºnica, corner radius, gradientes
-- `toColorScheme()` â†’ mapeo a Material 3 ColorScheme
-- `buildTypography()` dinÃ¡mica por tema
-- `LocalAppTheme` CompositionLocal
-- Carrusel visual en Settings (LazyRow + preview colores + borde animado)
-- **Retro Pixel ðŸ†:** Tema final 8-bit con Press Start 2P + mundo pixel art
+#### 🎨 Sistema de Temas Premium (12)
+- Rediseño completo: `AppTheme` con emoji, tipografía única, corner radius, gradientes, border
+- `toColorScheme()` → mapeo a Material 3 ColorScheme completo
+- `buildTypography()` dinámica por tema (Monospace/Serif/SansSerif + title weight)
+- `LocalAppTheme` CompositionLocal para acceso desde cualquier componente
+- Carrusel visual en Settings (LazyRow + preview colores + check/candado + borde animado)
+- Persistencia: `currentTheme` + `unlockedThemes` en DataStore
 
-#### âš™ï¸ ConfiguraciÃ³n Completa
-- Perfil, aprendizaje, experiencia (temas/sonido/vibraciÃ³n/animaciones)
-- Recordatorios (placeholder), datos (exportar/reset)
-- Logros (12 logros con DataStore persistente)
+#### 🕹️ Rediseño Retro Pixel — Tema Final (v2.1)
+- **Paleta NES 8-bit:** colores vibrantes (rojo `#FF4136`, verde `#2ECC40`, amarillo `#FFDC00`) sobre fondo azul noche `#0B0B3B`
+- **Fuente Press Start 2P:** tipografía pixelada clásica de juegos retro (Google Fonts)
+- **Fondo animado 8-bit:** 11 capas que construyen un mundo pixel art completo:
+  - Cielo degradado pixelado + estrellas parpadeantes con efecto cruz
+  - Luna creciente pixelada con resplandor
+  - Montañas con parallax (2 capas de profundidad)
+  - Árboles pixelados con follaje detallado
+  - Suelo verde con textura de pasto variante
+  - Briznas de hierba animadas
+  - Nubes pixeladas con scrolling parallax
+  - Luciérnagas flotantes con destello
+  - Rejilla pixelada sutil + efecto scanline CRT
+- **Esquinas 0dp,** bordes gruesos (3dp) para aspecto pixelado auténtico
 
-#### ðŸŽ“ Onboarding RediseÃ±ado (4 pasos)
-- HorizontalPager con animaciones de entrada
-- Paso 3: FilterChip multiselecciÃ³n (8 temas, mÃ¡x 3)
-- Paso 4: Input con validaciÃ³n y preview estilo terminal
+#### ⚙️ Configuración Completa (`SettingsScreen.kt`)
+- Perfil: nombre, nivel, renombrar con diálogo validado
+- Aprendizaje: lenguaje principal, temas activos, dificultad
+- Experiencia: carrusel de temas, sonido, vibración, reducir animaciones
+- Recordatorios: estructura visual (placeholder)
+- Datos: exportar progreso (mock), restablecer con **doble confirmación**
 
-#### â±ï¸ Timer Persistente
-- FocusSessionEntity en Room
-- El temporizador sobrevive al cierre de la app
-- Recompensa offline al reabrir
+#### 🎓 Onboarding Rediseñado (4 pasos)
+- Paso 1: "Tu compañero de código" + animación mascota + terminal
+- Paso 2: "Tu práctica la hace evolucionar" + tarjetas XP/Bytes
+- Paso 3: "Elige tu ruta" → FilterChip multiselección (8 temas, máx 3)
+- Paso 4: "Dale nombre a tu copiloto" (input 1-15 chars, preview)
+- Skip: diálogo de confirmación → Codey + ruta inicial
 
-#### âš–ï¸ Rebalance de MecÃ¡nicas
-- Decaimiento reducido ~50%
-- Recompensas aumentadas ~100%
-- Interacciones potenciadas ~50%
-- Streak mÃ¡s indulgente (resetea a las 48h)
+#### 🏆 Logros
+- Nuevo `AchievementsRepository` en DataStore (Flow persistente)
+- Logros: "Cazador de bugs" (Bug Hunt score = 5), "Git sin pánico" (Git Rescue score ≥ 3)
+- Se muestran en SettingsScreen
 
-#### ðŸ“š Banco de Retos
-- Expandido de **11 â†’ 90+ challenges**
-- Kotlin: 20+, JavaScript: 20, PHP: 19, Python: 29+
+#### ⏱️ Timer Persistente
+- Nueva entidad `FocusSessionEntity` en Room
+- El temporizador sobrevive al cierre de la app (se reanuda automáticamente al abrir)
+- Queries: `getActiveFocusSession()`, `getLatestFocusSession()`, `updateFocusSessionStatus()`
 
-#### ðŸ§¹ Limpieza
-- Eliminados ~20 imports/dependencias comentadas
+#### ⚖️ Rebalance de Mecánicas
+- Decaimiento reducido ~50% (menos punitivo)
+- Recompensas de estudio aumentadas ~100%
+- Interacciones (acariciar, limpiar) potenciadas ~50%
+- Streak más indulgente (resetea a las 48h en vez de 36h)
+- Umbrales de estado más permisivos
+
+#### 📚 Banco de Retos
+- Expandido de **11 → 88 challenges**
+- Kotlin: 20, JavaScript: 20, PHP: 19, Python: 29
+- Temas cubiertos: 80+ conceptos de programación
+
+#### 🧹 Limpieza
+- Eliminados ~20 imports/dependencias comentadas (Firebase Auth, Camera, Coil, etc.)
+- Eliminado archivo duplicado `ui/screens/OnboardingScreen.kt`
+- Deprecation warnings eliminados (`fallbackToDestructiveMigration(false)`, Koin DSL, `Icons.AutoMirrored`)
 - Build: **0 warnings, 0 errors**
 
 ---
 
-> **Code Tamagotchi v2.0** â€” Donde los bugs se convierten en mascotas y el cÃ³digo en cariÃ±o.  
-> DocumentaciÃ³n generada para desarrolladores y curiosos.  
-> Â¿Preguntas? Abre un issue en [GitHub](https://github.com/fguzman-stack/CodePet).
-
+> **Code Tamagotchi v2.0** — Donde los bugs se convierten en mascotas y el código en cariño.  
+> Documentación generada para desarrolladores y curiosos.  
+> ¿Preguntas? Abre un issue en [GitHub](https://github.com/fguzman-stack/CodePet).
