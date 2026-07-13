@@ -101,6 +101,7 @@ fun SettingsLanguageScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 listOf(
+                    stringResource(R.string.settings_lang_diff_beginner),
                     stringResource(R.string.settings_lang_diff_initial),
                     stringResource(R.string.settings_lang_diff_intermediate),
                     stringResource(R.string.settings_lang_diff_mixed)

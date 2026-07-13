@@ -18,9 +18,12 @@ import com.tamagotchi.code.util.RewardCalculator
 import com.tamagotchi.code.util.StatusCalculator
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
@@ -106,6 +109,12 @@ class PetViewModel(
         viewModelScope.launch {
             userPreferences.setDifficulty(newDifficulty)
             difficulty.value = newDifficulty
+            
+            // Lógica para dificultad principiante
+            if (newDifficulty.contains("Principiante", ignoreCase = true) || 
+                newDifficulty.contains("experiencia", ignoreCase = true)) {
+                // Podríamos cargar un set de retos ultra-básicos aquí
+            }
         }
     }
 
@@ -336,8 +345,23 @@ class PetViewModel(
         if (newName.isBlank()) return
         viewModelScope.launch {
             val current = petState.value ?: return@launch
-            val updated = current.copy(name = newName)
+            
+            // Si ya ha sido renombrado antes, simulamos un anuncio
+            if (current.hasRenamed) {
+                _challengeFeedback.value = "LOADING_AD"
+                delay(2000)
+                _challengeFeedback.value = "AD_COMPLETE"
+                delay(1000)
+                _challengeFeedback.value = null
+            }
+
+            val updated = current.copy(
+                name = newName,
+                hasRenamed = true
+            )
             repository.savePetState(updated)
+            soundManager.playSuccess()
+            triggerCelebration()
         }
     }
 
@@ -358,6 +382,7 @@ class PetViewModel(
         if (optionIndex == challenge.correctAnswerIndex) {
             _challengeFeedback.value = "CORRECT"
             soundManager.playSuccess()
+            triggerCelebration()
             viewModelScope.launch {
                 val current = petState.value ?: return@launch
 
@@ -527,6 +552,7 @@ class PetViewModel(
                     soundManager.playSuccess()
                 }
                 
+                triggerCelebration()
                 repository.savePetState(updated)
                 
                 repository.updateFocusSessionStatus(_activeFocusEntity.value!!.id, "COMPLETED")
@@ -603,6 +629,7 @@ class PetViewModel(
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             soundManager.playClick()
+            triggerCelebration()
             val updatedEnergy = (current.energy + 15f).coerceIn(0f, 100f)
             val updatedHealth = (current.health + 5f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
@@ -625,6 +652,7 @@ class PetViewModel(
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             soundManager.playClick()
+            triggerCelebration()
             val updatedHealth = (current.health + 12f).coerceIn(0f, 100f)
             val updatedEnergy = (current.energy + 8f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
@@ -657,6 +685,15 @@ class PetViewModel(
     private val _gameLastPlayed = MutableStateFlow<Map<String, Long>>(emptyMap())
     val gameCooldowns: StateFlow<Map<String, Long>> = _gameLastPlayed.asStateFlow()
 
+    private val _celebrationTrigger = MutableSharedFlow<Unit>(replay = 0)
+    val celebrationTrigger: SharedFlow<Unit> = _celebrationTrigger.asSharedFlow()
+
+    fun triggerCelebration() {
+        viewModelScope.launch {
+            _celebrationTrigger.emit(Unit)
+        }
+    }
+
     fun completeMinigame(bytesEarned: Int, healthEarned: Float, energyCost: Float) {
         viewModelScope.launch {
             val pet = repository.petState.firstOrNull() ?: return@launch
@@ -667,6 +704,7 @@ class PetViewModel(
             )
             repository.savePetState(updated)
             soundManager.playSuccess()
+            triggerCelebration()
             
             if (bytesEarned == 100) { // Bug Hunt score 10
                 achievementsRepository.unlockAchievement("cazador_de_bugs")

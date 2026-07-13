@@ -13,7 +13,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
+import android.graphics.Paint
+import androidx.compose.animation.core.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
@@ -66,13 +73,19 @@ fun AnimatedThemeBackground(
 // ---------------------------------------------------------
 @Composable
 fun MatrixBackground(primary: Color, accent: Color) {
-    val textMeasurer = rememberTextMeasurer()
     val infiniteTransition = rememberInfiniteTransition(label = "matrix")
 
     val baseTime by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1000f,
         animationSpec = infiniteRepeatable(tween(320000, easing = LinearEasing)),
         label = "baseTime"
+    )
+
+    // Animación de aparición progresiva (intro fade)
+    val introAlpha by animateFloatAsState(
+        targetValue = 1f,
+        animationSpec = tween(3000, easing = LinearOutSlowInEasing),
+        label = "matrix_intro"
     )
 
     val burstFactor by infiniteTransition.animateFloat(
@@ -91,79 +104,55 @@ fun MatrixBackground(primary: Color, accent: Color) {
         label = "burst"
     )
 
-    val hiddenMessages = remember {
-        listOf(
-            "te quiero",
-            "graba esto",
-            "come sano",
-            "sigue asi",
-            "eres genial",
-            ":)",
-            "debug mode",
-            "hola mundo",
-            "push it",
-            "commit"
-        )
+    // Usamos un pool de caracteres fijo para evitar Random excesivo en el loop de dibujo
+    val characters = remember { charArrayOf('0', '1') }
+    
+    // Optimizamos usando NativeCanvas para evitar el overhead de TextMeasurer en loops grandes
+    val paint = remember {
+        Paint().apply {
+            textAlign = Paint.Align.CENTER
+            isAntiAlias = false // Matrix es pixelado, desactivar AA ahorra CPU
+            isFakeBoldText = true
+        }
     }
-
-    val msgColumn = remember { Random.nextInt(3, 8) }
-    val msgIndex = remember { Random.nextInt(hiddenMessages.size) }
 
     Canvas(modifier = Modifier.fillMaxSize()) {
         val numColumns = (size.width / 32f).toInt()
         val random = java.util.Random(42)
         val speedMultiplier = 1f + burstFactor * 0.5f
-        val textStyle = TextStyle(
-            color = primary,
-            fontSize = 14.sp,
-            fontFamily = FontFamily.Monospace
-        )
-        val dimStyle = TextStyle(
-            color = primary.copy(alpha = 0.3f),
-            fontSize = 14.sp,
-            fontFamily = FontFamily.Monospace
-        )
+        
+        drawIntoCanvas { canvas ->
+            val nativeCanvas = canvas.nativeCanvas
+            
+            for (i in 0 until numColumns) {
+                val speed = (8f + random.nextFloat() * 12f) * speedMultiplier
+                val yOffset = (baseTime * speed + random.nextFloat() * 2000f) % (size.height + 200f) - 100f
+                val length = 6 + random.nextInt(6)
+                val columnSize = 24f + random.nextFloat() * 24f // Tamaño variable por columna para efecto de profundidad
 
-        for (i in 0 until numColumns) {
-            val speed = (8f + random.nextFloat() * 12f) * speedMultiplier
-            val yOffset = (baseTime * speed + random.nextFloat() * 2000f) % (size.height + 200f) - 100f
-            val length = 6 + random.nextInt(6)
+                // Staggered column appearance based on horizontal position
+                val columnIntroFactor = (introAlpha * 1.5f - (i.toFloat() / numColumns)).coerceIn(0f, 1f)
+                if (columnIntroFactor <= 0f) continue
 
-            for (j in 0 until length) {
-                val alpha = 1f - (j.toFloat() / length)
-                val char = if (random.nextFloat() > 0.5f) "1" else "0"
-                val charStyle = if (j == 0) textStyle else dimStyle
-                val y = yOffset - j * 24f
-                if (y in -24f..size.height - 16f) {
-                    drawText(
-                        textMeasurer,
-                        text = char,
-                        topLeft = Offset(i * 32f + 8f, y.coerceAtLeast(0f)),
-                        style = charStyle.copy(
-                            color = charStyle.color.copy(
-                                alpha = alpha.coerceIn(0.15f, 1f) * if (j == 0) 1f else 0.6f
-                            )
+                for (j in 0 until length) {
+                    val alpha = (1f - (j.toFloat() / length)) * columnIntroFactor
+                    val char = characters[random.nextInt(characters.size)]
+                    
+                    val y = yOffset - j * 32f
+                    if (y in -40f..size.height + 40f) {
+                        paint.color = (if (j == 0) primary else primary.copy(alpha = 0.4f))
+                            .copy(alpha = alpha.coerceIn(0f, 1f))
+                            .toArgb()
+                        paint.textSize = columnSize
+                        
+                        nativeCanvas.drawText(
+                            char.toString(),
+                            i * 32f + 16f,
+                            y,
+                            paint
                         )
-                    )
+                    }
                 }
-            }
-        }
-
-        if (msgColumn in 0 until numColumns) {
-            val revealProgress = ((baseTime % 5000f) / 5000f)
-            val msg = hiddenMessages[msgIndex]
-            val visibleChars = (revealProgress * msg.length).toInt().coerceIn(0, msg.length)
-            if (visibleChars > 0) {
-                drawText(
-                    textMeasurer,
-                    text = msg.substring(0, visibleChars),
-                    topLeft = Offset(msgColumn * 32f + 8f, size.height / 3f),
-                    style = TextStyle(
-                        color = accent,
-                        fontSize = 14.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                )
             }
         }
     }

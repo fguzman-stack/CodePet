@@ -3,7 +3,6 @@ package com.tamagotchi.code.ui.components
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
 import com.tamagotchi.code.ui.theme.LocalReduceMotion
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -41,8 +40,6 @@ fun ViewportCard(
     onPlayClick: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
-    val bounceScale = remember { Animatable(1f) }
-    val bounceOffsetY = remember { Animatable(0f) }
     val heartOffsetY = remember { Animatable(0f) }
     val heartAlpha = remember { Animatable(0f) }
     var showHeart by remember { mutableStateOf(false) }
@@ -56,26 +53,12 @@ fun ViewportCard(
         viewModel.soundManager.playClick()
         scope.launch {
             showHeart = true
-            bounceScale.snapTo(1f)
-            bounceOffsetY.snapTo(0f)
             heartOffsetY.snapTo(0f)
             heartAlpha.snapTo(1f)
-            launch { bounceScale.animateTo(1.18f, tween(PetAnimationConfig.bounceDurationMs(reduceMotion))); bounceScale.animateTo(1f, spring(dampingRatio = 0.35f)) }
-            launch { bounceOffsetY.animateTo(-16f, tween(PetAnimationConfig.bounceDurationMs(reduceMotion))); bounceOffsetY.animateTo(0f, spring(dampingRatio = 0.35f)) }
             launch { heartOffsetY.animateTo(-110f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))); heartAlpha.animateTo(0f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))) }
             delay((PetAnimationConfig.heartDurationMs(reduceMotion) + 120).toLong())
             showHeart = false
         }
-    }
-
-    val petImageRes = when (state.currentStatus) {
-        "SLEEPING" -> R.drawable.mascota_sleeping
-        "STUDYING" -> R.drawable.mascota_studying
-        "SICK" -> R.drawable.mascota_sick
-        "SAD" -> R.drawable.mascota_sad
-        "HUNGRY" -> R.drawable.mascota_hungry
-        "EXCITED" -> R.drawable.mascota_excited
-        else -> R.drawable.mascota_happy
     }
 
     val statusColor = when (state.currentStatus) {
@@ -88,43 +71,59 @@ fun ViewportCard(
         else -> MaterialTheme.colorScheme.secondary
     }
 
-    val randomQuote = remember(state.currentStatus) {
+    val randomQuote = remember(state.currentStatus, state.xp) {
         val quotes = when (state.currentStatus) {
             "SLEEPING" -> listOf(
                 "Zzz... if (dream) { sleep() } else { repeat() }... Zzz",
                 "Cargando baterías... no interrumpas mi hilo principal.",
-                "Soñando con compiladores veloces y cero NullPointers..."
+                "Soñando con compiladores veloces y cero NullPointers...",
+                "Mi CPU está en modo ahorro. Vuelve en un ciclo de reloj.",
+                "Zzz... ¿viste ese commit? Fue... legendario..."
             )
             "STUDYING" -> listOf(
                 "¡Shhh! Estoy optimizando algoritmos en mi cerebro.",
                 "Compilando... codeando a 1000 WPM.",
-                "Siento cómo se incrementa mi sinapsis neuronal binaria."
+                "Siento cómo se incrementa mi sinapsis neuronal binaria.",
+                "¿Sabías que el primer bug fue una polilla real? Yo prefiero los digitales.",
+                "Mi código es arte. Tu código... bueno, funciona.",
+                "Concentración total. No me hagas un force push ahora."
             )
             "SICK" -> listOf(
                 "Error 500: Necesito desbuguear urgente. ¡Dame una píldora!",
                 "Demasiados bugs acumulados en mi stack... me siento mal.",
-                "Siento mi CPU sobrecalentada. ¿Podemos repasar un poco?"
+                "Siento mi CPU sobrecalentada. ¿Podemos repasar un poco?",
+                "Mi recolector de basura no está funcionando. Me siento... sucio.",
+                "¿Me formateas? No, mejor dame cariño, es menos traumático."
             )
             "SAD" -> listOf(
                 "Tengo flojera... me siento un poco depre.",
                 "Mi batería de motivación está por debajo del 20%.",
-                "¿Procrastinando otra vez? Mi código se llena de advertencias."
+                "¿Procrastinando otra vez? Mi código se llena de advertencias.",
+                "Siento que mi arquitectura se desmorona. Necesito un refactor emocional.",
+                "Ni siquiera un 'Hello World' me anima hoy."
             )
             "HUNGRY" -> listOf(
                 "¡NullPointerException en mi estómago! Necesito bytes.",
                 "Mi caché de energía está vacía, ¿me das de comer?",
-                "Sin comida, mi rendimiento cae a O(n^2)."
+                "Sin comida, mi rendimiento cae a O(n^2).",
+                "Mi estómago está haciendo un loop infinito de ruidos.",
+                "Aliméntame o empezaré a borrar tus archivos temporales. Es broma... ¿o no?"
             )
             "EXCITED" -> listOf(
                 "¡Wiii! ¡Mi código es O(1) y mi corazón también!",
                 "¡Nivel de felicidad al MÁXIMO! Gracias por quererme.",
-                "¡Siento que podría compilar el kernel de Linux en 1 segundo!"
+                "¡Siento que podría compilar el kernel de Linux en 1 segundo!",
+                "¡Soy el root de tu corazón! ¡Wiiiii!",
+                "¡Todo compila a la primera! ¡Esto es magia negra!"
             )
             else -> listOf(
                 "¡Compilar sin advertencias es mi pasión!",
                 "¿Listo para tirar unas líneas de código limpias hoy?",
                 "¡Siento el poder de un refactor exitoso!",
-                "Me agradas, haces que mi arquitectura sea modular y sólida."
+                "Me agradas, haces que mi arquitectura sea modular y sólida.",
+                "¿Has probado a apagarlo y volverlo a encender? A mí me funciona.",
+                "Tu código es tan limpio que puedo ver mi reflejo en él.",
+                "Oye, ¿has visto mis logs? Están llenos de amor por ti."
             )
         }
         quotes.random()
@@ -156,13 +155,14 @@ fun ViewportCard(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             style = MaterialTheme.typography.titleLarge,
+                            color = if (appTheme.name == "Matrix Green") appTheme.primary else MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.testTag("pet_name_text")
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = "Renombrar",
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = statusColor,
                             modifier = Modifier
                                 .size(16.dp)
                                 .clickable { onRenameClick() }
@@ -211,39 +211,6 @@ fun ViewportCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val infiniteTransition = rememberInfiniteTransition(label = "pet_animation")
-
-            val amplitude = PetAnimationConfig.petFloatAmplitudeDp(state.currentStatus)
-            val offsetY by infiniteTransition.animateFloat(
-                initialValue = -amplitude,
-                targetValue = amplitude,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(PetAnimationConfig.petFloatDurationMs(state.currentStatus, reduceMotion), easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "pet_offset_y"
-            )
-
-            val offsetX by infiniteTransition.animateFloat(
-                initialValue = if (state.currentStatus == "SICK") -4f else 0f,
-                targetValue = if (state.currentStatus == "SICK") 4f else 0f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(if (reduceMotion) 1200 else 1400, easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "pet_offset_x"
-            )
-
-            val scale by infiniteTransition.animateFloat(
-                initialValue = if (state.currentStatus == "HUNGRY") 0.97f else 1f,
-                targetValue = if (state.currentStatus == "HUNGRY") 1.03f else 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(if (reduceMotion) 1600 else 2200, easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "pet_scale"
-            )
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -263,20 +230,11 @@ fun ViewportCard(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .offset(x = offsetX.dp, y = offsetY.dp)
-                        .scale(bounceScale.value * scale)
-                ) {
-                    Image(
-                        painter = painterResource(id = petImageRes),
-                        contentDescription = "Estado: ${state.currentStatus}",
-                        modifier = Modifier
-                            .offset(y = bounceOffsetY.value.dp)
-                            .size(170.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable { onPetTap() },
-                        contentScale = ContentScale.Crop
+                Box {
+                    AnimatedPetSprite(
+                        status = state.currentStatus,
+                        celebrationTrigger = viewModel.celebrationTrigger,
+                        onClick = { onPetTap() }
                     )
 
                     Box(
@@ -478,17 +436,6 @@ fun ViewportCard(
                     Icon(Icons.Default.CleaningServices, contentDescription = "Limpiar", modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
                     Text("Limpiar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
-                }
-                Button(
-                    onClick = { onRenameClick() },
-                    colors = ButtonDefaults.buttonColors(containerColor = statusColor),
-                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
-                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
-                    modifier = Modifier.weight(1f).height(34.dp)
-                ) {
-                    Icon(Icons.Default.Settings, contentDescription = "Ajustar", modifier = Modifier.size(14.dp))
-                    Spacer(modifier = Modifier.width(3.dp))
-                    Text("Ajustar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = onPlayClick,

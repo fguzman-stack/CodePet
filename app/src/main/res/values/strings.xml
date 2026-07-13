@@ -84,6 +84,7 @@
     <string name="settings_lang_primary">Lenguaje Principal</string>
     <string name="settings_lang_active_topics">Temas Activos</string>
     <string name="settings_lang_difficulty">Dificultad</string>
+    <string name="settings_lang_diff_beginner">Principiante</string>
     <string name="settings_lang_diff_initial">Inicial</string>
     <string name="settings_lang_diff_intermediate">Intermedia</string>
     <string name="settings_lang_diff_mixed">Mixta</string>

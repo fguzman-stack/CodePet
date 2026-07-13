@@ -17,5 +17,6 @@ data class PetStateEntity(
     val lastUpdated: Long = System.currentTimeMillis(),
     val streak: Int = 0,
     val lastStudyDate: Long = 0,
-    val currentStatus: String = "HAPPY"
+    val currentStatus: String = "HAPPY",
+    val hasRenamed: Boolean = false
 )
