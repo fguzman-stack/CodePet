@@ -55,13 +55,16 @@ object DecayCalculator {
             newStatus = StatusCalculator.determineStatus(newHealth, newHunger, newEnergy, false, false)
         }
 
+        val isDead = newHealth <= 0f
+
         return state.copy(
             hunger = newHunger,
             energy = newEnergy,
             health = newHealth,
             streak = newStreak,
             lastUpdated = now,
-            currentStatus = newStatus
+            currentStatus = if (isDead) "DEAD" else newStatus,
+            isDead = isDead
         )
     }
 }

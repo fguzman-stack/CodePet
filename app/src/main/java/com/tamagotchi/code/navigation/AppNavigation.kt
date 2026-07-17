@@ -33,6 +33,7 @@ object Routes {
     const val SHOP = "shop"
     const val SETTINGS = "settings"
     const val SETTINGS_LANGUAGE = "settings_language"
+    const val SETTINGS_ABOUT = "settings_about"
     const val GAMES = "games"
     const val BUG_HUNT = "bug_hunt"
     const val GIT_RESCUE = "git_rescue"
@@ -57,8 +58,7 @@ val bottomNavItems = listOf(
 fun AppNavigation(viewModel: PetViewModel) {
     if (!viewModel.hasSeenOnboarding.value) {
         com.tamagotchi.code.feature.onboarding.OnboardingScreen(
-            onComplete = { name, topics -> viewModel.completeOnboarding(name, topics) },
-            onSkip = { viewModel.skipOnboarding() }
+            onComplete = { name, topics -> viewModel.completeOnboarding(name, topics) }
         )
         return
     }
@@ -201,12 +201,18 @@ fun AppNavigation(viewModel: PetViewModel) {
                 com.tamagotchi.code.feature.settings.SettingsScreen(
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() },
-                    onNavigateToLanguage = { navController.navigate(Routes.SETTINGS_LANGUAGE) }
+                    onNavigateToLanguage = { navController.navigate(Routes.SETTINGS_LANGUAGE) },
+                    onNavigateToAbout = { navController.navigate(Routes.SETTINGS_ABOUT) }
                 )
             }
             composable(Routes.SETTINGS_LANGUAGE) {
                 com.tamagotchi.code.feature.settings.SettingsLanguageScreen(
                     viewModel = viewModel,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.SETTINGS_ABOUT) {
+                com.tamagotchi.code.feature.settings.AboutScreen(
                     onNavigateBack = { navController.popBackStack() }
                 )
             }

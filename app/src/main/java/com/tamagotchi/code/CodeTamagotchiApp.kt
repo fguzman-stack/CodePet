@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.tamagotchi.code.di.appModule
 import com.tamagotchi.code.util.PetCheckWorker
+import com.tamagotchi.code.widget.WidgetUpdateWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.util.concurrent.TimeUnit
@@ -23,6 +24,7 @@ class CodeTamagotchiApp : Application() {
         }
         createNotificationChannel()
         schedulePetCheck()
+        scheduleWidgetUpdate()
     }
 
     private fun createNotificationChannel() {
@@ -53,6 +55,18 @@ class CodeTamagotchiApp : Application() {
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "pet_check",
+            ExistingPeriodicWorkPolicy.KEEP,
+            request
+        )
+    }
+
+    private fun scheduleWidgetUpdate() {
+        val request = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(
+            1, TimeUnit.HOURS
+        ).build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "widget_update",
             ExistingPeriodicWorkPolicy.KEEP,
             request
         )

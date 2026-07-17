@@ -52,6 +52,34 @@ object ThemeRegistry {
     val allThemes = listOf(
 
         // ──────────────────────────────────────────────────────────
+        // 0. DEFAULT – Tema base, siempre disponible, adaptable
+        // ──────────────────────────────────────────────────────────
+        AppTheme(
+            name = "Default",
+            icon = Icons.Default.Palette,
+            description = "Tema base. Adaptable al modo claro u oscuro del sistema.",
+            isDark = false,
+            background = Color(0xFFF8F9FA),
+            surface = Color(0xFFFFFFFF),
+            surfaceVariant = Color(0xFFF0F0F3),
+            primary = Color(0xFF6750A4),
+            secondary = Color(0xFF625B71),
+            tertiary = Color(0xFF7D5260),
+            onPrimary = Color.White,
+            textPrimary = Color(0xFF1C1B1F),
+            textSecondary = Color(0xFF6F6E77),
+            accent = Color(0xFF6750A4),
+            success = Color(0xFF4CAF50),
+            error = Color(0xFFB3261E),
+            fontFamily = FontFamily.Default,
+            titleFontFamily = FontFamily.Default,
+            titleWeight = FontWeight.Bold,
+            cornerRadius = 12.dp,
+            borderWidth = 0.dp,
+            usesGradients = false
+        ),
+
+        // ──────────────────────────────────────────────────────────
         // 1. MATRIX GREEN – Terminal hacker, monospace puro
         // ──────────────────────────────────────────────────────────
         AppTheme(
@@ -67,7 +95,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF4AF626),
             onPrimary = Color(0xFF001A06),
             textPrimary = Color(0xFFD1FFD7),
-            textSecondary = Color(0xFF5AC66A),
+            textSecondary = Color(0xFF7DE88A),
             accent = Color(0xFF00FF41),
             success = Color(0xFF00FF41),
             error = Color(0xFFFF1744),
@@ -96,7 +124,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF4C3B7F),
             onPrimary = Color.White,
             textPrimary = Color(0xFFF2EDFF),
-            textSecondary = Color(0xFFA192D1),
+            textSecondary = Color(0xFFC4B8E8),
             accent = Color(0xFFD946EF),
             success = Color(0xFF2DD4BF),
             error = Color(0xFFFB7185),
@@ -211,7 +239,7 @@ object ThemeRegistry {
             tertiary = Color(0xFFFF003C),
             onPrimary = Color.Black,
             textPrimary = Color(0xFFFFFFFF),
-            textSecondary = Color(0xFF888888),
+            textSecondary = Color(0xFFAAAAAA),
             accent = Color(0xFF00FFD1),
             success = Color(0xFF00FF00),
             error = Color(0xFFFF003C),
@@ -239,7 +267,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF90E0EF),
             onPrimary = Color(0xFF001A29),
             textPrimary = Color(0xFFE0F7FA),
-            textSecondary = Color(0xFF81B2C4),
+            textSecondary = Color(0xFFA0D0E0),
             accent = Color(0xFF00B4D8),
             success = Color(0xFF00E676),
             error = Color(0xFFFF5252),
@@ -268,7 +296,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF8B0000),
             onPrimary = Color.White,
             textPrimary = Color(0xFFFFF0E6),
-            textSecondary = Color(0xFFB88673),
+            textSecondary = Color(0xFFD4A090),
             accent = Color(0xFFFF8C00),
             success = Color(0xFF76FF03),
             error = Color(0xFFFF1744),
@@ -297,7 +325,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF8B0000),
             onPrimary = Color.White,
             textPrimary = Color(0xFFEBEBEB),
-            textSecondary = Color(0xFF8C8683),
+            textSecondary = Color(0xFFB0A8A5),
             accent = Color(0xFFC0A080),
             success = Color(0xFF43A047),
             error = Color(0xFFD50000),
@@ -326,7 +354,7 @@ object ThemeRegistry {
             tertiary = Color(0xFF00BFFF),
             onPrimary = Color(0xFF01140D),
             textPrimary = Color(0xFFE6FFFA),
-            textSecondary = Color(0xFF849CA8),
+            textSecondary = Color(0xFFA8C0CC),
             accent = Color(0xFF8A2BE2),
             success = Color(0xFF00FFA3),
             error = Color(0xFFFF5252),
@@ -355,7 +383,7 @@ object ThemeRegistry {
             tertiary = Color(0xFFFF9F0A),
             onPrimary = Color.White,
             textPrimary = Color(0xFFFFFFFF),
-            textSecondary = Color(0xFFEBEBF5).copy(alpha = 0.6f),
+            textSecondary = Color(0xFFA0A0B0),
             accent = Color(0xFF0A84FF),
             success = Color(0xFF30D158),
             error = Color(0xFFFF453A),
@@ -383,7 +411,7 @@ object ThemeRegistry {
             tertiary = Color(0xFFFFDC00),
             onPrimary = Color(0xFFFFFFFF),
             textPrimary = Color(0xFFF0F0F0),
-            textSecondary = Color(0xFFAAAAAA),
+            textSecondary = Color(0xFFCCCCCC),
             accent = Color(0xFF00E5FF),
             success = Color(0xFF2ECC40),
             error = Color(0xFFFF4136),
@@ -396,7 +424,18 @@ object ThemeRegistry {
         )
     )
 
-    fun getTheme(name: String): AppTheme {
-        return allThemes.find { it.name == name } ?: allThemes.first()
+    fun getTheme(name: String, isDark: Boolean = false): AppTheme {
+        val theme = allThemes.find { it.name == name } ?: allThemes.first()
+        if (name != "Default" || !isDark) return theme
+        return theme.copy(
+            isDark = true,
+            background = Color(0xFF1C1B1F),
+            surface = Color(0xFF2B2930),
+            surfaceVariant = Color(0xFF3B3940),
+            textPrimary = Color(0xFFE6E1E5),
+            textSecondary = Color(0xFFB0ABB0),
+            primary = Color(0xFFD0BCFF),
+            secondary = Color(0xFFCCC2DC),
+        )
     }
 }

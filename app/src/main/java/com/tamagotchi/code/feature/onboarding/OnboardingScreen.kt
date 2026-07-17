@@ -25,51 +25,23 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
-    onComplete: (String, Set<String>) -> Unit,
-    onSkip: () -> Unit
+    onComplete: (String, Set<String>) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     val scope = rememberCoroutineScope()
     
     var selectedTopics by remember { mutableStateOf(setOf<String>()) }
     var petName by remember { mutableStateOf("") }
-    
-    var showSkipDialog by remember { mutableStateOf(false) }
-
-    if (showSkipDialog) {
-        AlertDialog(
-            onDismissRequest = { showSkipDialog = false },
-            title = { Text(stringResource(R.string.dialog_skip_title)) },
-            text = { Text(stringResource(R.string.dialog_skip_desc)) },
-            confirmButton = {
-                TextButton(onClick = { 
-                    showSkipDialog = false
-                    onSkip() 
-                }) {
-                    Text(stringResource(R.string.dialog_skip_confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showSkipDialog = false }) {
-                    Text(stringResource(R.string.dialog_skip_cancel))
-                }
-            }
-        )
-    }
 
     Scaffold(
         bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (pagerState.currentPage < 3) {
-                    TextButton(onClick = { showSkipDialog = true }) {
-                        Text(stringResource(R.string.onboarding_skip))
-                    }
+            if (pagerState.currentPage < 3) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
                     Button(onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -277,7 +249,13 @@ fun Step3(selectedTopics: Set<String>, onTopicsChange: (Set<String>) -> Unit) {
                             onTopicsChange(newSelection)
                         }
                     },
-                    label = { Text(topic) }
+                    label = { Text(topic) },
+                    leadingIcon = {
+                        com.tamagotchi.code.ui.components.TopicIcon(
+                            topic = topic,
+                            modifier = androidx.compose.ui.Modifier.size(18.dp)
+                        )
+                    }
                 )
             }
         }
@@ -335,6 +313,7 @@ fun Step4(petName: String, onNameChange: (String) -> Unit, onComplete: () -> Uni
         
         Button(
             onClick = onComplete,
+            enabled = petName.isNotBlank(),
             modifier = Modifier.fillMaxWidth().height(56.dp)
         ) {
             Text(stringResource(R.string.onboarding_step4_cta, previewName))

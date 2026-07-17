@@ -26,6 +26,9 @@ class UserPreferencesRepository(private val context: Context) {
         private val KEY_VIBRATION_ENABLED = booleanPreferencesKey("vibration_enabled")
         private val KEY_REDUCE_MOTION = booleanPreferencesKey("reduce_motion")
         private val KEY_GAME_LAST_PLAYED = stringSetPreferencesKey("game_last_played")
+        private val KEY_DEFAULT_THEME_MODE = stringPreferencesKey("default_theme_mode")
+        val KEY_LAST_DAILY_REWARD_CLAIM_TIME = androidx.datastore.preferences.core.longPreferencesKey("last_daily_reward_claim_time")
+        val KEY_DAILY_REWARD_DAY = androidx.datastore.preferences.core.intPreferencesKey("daily_reward_day")
     }
 
     val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -33,7 +36,11 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val currentTheme: Flow<String> = context.dataStore.data.map { prefs ->
-        prefs[KEY_THEME] ?: "Matrix Green"
+        prefs[KEY_THEME] ?: "Default"
+    }
+
+    val defaultThemeMode: Flow<String> = context.dataStore.data.map { prefs ->
+        prefs[KEY_DEFAULT_THEME_MODE] ?: "SYSTEM"
     }
 
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -81,6 +88,14 @@ class UserPreferencesRepository(private val context: Context) {
         }.toMap()
     }
 
+    val lastDailyRewardClaimTime: Flow<Long> = context.dataStore.data.map { prefs ->
+        prefs[KEY_LAST_DAILY_REWARD_CLAIM_TIME] ?: 0L
+    }
+
+    val dailyRewardDay: Flow<Int> = context.dataStore.data.map { prefs ->
+        prefs[KEY_DAILY_REWARD_DAY] ?: 0
+    }
+
     suspend fun setOnboardingCompleted() {
         context.dataStore.edit { prefs ->
             prefs[KEY_ONBOARDING] = true
@@ -103,6 +118,12 @@ class UserPreferencesRepository(private val context: Context) {
     suspend fun setUnlockedThemes(themes: Set<String>) {
         context.dataStore.edit { prefs ->
             prefs[KEY_UNLOCKED_THEMES] = themes
+        }
+    }
+
+    suspend fun setDefaultThemeMode(mode: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_DEFAULT_THEME_MODE] = mode
         }
     }
 
@@ -149,6 +170,13 @@ class UserPreferencesRepository(private val context: Context) {
         return context.dataStore.data.first().let { prefs ->
             val raw = prefs[KEY_GAME_LAST_PLAYED] ?: emptySet()
             raw.firstOrNull { it.startsWith("$gameId:") }?.split(":")?.get(1)?.toLongOrNull() ?: 0L
+        }
+    }
+
+    suspend fun setDailyRewardClaim(day: Int, time: Long) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_DAILY_REWARD_DAY] = day
+            prefs[KEY_LAST_DAILY_REWARD_CLAIM_TIME] = time
         }
     }
 }

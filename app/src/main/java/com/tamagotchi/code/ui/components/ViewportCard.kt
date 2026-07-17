@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +45,11 @@ fun ViewportCard(
     val heartAlpha = remember { Animatable(0f) }
     var showHeart by remember { mutableStateOf(false) }
 
+    var tapCount by remember { mutableIntStateOf(0) }
+    var showEasterEgg by remember { mutableStateOf(false) }
+    val easterEggScale = remember { Animatable(1f) }
+    val easterEggRotation = remember { Animatable(0f) }
+
     val appTheme = LocalAppTheme.current
     val reduceMotion = LocalReduceMotion.current
     val cardShape = RoundedCornerShape(appTheme.cornerRadius)
@@ -58,6 +64,29 @@ fun ViewportCard(
             launch { heartOffsetY.animateTo(-110f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))); heartAlpha.animateTo(0f, tween(PetAnimationConfig.heartDurationMs(reduceMotion))) }
             delay((PetAnimationConfig.heartDurationMs(reduceMotion) + 120).toLong())
             showHeart = false
+        }
+        tapCount++
+        if (tapCount >= 5) {
+            tapCount = 0
+            showEasterEgg = true
+            scope.launch {
+                easterEggScale.snapTo(1f)
+                easterEggRotation.snapTo(0f)
+                launch {
+                    easterEggScale.animateTo(1.3f, spring(dampingRatio = 0.3f, stiffness = 200f))
+                    easterEggScale.animateTo(1f, spring(dampingRatio = 0.5f, stiffness = 300f))
+                }
+                launch {
+                    easterEggRotation.animateTo(360f, tween(600, easing = FastOutSlowInEasing))
+                    easterEggRotation.snapTo(0f)
+                }
+                delay(1500)
+                showEasterEgg = false
+            }
+        }
+        scope.launch {
+            delay(2000)
+            tapCount = 0
         }
     }
 
@@ -264,6 +293,23 @@ fun ViewportCard(
                                 .offset(y = heartOffsetY.value.dp)
                                 .graphicsLayer(alpha = heartAlpha.value)
                                 .size(48.dp)
+                        )
+                    }
+
+                    if (showEasterEgg) {
+                        Text(
+                            text = "404: Personalidad no encontrada",
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .graphicsLayer(
+                                    scaleX = easterEggScale.value,
+                                    scaleY = easterEggScale.value,
+                                    rotationZ = easterEggRotation.value
+                                )
                         )
                     }
                 }

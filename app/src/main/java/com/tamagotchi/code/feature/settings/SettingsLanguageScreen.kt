@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.TopicIcon
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -88,6 +89,9 @@ fun SettingsLanguageScreen(
                             onClick = {
                                 viewModel.selectLanguage(lang)
                                 expandedLang = false
+                            },
+                            leadingIcon = {
+                                TopicIcon(topic = lang, modifier = androidx.compose.ui.Modifier.size(18.dp))
                             }
                         )
                     }
@@ -130,16 +134,18 @@ fun SettingsLanguageScreen(
                         onClick = {
                             val newSelection = selectedTopics.toMutableSet()
                             if (newSelection.contains(topic)) {
-                                if (newSelection.size > 1) { // Mínimo un tema
+                                if (newSelection.size > 1) {
                                     newSelection.remove(topic)
                                 }
                             } else {
                                 newSelection.add(topic)
                             }
-                            // viewModel does not have setSelectedTopics exposed publicly, we need to add it or use completeOnboarding, wait I'll add setTopics
                             viewModel.setTopics(newSelection)
                         },
-                        label = { Text(topic) }
+                        label = { Text(topic) },
+                        leadingIcon = {
+                            TopicIcon(topic = topic, modifier = androidx.compose.ui.Modifier.size(18.dp))
+                        }
                     )
                 }
             }

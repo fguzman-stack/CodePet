@@ -15,6 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HourglassBottom
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import kotlinx.coroutines.delay
@@ -164,7 +166,15 @@ fun BugHuntScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(stringResource(R.string.bug_hunt_round, currentRound, totalRounds), fontWeight = FontWeight.Bold)
-                    Text("⌛ ${timeRemaining}s", color = if (timeRemaining < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(
+                            Icons.Filled.HourglassBottom,
+                            contentDescription = null,
+                            tint = if (timeRemaining < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text("${timeRemaining}s", color = if (timeRemaining < 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

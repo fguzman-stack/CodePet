@@ -38,10 +38,13 @@ class PetViewModel(
     var hasSeenOnboarding = mutableStateOf(false)
         private set
 
-    var currentTheme = mutableStateOf("Matrix Green")
+    var currentTheme = mutableStateOf("Default")
         private set
 
-    val unlockedThemes = MutableStateFlow<Set<String>>(ThemeRegistry.allThemes.map { it.name }.toSet())
+    var defaultThemeMode = mutableStateOf("SYSTEM")
+        private set
+
+    val unlockedThemes = MutableStateFlow<Set<String>>(ThemeRegistry.allThemes.map { it.name }.toSet() + "Default")
     val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
 
     fun unlockTheme(themeName: String) {
@@ -85,10 +88,6 @@ class PetViewModel(
                 repository.savePetState(current.copy(name = updatedName))
             }
         }
-    }
-
-    fun skipOnboarding() {
-        completeOnboarding("Codey", defaultInitialTopics)
     }
 
     val difficulty = MutableStateFlow("Inicial")
@@ -146,6 +145,13 @@ class PetViewModel(
         }
     }
 
+    fun setDefaultThemeMode(mode: String) {
+        viewModelScope.launch {
+            userPreferences.setDefaultThemeMode(mode)
+            defaultThemeMode.value = mode
+        }
+    }
+
     fun exportProgressMock() {
         // Mock function for exporting progress
     }
@@ -189,6 +195,102 @@ class PetViewModel(
 
     fun dismissOfflineRewardDialog() {
         showOfflineRewardDialog.value = false
+    }
+
+    var showDailyRewardDialog = mutableStateOf(false)
+        private set
+    var nextClaimableDay = mutableStateOf(1)
+        private set
+    var isDailyRewardClaimedToday = mutableStateOf(false)
+        private set
+
+    fun dismissDailyRewardDialog() {
+        showDailyRewardDialog.value = false
+    }
+
+    fun openDailyRewardDialog() {
+        showDailyRewardDialog.value = true
+    }
+
+    fun checkDailyRewardEligibility() {
+        viewModelScope.launch {
+            delay(1000)
+            val lastClaimTime = userPreferences.lastDailyRewardClaimTime.firstOrNull() ?: 0L
+            val currentSavedDay = userPreferences.dailyRewardDay.firstOrNull() ?: 0
+            val now = System.currentTimeMillis()
+            
+            if (lastClaimTime == 0L) {
+                nextClaimableDay.value = 1
+                isDailyRewardClaimedToday.value = false
+                showDailyRewardDialog.value = true
+            } else {
+                val lastCal = java.util.Calendar.getInstance().apply { timeInMillis = lastClaimTime }
+                val nowCal = java.util.Calendar.getInstance().apply { timeInMillis = now }
+                
+                val sameDay = lastCal.get(java.util.Calendar.YEAR) == nowCal.get(java.util.Calendar.YEAR) &&
+                        lastCal.get(java.util.Calendar.DAY_OF_YEAR) == nowCal.get(java.util.Calendar.DAY_OF_YEAR)
+                
+                if (sameDay) {
+                    nextClaimableDay.value = if (currentSavedDay >= 7) 1 else currentSavedDay
+                    isDailyRewardClaimedToday.value = true
+                    showDailyRewardDialog.value = false
+                } else {
+                    val yesterdayCal = java.util.Calendar.getInstance().apply {
+                        timeInMillis = now
+                        add(java.util.Calendar.DAY_OF_YEAR, -1)
+                    }
+                    val claimedYesterday = lastCal.get(java.util.Calendar.YEAR) == yesterdayCal.get(java.util.Calendar.YEAR) &&
+                            lastCal.get(java.util.Calendar.DAY_OF_YEAR) == yesterdayCal.get(java.util.Calendar.DAY_OF_YEAR)
+                    
+                    if (claimedYesterday) {
+                        nextClaimableDay.value = if (currentSavedDay >= 7) 1 else currentSavedDay + 1
+                    } else {
+                        nextClaimableDay.value = 1
+                    }
+                    isDailyRewardClaimedToday.value = false
+                    showDailyRewardDialog.value = true
+                }
+            }
+        }
+    }
+
+    fun claimDailyReward() {
+        viewModelScope.launch {
+            val pet = repository.petState.firstOrNull() ?: return@launch
+            val targetDay = nextClaimableDay.value
+            if (targetDay < 1 || targetDay > 7) return@launch
+            
+            val reward = dailyRewardsList[targetDay - 1]
+            
+            val updatedXp = pet.xp + reward.xp
+            val updatedLevel = LevelCalculator.calculateLevel(updatedXp)
+            val updatedBytes = pet.bytes + reward.bytes
+            val updatedHealth = (pet.health + reward.healthRestore).coerceIn(0f, 100f)
+            val updatedEnergy = (pet.energy + reward.energyRestore).coerceIn(0f, 100f)
+            
+            var newStatus = pet.currentStatus
+            if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
+                newStatus = StatusCalculator.determineStatus(updatedHealth, pet.hunger, updatedEnergy, false, false)
+            }
+            
+            val updatedPet = pet.copy(
+                xp = updatedXp,
+                level = updatedLevel,
+                bytes = updatedBytes,
+                health = updatedHealth,
+                energy = updatedEnergy,
+                currentStatus = newStatus,
+                lastUpdated = System.currentTimeMillis()
+            )
+            repository.savePetState(updatedPet)
+            
+            userPreferences.setDailyRewardClaim(targetDay, System.currentTimeMillis())
+            isDailyRewardClaimedToday.value = true
+            showDailyRewardDialog.value = false
+            
+            soundManager.playSuccess()
+            triggerCelebration()
+        }
     }
 
     private var activeFocusSessionId: Long? = null
@@ -244,6 +346,7 @@ class PetViewModel(
         viewModelScope.launch { userPreferences.soundEnabled.collect { soundEnabled.value = it } }
         viewModelScope.launch { userPreferences.vibrationEnabled.collect { vibrationEnabled.value = it } }
         viewModelScope.launch { userPreferences.reduceMotion.collect { reduceMotion.value = it } }
+        viewModelScope.launch { userPreferences.defaultThemeMode.collect { defaultThemeMode.value = it } }
 
         viewModelScope.launch {
             userPreferences.unlockedThemes.collect { themes ->
@@ -317,6 +420,8 @@ class PetViewModel(
                 }
             }
         }
+        checkDailyRewardEligibility()
+        checkDeathState()
     }
 
     private fun resumeTimer() {
@@ -346,15 +451,6 @@ class PetViewModel(
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             
-            // Si ya ha sido renombrado antes, simulamos un anuncio
-            if (current.hasRenamed) {
-                _challengeFeedback.value = "LOADING_AD"
-                delay(2000)
-                _challengeFeedback.value = "AD_COMPLETE"
-                delay(1000)
-                _challengeFeedback.value = null
-            }
-
             val updated = current.copy(
                 name = newName,
                 hasRenamed = true
@@ -724,4 +820,84 @@ class PetViewModel(
             }
         }
     }
+
+    var showDeathDialog = mutableStateOf(false)
+        private set
+    var deathReviveCost = mutableStateOf(500)
+        private set
+
+    fun dismissDeathDialog() {
+        showDeathDialog.value = false
+    }
+
+    fun checkDeathState() {
+        viewModelScope.launch {
+            val pet = repository.petState.firstOrNull() ?: return@launch
+            if (pet.isDead) {
+                showDeathDialog.value = true
+            }
+        }
+    }
+
+    fun reviveWithBytes() {
+        viewModelScope.launch {
+            val pet = repository.petState.firstOrNull() ?: return@launch
+            if (!pet.isDead) return@launch
+            val cost = deathReviveCost.value
+            if (pet.bytes < cost) return@launch
+
+            val revived = pet.copy(
+                isDead = false,
+                health = 50f,
+                energy = 50f,
+                hunger = 50f,
+                currentStatus = "HAPPY",
+                bytes = pet.bytes - cost,
+                lastUpdated = System.currentTimeMillis()
+            )
+            repository.savePetState(revived)
+            showDeathDialog.value = false
+            soundManager.playLevelUp()
+            triggerCelebration()
+        }
+    }
+
+    fun reviveWithAd() {
+        viewModelScope.launch {
+            val pet = repository.petState.firstOrNull() ?: return@launch
+            if (!pet.isDead) return@launch
+
+            val revived = pet.copy(
+                isDead = false,
+                health = 40f,
+                energy = 40f,
+                hunger = 40f,
+                currentStatus = "HAPPY",
+                lastUpdated = System.currentTimeMillis()
+            )
+            repository.savePetState(revived)
+            showDeathDialog.value = false
+            soundManager.playLevelUp()
+            triggerCelebration()
+        }
+    }
 }
+
+data class DailyReward(
+    val day: Int,
+    val bytes: Int,
+    val xp: Int,
+    val healthRestore: Float = 0f,
+    val energyRestore: Float = 0f,
+    val title: String
+)
+
+val dailyRewardsList = listOf(
+    DailyReward(1, 50, 15, title = "Hola, Mundo!"),
+    DailyReward(2, 100, 25, title = "Variables Inicializadas"),
+    DailyReward(3, 150, 35, energyRestore = 15f, title = "Café Double Shot"),
+    DailyReward(4, 200, 45, title = "Bucle Optimizado"),
+    DailyReward(5, 250, 55, healthRestore = 15f, title = "Bug Solucionado"),
+    DailyReward(6, 350, 70, title = "Compilación Limpia"),
+    DailyReward(7, 500, 100, healthRestore = 25f, energyRestore = 25f, title = "Despliegue Exitoso (PROD)")
+)

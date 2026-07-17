@@ -1,5 +1,6 @@
 package com.tamagotchi.code.feature.settings
 
+import android.app.Activity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,28 +32,56 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.SweetAlertDialog
 import com.tamagotchi.code.ui.theme.AppTheme
 import com.tamagotchi.code.ui.theme.ThemeRegistry
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.util.AdManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: PetViewModel,
     onNavigateBack: () -> Unit,
-    onNavigateToLanguage: () -> Unit
+    onNavigateToLanguage: () -> Unit,
+    onNavigateToAbout: () -> Unit = {}
 ) {
     val petState by viewModel.petState.collectAsStateWithLifecycle()
     val soundEnabled by viewModel.soundEnabled.collectAsStateWithLifecycle()
     val vibrationEnabled by viewModel.vibrationEnabled.collectAsStateWithLifecycle()
     val reduceMotion by viewModel.reduceMotion.collectAsStateWithLifecycle()
     val currentTheme = viewModel.currentTheme.value
+    val defaultThemeMode = viewModel.defaultThemeMode.value
     val unlockedThemes by viewModel.unlockedThemes.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     
     var showResetStep1 by remember { mutableStateOf(false) }
     var showResetStep2 by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
+    var showAdDialog by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
+    
+    LaunchedEffect(Unit) {
+        AdManager.loadRewardedAd(context as Activity)
+    }
+
+    if (showAdDialog) {
+        SweetAlertDialog(
+            onDismissRequest = { showAdDialog = false },
+            title = stringResource(R.string.dialog_rename_ad_title),
+            text = stringResource(R.string.dialog_rename_ad_desc),
+            confirmButtonText = stringResource(R.string.dialog_rename_ad_confirm),
+            onConfirm = {
+                showAdDialog = false
+                AdManager.showRewardedAd(context as Activity) {
+                    showRenameDialog = true
+                    newName = petState?.name ?: ""
+                }
+            },
+            dismissButtonText = stringResource(R.string.dialog_rename_ad_cancel),
+            onDismiss = { showAdDialog = false }
+        )
+    }
 
     if (showResetStep1) {
         AlertDialog(
@@ -155,13 +185,13 @@ fun SettingsScreen(
         ) {
             // A. Perfil
             SettingsSectionTitle(stringResource(R.string.settings_section_profile))
-            SettingsItemClickable(
+            SettingsItemInfo(
                 title = stringResource(R.string.settings_profile_name),
-                subtitle = petState?.name ?: "",
-                onClick = {
-                    newName = petState?.name ?: ""
-                    showRenameDialog = true
-                }
+                subtitle = petState?.name ?: ""
+            )
+            SettingsItemClickable(
+                title = stringResource(R.string.settings_profile_rename_humor),
+                onClick = { showAdDialog = true }
             )
             SettingsItemInfo(
                 title = stringResource(R.string.settings_profile_level, petState?.level ?: 1)
@@ -200,6 +230,31 @@ fun SettingsScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Default theme mode selector
+            Text(
+                text = "Modo de tema base",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                listOf("Sistema" to "SYSTEM", "Claro" to "LIGHT", "Oscuro" to "DARK").forEach { (label, mode) ->
+                    FilterChip(
+                        selected = defaultThemeMode == mode,
+                        onClick = { viewModel.setDefaultThemeMode(mode) },
+                        label = { Text(label, fontSize = 12.sp) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
 
             SettingsItemSwitch(
                 title = stringResource(R.string.settings_experience_sound),
@@ -243,9 +298,11 @@ fun SettingsScreen(
                             .padding(vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = if (isUnlocked) "🏆" else "🔒",
-                            fontSize = 16.sp
+                        Icon(
+                            imageVector = if (isUnlocked) Icons.Filled.Check else Icons.Filled.Lock,
+                            contentDescription = null,
+                            tint = if (isUnlocked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(20.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
@@ -281,7 +338,7 @@ fun SettingsScreen(
             )
             SettingsItemClickable(
                 title = stringResource(R.string.settings_data_about),
-                onClick = { /* Open about */ }
+                onClick = onNavigateToAbout
             )
             
             Spacer(modifier = Modifier.height(32.dp))
