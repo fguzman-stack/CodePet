@@ -11,18 +11,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -32,6 +27,7 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,14 +43,11 @@ fun ViewportCard(
     val heartAlpha = remember { Animatable(0f) }
     var showHeart by remember { mutableStateOf(false) }
 
-    var tapCount by remember { mutableIntStateOf(0) }
-    var showEasterEgg by remember { mutableStateOf(false) }
-    val easterEggScale = remember { Animatable(1f) }
-    val easterEggRotation = remember { Animatable(0f) }
-
     val appTheme = LocalAppTheme.current
     val reduceMotion = LocalReduceMotion.current
     val cardShape = RoundedCornerShape(appTheme.cornerRadius)
+    
+    val equippedSkin by viewModel.equippedSkin.collectAsStateWithLifecycle()
 
     fun onPetTap() {
         viewModel.petThePet()
@@ -67,29 +60,7 @@ fun ViewportCard(
             delay((PetAnimationConfig.heartDurationMs(reduceMotion) + 120).toLong())
             showHeart = false
         }
-        tapCount++
-        if (tapCount >= 5) {
-            tapCount = 0
-            showEasterEgg = true
-            scope.launch {
-                easterEggScale.snapTo(1f)
-                easterEggRotation.snapTo(0f)
-                launch {
-                    easterEggScale.animateTo(1.3f, spring(dampingRatio = 0.3f, stiffness = 200f))
-                    easterEggScale.animateTo(1f, spring(dampingRatio = 0.5f, stiffness = 300f))
-                }
-                launch {
-                    easterEggRotation.animateTo(360f, tween(600, easing = FastOutSlowInEasing))
-                    easterEggRotation.snapTo(0f)
-                }
-                delay(1500)
-                showEasterEgg = false
-            }
-        }
-        scope.launch {
-            delay(2000)
-            tapCount = 0
-        }
+
     }
 
     val statusColor = when (state.currentStatus) {
@@ -262,14 +233,23 @@ fun ViewportCard(
                 contentAlignment = Alignment.Center
             ) {
                 Box {
-                    AnimatedPetSprite(
-                        status = state.currentStatus,
-                        level = state.level,
-                        equippedHat = state.equippedHat,
-                        celebrationTrigger = viewModel.celebrationTrigger,
-                        learningEventTrigger = viewModel.learningEventTrigger,
-                        onClick = { onPetTap() }
-                    )
+                    if (equippedSkin != null) {
+                        PixelArtPetSprite(
+                            status = state.currentStatus,
+                            level = state.level,
+                            equippedSkin = equippedSkin!!,
+                            celebrationTrigger = viewModel.celebrationTrigger,
+                            onClick = { onPetTap() }
+                        )
+                    } else {
+                        AnimatedPetSprite(
+                            status = state.currentStatus,
+                            level = state.level,
+                            celebrationTrigger = viewModel.celebrationTrigger,
+                            learningEventTrigger = viewModel.learningEventTrigger,
+                            onClick = { onPetTap() }
+                        )
+                    }
 
                     Box(
                         modifier = Modifier
@@ -300,22 +280,7 @@ fun ViewportCard(
                         )
                     }
 
-                    if (showEasterEgg) {
-                        Text(
-                            text = "404: Personalidad no encontrada",
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .graphicsLayer(
-                                    scaleX = easterEggScale.value,
-                                    scaleY = easterEggScale.value,
-                                    rotationZ = easterEggRotation.value
-                                )
-                        )
-                    }
+
                 }
             }
 

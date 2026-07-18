@@ -29,7 +29,6 @@ import com.tamagotchi.code.feature.games.HackathonScreen
 import com.tamagotchi.code.feature.skills.SkillTreeScreen
 import com.tamagotchi.code.feature.skills.SeasonPassScreen
 import com.tamagotchi.code.feature.skills.WeeklyMissionsScreen
-import com.tamagotchi.code.feature.settings.GitHubSyncScreen
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 object Routes {
@@ -40,7 +39,6 @@ object Routes {
     const val SETTINGS = "settings"
     const val SETTINGS_LANGUAGE = "settings_language"
     const val SETTINGS_ABOUT = "settings_about"
-    const val SETTINGS_GITHUB = "settings_github"
     const val GAMES = "games"
     const val BUG_HUNT = "bug_hunt"
     const val GIT_RESCUE = "git_rescue"
@@ -215,7 +213,6 @@ fun AppNavigation(viewModel: PetViewModel) {
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToLanguage = { navController.navigate(Routes.SETTINGS_LANGUAGE) },
                     onNavigateToAbout = { navController.navigate(Routes.SETTINGS_ABOUT) },
-                    onNavigateToGitHub = { navController.navigate(Routes.SETTINGS_GITHUB) },
                     onNavigateToSkillTree = { navController.navigate(Routes.SKILL_TREE) },
                     onNavigateToSeasonPass = { navController.navigate(Routes.SEASON_PASS) },
                     onNavigateToWeeklyMissions = { navController.navigate(Routes.WEEKLY_MISSIONS) }
@@ -287,12 +284,6 @@ fun AppNavigation(viewModel: PetViewModel) {
             }
             composable(Routes.WEEKLY_MISSIONS) {
                 WeeklyMissionsScreen(
-                    viewModel = viewModel,
-                    onBack = { navController.popBackStack() }
-                )
-            }
-            composable(Routes.SETTINGS_GITHUB) {
-                GitHubSyncScreen(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() }
                 )

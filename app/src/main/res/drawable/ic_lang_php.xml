@@ -7,10 +7,23 @@
     <path
         android:fillColor="#777BB3"
         android:pathData="M128 16C64 16 16 60 16 128c0 68 48 112 112 112s112-44 112-112C240 60 192 16 128 16z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M162 116c-6 0-10 2-13 6c-3 4-4 10-3 18c1 6 3 11 6 14s8 5 14 5h14l-4-20h-8c-4 0-6-1-6-4s1-6 3-10l-3-9zM106 116c-6 0-10 2-13 6s-4 10-3 18c1 6 3 11 6 14s8 5 14 5h14l-3-18l-9-1l-2-10l-4-14z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M76 86h16l14 73h-16zM150 86h16l14 73h-16z" />
+    <group
+        android:translateX="56"
+        android:translateY="86">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M0,0h144v84h-144z" />
+        <path
+            android:fillColor="#777BB3"
+            android:pathData="M20,12h40l-10,60h-20l5,-28h-10l-5,28h-16z" />
+        <path
+            android:fillColor="#777BB3"
+            android:pathData="M58,12h40l-4,20h16c12,0 20,4 24,16c2,6 2,16 0,24l-6,28h-16l6,-28c2,-8 0,-14 -4,-16c-4,-2 -10,-4 -18,-4h-20z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M66,28l-4,20h16c8,0 14,2 18,6c4,4 6,10 4,20l-4,18h16l4,-18c2,-8 0,-14 -4,-18c-4,-4 -10,-6 -18,-6h-20z" />
+        <path
+            android:fillColor="#777BB3"
+            android:pathData="M108,12l10,-60h16l-10,60z" />
+    </group>
 </vector>

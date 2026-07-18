@@ -56,7 +56,6 @@ abstract class AppDatabase : RoomDatabase() {
 
         val MIGRATION_4_5 = object : androidx.room.migration.Migration(4, 5) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE pet_state ADD COLUMN equippedHat TEXT")
                 db.execSQL("CREATE TABLE IF NOT EXISTS `code_cards` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `content` TEXT NOT NULL, `type` TEXT NOT NULL, `shown` INTEGER NOT NULL)")
                 db.execSQL("CREATE TABLE IF NOT EXISTS `quests` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `targetType` TEXT NOT NULL, `targetValue` INTEGER NOT NULL, `currentValue` INTEGER NOT NULL, `rewardBytes` INTEGER NOT NULL, `rewardXp` INTEGER NOT NULL, `isCompleted` INTEGER NOT NULL, `expiresAt` INTEGER NOT NULL)")
                 db.execSQL("CREATE TABLE IF NOT EXISTS `owned_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `itemId` TEXT NOT NULL, `type` TEXT NOT NULL, `isEquipped` INTEGER NOT NULL)")

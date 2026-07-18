@@ -46,7 +46,7 @@ fun ShopScreen(
 
         ShopPanel(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
-        HatShopPanel(viewModel = viewModel, state = state)
+        SkinShopPanel(viewModel = viewModel, state = state)
         Spacer(modifier = Modifier.height(16.dp))
         PetEditorPanel(viewModel = viewModel, state = state)
     }
@@ -150,17 +150,17 @@ fun ShopPanel(
 }
 
 @Composable
-fun HatShopPanel(
+fun SkinShopPanel(
     viewModel: PetViewModel,
     state: PetStateEntity
 ) {
     val appTheme = LocalAppTheme.current
     val ownedItems by viewModel.ownedItems.collectAsStateWithLifecycle()
-    val equippedHat = state.equippedHat
+    val equippedSkin by viewModel.equippedSkin.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> SOMBREROS",
+            text = ">>> SKINS (MODO RETRO)",
             fontSize = 13.sp,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
@@ -169,25 +169,43 @@ fun HatShopPanel(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Personaliza a Codey con estilo.",
+            text = "Activa la opción nano nativa (Pixel Art Canvas).",
             fontSize = 11.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        val hats = listOf(
-            HatData("dev_cap", "Gorro Programador", 50, Icons.Default.DeveloperMode, "Estilo clásico dev"),
-            HatData("grad_cap", "Birrete Graduación", 100, Icons.Default.School, "Codey se gradúa"),
-            HatData("vr_helmet", "Casco VR", 150, Icons.Default.Headset, "Realidad virtual"),
-            HatData("chef_hat", "Sombrero Chef", 80, Icons.Default.Restaurant, "Master chef"),
-            HatData("crown", "Corona del Código", 500, Icons.Default.Star, "Rey del código")
+        data class ShopSkinEntry(val id: String, val name: String, val cost: Int, val icon: ImageVector, val description: String)
+
+        val skins = listOf(
+            ShopSkinEntry("skin_alien", "Alien Verde (8-bits)", 300, Icons.Default.SmartToy, "Pixel Art clásico"),
+            ShopSkinEntry("skin_robot", "Robot Monocromo", 400, Icons.Default.Computer, "Escala de grises")
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            hats.forEach { hat ->
-                val owns = ownedItems.any { it.itemId == hat.id }
-                val isEquipped = equippedHat == hat.id
+            
+            if (equippedSkin != null) {
+                Button(
+                    onClick = { viewModel.equipSkin(null) },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    shape = RoundedCornerShape(6.dp),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth().height(36.dp)
+                ) {
+                    Text(
+                        text = "DESACTIVAR MODO RETRO",
+                        color = MaterialTheme.colorScheme.onError,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            skins.forEach { skin ->
+                val owns = ownedItems.any { it.itemId == skin.id }
+                val isEquipped = equippedSkin == skin.id
 
                 Surface(
                     shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
@@ -203,8 +221,8 @@ fun HatShopPanel(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = hat.icon,
-                            contentDescription = hat.name,
+                            imageVector = skin.icon,
+                            contentDescription = skin.name,
                             tint = if (owns) appTheme.accent else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.size(22.dp)
                         )
@@ -212,13 +230,13 @@ fun HatShopPanel(
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = hat.name,
+                                text = skin.name,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = hat.description,
+                                text = skin.description,
                                 fontSize = 9.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -226,15 +244,15 @@ fun HatShopPanel(
 
                         if (!owns) {
                             Button(
-                                onClick = { viewModel.buyHat(hat.id, hat.cost, hat.name) },
-                                enabled = state.bytes >= hat.cost,
+                                onClick = { viewModel.buySkin(skin.id, skin.cost, skin.name) },
+                                enabled = state.bytes >= skin.cost,
                                 colors = ButtonDefaults.buttonColors(containerColor = appTheme.accent),
                                 shape = RoundedCornerShape(6.dp),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                                 modifier = Modifier.height(30.dp)
                             ) {
                                 Text(
-                                    text = "${hat.cost} B",
+                                    text = "${skin.cost} B",
                                     color = appTheme.onPrimary,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 10.sp
@@ -242,7 +260,7 @@ fun HatShopPanel(
                             }
                         } else if (isEquipped) {
                             Text(
-                                text = "EQUIPADO",
+                                text = "ACTIVO",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
                                 color = appTheme.accent,
@@ -250,14 +268,14 @@ fun HatShopPanel(
                             )
                         } else {
                             Button(
-                                onClick = { viewModel.equipHat(hat.id) },
+                                onClick = { viewModel.equipSkin(skin.id) },
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                                 shape = RoundedCornerShape(6.dp),
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                                 modifier = Modifier.height(30.dp)
                             ) {
                                 Text(
-                                    text = "PONER",
+                                    text = "ACTIVAR",
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 10.sp
@@ -270,14 +288,6 @@ fun HatShopPanel(
         }
     }
 }
-
-data class HatData(
-    val id: String,
-    val name: String,
-    val cost: Int,
-    val icon: ImageVector,
-    val description: String
-)
 
 @Composable
 fun PetEditorPanel(

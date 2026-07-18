@@ -9,6 +9,7 @@
     <string name="onboarding_step1_title">Tu compañero de código</string>
     <string name="onboarding_step1_desc">Tu mascota virtual que te acompaña mientras practicas programación.</string>
     <string name="onboarding_step1_terminal">\> hola_mundo</string>
+    <string name="onboarding_step1_bubble">¡Hola! Soy Codey, tu compañero de código.\n¿Listo para esta aventura?</string>
     
     <!-- Step 2 -->
     <string name="onboarding_step2_title">Tu práctica la hace evolucionar</string>
@@ -16,6 +17,7 @@
     <string name="onboarding_step2_card2">Completa Focus</string>
     <string name="onboarding_step2_card3">Cuida a tu mascota</string>
     <string name="onboarding_step2_desc">Los retos y Focus entregan XP; los Bytes sirven para cuidado, juegos y estética.</string>
+    <string name="onboarding_step2_bubble">Para crecer juntos, resuelve retos,\ncompleta sesiones Focus y cuídame.\n¡Cada acción suma!</string>
     
     <!-- Step 3 -->
     <string name="onboarding_step3_title">Elige tu ruta</string>
@@ -29,12 +31,15 @@
     <string name="topic_git">Git</string>
     <string name="topic_clean_code">Clean Code</string>
     <string name="topic_data_structures">Estructuras de Datos</string>
+    <string name="onboarding_step3_bubble">Selecciona los temas que más te\ninteresen. Así puedo ayudarte mejor.</string>
     
     <!-- Step 4 -->
     <string name="onboarding_step4_title">Dale nombre a tu copiloto</string>
     <string name="onboarding_step4_preview">\> ¡Compilado! Soy %1$s.</string>
     <string name="onboarding_step4_cta">Crear a %1$s</string>
+    <string name="onboarding_step4_use_default">Usar nombre predeterminado: Codey</string>
     <string name="default_pet_name">Codey</string>
+    <string name="onboarding_step4_bubble">¿Cómo quieres llamarme?\nO puedes dejarme el nombre que traigo.</string>
     
     <!-- Dialog Skip -->
     <string name="dialog_skip_title">¿Omitir configuración?</string>

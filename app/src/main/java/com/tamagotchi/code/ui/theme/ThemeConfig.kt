@@ -59,24 +59,25 @@ object ThemeRegistry {
             icon = Icons.Default.Palette,
             description = "Tema base. Adaptable al modo claro u oscuro del sistema.",
             isDark = false,
-            background = Color(0xFFF8F9FA),
+            background = Color(0xFFF5F7FF),
             surface = Color(0xFFFFFFFF),
-            surfaceVariant = Color(0xFFF0F0F3),
-            primary = Color(0xFF6750A4),
-            secondary = Color(0xFF625B71),
-            tertiary = Color(0xFF7D5260),
+            surfaceVariant = Color(0xFFE9EEFF),
+            primary = Color(0xFF5D67FF),
+            secondary = Color(0xFF8C94FF),
+            tertiary = Color(0xFFA3AFFF),
             onPrimary = Color.White,
-            textPrimary = Color(0xFF1C1B1F),
-            textSecondary = Color(0xFF6F6E77),
-            accent = Color(0xFF6750A4),
+            textPrimary = Color(0xFF0F1128),
+            textSecondary = Color(0xFF5A6390),
+            accent = Color(0xFF5D67FF),
             success = Color(0xFF4CAF50),
             error = Color(0xFFB3261E),
-            fontFamily = FontFamily.Default,
-            titleFontFamily = FontFamily.Default,
+            fontFamily = FontFamily.SansSerif,
+            titleFontFamily = FontFamily.SansSerif,
             titleWeight = FontWeight.Bold,
-            cornerRadius = 12.dp,
+            cornerRadius = 16.dp,
             borderWidth = 0.dp,
-            usesGradients = false
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFFF5F7FF), Color(0xFFE9EEFF), Color(0xFFE0E6FF))
         ),
 
         // ──────────────────────────────────────────────────────────
@@ -368,31 +369,32 @@ object ThemeRegistry {
         ),
 
         // ──────────────────────────────────────────────────────────
-        // 11. NOCTURNO – iOS-style, elegante modo oscuro
+        // 12. NOCTURNO – iOS-style, elegante modo oscuro
         // ──────────────────────────────────────────────────────────
         AppTheme(
             name = "Nocturno",
             icon = Icons.Default.NightsStay,
             description = "Noche elegante. Inspiración iOS con azul profundo.",
             isDark = true,
-            background = Color(0xFF000000),
-            surface = Color(0xFF1C1C1E),
-            surfaceVariant = Color(0xFF2C2C2E),
-            primary = Color(0xFF0A84FF),
-            secondary = Color(0xFF30D158),
-            tertiary = Color(0xFFFF9F0A),
+            background = Color(0xFF0A0D24),
+            surface = Color(0xFF121530),
+            surfaceVariant = Color(0xFF1E2140),
+            primary = Color(0xFF6D7AFF),
+            secondary = Color(0xFF8C94FF),
+            tertiary = Color(0xFFA3AFFF),
             onPrimary = Color.White,
             textPrimary = Color(0xFFFFFFFF),
-            textSecondary = Color(0xFFA0A0B0),
-            accent = Color(0xFF0A84FF),
-            success = Color(0xFF30D158),
-            error = Color(0xFFFF453A),
+            textSecondary = Color(0xFFD0D4FF),
+            accent = Color(0xFF6D7AFF),
+            success = Color(0xFF4CAF50),
+            error = Color(0xFFFF6B6B),
             fontFamily = FontFamily.SansSerif,
             titleFontFamily = FontFamily.SansSerif,
             titleWeight = FontWeight.SemiBold,
             cornerRadius = 16.dp,
             borderWidth = 0.dp,
-            usesGradients = false
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF1E2140), Color(0xFF121530), Color(0xFF0A0D24))
         ),
 
         // ──────────────────────────────────────────────────────────
@@ -429,13 +431,13 @@ object ThemeRegistry {
         if (name != "Default" || !isDark) return theme
         return theme.copy(
             isDark = true,
-            background = Color(0xFF1C1B1F),
-            surface = Color(0xFF2B2930),
-            surfaceVariant = Color(0xFF3B3940),
-            textPrimary = Color(0xFFE6E1E5),
-            textSecondary = Color(0xFFB0ABB0),
-            primary = Color(0xFFD0BCFF),
-            secondary = Color(0xFFCCC2DC),
+            background = Color(0xFF0D0D1A),
+            surface = Color(0xFF1A1A33),
+            surfaceVariant = Color(0xFF26264D),
+            textPrimary = Color(0xFFFFFFFF),
+            textSecondary = Color(0xFFD0D4FF),
+            primary = Color(0xFF7B83FF),
+            secondary = Color(0xFFA5ABFF),
         )
     }
 }

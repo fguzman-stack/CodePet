@@ -47,7 +47,6 @@ class UserPreferencesRepository(private val context: Context) {
         private val KEY_SEASON_PASS_PREMIUM = booleanPreferencesKey("season_pass_premium")
         private val KEY_WEEKLY_MISSIONS = stringSetPreferencesKey("weekly_missions")
         private val KEY_HACKATHON = stringPreferencesKey("hackathon_data")
-        private val KEY_GITHUB_TOKEN = stringPreferencesKey("github_token")
     }
 
     val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -422,14 +421,5 @@ class UserPreferencesRepository(private val context: Context) {
         context.dataStore.edit { prefs ->
             prefs[KEY_HACKATHON] = "${data.active}|${data.attempts}|${data.bestTimeMs}|${data.expiresAt}"
         }
-    }
-
-    // === GITHUB TOKEN ===
-    suspend fun saveGitHubToken(token: String) {
-        context.dataStore.edit { prefs -> prefs[KEY_GITHUB_TOKEN] = token }
-    }
-
-    suspend fun getGitHubToken(): String? {
-        return context.dataStore.data.first()[KEY_GITHUB_TOKEN]
     }
 }

@@ -45,7 +45,6 @@ fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToLanguage: () -> Unit,
     onNavigateToAbout: () -> Unit = {},
-    onNavigateToGitHub: () -> Unit = {},
     onNavigateToSkillTree: () -> Unit = {},
     onNavigateToSeasonPass: () -> Unit = {},
     onNavigateToWeeklyMissions: () -> Unit = {}
@@ -335,11 +334,6 @@ fun SettingsScreen(
 
             // D3. Características avanzadas
             SettingsSectionTitle("Características Avanzadas")
-            SettingsItemClickable(
-                title = "GitHub Stats Sync",
-                subtitle = "Conecta tu GitHub y gana XP extra",
-                onClick = onNavigateToGitHub
-            )
             SettingsItemClickable(
                 title = "Árbol de Habilidades",
                 subtitle = "Desbloquea habilidades pasivas con XP",

@@ -3,6 +3,7 @@ package com.tamagotchi.code.ui.components
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.tamagotchi.code.R
 
@@ -24,6 +25,7 @@ fun TopicIcon(topic: String, modifier: Modifier = Modifier) {
     Icon(
         painter = painterResource(id = res),
         contentDescription = null,
+        tint = Color.Unspecified,
         modifier = modifier
     )
 }

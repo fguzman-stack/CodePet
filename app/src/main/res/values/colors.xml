@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Splash screen colors -->
+    <color name="splash_start">#5D67FF</color>
+    <color name="splash_end">#3A44D9</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#E6E9FF</color>
+    
+    <!-- Theme colors (already defined in ThemeConfig.kt) -->
+    <color name="primary">#5D67FF</color>
+    <color name="secondary">#8C94FF</color>
+    <color name="tertiary">#A3AFFF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#000000</color>
+    <color name="background">#F5F7FF</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#E9EEFF</color>
+    <color name="on_background">#1A1C2E</color>
+    <color name="on_surface">#1A1C2E</color>
+    <color name="on_surface_variant">#6A7394</color>
+    <color name="accent">#5D67FF</color>
+    <color name="success">#4CAF50</color>
+    <color name="error">#B3261E</color>
 </resources>

@@ -65,7 +65,6 @@ fun LearnScreen(
                 AnimatedPetSprite(
                     status = state.currentStatus,
                     level = state.level,
-                    equippedHat = state.equippedHat,
                     celebrationTrigger = viewModel.celebrationTrigger,
                     learningEventTrigger = viewModel.learningEventTrigger,
                     onClick = { viewModel.petThePet() },

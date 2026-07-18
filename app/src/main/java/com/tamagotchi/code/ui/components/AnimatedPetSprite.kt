@@ -39,7 +39,6 @@ import kotlin.random.Random
 fun AnimatedPetSprite(
     status: String,
     level: Int = 1,
-    equippedHat: String? = null,
     celebrationTrigger: SharedFlow<Unit>,
     learningEventTrigger: SharedFlow<String>? = null,
     onClick: () -> Unit,
@@ -249,42 +248,7 @@ fun AnimatedPetSprite(
             )
         }
 
-        // Overlay de Sombrero (Idea #7)
-        equippedHat?.let { hatId ->
-            val hatIcon = getHatIcon(hatId)
-            if (hatIcon != null) {
-                androidx.compose.material3.Icon(
-                    imageVector = hatIcon,
-                    contentDescription = "Hat: $hatId",
-                    tint = getHatColor(hatId),
-                    modifier = Modifier
-                        .size(60.dp)
-                        .offset(y = (-65).dp)
-                        .scale(if (evolutionStage == PetEvolutionStage.Egg) 0.7f else 1f)
-                )
-            }
-        }
     }
-}
-
-/**
- * Mapea el ID de sombrero a su Icono Material.
- */
-private fun getHatIcon(hatId: String): androidx.compose.ui.graphics.vector.ImageVector? = when (hatId) {
-    "dev_cap" -> Icons.Default.DeveloperMode
-    "grad_cap" -> Icons.Default.School
-    "vr_helmet" -> Icons.Default.Headset
-    "chef_hat" -> Icons.Default.Restaurant
-    "crown" -> Icons.Default.Star
-    else -> null
-}
-
-private fun getHatColor(hatId: String): androidx.compose.ui.graphics.Color = when (hatId) {
-    "crown" -> androidx.compose.ui.graphics.Color(0xFFFFD700) // Gold
-    "vr_helmet" -> androidx.compose.ui.graphics.Color(0xFF29B6F6) // Light Blue
-    "grad_cap" -> androidx.compose.ui.graphics.Color(0xFF424242) // Dark Gray
-    "chef_hat" -> androidx.compose.ui.graphics.Color(0xFFE0E0E0) // Light Gray
-    else -> androidx.compose.ui.graphics.Color(0xFF78909C) // Blue Gray
 }
 
 sealed class PetEvolutionStage {
@@ -305,26 +269,21 @@ sealed class PetEvolutionStage {
     }
 }
 
-/**
- * Mapea el estado a su drawable base.
- */
-private fun getPetDrawable(status: String): Int = when (status) {
-    "SLEEPING" -> R.drawable.mascota_sleeping
-    "STUDYING" -> R.drawable.mascota_studying
-    "SICK" -> R.drawable.mascota_sick
-    "SAD" -> R.drawable.mascota_sad
-    "HUNGRY" -> R.drawable.mascota_hungry
-    "EXCITED" -> R.drawable.mascota_excited
-    else -> R.drawable.mascota_happy
-}
+    /**
+     * Mapea el estado a su drawable base.
+     */
+    private fun getPetDrawable(status: String): Int = when (status) {
+        "SLEEPING" -> R.drawable.mascota_sleeping
+        "STUDYING" -> R.drawable.mascota_studying
+        "SICK" -> R.drawable.mascota_sick
+        "SAD" -> R.drawable.mascota_sad
+        "HUNGRY" -> R.drawable.mascota_hungry
+        "EXCITED" -> R.drawable.mascota_excited
+        else -> R.drawable.mascota_happy
+    }
 
-/**
- * Mapea el estado a su drawable de parpadeo (Blink).
- * TODO: Generar estos assets y añadirlos a res/drawable/
- */
-private fun getPetBlinkDrawable(status: String): Int = when (status) {
-    "HAPPY" -> try { R.drawable::class.java.getField("mascota_happy_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_happy }
-    "EXCITED" -> try { R.drawable::class.java.getField("mascota_excited_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_excited }
-    "STUDYING" -> try { R.drawable::class.java.getField("mascota_studying_blink").getInt(null) } catch(e: Exception) { R.drawable.mascota_studying }
-    else -> getPetDrawable(status)
-}
+    /**
+     * Mapea el estado a su drawable de parpadeo (Blink).
+     * TODO: Generar estos assets y añadirlos a res/drawable/
+     */
+    private fun getPetBlinkDrawable(status: String): Int = getPetDrawable(status)

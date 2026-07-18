@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
@@ -55,6 +56,9 @@ class PetViewModel(
     val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
 
     val ownedItems = MutableStateFlow<List<com.tamagotchi.code.data.database.OwnedItemEntity>>(emptyList())
+    val equippedSkin: StateFlow<String?> = ownedItems.map { items ->
+        items.find { it.type == "SKIN" && it.isEquipped }?.itemId
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val petAccentColor = MutableStateFlow(androidx.compose.ui.graphics.Color(0xFF81C784))
 
@@ -64,9 +68,7 @@ class PetViewModel(
     val weeklyMissionsState = MutableStateFlow<List<WeeklyMissionData>>(emptyList())
     val hackathonState = MutableStateFlow<HackathonData?>(null)
     val skillTreeState = MutableStateFlow<List<SkillNodeData>>(emptyList())
-    val githubStats = MutableStateFlow<GitHubStatsData?>(null)
     val isDndActive = MutableStateFlow(false)
-    val githubSyncLoading = MutableStateFlow(false)
 
     val languageProgressList = MutableStateFlow<List<com.tamagotchi.code.data.database.LanguageProgressEntity>>(emptyList())
 
@@ -1082,39 +1084,36 @@ class PetViewModel(
         }
     }
 
-    fun buyHat(hatId: String, cost: Int, hatName: String) {
+    // === SKINS (Shop) ===
+    fun buySkin(skinId: String, cost: Int, skinName: String) {
         viewModelScope.launch {
             val pet = petState.value ?: return@launch
             if (pet.bytes < cost) return@launch
             
-            // Auto-equip the new hat immediately
-            val updated = pet.copy(
-                bytes = pet.bytes - cost,
-                equippedHat = hatId
-            )
+            val updated = pet.copy(bytes = pet.bytes - cost)
             repository.savePetState(updated)
             
             repository.petDao.insertOwnedItem(
                 com.tamagotchi.code.data.database.OwnedItemEntity(
-                    itemId = hatId,
-                    type = "HAT",
+                    itemId = skinId,
+                    type = "SKIN",
                     isEquipped = true
                 )
             )
-            repository.petDao.unequipAllOfType("HAT") // Unequip everything else
-            repository.petDao.equipItem(hatId) // Equip the new one in DB
+            repository.petDao.unequipAllOfType("SKIN")
+            repository.petDao.equipItem(skinId)
             
             soundManager.playBuy()
-            userPreferences.addDailyActivity("shop:hat:$hatName")
+            userPreferences.addDailyActivity("shop:skin:$skinName")
         }
     }
 
-    fun equipHat(hatId: String) {
+    fun equipSkin(skinId: String?) {
         viewModelScope.launch {
-            val pet = petState.value ?: return@launch
-            repository.petDao.unequipAllOfType("HAT")
-            repository.petDao.equipItem(hatId)
-            repository.savePetState(pet.copy(equippedHat = hatId))
+            repository.petDao.unequipAllOfType("SKIN")
+            if (skinId != null) {
+                repository.petDao.equipItem(skinId)
+            }
             soundManager.playClick()
         }
     }
@@ -1326,84 +1325,6 @@ class PetViewModel(
         }
     }
 
-    // === GITHUB STATS ===
-    fun fetchGitHubStats(token: String) {
-        githubSyncLoading.value = true
-        viewModelScope.launch {
-            try {
-                val url = java.net.URL("https://api.github.com/user")
-                val conn = url.openConnection() as java.net.HttpURLConnection
-                conn.setRequestProperty("Authorization", "token $token")
-                conn.setRequestProperty("Accept", "application/vnd.github.v3+json")
-                conn.connectTimeout = 5000
-                conn.readTimeout = 5000
-
-                if (conn.responseCode == 200) {
-                    val body = conn.inputStream.bufferedReader().readText()
-                    val json = org.json.JSONObject(body)
-                    val login = json.optString("login", "unknown")
-                    val publicRepos = json.optInt("public_repos", 0)
-
-                    val eventsUrl = java.net.URL("https://api.github.com/users/$login/events?per_page=30")
-                    val eventsConn = eventsUrl.openConnection() as java.net.HttpURLConnection
-                    eventsConn.setRequestProperty("Authorization", "token $token")
-                    eventsConn.setRequestProperty("Accept", "application/vnd.github.v3+json")
-                    eventsConn.connectTimeout = 5000
-                    eventsConn.readTimeout = 5000
-
-                    var commits = 0
-                    var prs = 0
-                    var issues = 0
-                    if (eventsConn.responseCode == 200) {
-                        val eventsBody = eventsConn.inputStream.bufferedReader().readText()
-                        val events = org.json.JSONArray(eventsBody)
-                        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
-                        for (i in 0 until events.length()) {
-                            val event = events.getJSONObject(i)
-                            val createdAt = event.optString("created_at", "")
-                            if (createdAt.startsWith(today)) {
-                                when (event.optString("type", "")) {
-                                    "PushEvent" -> {
-                                        val size = event.optJSONObject("payload")?.optInt("size", 1) ?: 1
-                                        commits += size
-                                    }
-                                    "PullRequestEvent" -> prs++
-                                    "IssuesEvent" -> issues++
-                                }
-                            }
-                        }
-                    }
-
-                    val xpBonus = commits * 5 + prs * 10 + issues * 3
-                    githubStats.value = GitHubStatsData(
-                        username = login,
-                        publicRepos = publicRepos,
-                        todayCommits = commits,
-                        todayPRs = prs,
-                        todayIssues = issues,
-                        xpBonus = xpBonus
-                    )
-                    userPreferences.saveGitHubToken(token)
-
-                    if (xpBonus > 0) {
-                        val pet = petState.value ?: return@launch
-                        val newLevel = com.tamagotchi.code.util.LevelCalculator.calculateLevel(pet.xp + xpBonus)
-                        repository.savePetState(pet.copy(
-                            xp = pet.xp + xpBonus,
-                            level = newLevel,
-                            lastUpdated = System.currentTimeMillis()
-                        ))
-                        triggerCelebration()
-                    }
-                    githubSyncLoading.value = false
-                }
-            } catch (_: Exception) {
-                githubStats.value = null
-                githubSyncLoading.value = false
-            }
-        }
-    }
-
     // === DND MODE ===
     fun checkDndMode(context: android.content.Context) {
         viewModelScope.launch {
@@ -1532,15 +1453,6 @@ object SkillTreeData {
         SkillNodeData("extra_heart", "Corazón extra", "Máximo 6 corazones")
     )
 }
-
-data class GitHubStatsData(
-    val username: String,
-    val publicRepos: Int,
-    val todayCommits: Int,
-    val todayPRs: Int,
-    val todayIssues: Int,
-    val xpBonus: Int
-)
 
 data class DailyReward(
     val day: Int,

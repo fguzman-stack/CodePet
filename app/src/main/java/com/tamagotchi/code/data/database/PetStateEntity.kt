@@ -19,6 +19,5 @@ data class PetStateEntity(
     val lastStudyDate: Long = 0,
     val currentStatus: String = "HAPPY",
     val hasRenamed: Boolean = false,
-    val isDead: Boolean = false,
-    val equippedHat: String? = null
+    val isDead: Boolean = false
 )
