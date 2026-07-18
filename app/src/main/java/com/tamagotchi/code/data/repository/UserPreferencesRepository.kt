@@ -32,6 +32,7 @@ class UserPreferencesRepository(private val context: Context) {
         private val KEY_DAILY_ACTIVITY_LOG = stringSetPreferencesKey("daily_activity_log")
         private val KEY_LAST_COMMIT_DATE = stringPreferencesKey("last_commit_date")
         private val KEY_PENDING_COMMIT = stringPreferencesKey("pending_commit")
+        private val KEY_SHOWN_CARDS = stringSetPreferencesKey("shown_cards")
     }
 
     val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -225,5 +226,22 @@ class UserPreferencesRepository(private val context: Context) {
 
     val pendingCommitFlow: Flow<String?> = context.dataStore.data.map { prefs ->
         prefs[KEY_PENDING_COMMIT]
+    }
+
+    suspend fun getShownCards(): Set<String> {
+        return context.dataStore.data.first()[KEY_SHOWN_CARDS] ?: emptySet()
+    }
+
+    suspend fun markCardShown(cardId: Int) {
+        context.dataStore.edit { prefs ->
+            val current = prefs[KEY_SHOWN_CARDS] ?: emptySet()
+            prefs[KEY_SHOWN_CARDS] = current + cardId.toString()
+        }
+    }
+
+    suspend fun resetShownCards() {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_SHOWN_CARDS] = emptySet()
+        }
     }
 }

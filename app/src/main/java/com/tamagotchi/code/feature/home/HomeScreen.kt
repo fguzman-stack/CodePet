@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.components.DailyRewardDialog
+import com.tamagotchi.code.ui.components.CodeCardDialog
 import com.tamagotchi.code.ui.components.ViewportCard
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -195,6 +196,13 @@ fun HomeScreen(
                         }
                     }
                 }
+            )
+        }
+
+        if (viewModel.showCodeCardDialog.value && viewModel.currentCodeCard.value != null) {
+            CodeCardDialog(
+                card = viewModel.currentCodeCard.value!!,
+                onDismiss = { viewModel.dismissCodeCardDialog() }
             )
         }
 

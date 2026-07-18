@@ -4,7 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tamagotchi.code.data.ChallengesData
+import com.tamagotchi.code.data.CodeCard
 import com.tamagotchi.code.data.CodingChallenge
+import com.tamagotchi.code.data.codeCards
 import com.tamagotchi.code.data.database.FocusSessionEntity
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
@@ -838,6 +840,11 @@ class PetViewModel(
     var pendingCommitMessage = mutableStateOf("")
         private set
 
+    var showCodeCardDialog = mutableStateOf(false)
+        private set
+    var currentCodeCard = mutableStateOf<CodeCard?>(null)
+        private set
+
     fun dismissDeathDialog() {
         showDeathDialog.value = false
     }
@@ -854,6 +861,28 @@ class PetViewModel(
                 pendingCommitMessage.value = commit
                 showCommitDialog.value = true
             }
+        }
+    }
+
+    fun dismissCodeCardDialog() {
+        showCodeCardDialog.value = false
+        currentCodeCard.value = null
+    }
+
+    fun showRandomCodeCard() {
+        viewModelScope.launch {
+            val shownIds = userPreferences.getShownCards().mapNotNull { it.toIntOrNull() }.toSet()
+            val unseen = codeCards.filter { it.id !in shownIds }
+            val pool = if (unseen.isEmpty()) {
+                userPreferences.resetShownCards()
+                codeCards
+            } else {
+                unseen
+            }
+            val card = pool.random()
+            userPreferences.markCardShown(card.id)
+            currentCodeCard.value = card
+            showCodeCardDialog.value = true
         }
     }
 
