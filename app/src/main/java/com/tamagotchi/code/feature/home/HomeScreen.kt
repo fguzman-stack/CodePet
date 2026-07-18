@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -33,8 +34,8 @@ fun HomeScreen(
     onReviveWithAd: () -> Unit = {}
 ) {
     val petState by viewModel.petState.collectAsStateWithLifecycle()
-
     val state = petState
+    LaunchedEffect(Unit) { viewModel.checkPendingCommit() }
     if (state != null) {
         Column(
             modifier = Modifier
@@ -192,6 +193,57 @@ fun HomeScreen(
                                 )
                             }
                         }
+                    }
+                }
+            )
+        }
+
+        if (viewModel.showCommitDialog.value) {
+            AlertDialog(
+                onDismissRequest = { viewModel.dismissCommitDialog() },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Icon(
+                            Icons.Default.AllInbox,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            "Codey hizo commit",
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                text = {
+                    Column {
+                        Text(
+                            "Resumen de ayer:",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Surface(
+                            color = Color(0xFF1B1B2F),
+                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = viewModel.pendingCommitMessage.value,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 13.sp,
+                                color = Color(0xFF00FF41),
+                                modifier = Modifier.padding(12.dp),
+                                lineHeight = 20.sp
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { viewModel.dismissCommitDialog() }) {
+                        Text("Fusionar (Aceptar)", fontFamily = FontFamily.Monospace)
                     }
                 }
             )

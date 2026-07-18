@@ -511,6 +511,7 @@ class PetViewModel(
                 if (updated.bytes >= 1000) {
                     achievementsRepository.unlockAchievement("ahorrador")
                 }
+                userPreferences.addDailyActivity("challenge:${challenge.language}")
             }
         } else {
             soundManager.playError()
@@ -557,6 +558,7 @@ class PetViewModel(
                 currentStatus = newStatus
             )
             repository.savePetState(updated)
+            userPreferences.addDailyActivity("shop:${itemName}")
         }
     }
 
@@ -578,6 +580,7 @@ class PetViewModel(
 
             if (!isCurrentlySleeping) {
                 achievementsRepository.unlockAchievement("duermevela")
+                userPreferences.addDailyActivity("sleep")
             }
             val updated = current.copy(
                 currentStatus = newStatus,
@@ -721,6 +724,7 @@ class PetViewModel(
         repository.savePetState(updated)
         if (reward.streak >= 7) achievementsRepository.unlockAchievement("racha_7")
         if (reward.streak >= 30) achievementsRepository.unlockAchievement("racha_30")
+        userPreferences.addDailyActivity("study:${topic}")
     }
 
     fun petThePet() {
@@ -743,6 +747,7 @@ class PetViewModel(
             )
             repository.savePetState(updated)
             achievementsRepository.unlockAchievement("primer_acaricie")
+            userPreferences.addDailyActivity("pet")
         }
     }
 
@@ -765,6 +770,7 @@ class PetViewModel(
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updated)
+            userPreferences.addDailyActivity("clean")
         }
     }
 
@@ -818,6 +824,7 @@ class PetViewModel(
             } else if (bytesEarned == 45) { // Git Rescue score 3
                 achievementsRepository.unlockAchievement("git_sin_panico")
             }
+            userPreferences.addDailyActivity("game:${bytesEarned}")
         }
     }
 
@@ -826,8 +833,28 @@ class PetViewModel(
     var deathReviveCost = mutableStateOf(500)
         private set
 
+    var showCommitDialog = mutableStateOf(false)
+        private set
+    var pendingCommitMessage = mutableStateOf("")
+        private set
+
     fun dismissDeathDialog() {
         showDeathDialog.value = false
+    }
+
+    fun dismissCommitDialog() {
+        showCommitDialog.value = false
+        viewModelScope.launch { userPreferences.clearPendingCommit() }
+    }
+
+    fun checkPendingCommit() {
+        viewModelScope.launch {
+            val commit = userPreferences.getPendingCommit()
+            if (commit != null) {
+                pendingCommitMessage.value = commit
+                showCommitDialog.value = true
+            }
+        }
     }
 
     fun checkDeathState() {

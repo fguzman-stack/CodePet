@@ -29,6 +29,9 @@ class UserPreferencesRepository(private val context: Context) {
         private val KEY_DEFAULT_THEME_MODE = stringPreferencesKey("default_theme_mode")
         val KEY_LAST_DAILY_REWARD_CLAIM_TIME = androidx.datastore.preferences.core.longPreferencesKey("last_daily_reward_claim_time")
         val KEY_DAILY_REWARD_DAY = androidx.datastore.preferences.core.intPreferencesKey("daily_reward_day")
+        private val KEY_DAILY_ACTIVITY_LOG = stringSetPreferencesKey("daily_activity_log")
+        private val KEY_LAST_COMMIT_DATE = stringPreferencesKey("last_commit_date")
+        private val KEY_PENDING_COMMIT = stringPreferencesKey("pending_commit")
     }
 
     val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -178,5 +181,49 @@ class UserPreferencesRepository(private val context: Context) {
             prefs[KEY_DAILY_REWARD_DAY] = day
             prefs[KEY_LAST_DAILY_REWARD_CLAIM_TIME] = time
         }
+    }
+
+    suspend fun addDailyActivity(activity: String) {
+        context.dataStore.edit { prefs ->
+            val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+            val storedDate = prefs[KEY_LAST_COMMIT_DATE]
+            if (storedDate != today) {
+                prefs[KEY_DAILY_ACTIVITY_LOG] = setOf(activity)
+                prefs[KEY_LAST_COMMIT_DATE] = today
+            } else {
+                val current = prefs[KEY_DAILY_ACTIVITY_LOG] ?: emptySet()
+                prefs[KEY_DAILY_ACTIVITY_LOG] = current + activity
+            }
+        }
+    }
+
+    suspend fun getDailyActivityLog(): Set<String> {
+        return context.dataStore.data.first()[KEY_DAILY_ACTIVITY_LOG] ?: emptySet()
+    }
+
+    suspend fun clearDailyActivityLog() {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_DAILY_ACTIVITY_LOG] = emptySet()
+        }
+    }
+
+    suspend fun setPendingCommit(commit: String) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_PENDING_COMMIT] = commit
+        }
+    }
+
+    suspend fun getPendingCommit(): String? {
+        return context.dataStore.data.first()[KEY_PENDING_COMMIT]
+    }
+
+    suspend fun clearPendingCommit() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(KEY_PENDING_COMMIT)
+        }
+    }
+
+    val pendingCommitFlow: Flow<String?> = context.dataStore.data.map { prefs ->
+        prefs[KEY_PENDING_COMMIT]
     }
 }
