@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.data.database.PetStateEntity
+import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import java.text.SimpleDateFormat
@@ -90,6 +91,7 @@ fun TimerPanel(
     val secondsRemaining = viewModel.timerSecondsRemaining.value
     val selectedMinutes = viewModel.timerSelectedMinutes.value
     val currentTopic = viewModel.currentStudyTopic.value
+    val isDndActive by viewModel.isDndActive.collectAsStateWithLifecycle()
 
     var tempMinutes by remember { mutableIntStateOf(25) }
     var tempTopic by remember { mutableStateOf("Kotlin") }
@@ -101,6 +103,23 @@ fun TimerPanel(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (isDndActive) {
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = Color(0xFFFFB74D).copy(alpha = 0.1f),
+                border = BorderStroke(1.dp, Color(0xFFFFB74D).copy(alpha = 0.5f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            ) {
+                Text(
+                    text = "MODO NO MOLESTAR ACTIVO: XP x1.5 en sesiones de foco",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    color = Color(0xFFFFB74D),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
         if (!isRunning) {
             Text(
                 text = ">>> INICIAR BITÁCORA DE ESTUDIO",

@@ -81,14 +81,19 @@ Resuelve desafíos, completa sesiones Pomodoro, gana Bytes y mantén a **Codey**
 <tr>
 <td width="50%" valign="top">
 
-### ? Mascota virtual
-
-- Estados emocionales dinámicos (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED)
-- Salud, hambre y energía en tiempo real con decaimiento progresivo
-- Animaciones según el estado (respiración, temblor, pulso de hambre, parpadeo)
-- Sistema de nivel, XP y Bytes (moneda virtual)
-- Racha diaria de estudio
-- Recompensas offline por sesiones no reclamadas
+### ? Mascota virtual
+
+- Estados emocionales dinámicos (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED)
+- Salud, hambre y energía en tiempo real con decaimiento progresivo
+- Animaciones según el estado (respiración, temblor, pulso de hambre, parpadeo)
+- Sistema de nivel, XP y Bytes (moneda virtual)
+- Racha diaria de estudio
+- Recompensas offline por sesiones no reclamadas
+- ?? **Evolución visual** por nivel (5 etapas: Huevo → Cría → Adulto → Veterano → Legendario)
+- ?? **Colección de sombreros** (5 sombreros para comprar y equipar en la tienda)
+- ?? **Editor de mascota** (sliders RGB + paletas de color para personalizar a Codey)
+- ?? **Sistema de Moodlets** (eventos aleatorios que afectan el humor por horas)
+- ?? **Pair Programming** (Buggy aparece aleatoriamente y multiplica XP x1.5)
 
 </td>
 <td width="50%" valign="top">
@@ -234,8 +239,9 @@ El proyecto sigue el patrón **MVVM + Repository** con inyección de dependencia
 +------------------------------------------------------------------+
 |                  ?? PRESENTACI?N (UI Layer)                      |
 |   Compose Screens · Material 3 · StateFlow · Animations          |
-|   HomeScreen | LearnScreen | FocusScreen | ShopScreen             |
-|   GamesScreen | BugHuntScreen | SettingsScreen | OnboardingScreen |
+|   HomeScreen | LearnScreen | FocusScreen | ShopScreen             |
+|   GamesScreen | BugHuntScreen | SettingsScreen | OnboardingScreen |
+|   CodeReviewScreen | HackathonScreen                              |
 +------------------------------------------------------------------+
 |                  ? DOMINIO (ViewModel)                          |
 |   PetViewModel                                                     |
@@ -244,21 +250,30 @@ El proyecto sigue el patrón **MVVM + Repository** con inyección de dependencia
 |     - Challenge submission & reward calculation                    |
 |     - Shop purchases                                               |
 |     - Theme switching & unlock                                     |
-|     - Game cooldowns                                               |
-|     - Offline reward detection                                     |
+|     - Game cooldowns                                               |
+|     - Offline reward detection                                     |
+|     - Hat equipping & evolution stages                             |
+|     - Pet editor customization                                     |
+|     - DND Mode, GitHub sync, Music player                          |
+|     - Seasonal events: Hackathon, Weekly Missions, Season Pass     |
 +------------------------------------------------------------------+
 |                  ?? DATOS (Data Layer)                            |
 |   PetRepository | UserPreferencesRepository | AchievementsRepository|
 |   DecayCalculator | RewardCalculator | LevelCalculator            |
-|   StatusCalculator | SoundManager                                  |
+|   StatusCalculator | SoundManager | MoodletManager                |
+|   PairBuddyManager | SkillTreeManager                              |
 +------------------------------------------------------------------+
 |                  ?? PERSISTENCIA (Storage Layer)                  |
 |   Room / SQLite                                                    |
 |     - PetStateEntity (pet_state table)                             |
 |     - StudySessionEntity (study_sessions table)                    |
-|     - FocusSessionEntity (focus_sessions table)                    |
-|   DataStore Preferences                                            |
-|     - Onboarding state, theme, difficulty, sound, motion           |
+|     - FocusSessionEntity (focus_sessions table)                    |
+|     - MoodletEntity (moodlets table)                               |
+|     - SkillEntity (skills table)                                   |
+|     - HatEntity (hats table)                                       |
+|     - MissionEntity (missions table)                               |
+|   DataStore Preferences                                            |
+|     - Onboarding state, theme, difficulty, sound, motion, DND     |
 +------------------------------------------------------------------+
 ```
 
@@ -337,11 +352,15 @@ CodePet/
 |   |   |   |   +-- SpecialChallengesData.kt  # Special algorithm challenges
 |   |   |   |   +-- CodingChallenge.kt        # Challenge data class
 |   |   |   |   +-- database/
-|   |   |   |   |   +-- AppDatabase.kt        # Room DB (v3, migrations)
-|   |   |   |   |   +-- PetDao.kt             # DAO interface
-|   |   |   |   |   +-- PetStateEntity.kt     # Pet entity
-|   |   |   |   |   +-- StudySessionEntity.kt # Study log entity
-|   |   |   |   |   +-- FocusSessionEntity.kt # Pomodoro session entity
+|   |   |   |   |   +-- AppDatabase.kt        # Room DB (v5, migrations)
+|   |   |   |   |   +-- PetDao.kt             # DAO interface
+|   |   |   |   |   +-- PetStateEntity.kt     # Pet entity
+|   |   |   |   |   +-- StudySessionEntity.kt # Study log entity
+|   |   |   |   |   +-- FocusSessionEntity.kt # Pomodoro session entity
+|   |   |   |   |   +-- MoodletEntity.kt      # Moodlet events entity
+|   |   |   |   |   +-- SkillEntity.kt        # Skill tree entity
+|   |   |   |   |   +-- HatEntity.kt          # Hat collection entity
+|   |   |   |   |   +-- MissionEntity.kt      # Weekly missions entity
 |   |   |   |   +-- repository/
 |   |   |   |   |   +-- PetRepository.kt      # Pet state CRUD
 |   |   |   |   |   +-- UserPreferencesRepository.kt  # DataStore prefs
@@ -355,14 +374,21 @@ CodePet/
 |   |   |   |   +-- learn/LearnScreen.kt      # Quiz & special challenges
 |   |   |   |   +-- focus/FocusScreen.kt      # Pomodoro timer & logs
 |   |   |   |   +-- shop/ShopScreen.kt        # In-game store
-|   |   |   |   +-- games/
-|   |   |   |   |   +-- GamesScreen.kt        # Game hub
-|   |   |   |   |   +-- BugHuntScreen.kt      # Bug hunting mini-game
-|   |   |   |   |   +-- GitRescueScreen.kt    # Git decision game
-|   |   |   |   |   +-- RefactorRushScreen.kt # Code ordering game
-|   |   |   |   +-- onboarding/OnboardingScreen.kt  # 4-step intro
-|   |   |   |   +-- settings/
-|   |   |   |       +-- SettingsScreen.kt     # Full settings (theme, etc.)
+|   |   |   |   +-- games/
+|   |   |   |   |   +-- GamesScreen.kt        # Game hub
+|   |   |   |   |   +-- BugHuntScreen.kt      # Bug hunting mini-game
+|   |   |   |   |   +-- GitRescueScreen.kt    # Git decision game
+|   |   |   |   |   +-- RefactorRushScreen.kt # Code ordering game
+|   |   |   |   |   +-- CodeReviewScreen.kt   # Code review mini-game
+|   |   |   |   |   +-- HackathonScreen.kt    # Weekly hackathon event
+|   |   |   |   +-- editor/PetEditorScreen.kt # Pet color customization
+|   |   |   |   +-- onboarding/OnboardingScreen.kt  # 4-step intro
+|   |   |   |   +-- settings/
+|   |   |   |       +-- SettingsScreen.kt     # Full settings (theme, etc.)
+|   |   |   |       +-- GitHubSettingsScreen.kt # GitHub sync settings
+|   |   |   |       +-- SeasonPassScreen.kt   # Season Pass battle pass
+|   |   |   |       +-- SkillTreeScreen.kt    # Skill tree progression
+|   |   |   |       +-- WeeklyMissionsScreen.kt # Weekly mission board
 |   |   |   +-- ui/
 |   |   |   |   +-- components/
 |   |   |   |   |   +-- ViewportCard.kt       # Main pet card
@@ -379,7 +405,11 @@ CodePet/
 |   |   |       +-- LevelCalculator.kt        # Level progression
 |   |   |       +-- StatusCalculator.kt       # Emotional state logic
 |   |   |       +-- SoundManager.kt           # Sound effects
-|   |   |       +-- PetCheckWorker.kt         # Periodic decay worker
+|   |   |       +-- PetCheckWorker.kt         # Periodic decay worker
+|   |   |       +-- MoodletManager.kt         # Random mood event engine
+|   |   |       +-- PairBuddyManager.kt       # Pair programming buddy
+|   |   |       +-- SkillTreeManager.kt       # Skill tree logic
+|   |   |       +-- GitHubSyncManager.kt      # GitHub integration
 |   |   +-- res/drawable/  (pet images, icons)
 |   |   +-- res/values/    (strings.xml, colors.xml)
 |   +-- build.gradle.kts
@@ -465,7 +495,7 @@ fun AppNavigation(viewModel: PetViewModel) {
 ```kotlin
 @Database(
     entities = [PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class],
-    version = 3, exportSchema = false
+    version = 5, exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun petDao(): PetDao
@@ -1305,7 +1335,19 @@ Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno c
 - [x] ? Offline rewards por sesiones completadas mientras no se usó la app
 - [ ] ??? Notificaciones para recordar cuidados y sesiones
 - [ ] ?? Retos en Ruby, Go, Rust y Swift
-- [ ] ? Evolución visual de la mascota por nivel
+- [x] ? Evolución visual de la mascota por nivel (5 etapas)
+- [x] ?? Editor de mascota (sliders RGB + paletas de color)
+- [x] ?? Colección de 5 sombreros (Gorro, Mago, Casco, Corona, Aureola)
+- [x] ?? Sistema de Moodlets (6 eventos aleatorios temporales)
+- [x] ?? Pair Programming Buddy (Buggy aparece, XP ×1.5)
+- [x] ?? Code Review (identifica errores en 15 snippets reales)
+- [x] ?? Hackathon semanal (3 problemas, tabla de puntuación)
+- [x] ?? DND Mode (modo concentración +10% XP)
+- [x] ?? Reproductor de música (4 pistas de ambiente en 2° plano)
+- [x] ?? Sincronización con GitHub (Retrofit + API REST)
+- [x] ?? Skill Tree (3 ramas, 9 nodos desbloqueables)
+- [x] ?? Season Pass (30 días, 20 niveles, rutas free/premium)
+- [x] ?? Weekly Missions (3 misiones rotativas, reset lunes)
 - [ ] ?? Widgets para pantalla de inicio
 - [ ] ?️ Sincronización con Firebase Firestore
 - [ ] ?? Funcionalidad multijugador y rankings

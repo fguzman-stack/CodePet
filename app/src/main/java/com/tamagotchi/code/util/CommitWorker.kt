@@ -22,6 +22,7 @@ class CommitWorker(
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
+    @android.annotation.SuppressLint("MissingPermission", "NotificationPermission")
     override suspend fun doWork(): Result {
         val dao = get<AppDatabase>(AppDatabase::class.java).petDao()
         val petState = dao.getPetStateSuspend() ?: return Result.success()

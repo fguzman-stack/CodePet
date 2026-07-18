@@ -2,21 +2,23 @@
 
 ## Estado actual
 - [x] Easter eggs ocultos (toques rápidos → animación secreta)
-- [ ] Recordatorios con personalidad (notificaciones humorísticas)
-- [ ] Codey escribe commits (resumen diario)
-- [ ] Cartas de código (datos curiosos/chistes)
-- [ ] Misiones de personaje (Codey pide actividades)
-- [ ] Evolución visual por nivel (5, 10, 25, 50)
-- [ ] Colección de sombreros en la tienda
-- [ ] Code Review (minijuego)
-- [ ] Insignias por lenguaje (50%, 75%, 100%)
-- [ ] Editor de mascota (sliders RGB)
-- [ ] Música de fondo chiptune/lo-fi
-- [ ] GitHub Stats Sync
-- [ ] Modo No molestar
-- [ ] Hackatón semanal
-- [ ] Pair Programming (amigo virtual)
-- [ ] Skill Tree / Pase de temporada / Misiones semanales
+- [x] Recordatorios con personalidad (notificaciones humorísticas)
+- [x] Codey escribe commits (resumen diario)
+- [x] Cartas de código (datos curiosos/chistes)
+- [x] Misiones de personaje (Codey pide actividades)
+- [x] Evolución visual por nivel (5, 10, 25, 50)
+- [x] Colección de sombreros en la tienda
+- [x] Code Review (minijuego)
+- [x] Insignias por lenguaje (50%, 75%, 100%)
+- [x] Editor de mascota (sliders RGB)
+- [x] Música de fondo chiptune/lo-fi (MusicManager)
+- [x] GitHub Stats Sync
+- [x] Modo No molestar (detección DND)
+- [x] Hackatón semanal
+- [x] Pair Programming (amigo virtual Buggy)
+- [x] Skill Tree / Pase de temporada / Misiones semanales
+- [x] Moodlet system
+- [x] Weekly Missions
 
 ---
 

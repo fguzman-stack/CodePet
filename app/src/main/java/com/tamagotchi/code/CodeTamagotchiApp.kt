@@ -54,6 +54,10 @@ class CodeTamagotchiApp : Application() {
                 NotificationChannel("pet_critical", "Codey en peligro", NotificationManager.IMPORTANCE_HIGH).apply {
                     description = "Codey está en estado crítico"
                     this.group = groupId
+                },
+                NotificationChannel(NOTIFICATION_CHANNEL_ID, "Recordatorios de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Recordatorios sobre el estado de tu mascota virtual"
+                    this.group = groupId
                 }
             )
             channels.forEach { manager.createNotificationChannel(it) }

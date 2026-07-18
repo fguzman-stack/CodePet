@@ -24,6 +24,12 @@ import com.tamagotchi.code.feature.focus.FocusScreen
 import com.tamagotchi.code.feature.home.HomeScreen
 import com.tamagotchi.code.feature.learn.LearnScreen
 import com.tamagotchi.code.feature.shop.ShopScreen
+import com.tamagotchi.code.feature.games.CodeReviewScreen
+import com.tamagotchi.code.feature.games.HackathonScreen
+import com.tamagotchi.code.feature.skills.SkillTreeScreen
+import com.tamagotchi.code.feature.skills.SeasonPassScreen
+import com.tamagotchi.code.feature.skills.WeeklyMissionsScreen
+import com.tamagotchi.code.feature.settings.GitHubSyncScreen
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 object Routes {
@@ -34,10 +40,16 @@ object Routes {
     const val SETTINGS = "settings"
     const val SETTINGS_LANGUAGE = "settings_language"
     const val SETTINGS_ABOUT = "settings_about"
+    const val SETTINGS_GITHUB = "settings_github"
     const val GAMES = "games"
     const val BUG_HUNT = "bug_hunt"
     const val GIT_RESCUE = "git_rescue"
     const val REFACTOR_RUSH = "refactor_rush"
+    const val CODE_REVIEW = "code_review"
+    const val HACKATHON = "hackathon"
+    const val SKILL_TREE = "skill_tree"
+    const val SEASON_PASS = "season_pass"
+    const val WEEKLY_MISSIONS = "weekly_missions"
 }
 
 data class BottomNavItem(
@@ -202,7 +214,11 @@ fun AppNavigation(viewModel: PetViewModel) {
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToLanguage = { navController.navigate(Routes.SETTINGS_LANGUAGE) },
-                    onNavigateToAbout = { navController.navigate(Routes.SETTINGS_ABOUT) }
+                    onNavigateToAbout = { navController.navigate(Routes.SETTINGS_ABOUT) },
+                    onNavigateToGitHub = { navController.navigate(Routes.SETTINGS_GITHUB) },
+                    onNavigateToSkillTree = { navController.navigate(Routes.SKILL_TREE) },
+                    onNavigateToSeasonPass = { navController.navigate(Routes.SEASON_PASS) },
+                    onNavigateToWeeklyMissions = { navController.navigate(Routes.WEEKLY_MISSIONS) }
                 )
             }
             composable(Routes.SETTINGS_LANGUAGE) {
@@ -222,7 +238,9 @@ fun AppNavigation(viewModel: PetViewModel) {
                     onNavigateBack = { navController.popBackStack() },
                     onNavigateToBugHunt = { navController.navigate(Routes.BUG_HUNT) },
                     onNavigateToGitRescue = { navController.navigate(Routes.GIT_RESCUE) },
-                    onNavigateToRefactorRush = { navController.navigate(Routes.REFACTOR_RUSH) }
+                    onNavigateToRefactorRush = { navController.navigate(Routes.REFACTOR_RUSH) },
+                    onNavigateToCodeReview = { navController.navigate(Routes.CODE_REVIEW) },
+                    onNavigateToHackathon = { navController.navigate(Routes.HACKATHON) }
                 )
             }
             composable(Routes.BUG_HUNT) {
@@ -241,6 +259,42 @@ fun AppNavigation(viewModel: PetViewModel) {
                 com.tamagotchi.code.feature.games.RefactorRushScreen(
                     viewModel = viewModel,
                     onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.CODE_REVIEW) {
+                CodeReviewScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.HACKATHON) {
+                HackathonScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.SKILL_TREE) {
+                SkillTreeScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.SEASON_PASS) {
+                SeasonPassScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.WEEKLY_MISSIONS) {
+                WeeklyMissionsScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.SETTINGS_GITHUB) {
+                GitHubSyncScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() }
                 )
             }
         }

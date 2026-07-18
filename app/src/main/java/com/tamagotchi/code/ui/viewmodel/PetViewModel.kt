@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.tamagotchi.code.data.ChallengesData
 import com.tamagotchi.code.data.CodeCard
 import com.tamagotchi.code.data.CodingChallenge
+import com.tamagotchi.code.data.QuestType
 import com.tamagotchi.code.data.codeCards
+import com.tamagotchi.code.data.getTargetForQuest
 import com.tamagotchi.code.data.database.FocusSessionEntity
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
@@ -30,6 +32,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import android.content.Context
+import android.app.NotificationManager
+
 class PetViewModel(
     private val repository: PetRepository,
     private val userPreferences: UserPreferencesRepository,
@@ -48,6 +53,22 @@ class PetViewModel(
 
     val unlockedThemes = MutableStateFlow<Set<String>>(ThemeRegistry.allThemes.map { it.name }.toSet() + "Default")
     val unlockedAchievements = MutableStateFlow<Set<String>>(emptySet())
+
+    val ownedItems = MutableStateFlow<List<com.tamagotchi.code.data.database.OwnedItemEntity>>(emptyList())
+
+    val petAccentColor = MutableStateFlow(androidx.compose.ui.graphics.Color(0xFF81C784))
+
+    val moodletState = MutableStateFlow<MoodletState?>(null)
+    val pairBuddyState = MutableStateFlow<PairBuddyState?>(null)
+    val seasonPassState = MutableStateFlow<SeasonPassData?>(null)
+    val weeklyMissionsState = MutableStateFlow<List<WeeklyMissionData>>(emptyList())
+    val hackathonState = MutableStateFlow<HackathonData?>(null)
+    val skillTreeState = MutableStateFlow<List<SkillNodeData>>(emptyList())
+    val githubStats = MutableStateFlow<GitHubStatsData?>(null)
+    val isDndActive = MutableStateFlow(false)
+    val githubSyncLoading = MutableStateFlow(false)
+
+    val languageProgressList = MutableStateFlow<List<com.tamagotchi.code.data.database.LanguageProgressEntity>>(emptyList())
 
     fun unlockTheme(themeName: String) {
         viewModelScope.launch {
@@ -422,6 +443,15 @@ class PetViewModel(
                 }
             }
         }
+        loadOwnedItems()
+        loadPetAccentColor()
+        loadMoodlet()
+        loadSkillTree()
+        loadSeasonPass()
+        loadWeeklyMissions()
+        loadHackathon()
+        loadLanguageProgress()
+        checkAndTriggerMoodlet()
         checkDailyRewardEligibility()
         checkDeathState()
     }
@@ -485,8 +515,10 @@ class PetViewModel(
             viewModelScope.launch {
                 val current = petState.value ?: return@launch
 
+                val pairBuddyBonus = if (pairBuddyState.value != null) 1.5f else 1.0f
                 val reward = RewardCalculator.calculateChallengeReward(challenge.type)
-                val updatedXp = current.xp + reward.xp
+                val adjustedXp = (reward.xp * pairBuddyBonus).toInt()
+                val updatedXp = current.xp + adjustedXp
                 val updatedLevel = LevelCalculator.calculateLevel(updatedXp)
                 val newHealth = (current.health + reward.healthRestore).coerceIn(0f, 100f)
                 val newHunger = (current.hunger + reward.hungerRestore).coerceIn(0f, 100f)
@@ -506,6 +538,11 @@ class PetViewModel(
                     )
                 )
                 repository.savePetState(updated)
+                addSeasonPassXp(reward.xp / 2)
+
+                if (pairBuddyState.value != null) {
+                    consumePairBuddyChallenge()
+                }
                 
                 if (updated.level > current.level) {
                     achievementsRepository.unlockAchievement("nivel_experto")
@@ -514,6 +551,7 @@ class PetViewModel(
                     achievementsRepository.unlockAchievement("ahorrador")
                 }
                 userPreferences.addDailyActivity("challenge:${challenge.language}")
+                checkAndActivatePairBuddy()
             }
         } else {
             soundManager.playError()
@@ -536,7 +574,12 @@ class PetViewModel(
     fun buyShopItem(itemName: String, cost: Int, hungerRestore: Float, healthRestore: Float, energyRestore: Float) {
         viewModelScope.launch {
             val current = petState.value ?: return@launch
-            if (current.bytes < cost) {
+
+            val discountTier = skillTreeState.value.find { it.id == "shop_discount" }?.currentTier ?: 0
+            val discount = when (discountTier) { 1 -> 0.05f; 2 -> 0.10f; 3 -> 0.15f; else -> 0f }
+            val finalCost = (cost * (1f - discount)).toInt().coerceAtLeast(1)
+
+            if (current.bytes < finalCost) {
                 soundManager.playError()
                 return@launch
             }
@@ -553,13 +596,14 @@ class PetViewModel(
             }
 
             val updated = current.copy(
-                bytes = current.bytes - cost,
+                bytes = current.bytes - finalCost,
                 hunger = updatedHunger,
                 health = updatedHealth,
                 energy = updatedEnergy,
                 currentStatus = newStatus
             )
             repository.savePetState(updated)
+            addSeasonPassXp(5)
             userPreferences.addDailyActivity("shop:${itemName}")
         }
     }
@@ -709,13 +753,16 @@ class PetViewModel(
             lastStudyDate = current.lastStudyDate
         )
 
+        val dndMultiplier = if (isDndActive.value) 1.5f else 1.0f
+        val adjustedXp = (reward.xp * dndMultiplier).toInt()
+
         val now = System.currentTimeMillis()
         val updatedEnergy = (current.energy - reward.energyCost).coerceIn(0f, 100f)
         val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, updatedEnergy, false, false)
 
         val updated = current.copy(
-            xp = current.xp + reward.xp,
-            level = reward.newLevel,
+            xp = current.xp + adjustedXp,
+            level = com.tamagotchi.code.util.LevelCalculator.calculateLevel(current.xp + adjustedXp),
             bytes = current.bytes + reward.bytes,
             energy = updatedEnergy,
             streak = reward.streak,
@@ -724,6 +771,7 @@ class PetViewModel(
             currentStatus = newStatus
         )
         repository.savePetState(updated)
+        addSeasonPassXp(adjustedXp / 2)
         if (reward.streak >= 7) achievementsRepository.unlockAchievement("racha_7")
         if (reward.streak >= 30) achievementsRepository.unlockAchievement("racha_30")
         userPreferences.addDailyActivity("study:${topic}")
@@ -812,18 +860,30 @@ class PetViewModel(
     fun completeMinigame(bytesEarned: Int, healthEarned: Float, energyCost: Float) {
         viewModelScope.launch {
             val pet = repository.petState.firstOrNull() ?: return@launch
+            val bonusTier = skillTreeState.value.find { it.id == "minigame_bonus" }?.currentTier ?: 0
+            val bonusMultiplier = when (bonusTier) { 1 -> 1.1f; 2 -> 1.2f; 3 -> 1.3f; else -> 1.0f }
+            val adjustedBytes = (bytesEarned * bonusMultiplier).toInt()
+
+            val pairBuddyBonus = if (pairBuddyState.value != null) 1.5f else 1.0f
+            val finalBytes = (adjustedBytes * pairBuddyBonus).toInt()
+
             val updated = pet.copy(
-                bytes = pet.bytes + bytesEarned,
+                bytes = pet.bytes + finalBytes,
                 health = (pet.health + healthEarned).coerceIn(0f, 100f),
                 energy = (pet.energy + energyCost).coerceIn(0f, 100f)
             )
             repository.savePetState(updated)
+            addSeasonPassXp(finalBytes / 4)
             soundManager.playSuccess()
             triggerCelebration()
+
+            if (pairBuddyState.value != null) {
+                consumePairBuddyChallenge()
+            }
             
-            if (bytesEarned == 100) { // Bug Hunt score 10
+            if (bytesEarned == 100) {
                 achievementsRepository.unlockAchievement("cazador_de_bugs")
-            } else if (bytesEarned == 45) { // Git Rescue score 3
+            } else if (bytesEarned == 45) {
                 achievementsRepository.unlockAchievement("git_sin_panico")
             }
             userPreferences.addDailyActivity("game:${bytesEarned}")
@@ -843,6 +903,17 @@ class PetViewModel(
     var showCodeCardDialog = mutableStateOf(false)
         private set
     var currentCodeCard = mutableStateOf<CodeCard?>(null)
+        private set
+
+    var activeQuestType = mutableStateOf<QuestType?>(null)
+        private set
+    var activeQuestProgress = mutableStateOf(0)
+        private set
+    var activeQuestTarget = mutableStateOf(0)
+        private set
+    var showQuestCompletedDialog = mutableStateOf(false)
+        private set
+    var questCompletedMessage = mutableStateOf("")
         private set
 
     fun dismissDeathDialog() {
@@ -884,6 +955,70 @@ class PetViewModel(
             currentCodeCard.value = card
             showCodeCardDialog.value = true
         }
+    }
+
+    fun loadActiveQuest() {
+        viewModelScope.launch {
+            val typeName = userPreferences.getActiveQuestType() ?: return@launch
+            val type = try { QuestType.valueOf(typeName) } catch (_: Exception) { return@launch }
+            val expires = userPreferences.getActiveQuestExpires()
+            if (expires > 0L && System.currentTimeMillis() > expires) {
+                userPreferences.clearActiveQuest()
+                activeQuestType.value = null
+                activeQuestProgress.value = 0
+                activeQuestTarget.value = 0
+                return@launch
+            }
+            activeQuestType.value = type
+            activeQuestProgress.value = userPreferences.getActiveQuestProgress()
+            activeQuestTarget.value = getTargetForQuest(type)
+        }
+    }
+
+    fun assignNewQuest() {
+        viewModelScope.launch {
+            val allQuests = QuestType.entries
+            val chosen = allQuests.random()
+            val target = getTargetForQuest(chosen)
+            val expiresAt = System.currentTimeMillis() + 4 * 60 * 60 * 1000L
+            userPreferences.setActiveQuest(chosen.name, 0, expiresAt, System.currentTimeMillis())
+            activeQuestType.value = chosen
+            activeQuestProgress.value = 0
+            activeQuestTarget.value = target
+        }
+    }
+
+    private suspend fun checkQuestProgress(type: QuestType) {
+        val currentType = activeQuestType.value ?: return
+        if (currentType != type) return
+        userPreferences.incrementQuestProgress()
+        val progress = userPreferences.getActiveQuestProgress()
+        activeQuestProgress.value = progress
+        if (progress >= activeQuestTarget.value) {
+            val rewardXp = currentType.rewardXp
+            val rewardBytes = currentType.rewardBytes
+            val pet = repository.petState.firstOrNull() ?: return
+            val updatedLevel = LevelCalculator.calculateLevel(pet.xp + rewardXp)
+            val updated = pet.copy(
+                xp = pet.xp + rewardXp,
+                level = updatedLevel,
+                bytes = pet.bytes + rewardBytes,
+                lastUpdated = System.currentTimeMillis()
+            )
+            repository.savePetState(updated)
+            questCompletedMessage.value = "Mision completada!\n\n${currentType.displayName}\n\n+$rewardXp XP\n+$rewardBytes Bytes"
+            showQuestCompletedDialog.value = true
+            soundManager.playLevelUp()
+            triggerCelebration()
+            userPreferences.clearActiveQuest()
+            activeQuestType.value = null
+            activeQuestProgress.value = 0
+            activeQuestTarget.value = 0
+        }
+    }
+
+    fun dismissQuestCompletedDialog() {
+        showQuestCompletedDialog.value = false
     }
 
     fun checkDeathState() {
@@ -937,7 +1072,475 @@ class PetViewModel(
             triggerCelebration()
         }
     }
+
+    // === SOMBREROS (Shop) ===
+    fun loadOwnedItems() {
+        viewModelScope.launch {
+            repository.petDao.getOwnedItems().collect { items ->
+                ownedItems.value = items
+            }
+        }
+    }
+
+    fun buyHat(hatId: String, cost: Int, hatName: String) {
+        viewModelScope.launch {
+            val pet = petState.value ?: return@launch
+            if (pet.bytes < cost) return@launch
+            
+            // Auto-equip the new hat immediately
+            val updated = pet.copy(
+                bytes = pet.bytes - cost,
+                equippedHat = hatId
+            )
+            repository.savePetState(updated)
+            
+            repository.petDao.insertOwnedItem(
+                com.tamagotchi.code.data.database.OwnedItemEntity(
+                    itemId = hatId,
+                    type = "HAT",
+                    isEquipped = true
+                )
+            )
+            repository.petDao.unequipAllOfType("HAT") // Unequip everything else
+            repository.petDao.equipItem(hatId) // Equip the new one in DB
+            
+            soundManager.playBuy()
+            userPreferences.addDailyActivity("shop:hat:$hatName")
+        }
+    }
+
+    fun equipHat(hatId: String) {
+        viewModelScope.launch {
+            val pet = petState.value ?: return@launch
+            repository.petDao.unequipAllOfType("HAT")
+            repository.petDao.equipItem(hatId)
+            repository.savePetState(pet.copy(equippedHat = hatId))
+            soundManager.playClick()
+        }
+    }
+
+    // === EDITOR DE MASCOTA ===
+    fun setPetAccentColor(color: androidx.compose.ui.graphics.Color) {
+        viewModelScope.launch {
+            val pet = petState.value ?: return@launch
+            if (pet.bytes < 30) return@launch
+            repository.savePetState(pet.copy(bytes = pet.bytes - 30))
+            userPreferences.setPetAccentColor(color.hashCode())
+            petAccentColor.value = color
+            soundManager.playBuy()
+        }
+    }
+
+    fun loadPetAccentColor() {
+        viewModelScope.launch {
+            val colorInt = userPreferences.getPetAccentColor()
+            if (colorInt != 0) {
+                petAccentColor.value = androidx.compose.ui.graphics.Color(colorInt)
+            }
+        }
+    }
+
+    // === MOODLET SYSTEM ===
+    fun loadMoodlet() {
+        viewModelScope.launch {
+            val data = userPreferences.getMoodletData()
+            if (data != null && data.expiry > System.currentTimeMillis()) {
+                moodletState.value = MoodletState(data.moodletType, data.expiry)
+            } else if (data != null) {
+                userPreferences.clearMoodlet()
+                moodletState.value = null
+            }
+        }
+    }
+
+    fun triggerRandomMoodlet() {
+        viewModelScope.launch {
+            val events = listOf(
+                "bug_prod" to "Encontró un bug en producción 😱",
+                "tabs" to "Te vio usar tabs 😊",
+                "spaces" to "Te vio usar espacios 🤔",
+                "bad_commit" to "Commit sin descripción 😞",
+                "clean_code" to "Código limpio detectado 🎉",
+                "spilled_coffee" to "Café derramado 😰"
+            )
+            val (type, message) = events.random()
+            val duration = when (type) {
+                "bug_prod" -> 2L
+                "spilled_coffee" -> 1L
+                "bad_commit" -> 2L
+                "clean_code" -> 3L
+                else -> 1L
+            }
+            val expiry = System.currentTimeMillis() + duration * 60 * 60 * 1000
+            userPreferences.saveMoodlet(type, expiry)
+            moodletState.value = MoodletState(message, expiry)
+        }
+    }
+
+    // === PAIR BUDDY (Buggy) ===
+    fun activatePairBuddy() {
+        if (pairBuddyState.value != null) return
+        pairBuddyState.value = PairBuddyState(
+            name = "Buggy",
+            remainingChallenges = 3,
+            xpMultiplier = 1.5f
+        )
+    }
+
+    fun consumePairBuddyChallenge() {
+        val current = pairBuddyState.value ?: return
+        if (current.remainingChallenges <= 1) {
+            pairBuddyState.value = null
+        } else {
+            pairBuddyState.value = current.copy(remainingChallenges = current.remainingChallenges - 1)
+        }
+    }
+
+    // === SKILL TREE ===
+    fun loadSkillTree() {
+        viewModelScope.launch {
+            val skills = userPreferences.getSkillTreeData()
+            skillTreeState.value = skills.ifEmpty {
+                SkillTreeData.DEFAULT_SKILLS
+            }
+        }
+    }
+
+    fun unlockSkillNode(skillId: String) {
+        viewModelScope.launch {
+            val current = skillTreeState.value.toMutableList()
+            val idx = current.indexOfFirst { it.id == skillId }
+            if (idx == -1) return@launch
+            val node = current[idx]
+            if (node.currentTier >= node.maxTier) return@launch
+
+            val pet = petState.value ?: return@launch
+            val cost = (node.currentTier + 1) * 100
+            if (pet.xp < cost) return@launch
+
+            val updated = pet.copy(xp = pet.xp - cost)
+            repository.savePetState(updated)
+
+            current[idx] = node.copy(currentTier = node.currentTier + 1)
+            skillTreeState.value = current
+            userPreferences.saveSkillTreeData(current)
+            soundManager.playLevelUp()
+        }
+    }
+
+    // === SEASON PASS ===
+    fun loadSeasonPass() {
+        viewModelScope.launch {
+            val data = userPreferences.getSeasonPassData()
+            seasonPassState.value = data ?: SeasonPassData()
+        }
+    }
+
+    fun addSeasonPassXp(xp: Int) {
+        viewModelScope.launch {
+            val current = seasonPassState.value ?: SeasonPassData()
+            val newXp = current.xp + xp
+            val newLevel = current.level + (newXp / 100)
+            val remainingXp = newXp % 100
+            val updated = current.copy(
+                xp = remainingXp,
+                level = newLevel.coerceAtMost(20)
+            )
+            seasonPassState.value = updated
+            userPreferences.saveSeasonPassData(updated)
+            if (newLevel > current.level) {
+                triggerCelebration()
+            }
+        }
+    }
+
+    // === WEEKLY MISSIONS ===
+    fun loadWeeklyMissions() {
+        viewModelScope.launch {
+            val missions = userPreferences.getWeeklyMissions()
+            weeklyMissionsState.value = missions.ifEmpty {
+                WeeklyMissionData.generateWeeklyMissions()
+            }
+        }
+    }
+
+    fun completeWeeklyMission(missionId: String) {
+        viewModelScope.launch {
+            val current = weeklyMissionsState.value.toMutableList()
+            val idx = current.indexOfFirst { it.id == missionId }
+            if (idx == -1 || current[idx].completed) return@launch
+            current[idx] = current[idx].copy(completed = true)
+            val mission = current[idx]
+
+            val pet = petState.value ?: return@launch
+            val updatedLevel = com.tamagotchi.code.util.LevelCalculator.calculateLevel(pet.xp + mission.rewardXp)
+            repository.savePetState(pet.copy(
+                xp = pet.xp + mission.rewardXp,
+                level = updatedLevel,
+                bytes = pet.bytes + mission.rewardBytes
+            ))
+
+            val completedCount = current.count { it.completed }
+            if (completedCount == 3) {
+                repository.savePetState(pet.copy(
+                    bytes = pet.bytes + 500
+                ))
+            }
+
+            weeklyMissionsState.value = current
+            userPreferences.saveWeeklyMissions(current)
+            soundManager.playLevelUp()
+            triggerCelebration()
+        }
+    }
+
+    // === HACKATHON ===
+    fun loadHackathon() {
+        viewModelScope.launch {
+            val data = userPreferences.getHackathonData()
+            hackathonState.value = data
+        }
+    }
+
+    fun submitHackathonSolution(attempts: Int, timeMs: Long) {
+        viewModelScope.launch {
+            val current = hackathonState.value ?: return@launch
+            if (current.attempts >= 3) return@launch
+
+            val updated = current.copy(
+                attempts = current.attempts + 1,
+                bestTimeMs = minOf(current.bestTimeMs, timeMs)
+            )
+            hackathonState.value = updated
+            userPreferences.saveHackathonData(updated)
+
+            val pet = petState.value ?: return@launch
+            val newLevel = com.tamagotchi.code.util.LevelCalculator.calculateLevel(pet.xp + 200)
+            repository.savePetState(pet.copy(
+                xp = pet.xp + 200,
+                level = newLevel,
+                bytes = pet.bytes + 500
+            ))
+            soundManager.playLevelUp()
+            triggerCelebration()
+        }
+    }
+
+    // === GITHUB STATS ===
+    fun fetchGitHubStats(token: String) {
+        githubSyncLoading.value = true
+        viewModelScope.launch {
+            try {
+                val url = java.net.URL("https://api.github.com/user")
+                val conn = url.openConnection() as java.net.HttpURLConnection
+                conn.setRequestProperty("Authorization", "token $token")
+                conn.setRequestProperty("Accept", "application/vnd.github.v3+json")
+                conn.connectTimeout = 5000
+                conn.readTimeout = 5000
+
+                if (conn.responseCode == 200) {
+                    val body = conn.inputStream.bufferedReader().readText()
+                    val json = org.json.JSONObject(body)
+                    val login = json.optString("login", "unknown")
+                    val publicRepos = json.optInt("public_repos", 0)
+
+                    val eventsUrl = java.net.URL("https://api.github.com/users/$login/events?per_page=30")
+                    val eventsConn = eventsUrl.openConnection() as java.net.HttpURLConnection
+                    eventsConn.setRequestProperty("Authorization", "token $token")
+                    eventsConn.setRequestProperty("Accept", "application/vnd.github.v3+json")
+                    eventsConn.connectTimeout = 5000
+                    eventsConn.readTimeout = 5000
+
+                    var commits = 0
+                    var prs = 0
+                    var issues = 0
+                    if (eventsConn.responseCode == 200) {
+                        val eventsBody = eventsConn.inputStream.bufferedReader().readText()
+                        val events = org.json.JSONArray(eventsBody)
+                        val today = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                        for (i in 0 until events.length()) {
+                            val event = events.getJSONObject(i)
+                            val createdAt = event.optString("created_at", "")
+                            if (createdAt.startsWith(today)) {
+                                when (event.optString("type", "")) {
+                                    "PushEvent" -> {
+                                        val size = event.optJSONObject("payload")?.optInt("size", 1) ?: 1
+                                        commits += size
+                                    }
+                                    "PullRequestEvent" -> prs++
+                                    "IssuesEvent" -> issues++
+                                }
+                            }
+                        }
+                    }
+
+                    val xpBonus = commits * 5 + prs * 10 + issues * 3
+                    githubStats.value = GitHubStatsData(
+                        username = login,
+                        publicRepos = publicRepos,
+                        todayCommits = commits,
+                        todayPRs = prs,
+                        todayIssues = issues,
+                        xpBonus = xpBonus
+                    )
+                    userPreferences.saveGitHubToken(token)
+
+                    if (xpBonus > 0) {
+                        val pet = petState.value ?: return@launch
+                        val newLevel = com.tamagotchi.code.util.LevelCalculator.calculateLevel(pet.xp + xpBonus)
+                        repository.savePetState(pet.copy(
+                            xp = pet.xp + xpBonus,
+                            level = newLevel,
+                            lastUpdated = System.currentTimeMillis()
+                        ))
+                        triggerCelebration()
+                    }
+                    githubSyncLoading.value = false
+                }
+            } catch (_: Exception) {
+                githubStats.value = null
+                githubSyncLoading.value = false
+            }
+        }
+    }
+
+    // === DND MODE ===
+    fun checkDndMode(context: android.content.Context) {
+        viewModelScope.launch {
+            try {
+                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val filter = notificationManager.currentInterruptionFilter
+                isDndActive.value = filter == NotificationManager.INTERRUPTION_FILTER_PRIORITY ||
+                        filter == NotificationManager.INTERRUPTION_FILTER_NONE ||
+                        filter == NotificationManager.INTERRUPTION_FILTER_ALARMS
+            } catch (_: Exception) {
+                isDndActive.value = false
+            }
+        }
+    }
+
+    // === LANGUAGE BADGES ===
+    fun loadLanguageProgress() {
+        viewModelScope.launch {
+            repository.petDao.getAllLanguageProgress().collect { progress ->
+                languageProgressList.value = progress
+            }
+        }
+    }
+
+    fun updateLanguageProgress(languageId: String, completed: Int, total: Int) {
+        viewModelScope.launch {
+            val badgeLevel = when {
+                total > 0 && completed >= total -> 3
+                total > 0 && completed >= (total * 0.75f) -> 2
+                total > 0 && completed >= (total * 0.5f) -> 1
+                else -> 0
+            }
+            repository.petDao.updateLanguageProgress(
+                com.tamagotchi.code.data.database.LanguageProgressEntity(
+                    languageId = languageId,
+                    challengesCompleted = completed,
+                    totalChallenges = total,
+                    badgeLevel = badgeLevel
+                )
+            )
+        }
+    }
+
+    // === PAIR BUDDY RANDOM ACTIVATION ===
+    fun checkAndActivatePairBuddy() {
+        if (pairBuddyState.value != null) return
+        if (kotlin.random.Random.nextFloat() < 0.2f) {
+            activatePairBuddy()
+        }
+    }
+
+    // === DAILY MOODLET CHECK ===
+    fun checkAndTriggerMoodlet() {
+        viewModelScope.launch {
+            val lastCheck = userPreferences.getLastMoodletCheck()
+            val now = System.currentTimeMillis()
+            if (now - lastCheck > 30 * 60 * 1000) { // cada 30 min
+                if (kotlin.random.Random.nextFloat() < 0.05f) { // 5% probabilidad
+                    triggerRandomMoodlet()
+                }
+                userPreferences.setLastMoodletCheck(now)
+            }
+        }
+    }
 }
+
+// === NEW DATA CLASSES ===
+
+data class MoodletState(
+    val moodletType: String,
+    val expiry: Long
+)
+
+data class PairBuddyState(
+    val name: String,
+    val remainingChallenges: Int,
+    val xpMultiplier: Float
+)
+
+data class SeasonPassData(
+    val level: Int = 0,
+    val xp: Int = 0,
+    val premium: Boolean = false
+)
+
+data class WeeklyMissionData(
+    val id: String,
+    val title: String,
+    val description: String,
+    val rewardXp: Int,
+    val rewardBytes: Int,
+    val completed: Boolean = false
+) {
+    companion object {
+        fun generateWeeklyMissions(): List<WeeklyMissionData> = listOf(
+            WeeklyMissionData("wm1", "5 retos de código", "Completa 5 retos en Aprender", 100, 50),
+            WeeklyMissionData("wm2", "2h modo foco", "Estudia 2 horas en modo foco", 200, 100),
+            WeeklyMissionData("wm3", "Gana 3 Bug Hunt", "Gana 3 partidas de Bug Hunt", 150, 75)
+        )
+    }
+}
+
+data class HackathonData(
+    val active: Boolean = true,
+    val attempts: Int = 0,
+    val bestTimeMs: Long = Long.MAX_VALUE,
+    val expiresAt: Long = System.currentTimeMillis() + 48 * 60 * 60 * 1000
+)
+
+data class SkillNodeData(
+    val id: String,
+    val name: String,
+    val description: String,
+    val maxTier: Int = 3,
+    val currentTier: Int = 0,
+    val icon: String = "Star"
+)
+
+object SkillTreeData {
+    val DEFAULT_SKILLS = listOf(
+        SkillNodeData("double_xp", "Doble XP domingo", "XP x1.5/2/3 los domingos"),
+        SkillNodeData("slow_decay", "Decaimiento lento", "Decaimiento -10%/-20%/-30%"),
+        SkillNodeData("shop_discount", "Descuento tienda", "5%/10%/15% descuento"),
+        SkillNodeData("minigame_bonus", "Bonus minijuegos", "+10%/+20%/+30% recompensa"),
+        SkillNodeData("offline_xp", "XP offline", "1h/2h/4h de XP pasivo"),
+        SkillNodeData("extra_heart", "Corazón extra", "Máximo 6 corazones")
+    )
+}
+
+data class GitHubStatsData(
+    val username: String,
+    val publicRepos: Int,
+    val todayCommits: Int,
+    val todayPRs: Int,
+    val todayIssues: Int,
+    val xpBonus: Int
+)
 
 data class DailyReward(
     val day: Int,

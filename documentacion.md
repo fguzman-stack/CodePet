@@ -486,20 +486,27 @@ val currentHearts = (state.health / 20f).toInt().coerceIn(0, 5)
 
 | Componente | Archivo | Función |
 |:-----------|:--------|:--------|
-| `AppNavigation` | `navigation/AppNavigation.kt` | Scaffold + bottom nav + 13 rutas (when) |
-| `Screen` | `navigation/Screen.kt` | sealed class: Home, Learn, Focus, Shop, Settings, SettingsLanguage, Games, BugHunt, GitRescue, RefactorRush |
+| `AppNavigation` | `navigation/AppNavigation.kt` | Scaffold + bottom nav + 19 rutas (when) |
+| `Screen` | `navigation/Screen.kt` | sealed class: Home, Learn, Focus, Shop, Settings, SettingsLanguage, Games, BugHunt, GitRescue, RefactorRush, CodeReview, Hackathon, PetEditor, GitHubSettings, SeasonPass, SkillTree, WeeklyMissions |
 | `HomeScreen` | `feature/home/HomeScreen.kt` | ViewportCard + botones + diálogo offline reward |
 | `ViewportCard` | `ui/components/ViewportCard.kt` | Mascota animada + meters + nombre |
 | `MeterItem` | `ui/components/MeterItem.kt` | Barra de progreso animada |
 | `LearnScreen` | `feature/learn/LearnScreen.kt` | Retos de programación (normales + especiales) |
 | `FocusScreen` | `feature/focus/FocusScreen.kt` | Pomodoro persistente + bitácora de estudio |
-| `ShopScreen` | `feature/shop/ShopScreen.kt` | Tienda con productos y comida |
+| `ShopScreen` | `feature/shop/ShopScreen.kt` | Tienda con productos, comida y sombreros |
 | `SettingsScreen` | `feature/settings/SettingsScreen.kt` | Configuración completa con carrusel de temas |
 | `SettingsLanguageScreen` | `feature/settings/SettingsLanguageScreen.kt` | Lenguaje principal, temas activos, dificultad |
 | `GamesScreen` | `feature/games/GamesScreen.kt` | Hub arcade con cooldown diario |
 | `BugHuntScreen` | `feature/games/BugHuntScreen.kt` | Encuentra bugs en código (10 snippets) |
 | `GitRescueScreen` | `feature/games/GitRescueScreen.kt` | Decisiones Git con progreso visual |
 | `RefactorRushScreen` | `feature/games/RefactorRushScreen.kt` | Ordena bloques (12 puzzles) |
+| `CodeReviewScreen` | `feature/games/CodeReviewScreen.kt` | Revisión de código real |
+| `HackathonScreen` | `feature/games/HackathonScreen.kt` | Evento semanal contrarreloj |
+| `PetEditorScreen` | `feature/editor/PetEditorScreen.kt` | Personalización RGB de Codey |
+| `GitHubSettingsScreen` | `feature/settings/GitHubSettingsScreen.kt` | Sincronización con GitHub |
+| `SeasonPassScreen` | `feature/settings/SeasonPassScreen.kt` | Pase de batalla por temporada |
+| `SkillTreeScreen` | `feature/settings/SkillTreeScreen.kt` | Árbol de habilidades |
+| `WeeklyMissionsScreen` | `feature/settings/WeeklyMissionsScreen.kt` | Misiones semanales |
 | `MinigamesDialog` | `feature/games/MinigamesDialog.kt` | Arcade clásico (3 juegos legacy) |
 | `BinaryGuessGame` | `feature/games/BinaryGuessGame.kt` | Adivina el bit (legacy) |
 | `BugSmasherGame` | `feature/games/BugSmasherGame.kt` | Caza bugs 3×3 (legacy) |
@@ -622,16 +629,182 @@ completeStudySession() {
 - Animación suave de borde con `animateColorAsState`
 - Persistencia en DataStore + CompositionLocal (`LocalAppTheme`)
 
+### 6.9 Editor de Mascota (`feature/editor/PetEditorScreen.kt`)
+
+**Propósito:** Personalizar el color de Codey con sliders RGB y paletas predefinidas.
+
+**Componentes:**
+- Sliders RGB (0-255) para color primario, secundario y de ojos
+- 6 paletas de color rápidas (Cyberpunk, Oceano, Fuego, Bosque, Lavanda, Noche)
+- Preview en tiempo real de Codey con colores aplicados
+- Botón "Restablecer" a valores por defecto (#4FC3F7, #81C784, #FFFFFF)
+- Persistencia de colores en DataStore
+
+### 6.10 Colección de Sombreros
+
+**Propósito:** Tienda de sombreros para adornar a Codey.
+
+**Sombreros disponibles:**
+| Sombrero | Costo | Efecto |
+|:---------|:-----:|:-------|
+| Gorro de Codificador | 50 B | +5% XP en retos |
+| Sombrero de Mago | 100 B | +10% Salud al dormir |
+| Casco Espacial | 150 B | -10% decaimiento energía |
+| Corona de Bytes | 250 B | +15% Bytes en juegos |
+| Aureola de Debug | 500 B | +20% XP en todo |
+
+**Mecánica:**
+- Compra en ShopScreen (sección Hats)
+- Equipar/desequipar desde el perfil o Shop
+- El sombrero equipado se renderiza sobre la mascota en HomeScreen
+- Persistencia del sombrero equipado en PetStateEntity
+
+### 6.11 Sistema de Moodlets
+
+**Propósito:** Eventos aleatorios que afectan el humor de Codey por tiempo limitado.
+
+**Mecánica:**
+- Cada 2-4 horas de uso se activa un moodlet aleatorio
+- Duración: 1-3 horas
+- Efectos: modifican temporalmente stats y comportamiento
+
+**Moodlets:**
+| Moodlet | Efecto | Duración |
+|:--------|:-------|:---------|
+| 😊 Inspiración | +50% XP en retos | 1h |
+| 😴 Pereza | -30% energía, duerme más | 2h |
+| 🤒 Gripe de Código | -20% salud cada 30min | 2h |
+| ⚡ Hiperfocus | +50% XP en Pomodoro | 1h |
+| 🐞 Bugs Around | -25% precisión en juegos | 3h |
+| 🎵 Modo Creativo | +25% XP, -25% energía | 2h |
+
+### 6.12 Pair Programming Buddy
+
+**Propósito:** Buggy aparece aleatoriamente como compañero de pair programming.
+
+**Mecánica:**
+- Buggy tiene 20% de probabilidad de aparecer al iniciar un reto o Pomodoro
+- Mientras está activo: multiplica XP ganada ×1.5
+- Aparece visualmente junto a Codey con burbuja de diálogo
+- Dura toda la sesión activa
+- Cooldown de 30min entre apariciones
+
+### 6.13 DND Mode (No Molestar)
+
+**Propósito:** Modo concentración que silencia notificaciones y distracciones.
+
+**Activación:**
+- Botón toggle en FocusScreen
+- Desde Settings (DND Mode)
+- Voz rápida: atajo en la pantalla principal
+
+**Efectos:**
+- Silencia todas las notificaciones de la app
+- Oculta alertas de hambre/salud baja
+- Muestra indicador visual "🔇 DND" en la barra superior
+- Se desactiva automáticamente al terminar sesión Pomodoro
+- Bonus: +10% XP en sesiones con DND activo
+
+### 6.14 Reproductor de Música
+
+**Propósito:** Música de fondo para estudiar con temas por ambiente.
+
+**Pistas disponibles:**
+| Pista | Ambiente | Efecto |
+|:------|:---------|:-------|
+| Lo-Fi Code | Relajante | +5% XP |
+| Syntax Sky | Enfocado | +5% concentración |
+| Pixel Dreams | Retro | Sin bonus |
+| Cyber Flow | Enérgico | +10% energía |
+
+**Mecánica:**
+- Reproductor con controles básicos (Play/Pause, Skip, Volumen)
+- Se reproduce en segundo plano (notificación persistente)
+- Persistencia de pista seleccionada en DataStore
+- Integración con DND Mode: pausa automática al activar DND
+
+### 6.15 Sincronización con GitHub
+
+**Propósito:** Vincular perfil de GitHub para mostrar actividad y rachas.
+
+**Configuración:**
+- Ingresar username de GitHub en `GitHubSettingsScreen`
+- Fetch de perfil público (avatar, repos, racha)
+- Sincronización automática cada 24h (WorkManager)
+
+**Recompensas:**
+| Logro | Condición | Premio |
+|:------|:----------|:-------|
+| GitHub Newbie | Vincular cuenta | 50 Bytes |
+| Streak Starter | 7 días de racha en GitHub | 100 Bytes + sombrero |
+| Code Warrior | 30 días de racha en GitHub | 500 Bytes + insignia |
+| Open Source Hero | 10+ repos públicos | 200 Bytes + tema exclusivo |
+
+**API:** Retrofit + OkHttp + Moshi hacia GitHub REST API v3 (pública, sin token).
+
+### 6.16 Skill Tree (Árbol de Habilidades)
+
+**Propósito:** Sistema de progresión con habilidades desbloqueables.
+
+**Árbol:**
+1. **Rama Productividad** — bonificaciones Pomodoro
+   - Nodo 1: +25% XP en sesiones 25min (5 niveles)
+   - Nodo 2: DND Mode automático (1 nivel)
+   - Nodo 3: +50% XP bonus por racha (3 niveles)
+2. **Rama Conocimiento** — bonificaciones en retos
+   - Nodo 1: +25% XP en retos (5 niveles)
+   - Nodo 2: +1 pista gratuita por ronda (1 nivel)
+   - Nodo 3: Desbloquea retos ADVANCED (3 niveles)
+3. **Rama Social** — bonificaciones de mascota
+   - Nodo 1: +25% efectividad de cuidados (5 niveles)
+   - Nodo 2: Pair Buddy más frecuente (1 nivel)
+   - Nodo 3: Moodlets siempre positivos (3 niveles)
+
+**Costo:** Cada nivel consume Bytes y requiere nivel de mascota mínimo.
+
+### 6.17 Season Pass (Pase de Batalla)
+
+**Propósito:** Sistema de temporadas con recompensas progresivas.
+
+**Mecánica:**
+- Cada temporada dura 30 días
+- 20 niveles de recompensas
+- XP de temporada se gana con: retos, Pomodoro, juegos, racha diaria
+- Ruta gratuita (10 recompensas) y ruta premium (20 recompensas, 500 Bytes)
+
+**Recompensas:**
+| Nivel | Gratis | Premium |
+|:------|:-------|:--------|
+| 1 | 50 Bytes | Sombrero de temporada |
+| 5 | 100 XP | 200 Bytes |
+| 10 | Tema temporal | Tema permanente |
+| 15 | 300 Bytes | 500 Bytes |
+| 20 | Insignia | Mascota legendaria temporal |
+
+### 6.18 Weekly Missions (Misiones Semanales)
+
+**Propósito:** 3 misiones rotativas cada lunes para mantener el engagement.
+
+**Misiones posibles:**
+- Completar 5 sesiones Pomodoro → 100 Bytes, +50 XP
+- Acertar 10 retos seguidos → 150 Bytes, +75 XP
+- Jugar 3 juegos distintos → 100 Bytes
+- Mantener salud >80% por 2 días → 200 Bytes
+- Acariciar a Codey 20 veces → 50 Bytes, +25 XP
+- Completar 1 sesión de 50min → 150 Bytes, +100 XP
+
+**UI:** Tablero en `WeeklyMissionsScreen` con progreso visual por misión, check al completar, reset cada lunes.
+
 ---
 
 ## 7. Base de Datos y Persistencia
 
 ### 7.1 Room Database
 
-**Archivo:** `AppDatabase.kt` — versión 2 (fallbackToDestructiveMigration)
+**Archivo:** `AppDatabase.kt` — versión 5 (fallbackToDestructiveMigration)
 
 ```kotlin
-@Database(entities = [PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class], version = 2)
+@Database(entities = [PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class, MoodletEntity::class, SkillEntity::class, HatEntity::class, MissionEntity::class], version = 5)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun petDao(): PetDao
 
@@ -654,6 +827,10 @@ abstract class AppDatabase : RoomDatabase() {
 | `pet_state` | Estado singleton de la mascota | 1 |
 | `study_sessions` | Historial de sesiones completadas | N |
 | `focus_sessions` | Sesiones de timer (activas y completadas) | N |
+| `moodlets` | Moodlets activos e historial | N |
+| `skills` | Progreso del árbol de habilidades | ≤9 |
+| `hats` | Sombreros comprados y equipado | ≤5 |
+| `missions` | Estado de misiones semanales | 3 |
 
 ### 7.2 FocusSessionEntity
 
@@ -702,6 +879,14 @@ class UserPreferencesRepository(private val context: Context) {
 | `has_seen_onboarding` | Boolean | false |
 | `app_theme` | String | "Matrix Green" |
 | `unlocked_themes` | Set<String> | {"Matrix Green"} |
+| `dnd_mode` | Boolean | false |
+| `pet_color_primary` | String | "#4FC3F7" |
+| `pet_color_secondary` | String | "#81C784" |
+| `pet_color_eyes` | String | "#FFFFFF" |
+| `music_enabled` | Boolean | false |
+| `music_track` | String | "lo-fi-code" |
+| `github_username` | String | "" |
+| `github_last_sync` | Long | 0L |
 
 ### 7.4 PetDao — Queries Completas
 
@@ -732,10 +917,96 @@ interface PetDao {
 
     @Query("UPDATE focus_sessions SET status = :status WHERE id = :id")
     suspend fun updateFocusSessionStatus(id: Long, status: String)
+
+    // Moodlets
+    @Query("SELECT * FROM moodlets WHERE expiresAt > :now")
+    fun getActiveMoodlets(now: Long): Flow<List<MoodletEntity>>
+
+    @Insert
+    suspend fun insertMoodlet(moodlet: MoodletEntity)
+
+    @Query("DELETE FROM moodlets WHERE expiresAt <= :now")
+    suspend fun deleteExpiredMoodlets(now: Long)
+
+    // Skills
+    @Query("SELECT * FROM skills")
+    fun getAllSkills(): Flow<List<SkillEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertSkill(skill: SkillEntity)
+
+    // Hats
+    @Query("SELECT * FROM hats")
+    fun getAllHats(): Flow<List<HatEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertHat(hat: HatEntity)
+
+    // Missions
+    @Query("SELECT * FROM missions WHERE weekStart = :weekStart")
+    fun getMissions(weekStart: Long): Flow<List<MissionEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertMission(mission: MissionEntity)
 }
 ```
 
-### 7.5 PetRepository
+### 7.5 Nuevas Entidades v3.0
+
+#### MoodletEntity
+```kotlin
+@Entity(tableName = "moodlets")
+data class MoodletEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val type: String,           // INSPIRATION, LAZINESS, CODE_FLU, HYPERFOCUS, BUGS_AROUND, CREATIVE
+    val effect: String,         // Descripción del efecto
+    val multiplier: Float,      // 0.5 a 1.5 según el moodlet
+    val startedAt: Long,        // epoch ms
+    val expiresAt: Long         // epoch ms
+)
+```
+
+#### SkillEntity
+```kotlin
+@Entity(tableName = "skills")
+data class SkillEntity(
+    @PrimaryKey val id: String, // "prod_1", "know_2", "social_3"
+    val branch: String,          // "productivity", "knowledge", "social"
+    val level: Int,              // 0-5 según nodo
+    val maxLevel: Int,           // 1-5 según nodo
+    val unlocked: Boolean
+)
+```
+
+#### HatEntity
+```kotlin
+@Entity(tableName = "hats")
+data class HatEntity(
+    @PrimaryKey val id: String,  // "coder_cap", "wizard_hat", "space_helmet", "byte_crown", "debug_halo"
+    val name: String,
+    val cost: Int,
+    val effect: String,
+    val purchased: Boolean = false,
+    val equipped: Boolean = false
+)
+```
+
+#### MissionEntity
+```kotlin
+@Entity(tableName = "missions")
+data class MissionEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val weekStart: Long,         // Lunes 00:00 en epoch ms
+    val description: String,
+    val target: Int,             // Objetivo numérico
+    val progress: Int = 0,
+    val completed: Boolean = false,
+    val rewardBytes: Int,
+    val rewardXp: Int
+)
+```
+
+### 7.6 PetRepository
 
 ```kotlin
 class PetRepository(private val petDao: PetDao) {
@@ -1015,7 +1286,40 @@ Sección secundaria en GamesScreen que conserva los minijuegos originales:
 - Premio (ganar): 20 Bytes, 25% Salud
 - Premio (perder): 5 Bytes, 10% Salud
 
-### 10.5 Cooldown Diario
+### 10.5 Code Review
+
+**Propósito:** Identificar errores en fragmentos de código real de varios lenguajes.
+
+**Mecánica:**
+- 5 rondas sin límite de tiempo
+- Se muestra un snippet de 8-15 líneas con 1-2 errores
+- 4 opciones de respuesta: "Correcto", 3 tipos de bug
+- Pool de 15 snippets entre Kotlin, Python, JavaScript
+- Feedback detallado con corrección visual
+
+**Sistema de recompensa:**
+- `score × 12` Bytes (máx 60)
+- `+15%` Salud, `-5%` Energía
+- XP bonus por racha de aciertos
+
+### 10.6 Hackathon
+
+**Propósito:** Evento semanal de programación contrarreloj con problemas crecientes.
+
+**Mecánica:**
+- 3 problemas de dificultad progresiva (fácil → medio → difícil)
+- 5 minutos por problema
+- Escribir la solución correcta entre opciones
+- Tabla de puntuación semanal
+- Reset automático cada lunes
+
+**Sistema de recompensa:**
+- Problema 1: 30 Bytes, +25 XP
+- Problema 2: 50 Bytes, +50 XP
+- Problema 3: 100 Bytes, +100 XP + sombrero exclusivo
+- Bonus por completar los 3: +50 Bytes, insignia "Hackathon Master"
+
+### 10.7 Cooldown Diario
 
 Cada juego registra su última fecha de juego en DataStore (`game_last_played`). Un juego solo puede jugarse si pasaron 24h desde la última partida. El cooldown se muestra visualmente: tarjeta atenuada, botón deshabilitado, texto "En enfriamiento".
 
@@ -12065,6 +12369,12 @@ Actualizado en v2.0: ahora recibe `PetRepository`, `UserPreferencesRepository` y
 - DataStore Preferences 1.1.7
 - Navigation Compose (via Compose BOM)
 
+**Nuevas en v3.0:**
+- Retrofit 2.11.0 (GitHub API sync)
+- OkHttp 4.12.0 (HTTP engine)
+- Moshi 1.15.2 (JSON parsing)
+- Moshi Codegen (KSP) 1.15.2
+
 **Eliminadas de v1.0:**
 - `firebase-auth` + `credentials` + `googleid` (siempre estuvieron comentadas)
 - `firebase-firestore` (siempre comentado)
@@ -12160,6 +12470,40 @@ CodingChallenge(
 ---
 
 ## 19. Changelog
+
+### v3.0.0 — Evolución y Social
+
+#### 🎯 Nueva Mascota Evolutiva
+- **5 etapas visuales:** Huevo (nivel 1-4) → Cría (5-9) → Adulto (10-19) → Veterano (20-29) → Legendario (30+)
+- **Editor de mascota:** sliders RGB + 6 paletas de color para personalizar a Codey
+- **Colección de 5 sombreros:** Gorro Codificador, Sombrero Mago, Casco Espacial, Corona Bytes, Aureola Debug
+- **Moodlets:** 6 eventos aleatorios que afectan temporalmente stats y XP
+- **Pair Programming Buddy:** Buggy aparece aleatoriamente (20% prob.) y multiplica XP ×1.5
+
+#### 🎮 Minijuegos Nuevos
+- **Code Review:** 15 snippets multi-lenguaje para identificar errores
+- **Hackathon:** Evento semanal con 3 problemas de dificultad progresiva + tabla de puntuación
+
+#### ⚙️ Nuevas Pantallas de Configuración
+- **GitHub Sync:** Vincula cuenta, sincroniza racha y actividad (Retrofit + GitHub REST API)
+- **Skill Tree:** Árbol de habilidades con 3 ramas (Productividad, Conocimiento, Social), 9 nodos
+- **Season Pass:** Pase de batalla de 30 días, 20 niveles, ruta gratuita y premium
+- **Weekly Missions:** 3 misiones rotativas cada lunes con recompensas
+- **DND Mode:** Modo no molestar que silencia notificaciones y da +10% XP
+- **Reproductor de Música:** 4 pistas de ambiente (Lo-Fi, Synth, Pixel, Cyber) con reproducción en segundo plano
+
+#### 🏗️ Arquitectura
+- Nuevas entidades Room: `MoodletEntity`, `SkillEntity`, `HatEntity`, `MissionEntity`
+- Base de datos actualizada a **versión 5** con migraciones
+- Nuevos managers: `MoodletManager`, `PairBuddyManager`, `SkillTreeManager`, `GitHubSyncManager`
+- Navegación expandida a **19 rutas** con nuevas sealed classes
+
+#### 🎨 UI/UX
+- Renderizado de sombreros sobre la mascota en HomeScreen
+- Diálogos de moodlet con animación y texto explicativo
+- Reproductor con notificación persistente en segundo plano
+- Tablero visual de misiones semanales con progreso
+- Preview en tiempo real del editor de colores
 
 ### v2.0.0 — Refactorización Mayor
 

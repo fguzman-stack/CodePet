@@ -27,6 +27,9 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 import com.tamagotchi.code.ui.components.AnimatedPetSprite
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 
 @Composable
 fun LearnScreen(
@@ -34,7 +37,7 @@ fun LearnScreen(
     state: PetStateEntity
 ) {
     var activeTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Retos Normales", "Retos Especiales")
+    val tabs = listOf("Retos Normales", "Retos Especiales", "Insignias")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -61,6 +64,8 @@ fun LearnScreen(
             Box(modifier = Modifier.size(80.dp)) {
                 AnimatedPetSprite(
                     status = state.currentStatus,
+                    level = state.level,
+                    equippedHat = state.equippedHat,
                     celebrationTrigger = viewModel.celebrationTrigger,
                     learningEventTrigger = viewModel.learningEventTrigger,
                     onClick = { viewModel.petThePet() },
@@ -98,6 +103,121 @@ fun LearnScreen(
         when (activeTab) {
             0 -> QuizPanel(viewModel = viewModel)
             1 -> SpecialChallengesPanel(viewModel = viewModel, state = state)
+            2 -> BadgesPanel(viewModel = viewModel)
+        }
+    }
+}
+
+@Composable
+fun BadgesPanel(viewModel: PetViewModel) {
+    val languageProgress by viewModel.languageProgressList.collectAsStateWithLifecycle()
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = ">>> INSIGNIAS POR LENGUAJE",
+            fontSize = 13.sp,
+            fontFamily = FontFamily.Monospace,
+            color = Color(0xFF81C784),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Completa retos para desbloquear insignias: Bronce (50%), Plata (75%), Oro (100%)",
+            fontSize = 11.sp,
+            fontFamily = FontFamily.Monospace,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        val languages = listOf("Kotlin", "JavaScript", "PHP", "Python")
+        val languageKeyMap = mapOf("Kotlin" to "KOTLIN", "JavaScript" to "JS", "PHP" to "PHP", "Python" to "PYTHON")
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            languages.forEach { langName ->
+                val key = languageKeyMap[langName] ?: langName.uppercase()
+                val progress = languageProgress.find { it.languageId == key }
+                val total = progress?.totalChallenges ?: 10
+                val completed = progress?.challengesCompleted ?: 0
+                val badgeLevel = progress?.badgeLevel ?: 0
+                val pct = if (total > 0) (completed.toFloat() / total * 100).toInt() else 0
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color(0xFF151D16),
+                    border = BorderStroke(1.dp, Color(0xFF2E7D32).copy(alpha = 0.3f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val badgeIcon = when {
+                            badgeLevel >= 3 -> Icons.Default.EmojiEvents
+                            badgeLevel >= 2 -> Icons.Default.WorkspacePremium
+                            badgeLevel >= 1 -> Icons.Default.MilitaryTech
+                            else -> Icons.Default.Code
+                        }
+                        val badgeColor = when {
+                            badgeLevel >= 3 -> Color(0xFFFFD700)
+                            badgeLevel >= 2 -> Color(0xFFC0C0C0)
+                            badgeLevel >= 1 -> Color(0xFFCD7F32)
+                            else -> Color.Gray
+                        }
+
+                        Icon(
+                            imageVector = badgeIcon,
+                            contentDescription = "Badge $langName",
+                            tint = badgeColor,
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = langName,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 12.sp,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "$completed/$total retos ($pct%)",
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 10.sp,
+                                color = Color.Gray
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            LinearProgressIndicator(
+                                progress = { if (total > 0) completed.toFloat() / total else 0f },
+                                color = badgeColor,
+                                trackColor = Color(0xFF2E7D32).copy(alpha = 0.3f),
+                                modifier = Modifier.fillMaxWidth().height(4.dp)
+                            )
+                        }
+
+                        AnimatedVisibility(
+                            visible = badgeLevel > 0,
+                            enter = scaleIn() + fadeIn()
+                        ) {
+                            val badgeName = when (badgeLevel) {
+                                3 -> "ORO"
+                                2 -> "PLATA"
+                                1 -> "BRONCE"
+                                else -> ""
+                            }
+                            Text(
+                                text = badgeName,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 10.sp,
+                                color = badgeColor,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

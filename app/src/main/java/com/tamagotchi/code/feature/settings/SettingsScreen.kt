@@ -44,7 +44,11 @@ fun SettingsScreen(
     viewModel: PetViewModel,
     onNavigateBack: () -> Unit,
     onNavigateToLanguage: () -> Unit,
-    onNavigateToAbout: () -> Unit = {}
+    onNavigateToAbout: () -> Unit = {},
+    onNavigateToGitHub: () -> Unit = {},
+    onNavigateToSkillTree: () -> Unit = {},
+    onNavigateToSeasonPass: () -> Unit = {},
+    onNavigateToWeeklyMissions: () -> Unit = {}
 ) {
     val petState by viewModel.petState.collectAsStateWithLifecycle()
     val soundEnabled by viewModel.soundEnabled.collectAsStateWithLifecycle()
@@ -54,7 +58,10 @@ fun SettingsScreen(
     val defaultThemeMode = viewModel.defaultThemeMode.value
     val unlockedThemes by viewModel.unlockedThemes.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    
+    val petAccentColor by viewModel.petAccentColor.collectAsStateWithLifecycle()
+    val moodlet by viewModel.moodletState.collectAsStateWithLifecycle()
+    val isDndActive by viewModel.isDndActive.collectAsStateWithLifecycle()
+
     var showResetStep1 by remember { mutableStateOf(false) }
     var showResetStep2 by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
@@ -63,6 +70,7 @@ fun SettingsScreen(
     
     LaunchedEffect(Unit) {
         AdManager.loadRewardedAd(context as Activity)
+        viewModel.checkDndMode(context)
     }
 
     if (showAdDialog) {
@@ -320,6 +328,63 @@ fun SettingsScreen(
                             )
                         }
                     }
+                }
+            }
+
+            HorizontalDivider()
+
+            // D3. Características avanzadas
+            SettingsSectionTitle("Características Avanzadas")
+            SettingsItemClickable(
+                title = "GitHub Stats Sync",
+                subtitle = "Conecta tu GitHub y gana XP extra",
+                onClick = onNavigateToGitHub
+            )
+            SettingsItemClickable(
+                title = "Árbol de Habilidades",
+                subtitle = "Desbloquea habilidades pasivas con XP",
+                onClick = onNavigateToSkillTree
+            )
+            SettingsItemClickable(
+                title = "Pase de Temporada",
+                subtitle = "20 niveles de recompensas",
+                onClick = onNavigateToSeasonPass
+            )
+            SettingsItemClickable(
+                title = "Misiones Semanales",
+                subtitle = "3 misiones rotativas cada lunes",
+                onClick = onNavigateToWeeklyMissions
+            )
+
+            if (moodlet != null) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "Moodlet: ${moodlet!!.moodletType}",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+
+            if (isDndActive) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = Color(0xFFFFB74D).copy(alpha = 0.2f),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "Modo No Molestar activo: XP x1.5 en modo foco",
+                        fontSize = 11.sp,
+                        color = Color(0xFFFFB74D),
+                        modifier = Modifier.padding(8.dp)
+                    )
                 }
             }
 

@@ -31,6 +31,7 @@ import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -263,6 +264,8 @@ fun ViewportCard(
                 Box {
                     AnimatedPetSprite(
                         status = state.currentStatus,
+                        level = state.level,
+                        equippedHat = state.equippedHat,
                         celebrationTrigger = viewModel.celebrationTrigger,
                         learningEventTrigger = viewModel.learningEventTrigger,
                         onClick = { onPetTap() }
@@ -417,6 +420,11 @@ fun ViewportCard(
             Spacer(modifier = Modifier.height(6.dp))
             HorizontalDivider(color = statusColor.copy(alpha = 0.2f))
             Spacer(modifier = Modifier.height(6.dp))
+
+            val pairBuddy = viewModel.pairBuddyState.collectAsState().value
+            pairBuddy?.let { buddy ->
+                PairBuddyOverlay(buddy = buddy, modifier = Modifier.padding(bottom = 6.dp))
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

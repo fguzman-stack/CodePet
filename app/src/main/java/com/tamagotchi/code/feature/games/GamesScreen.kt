@@ -23,7 +23,9 @@ fun GamesScreen(
     onNavigateBack: () -> Unit,
     onNavigateToBugHunt: () -> Unit,
     onNavigateToGitRescue: () -> Unit,
-    onNavigateToRefactorRush: () -> Unit
+    onNavigateToRefactorRush: () -> Unit,
+    onNavigateToCodeReview: () -> Unit = {},
+    onNavigateToHackathon: () -> Unit = {}
 ) {
     var showClassicDialog by remember { mutableStateOf(false) }
     val gameCooldowns by viewModel.gameCooldowns.collectAsStateWithLifecycle()
@@ -97,6 +99,24 @@ fun GamesScreen(
                 canPlay = canPlay("refactor_rush"),
                 onCooldownText = stringResource(R.string.games_cooldown),
                 onClick = { handleGameClick("refactor_rush", onNavigateToRefactorRush) }
+            )
+
+            // Game 4: Code Review
+            GameCard(
+                title = "Code Review",
+                description = "Revisa snippets de código y detecta bugs.",
+                canPlay = canPlay("code_review"),
+                onCooldownText = stringResource(R.string.games_cooldown),
+                onClick = { handleGameClick("code_review", onNavigateToCodeReview) }
+            )
+
+            // Game 5: Hackatón Semanal
+            GameCard(
+                title = "Hackatón Semanal",
+                description = "Desafío de algoritmo de fin de semana.",
+                canPlay = canPlay("hackathon"),
+                onCooldownText = stringResource(R.string.games_cooldown),
+                onClick = { handleGameClick("hackathon", onNavigateToHackathon) }
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))

@@ -2,11 +2,13 @@ package com.tamagotchi.code.feature.shop
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
@@ -26,7 +29,11 @@ fun ShopScreen(
 ) {
     val appTheme = LocalAppTheme.current
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
         Text(
             text = ">>> TIENDA",
             fontSize = 14.sp,
@@ -38,6 +45,10 @@ fun ShopScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         ShopPanel(viewModel = viewModel, state = state)
+        Spacer(modifier = Modifier.height(16.dp))
+        HatShopPanel(viewModel = viewModel, state = state)
+        Spacer(modifier = Modifier.height(16.dp))
+        PetEditorPanel(viewModel = viewModel, state = state)
     }
 }
 
@@ -131,6 +142,273 @@ fun ShopPanel(
                                 fontSize = 11.sp
                             )
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HatShopPanel(
+    viewModel: PetViewModel,
+    state: PetStateEntity
+) {
+    val appTheme = LocalAppTheme.current
+    val ownedItems by viewModel.ownedItems.collectAsStateWithLifecycle()
+    val equippedHat = state.equippedHat
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = ">>> SOMBREROS",
+            fontSize = 13.sp,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Personaliza a Codey con estilo.",
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val hats = listOf(
+            HatData("dev_cap", "Gorro Programador", 50, Icons.Default.DeveloperMode, "Estilo clásico dev"),
+            HatData("grad_cap", "Birrete Graduación", 100, Icons.Default.School, "Codey se gradúa"),
+            HatData("vr_helmet", "Casco VR", 150, Icons.Default.Headset, "Realidad virtual"),
+            HatData("chef_hat", "Sombrero Chef", 80, Icons.Default.Restaurant, "Master chef"),
+            HatData("crown", "Corona del Código", 500, Icons.Default.Star, "Rey del código")
+        )
+
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            hats.forEach { hat ->
+                val owns = ownedItems.any { it.itemId == hat.id }
+                val isEquipped = equippedHat == hat.id
+
+                Surface(
+                    shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    border = BorderStroke(
+                        appTheme.borderWidth.coerceAtMost(1.dp),
+                        if (isEquipped) appTheme.accent else MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = hat.icon,
+                            contentDescription = hat.name,
+                            tint = if (owns) appTheme.accent else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = hat.name,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = hat.description,
+                                fontSize = 9.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        if (!owns) {
+                            Button(
+                                onClick = { viewModel.buyHat(hat.id, hat.cost, hat.name) },
+                                enabled = state.bytes >= hat.cost,
+                                colors = ButtonDefaults.buttonColors(containerColor = appTheme.accent),
+                                shape = RoundedCornerShape(6.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                modifier = Modifier.height(30.dp)
+                            ) {
+                                Text(
+                                    text = "${hat.cost} B",
+                                    color = appTheme.onPrimary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        } else if (isEquipped) {
+                            Text(
+                                text = "EQUIPADO",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 10.sp,
+                                color = appTheme.accent,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                        } else {
+                            Button(
+                                onClick = { viewModel.equipHat(hat.id) },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                                shape = RoundedCornerShape(6.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                                modifier = Modifier.height(30.dp)
+                            ) {
+                                Text(
+                                    text = "PONER",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+data class HatData(
+    val id: String,
+    val name: String,
+    val cost: Int,
+    val icon: ImageVector,
+    val description: String
+)
+
+@Composable
+fun PetEditorPanel(
+    viewModel: PetViewModel,
+    state: PetStateEntity
+) {
+    val appTheme = LocalAppTheme.current
+    val accentColor by viewModel.petAccentColor.collectAsStateWithLifecycle()
+    var sliderRed by remember { mutableFloatStateOf(accentColor.red) }
+    var sliderGreen by remember { mutableFloatStateOf(accentColor.green) }
+    var sliderBlue by remember { mutableFloatStateOf(accentColor.blue) }
+    var previewColor by remember { mutableStateOf(accentColor) }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = ">>> EDITOR DE CODEY",
+            fontSize = 13.sp,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Cambia el color de acento de tu mascota (30 B por cambio).",
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Surface(
+            shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("R", fontSize = 11.sp, color = Color(0xFFEF5350), fontWeight = FontWeight.Bold)
+                Slider(
+                    value = sliderRed,
+                    onValueChange = {
+                        sliderRed = it
+                        previewColor = Color(it, sliderGreen, sliderBlue)
+                    },
+                    colors = SliderDefaults.colors(thumbColor = Color(0xFFEF5350), activeTrackColor = Color(0xFFEF5350)),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("G", fontSize = 11.sp, color = Color(0xFF4CAF50), fontWeight = FontWeight.Bold)
+                Slider(
+                    value = sliderGreen,
+                    onValueChange = {
+                        sliderGreen = it
+                        previewColor = Color(sliderRed, it, sliderBlue)
+                    },
+                    colors = SliderDefaults.colors(thumbColor = Color(0xFF4CAF50), activeTrackColor = Color(0xFF4CAF50)),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text("B", fontSize = 11.sp, color = Color(0xFF42A5F5), fontWeight = FontWeight.Bold)
+                Slider(
+                    value = sliderBlue,
+                    onValueChange = {
+                        sliderBlue = it
+                        previewColor = Color(sliderRed, sliderGreen, it)
+                    },
+                    colors = SliderDefaults.colors(thumbColor = Color(0xFF42A5F5), activeTrackColor = Color(0xFF42A5F5)),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(8.dp),
+                    color = previewColor,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                ) {}
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Button(
+                    onClick = { viewModel.setPetAccentColor(previewColor) },
+                    enabled = state.bytes >= 30 && previewColor != accentColor,
+                    colors = ButtonDefaults.buttonColors(containerColor = appTheme.accent),
+                    shape = RoundedCornerShape(6.dp),
+                    modifier = Modifier.fillMaxWidth().height(36.dp)
+                ) {
+                    Text(
+                        text = "APLICAR COLOR (30 B)",
+                        color = appTheme.onPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Paletas rápidas:",
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    listOf(
+                        Color(0xFF81C784) to "Verde",
+                        Color(0xFF64B5F6) to "Azul",
+                        Color(0xFFFFB74D) to "Naranja",
+                        Color(0xFFE57373) to "Rojo",
+                        Color(0xFFCE93D8) to "Púrpura"
+                    ).forEach { (color, name) ->
+                        Surface(
+                            onClick = {
+                                sliderRed = color.red
+                                sliderGreen = color.green
+                                sliderBlue = color.blue
+                                previewColor = color
+                                viewModel.setPetAccentColor(color)
+                            },
+                            shape = RoundedCornerShape(6.dp),
+                            color = color,
+                            modifier = Modifier
+                                .size(36.dp)
+                                .testTag("palette_$name")
+                        ) {}
                     }
                 }
             }

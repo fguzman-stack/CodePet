@@ -6,7 +6,7 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
 import kotlinx.coroutines.flow.Flow
 
-class PetRepository(private val petDao: PetDao) {
+class PetRepository(val petDao: PetDao) {
     val petState: Flow<PetStateEntity?> = petDao.getPetState()
     val studySessions: Flow<List<StudySessionEntity>> = petDao.getAllStudySessions()
     val latestFocusSession: Flow<FocusSessionEntity?> = petDao.getLatestFocusSession()

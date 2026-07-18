@@ -18,6 +18,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.theme.LocalReduceMotion
 import kotlinx.coroutines.delay
@@ -36,6 +38,8 @@ import kotlin.random.Random
 @Composable
 fun AnimatedPetSprite(
     status: String,
+    level: Int = 1,
+    equippedHat: String? = null,
     celebrationTrigger: SharedFlow<Unit>,
     learningEventTrigger: SharedFlow<String>? = null,
     onClick: () -> Unit,
@@ -43,6 +47,8 @@ fun AnimatedPetSprite(
 ) {
     val reduceMotion = LocalReduceMotion.current
     
+    val evolutionStage = remember(level) { PetEvolutionStage.fromLevel(level) }
+
     // --- ESTADOS DE ANIMACIÓN ---
     
     // Animación de celebración (Bounce + Wobble)
@@ -210,6 +216,12 @@ fun AnimatedPetSprite(
                     status == "HUNGRY" && !reduceMotion -> hungryScale
                     status != "SLEEPING" && !reduceMotion -> breathingScale * flashAnim.value
                     else -> 1.0f * flashAnim.value
+                } * when(evolutionStage) {
+                    PetEvolutionStage.Egg -> 0.8f
+                    PetEvolutionStage.Child -> 0.9f
+                    PetEvolutionStage.Adult -> 1.0f
+                    PetEvolutionStage.Veteran -> 1.1f
+                    PetEvolutionStage.Legendary -> 1.2f
                 }
             )
             .graphicsLayer {
@@ -235,6 +247,60 @@ fun AnimatedPetSprite(
                     ) { onClick() },
                 contentScale = ContentScale.Fit
             )
+        }
+
+        // Overlay de Sombrero (Idea #7)
+        equippedHat?.let { hatId ->
+            val hatIcon = getHatIcon(hatId)
+            if (hatIcon != null) {
+                androidx.compose.material3.Icon(
+                    imageVector = hatIcon,
+                    contentDescription = "Hat: $hatId",
+                    tint = getHatColor(hatId),
+                    modifier = Modifier
+                        .size(60.dp)
+                        .offset(y = (-65).dp)
+                        .scale(if (evolutionStage == PetEvolutionStage.Egg) 0.7f else 1f)
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Mapea el ID de sombrero a su Icono Material.
+ */
+private fun getHatIcon(hatId: String): androidx.compose.ui.graphics.vector.ImageVector? = when (hatId) {
+    "dev_cap" -> Icons.Default.DeveloperMode
+    "grad_cap" -> Icons.Default.School
+    "vr_helmet" -> Icons.Default.Headset
+    "chef_hat" -> Icons.Default.Restaurant
+    "crown" -> Icons.Default.Star
+    else -> null
+}
+
+private fun getHatColor(hatId: String): androidx.compose.ui.graphics.Color = when (hatId) {
+    "crown" -> androidx.compose.ui.graphics.Color(0xFFFFD700) // Gold
+    "vr_helmet" -> androidx.compose.ui.graphics.Color(0xFF29B6F6) // Light Blue
+    "grad_cap" -> androidx.compose.ui.graphics.Color(0xFF424242) // Dark Gray
+    "chef_hat" -> androidx.compose.ui.graphics.Color(0xFFE0E0E0) // Light Gray
+    else -> androidx.compose.ui.graphics.Color(0xFF78909C) // Blue Gray
+}
+
+sealed class PetEvolutionStage {
+    object Egg : PetEvolutionStage()
+    object Child : PetEvolutionStage()
+    object Adult : PetEvolutionStage()
+    object Veteran : PetEvolutionStage()
+    object Legendary : PetEvolutionStage()
+
+    companion object {
+        fun fromLevel(level: Int): PetEvolutionStage = when {
+            level < 5 -> Egg
+            level < 10 -> Child
+            level < 25 -> Adult
+            level < 50 -> Veteran
+            else -> Legendary
         }
     }
 }

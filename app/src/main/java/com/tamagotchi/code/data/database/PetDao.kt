@@ -43,4 +43,44 @@ interface PetDao {
         updateFocusSessionStatus(sessionId, status)
         insertOrUpdatePetState(petState)
     }
+
+    // New methods for Expansion
+    @Query("SELECT * FROM code_cards WHERE shown = 0 ORDER BY RANDOM() LIMIT 1")
+    suspend fun getRandomUnshownCard(): CodeCardEntity?
+
+    @Query("UPDATE code_cards SET shown = 1 WHERE id = :cardId")
+    suspend fun markCardAsShown(cardId: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCodeCards(cards: List<CodeCardEntity>)
+
+    @Query("SELECT * FROM quests WHERE isCompleted = 0 AND expiresAt > :now")
+    fun getActiveQuests(now: Long): Flow<List<QuestEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertQuest(quest: QuestEntity)
+
+    @Query("SELECT * FROM owned_items")
+    fun getOwnedItems(): Flow<List<OwnedItemEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOwnedItem(item: OwnedItemEntity)
+
+    @Query("UPDATE owned_items SET isEquipped = 0 WHERE type = :type")
+    suspend fun unequipAllOfType(type: String)
+
+    @Query("UPDATE owned_items SET isEquipped = 1 WHERE itemId = :itemId")
+    suspend fun equipItem(itemId: String)
+
+    @Query("SELECT * FROM language_progress")
+    fun getAllLanguageProgress(): Flow<List<LanguageProgressEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateLanguageProgress(progress: LanguageProgressEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertActivityLog(log: ActivityLogEntity)
+
+    @Query("SELECT * FROM activity_logs WHERE timestamp > :since ORDER BY timestamp DESC")
+    suspend fun getActivityLogsSince(since: Long): List<ActivityLogEntity>
 }

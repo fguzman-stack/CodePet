@@ -33,6 +33,21 @@ class UserPreferencesRepository(private val context: Context) {
         private val KEY_LAST_COMMIT_DATE = stringPreferencesKey("last_commit_date")
         private val KEY_PENDING_COMMIT = stringPreferencesKey("pending_commit")
         private val KEY_SHOWN_CARDS = stringSetPreferencesKey("shown_cards")
+        private val KEY_ACTIVE_QUEST_TYPE = stringPreferencesKey("active_quest_type")
+        private val KEY_ACTIVE_QUEST_PROGRESS = androidx.datastore.preferences.core.intPreferencesKey("active_quest_progress")
+        private val KEY_ACTIVE_QUEST_EXPIRES = androidx.datastore.preferences.core.longPreferencesKey("active_quest_expires")
+        private val KEY_ACTIVE_QUEST_STARTED = androidx.datastore.preferences.core.longPreferencesKey("active_quest_started")
+        private val KEY_PET_ACCENT_COLOR = androidx.datastore.preferences.core.intPreferencesKey("pet_accent_color")
+        private val KEY_MOODLET_TYPE = stringPreferencesKey("moodlet_type")
+        private val KEY_MOODLET_EXPIRY = androidx.datastore.preferences.core.longPreferencesKey("moodlet_expiry")
+        private val KEY_LAST_MOODLET_CHECK = androidx.datastore.preferences.core.longPreferencesKey("last_moodlet_check")
+        private val KEY_SKILL_TREE = stringSetPreferencesKey("skill_tree_data")
+        private val KEY_SEASON_PASS_LEVEL = androidx.datastore.preferences.core.intPreferencesKey("season_pass_level")
+        private val KEY_SEASON_PASS_XP = androidx.datastore.preferences.core.intPreferencesKey("season_pass_xp")
+        private val KEY_SEASON_PASS_PREMIUM = booleanPreferencesKey("season_pass_premium")
+        private val KEY_WEEKLY_MISSIONS = stringSetPreferencesKey("weekly_missions")
+        private val KEY_HACKATHON = stringPreferencesKey("hackathon_data")
+        private val KEY_GITHUB_TOKEN = stringPreferencesKey("github_token")
     }
 
     val hasSeenOnboarding: Flow<Boolean> = context.dataStore.data.map { prefs ->
@@ -243,5 +258,178 @@ class UserPreferencesRepository(private val context: Context) {
         context.dataStore.edit { prefs ->
             prefs[KEY_SHOWN_CARDS] = emptySet()
         }
+    }
+
+    suspend fun setActiveQuest(type: String, progress: Int, expiresAt: Long, startedAt: Long) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_ACTIVE_QUEST_TYPE] = type
+            prefs[KEY_ACTIVE_QUEST_PROGRESS] = progress
+            prefs[KEY_ACTIVE_QUEST_EXPIRES] = expiresAt
+            prefs[KEY_ACTIVE_QUEST_STARTED] = startedAt
+        }
+    }
+
+    suspend fun getActiveQuestType(): String? {
+        return context.dataStore.data.first()[KEY_ACTIVE_QUEST_TYPE]
+    }
+
+    suspend fun getActiveQuestProgress(): Int {
+        return context.dataStore.data.first()[KEY_ACTIVE_QUEST_PROGRESS] ?: 0
+    }
+
+    suspend fun getActiveQuestExpires(): Long {
+        return context.dataStore.data.first()[KEY_ACTIVE_QUEST_EXPIRES] ?: 0L
+    }
+
+    suspend fun getActiveQuestStarted(): Long {
+        return context.dataStore.data.first()[KEY_ACTIVE_QUEST_STARTED] ?: 0L
+    }
+
+    suspend fun incrementQuestProgress() {
+        context.dataStore.edit { prefs ->
+            val current = prefs[KEY_ACTIVE_QUEST_PROGRESS] ?: 0
+            prefs[KEY_ACTIVE_QUEST_PROGRESS] = current + 1
+        }
+    }
+
+    suspend fun clearActiveQuest() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(KEY_ACTIVE_QUEST_TYPE)
+            prefs.remove(KEY_ACTIVE_QUEST_PROGRESS)
+            prefs.remove(KEY_ACTIVE_QUEST_EXPIRES)
+            prefs.remove(KEY_ACTIVE_QUEST_STARTED)
+        }
+    }
+
+    // === PET ACCENT COLOR ===
+    suspend fun setPetAccentColor(color: Int) {
+        context.dataStore.edit { prefs -> prefs[KEY_PET_ACCENT_COLOR] = color }
+    }
+
+    suspend fun getPetAccentColor(): Int {
+        return context.dataStore.data.first()[KEY_PET_ACCENT_COLOR] ?: 0
+    }
+
+    // === MOODLET ===
+    data class MoodletData(val moodletType: String, val expiry: Long)
+
+    suspend fun saveMoodlet(type: String, expiry: Long) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_MOODLET_TYPE] = type
+            prefs[KEY_MOODLET_EXPIRY] = expiry
+        }
+    }
+
+    suspend fun getMoodletData(): MoodletData? {
+        val prefs = context.dataStore.data.first()
+        val type = prefs[KEY_MOODLET_TYPE] ?: return null
+        val expiry = prefs[KEY_MOODLET_EXPIRY] ?: return null
+        return MoodletData(type, expiry)
+    }
+
+    suspend fun clearMoodlet() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(KEY_MOODLET_TYPE)
+            prefs.remove(KEY_MOODLET_EXPIRY)
+        }
+    }
+
+    suspend fun getLastMoodletCheck(): Long {
+        return context.dataStore.data.first()[KEY_LAST_MOODLET_CHECK] ?: 0L
+    }
+
+    suspend fun setLastMoodletCheck(time: Long) {
+        context.dataStore.edit { prefs -> prefs[KEY_LAST_MOODLET_CHECK] = time }
+    }
+
+    // === SKILL TREE ===
+    suspend fun getSkillTreeData(): List<com.tamagotchi.code.ui.viewmodel.SkillNodeData> {
+        val raw = context.dataStore.data.first()[KEY_SKILL_TREE] ?: return emptyList()
+        return raw.mapNotNull { entry ->
+            val parts = entry.split(":", limit = 4)
+            if (parts.size == 4) {
+                com.tamagotchi.code.ui.viewmodel.SkillNodeData(
+                    id = parts[0], name = parts[1], description = parts[2],
+                    currentTier = parts[3].toIntOrNull() ?: 0
+                )
+            } else null
+        }
+    }
+
+    suspend fun saveSkillTreeData(skills: List<com.tamagotchi.code.ui.viewmodel.SkillNodeData>) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_SKILL_TREE] = skills.map { "${it.id}:${it.name}:${it.description}:${it.currentTier}" }.toSet()
+        }
+    }
+
+    // === SEASON PASS ===
+    suspend fun getSeasonPassData(): com.tamagotchi.code.ui.viewmodel.SeasonPassData? {
+        val prefs = context.dataStore.data.first()
+        val level = prefs[KEY_SEASON_PASS_LEVEL] ?: return null
+        val xp = prefs[KEY_SEASON_PASS_XP] ?: 0
+        val premium = prefs[KEY_SEASON_PASS_PREMIUM] ?: false
+        return com.tamagotchi.code.ui.viewmodel.SeasonPassData(level, xp, premium)
+    }
+
+    suspend fun saveSeasonPassData(data: com.tamagotchi.code.ui.viewmodel.SeasonPassData) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_SEASON_PASS_LEVEL] = data.level
+            prefs[KEY_SEASON_PASS_XP] = data.xp
+            prefs[KEY_SEASON_PASS_PREMIUM] = data.premium
+        }
+    }
+
+    // === WEEKLY MISSIONS ===
+    suspend fun getWeeklyMissions(): List<com.tamagotchi.code.ui.viewmodel.WeeklyMissionData> {
+        val raw = context.dataStore.data.first()[KEY_WEEKLY_MISSIONS] ?: return emptyList()
+        return raw.mapNotNull { entry ->
+            val parts = entry.split("|", limit = 6)
+            if (parts.size == 6) {
+                com.tamagotchi.code.ui.viewmodel.WeeklyMissionData(
+                    id = parts[0], title = parts[1], description = parts[2],
+                    rewardXp = parts[3].toIntOrNull() ?: 0,
+                    rewardBytes = parts[4].toIntOrNull() ?: 0,
+                    completed = parts[5].toBoolean()
+                )
+            } else null
+        }
+    }
+
+    suspend fun saveWeeklyMissions(missions: List<com.tamagotchi.code.ui.viewmodel.WeeklyMissionData>) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_WEEKLY_MISSIONS] = missions.map {
+                "${it.id}|${it.title}|${it.description}|${it.rewardXp}|${it.rewardBytes}|${it.completed}"
+            }.toSet()
+        }
+    }
+
+    // === HACKATHON ===
+    suspend fun getHackathonData(): com.tamagotchi.code.ui.viewmodel.HackathonData? {
+        val raw = context.dataStore.data.first()[KEY_HACKATHON] ?: return null
+        val parts = raw.split("|", limit = 4)
+        if (parts.size == 4) {
+            return com.tamagotchi.code.ui.viewmodel.HackathonData(
+                active = parts[0].toBoolean(),
+                attempts = parts[1].toIntOrNull() ?: 0,
+                bestTimeMs = parts[2].toLongOrNull() ?: Long.MAX_VALUE,
+                expiresAt = parts[3].toLongOrNull() ?: System.currentTimeMillis()
+            )
+        }
+        return null
+    }
+
+    suspend fun saveHackathonData(data: com.tamagotchi.code.ui.viewmodel.HackathonData) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_HACKATHON] = "${data.active}|${data.attempts}|${data.bestTimeMs}|${data.expiresAt}"
+        }
+    }
+
+    // === GITHUB TOKEN ===
+    suspend fun saveGitHubToken(token: String) {
+        context.dataStore.edit { prefs -> prefs[KEY_GITHUB_TOKEN] = token }
+    }
+
+    suspend fun getGitHubToken(): String? {
+        return context.dataStore.data.first()[KEY_GITHUB_TOKEN]
     }
 }

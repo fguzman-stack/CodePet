@@ -22,6 +22,7 @@ class PetCheckWorker(
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
+    @android.annotation.SuppressLint("MissingPermission", "NotificationPermission")
     override suspend fun doWork(): Result {
         val dao = get<AppDatabase>(AppDatabase::class.java).petDao()
         val petState = dao.getPetStateSuspend() ?: return Result.success()
@@ -58,15 +59,11 @@ class PetCheckWorker(
         }
 
         val reason = when {
-            petState.health < 5f -> when {
-                petState.health <= 0f -> "Me he ido al otro lado del compilador... ¿me rescatas?"
-                petState.health < 3f -> "Me duele hasta el último bit... ¿puedes revisarme? (Salud: ${petState.health.toInt()}%)"
-                else -> "Noto que el Blue Screen of Death se acerca... (Salud: ${petState.health.toInt()}%)"
-            }
-            petState.hunger < 5f -> "Llevo horas sin comer, ¿crees que soy un microservicio? (Hambre: ${petState.hunger.toInt()}%)"
-            petState.hunger < 20f -> "Mi estómago está haciendo un loop infinito de ruidos. (Hambre: ${petState.hunger.toInt()}%)"
+            petState.health <= 0f -> "Me he ido al otro lado del compilador... ¿me rescatas?"
             petState.health < 5f -> "Me duele hasta el último bit... ¿puedes revisarme? (Salud: ${petState.health.toInt()}%)"
             petState.health < 20f -> "Noto que el Blue Screen of Death se acerca... (Salud: ${petState.health.toInt()}%)"
+            petState.hunger < 5f -> "Llevo horas sin comer, ¿crees que soy un microservicio? (Hambre: ${petState.hunger.toInt()}%)"
+            petState.hunger < 20f -> "Mi estómago está haciendo un loop infinito de ruidos. (Hambre: ${petState.hunger.toInt()}%)"
             petState.energy < 5f -> "Mi batería está en rojo. Y no es una metáfora de código. (Energía: ${petState.energy.toInt()}%)"
             petState.energy < 15f -> "Oye, ¿has visto mis logs? Están llenos de NullPointerException existenciales. (Energía: ${petState.energy.toInt()}%)"
             else -> "¡Necesito atención!"
