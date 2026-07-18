@@ -2,6 +2,7 @@ package com.tamagotchi.code
 
 import android.app.Application
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.os.Build
 import androidx.work.Constraints
@@ -22,22 +23,36 @@ class CodeTamagotchiApp : Application() {
             androidContext(this@CodeTamagotchiApp)
             modules(appModule)
         }
-        createNotificationChannel()
+        createNotificationChannels()
         schedulePetCheck()
         scheduleWidgetUpdate()
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                "Estado de tu mascota",
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Recordatorios sobre el estado de tu mascota virtual"
-            }
             val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+            val groupId = "pet_care"
+            NotificationChannelGroup(groupId, "Cuidado de Codey").let { manager.createNotificationChannelGroup(it) }
+
+            val channels = listOf(
+                NotificationChannel("pet_hunger", "Hambre de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Codey tiene hambre"
+                    this.group = groupId
+                },
+                NotificationChannel("pet_health", "Salud de Codey", NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = "Codey está enfermo"
+                    this.group = groupId
+                },
+                NotificationChannel("pet_energy", "Energía de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Codey está cansado"
+                    this.group = groupId
+                },
+                NotificationChannel("pet_critical", "Codey en peligro", NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = "Codey está en estado crítico"
+                    this.group = groupId
+                }
+            )
+            channels.forEach { manager.createNotificationChannel(it) }
         }
     }
 
