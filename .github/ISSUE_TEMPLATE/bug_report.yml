@@ -1,0 +1,72 @@
+name: 🐛 Bug report
+description: Report something that crashes or behaves unexpectedly
+labels: [bug, triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping squash bugs! 🐛 **Codey is counting on you.**
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+      description: What happened vs what you expected?
+      placeholder: |
+        When I complete a challenge while Codey is sleeping, the XP counter stays at 0.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to Learn
+        2. Answer any Kotlin challenge
+        3. See error
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      multiple: true
+      options:
+        - Pet / Mascota
+        - Challenges / Retos
+        - Pomodoro / Study
+        - Arcade games
+        - Shop / Hats
+        - Themes
+        - Notifications
+        - Widget
+        - Music / Sound
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device & Android version
+      placeholder: "e.g. Pixel 7a — Android 15"
+    validations:
+      required: true
+  - type: input
+    id: appversion
+    attributes:
+      label: App version
+      description: Settings → About
+      placeholder: "3.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logcat output (optional)
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true

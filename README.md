@@ -1,239 +1,257 @@
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=26&duration=3200&pause=900&color=81C784&center=true&vCenter=true&width=760&lines=%F0%9F%90%BE+Code+Tamagotchi;%3E+Tu+mascota+virtual+para+aprender+a+programar;%3E+Estudia.+Resuelve+retos.+Evoluciona." alt="Code Tamagotchi - Tu mascota virtual para aprender a programar"/>
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=26&duration=3200&pause=900&color=81C784&center=true&vCenter=true&width=760&lines=%F0%9F%90%BE+Code+Tamagotchi;%3E+Your+virtual+pet+that+learns+to+code+with+you;%3E+Study.+Solve+challenges.+Evolve." alt="Code Tamagotchi - Your virtual pet for learning to program"/>
   <br/>
   <img src="app/src/main/res/drawable/iconoapp.png" width="150" alt="Code Tamagotchi Logo"/>
   <h1>🐾 Code Tamagotchi</h1>
-  <p><em>Tu compañero de estudio que evoluciona mientras programas</em></p>
+  <p><em>Your study buddy that evolves while you code</em></p>
   <p>
-    <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=for-the-badge&logo=github&logoColor=white&color=7C4DFF" alt="Última versión"/></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-81C784?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Licencia MIT"/></a>
-    <a href="https://github.com/fguzman-stack/CodePet/actions"><img src="https://img.shields.io/badge/Build-passing-00C853?style=for-the-badge&logo=githubactions&logoColor=white" alt="Estado del build"/></a>
+    <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=for-the-badge&logo=github&logoColor=white&color=7C4DFF" alt="Latest release"/></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-81C784?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License"/></a>
+    <a href="https://github.com/fguzman-stack/CodePet/actions/workflows/android.yml"><img src="https://img.shields.io/github/actions/workflow/status/fguzman-stack/CodePet/android.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=Build" alt="Build status"/></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/Android-24%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
     <img src="https://img.shields.io/badge/Kotlin-2.2.10-7F52FF?style=flat-square&logo=kotlin&logoColor=white"/>
     <img src="https://img.shields.io/badge/Jetpack_Compose-UI-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white"/>
     <img src="https://img.shields.io/badge/Material_3-Material_You-6750A4?style=flat-square&logo=materialdesign&logoColor=white"/>
     <img src="https://img.shields.io/badge/Room-SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white"/>
     <img src="https://img.shields.io/badge/Koin-4.0.2-0099E5?style=flat-square&logo=koin&logoColor=white"/>
-    <img src="https://img.shields.io/badge/DataStore-Jetpack-FF6F00?style=flat-square&logo=android&logoColor=white"/>
   </p>
   <br/>
   <pre>> ./code-tamagotchi --status
 > <b>Status:</b> <code>ACTIVE</code>  <b>Platform:</b> <code>ANDROID</code>  <b>Language:</b> <code>KOTLIN / COMPOSE</code></pre>
-  <p><b>Code Tamagotchi</b> transforma el estudio de programación en una experiencia de cuidado, progreso y recompensas. Resuelve desafíos, completa sesiones Pomodoro, gana Bytes y mantén a <b>Codey</b> feliz, saludable y listo para compilar.</p>
-  <a href="#-instalación"><img src="https://img.shields.io/badge/▶_Empezar_a_jugar-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Empezar a jugar"/></a>
-  <a href="#-características"><img src="https://img.shields.io/badge/✨_Explorar_funciones-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explorar funciones"/></a>
+  <p><b>Code Tamagotchi</b> turns programming study into an experience of care, progress and rewards. Solve challenges, finish Pomodoro sessions, earn Bytes and keep <b>Codey</b> happy, healthy and ready to compile.</p>
+  <a href="https://github.com/fguzman-stack/CodePet/releases/latest"><img src="https://img.shields.io/badge/▶_Download_the_APK-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Download the APK"/></a>
+  <a href="#-features"><img src="https://img.shields.io/badge/✨_Explore_features-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explore features"/></a>
 </div>
+
+<p align="center">
+  <b>English</b> · <a href="README.es.md">🇪🇸 Español</a>
+</p>
 
 ---
 
-## 📋 Navegación
+## 📋 Navigation
 
 <div align="center">
-  [✨ Características](#-características) ·
-  [🛠️ Tecnologías](#️-tecnologías) ·
-  [🏗️ Arquitectura](#️-arquitectura) ·
+  [✨ Features](#-features) ·
+  [📸 Screenshots](#-screenshots) ·
+  [🛠️ Tech Stack](#️-tech-stack) ·
+  [🏗️ Architecture](#️-architecture) ·
   [⚡ Quick Start](#-quick-start) ·
-  [📦 Instalación](#-instalación) ·
-  [🎮 Cómo jugar](#-cómo-jugar) ·
-  [🎨 Temas visuales](#-temas-visuales) ·
+  [🎮 How to Play](#-how-to-play) ·
+  [🎨 Themes](#-themes) ·
   [🗺️ Roadmap](#️-roadmap) ·
-  [🤝 Contribuir](#-contribuir)
+  [🤝 Contributing](#-contributing)
 </div>
 
 ---
 
-## ✨ Características
+## ✨ Features
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🐾 Mascota virtual
-- Estados emocionales dinámicos (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED)
-- Salud, hambre y energía en tiempo real con decaimiento progresivo
-- Animaciones según el estado (respiración, temblor, pulso de hambre, parpadeo)
-- Sistema de nivel, XP y Bytes (moneda virtual)
-- Racha diaria de estudio y recompensas offline
-- 🏅 **Evolución visual** — 5 etapas: Huevo → Cría → Adulto → Veterano → Legendario
-- 🎩 **Colección de sombreros** — 5 sombreros para comprar y equipar
-- 🎨 **Editor de mascota** — sliders RGB + paletas de color para personalizar a Codey
-- 😊 **Sistema de Moodlets** — eventos aleatorios que afectan el humor por horas
-- 👫 **Pair Programming** — Buggy aparece aleatoriamente y multiplica XP ×1.5
+### 🐾 Virtual pet
+- Dynamic emotional states (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED, DEAD)
+- Health, hunger and energy in real time with progressive decay
+- ☠️ **Death & revival system** — if health hits 0, Codey shows up under a tombstone and you can revive him with Bytes
+- State-based animations (breathing, trembling, hunger pulse, blinking)
+- Level, XP and Bytes (virtual currency) system
+- Daily study streaks and offline rewards
+- 🏅 **Visual evolution** — 5 stages: Egg → Baby → Adult → Veteran → Legendary
+- 😊 **Moodlets** — random events that shift the mood for hours
+- 👫 **Pair Programming** — Buggy shows up randomly and multiplies XP ×1.5
 
 </td>
 <td width="50%" valign="top">
 
-### 💻 Aprende programando
-- Retos de **Kotlin**, **JavaScript**, **PHP** y **Python**
-- Preguntas tipo trivia y debugging
-- Retos especiales de algoritmos que desbloquean temas visuales
-- Feedback educativo en cada respuesta con explicaciones de Codey
-- Recompensas por progreso y precisión
-- **88+ desafíos de programación integrados**
+### 💻 Learn by coding
+- Challenges in **Kotlin**, **JavaScript**, **PHP** and **Python**
+- Trivia and debugging questions
+- Special algorithm challenges that unlock visual themes
+- Educational feedback on every answer, in Codey's voice
+- Progress and accuracy rewards
+- **88+ built-in coding challenges**
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### ⏱️ Pomodoro integrado
-- Sesiones de 15, 25 o 50 minutos
-- Bitácora persistente de estudio
-- XP y Bytes por cada minuto
-- Bonificación para sesiones de 25+ minutos (+50 Bytes, +75 XP)
-- 8 temas de estudio: Kotlin, JavaScript, PHP, Python, SQL, Clean Code, Git, Estructuras de Datos
-- Reanudación automática de sesiones activas al abrir la app
+### ⏱️ Built-in Pomodoro
+- 15, 25 or 50 minute sessions
+- Persistent study log
+- XP and Bytes per minute
+- Bonus for 25+ minute sessions (+50 Bytes, +75 XP)
+- 8 study topics: Kotlin, JavaScript, PHP, Python, SQL, Clean Code, Git, Data Structures
+- Active sessions auto-resume when opening the app
 
 </td>
 <td width="50%" valign="top">
 
-### 🕹️ Arcade de Depuración
-- 🐛 **Bug Hunt — Terminal Panic:** Encuentra bugs en fragmentos de código
-- 🐙 **Git Rescue:** Decisiones Git para salvar un repo en llamas
-- 🔧 **Refactor Rush:** Ordena bloques de código para que compilen
-- 📝 **Code Review:** Identifica errores en 15 snippets multi-lenguaje
-- 🏆 **Hackathon:** Evento semanal con 3 problemas de dificultad progresiva
-- Explicaciones con humor de Codey en cada ronda
-- Cooldown diario para evitar farm de moneda
-- 🎮 Arcade clásico (Adivina el Bit, Caza de Bugs, Servidor/Script/Hacker)
+### 🕹️ Debugging Arcade
+- 🐛 **Bug Hunt — Terminal Panic:** find bugs in code snippets
+- 🐙 **Git Rescue:** Git decisions to save a repo on fire
+- 🔧 **Refactor Rush:** reorder code blocks until it compiles
+- 📝 **Code Review:** spot errors in 15 multi-language snippets
+- 🏆 **Hackathon:** weekly event with 3 problems of rising difficulty
+- Codey's humorous explanations on every round
+- Daily cooldown to prevent currency farming
+- 🎮 Classic arcade (Guess the Bit, Bug Catch, Server/Script/Hacker)
 
 </td>
 </tr>
 </table>
 
-### ⚙️ Funcionalidades extra
-- 🔇 **DND Mode** — Modo concentración que silencia notificaciones y da +10% XP
-- 🎵 **Reproductor de música** — 4 pistas de ambiente (Lo-Fi, Synth, Pixel, Cyber)
-- 🔗 **GitHub Sync** — Vincula tu cuenta y sincroniza racha de actividad
-- 🌳 **Skill Tree** — Árbol de habilidades con 3 ramas y 9 nodos desbloqueables
-- 🎫 **Season Pass** — Pase de batalla de 30 días con 20 niveles (ruta free y premium)
-- 📋 **Weekly Missions** — 3 misiones rotativas cada lunes con recompensas
+### ⚙️ Extra features
+- 🔇 **DND Mode** — focus mode that mutes notifications and grants +10% XP
+- 🌳 **Skill Tree** — 3 branches, 9 unlockable nodes
+- 🏆 **Daily rewards** streak & offline rewards
+- 🎫 **Season Pass** — 30-day battle pass with 20 levels
+- 📋 **Weekly Missions** — 3 rotating missions every Monday with rewards
+
+---
+
+## 📸 Screenshots
+
+| Home | Challenges | Pomodoro |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/01-home.png" width="220"/> | <img src="docs/screenshots/02-learn.png" width="220"/> | <img src="docs/screenshots/03-focus.png" width="220"/> |
+| **Arcade** | **Shop** | **Weekly Missions** |
+| <img src="docs/screenshots/04-games.png" width="220"/> | <img src="docs/screenshots/05-shop.png" width="220"/> | <img src="docs/screenshots/06-missions.png" width="220"/> |
+| **Themes** | **Skill Tree** | **Season Pass** |
+| <img src="docs/screenshots/07-themes.png" width="220"/> | <img src="docs/screenshots/08-skilltree.png" width="220"/> | <img src="docs/screenshots/09-seasonpass.png" width="220"/> |
+
+> 🎨 12 premium themes with unique animated Canvas backgrounds. 🐾 Watch Codey evolve from Egg to Legendary as you study.
 
 ---
 
 ## ⚡ Quick Start
 
 ```bash
-# Clonar
+# Clone
 git clone https://github.com/fguzman-stack/CodePet.git
 cd CodePet
 
-# Compilar APK de desarrollo
+# Build the dev APK
 ./gradlew clean assembleDebug
 
-# Instalar en dispositivo/emulador
+# Install on device/emulator
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-El proyecto usa Gradle 8.x con Gradle Wrapper. **Requiere:** Android Studio Hedgehog+, JDK 17+, Android SDK API 24+.
+**Or just grab the [prebuilt APK from Releases](https://github.com/fguzman-stack/CodePet/releases/latest)** — no build tools needed.
+
+The project uses Gradle 9.x with the Gradle Wrapper. **Requires:** JDK 17+, Android SDK (API 36). The app is **100% offline** — no API keys, accounts or secrets needed to build or play.
 
 ---
 
-## 🔄 Bucle de progreso
+## 🔄 Progress loop
 
 ```
-   ESTUDIA             RESUELVE              GANA
-+------------+     +------------+      +------------+
-| Pomodoro   | --> | Retos dev  | ---> | XP + Bytes |
-+------------+     +------------+      +-----+------+
+    STUDIES             SOLVES               EARNS
+ +------------+     +------------+      +------------+
+ | Pomodoro   | --> | Dev        | ---> | XP + Bytes |
+ |            |     | challenges |      |            |
+ +------------+     +------------+      +-----+------+
                                               |
                                               v
                                        +------------+
-                                       | CUIDA A    |
+                                       |   CARES    |
                                        |   CODEY    |
                                        +-----+------+
                                              |
                                              v
-                                       DESBLOQUEA TEMAS
+                                        UNLOCKS THEMES
 ```
 
-> Cada sesión terminada fortalece a tu mascota. Cada reto correcto acelera su evolución.
+> Every finished session strengthens your pet. Every correct challenge speeds up its evolution.
 
 ---
 
-## 😊 Estados de Codey
+## 😊 Codey's states
 
-| Estado | Condición principal | Comportamiento |
+| State | Main trigger | Behavior |
 |:-------|:--------------------|:---------------|
-| 😊 `HAPPY` | Valores equilibrados | Flotación suave, parpadeo |
-| 😴 `SLEEPING` | El usuario activa descanso | Recupera energía, fondo de respiración |
-| 📚 `STUDYING` | Pomodoro en curso | Concentrado en aprender |
-| 🤒 `SICK` | Salud menor a 30% | Tiembla y necesita cuidado |
-| 🍽️ `HUNGRY` | Hambre menor a 30% | Pulso de alerta |
-| 😢 `SAD` | Energía menor a 20% | Baja actividad |
-| 😆 `EXCITED` | Felicidad máxima | Rebote rápido |
+| 😊 `HAPPY` | Balanced stats | Gentle floating, blinking |
+| 😴 `SLEEPING` | User enables rest | Recovers energy, breathing backdrop |
+| 📚 `STUDYING` | Pomodoro in progress | Focused on learning |
+| 🤒 `SICK` | Health below 30% | Trembles, needs care |
+| 🍽️ `HUNGRY` | Hunger below 30% | Alert pulse |
+| 😢 `SAD` | Energy below 20% | Low activity |
+| 😆 `EXCITED` | Max happiness | Fast bouncing |
+| ☠️ `DEAD` | Health hits 0 | Static tombstone, revival dialog |
 
 ---
 
-## 🛠️ Tecnologías
+## 🛠️ Tech Stack
 
-| Tecnología | Uso |
+| Technology | Used for |
 |:-----------|:----|
-| **Kotlin 2.2.10** | Lenguaje principal |
-| **Jetpack Compose** | UI declarativa con animaciones nativas |
-| **Material 3** | Componentes y sistema visual (Material You) |
-| **Room v5** | Persistencia local SQLite con migraciones |
-| **DataStore** | Preferencias de usuario, temas, cooldowns |
-| **ViewModel + StateFlow** | Estado reactivo y ciclo de vida |
-| **Coroutines + Flow** | Procesos asíncronos y flujos de datos |
-| **Koin 4.0.2** | Inyección de dependencias |
-| **KSP** | Procesamiento de anotaciones en tiempo de compilación |
-| **WorkManager** | Tareas periódicas (decaimiento cada 4h) |
-| **Roborazzi** | Pruebas visuales por capturas |
-| **Retrofit + OkHttp + Moshi** | Cliente HTTP (GitHub API) |
-| **Firebase** | App Check, ReCaptcha e IA opcional |
+| **Kotlin 2.2.10** | Main language |
+| **Jetpack Compose** | Declarative UI with native animations |
+| **Material 3** | Components & visual system (Material You) |
+| **Room v5** | Local SQLite persistence with migrations |
+| **DataStore** | User prefs, themes, cooldowns |
+| **ViewModel + StateFlow** | Reactive state & lifecycle |
+| **Coroutines + Flow** | Async work and data streams |
+| **Koin 4.0.2** | Dependency injection |
+| **KSP** | Compile-time annotation processing |
+| **WorkManager** | Periodic jobs (stat decay every 4h) |
+| **Roborazzi** | Visual regression tests via screenshots |
 
 ---
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-El proyecto sigue el patrón **MVVM + Repository** con inyección de dependencias via **Koin**.
+The project follows **MVVM + Repository** with dependency injection via **Koin**.
 
 ```
 +------------------------------------------------------------------+
-|              🖥️ PRESENTACIÓN (UI Layer)                          |
+|              🖥️ PRESENTATION (UI Layer)                          |
 |  Compose Screens · Material 3 · StateFlow · Animations           |
 |  HomeScreen | LearnScreen | FocusScreen | ShopScreen             |
 |  GamesScreen | BugHuntScreen | SettingsScreen | OnboardingScreen |
 |  CodeReviewScreen | HackathonScreen                              |
 +------------------------------------------------------------------+
-|              🧠 DOMINIO (ViewModel)                              |
+|              🧠 DOMAIN (ViewModel)                               |
 |  PetViewModel                                                     |
 |    - Pet state management                                         |
 |    - Study timer logic (start/cancel/complete)                    |
 |    - Challenge submission & reward calculation                    |
-|    - Shop purchases & hat equipping                               |
+|    - Shop purchases & skin equipping                                |
 |    - Theme switching & unlock                                     |
 |    - Game cooldowns                                               |
 |    - Offline reward detection                                     |
-|    - DND Mode, GitHub sync, Music player                          |
+|    - DND Mode, sound effects, daily commit generator               |
 |    - Seasonal events: Hackathon, Weekly Missions, Season Pass     |
 +------------------------------------------------------------------+
-|              📊 DATOS (Data Layer)                                |
+|              📊 DATA (Data Layer)                                 |
 |  PetRepository | UserPreferencesRepository | AchievementsRepository|
 |  DecayCalculator | RewardCalculator | LevelCalculator             |
-|  StatusCalculator | SoundManager | MoodletManager                 |
-|  PairBuddyManager | SkillTreeManager                              |
+|  StatusCalculator | SoundManager                                   |
+|  (Moodlets, Pair Buddy & Skill Tree logic live in the ViewModel)  |
 +------------------------------------------------------------------+
-|              💾 PERSISTENCIA (Storage Layer)                      |
+|              💾 PERSISTENCE (Storage Layer)                       |
 |  Room / SQLite                                                    |
 |    - PetStateEntity | StudySessionEntity | FocusSessionEntity     |
-|    - MoodletEntity | SkillEntity | HatEntity | MissionEntity      |
+|    - CodeCardEntity | QuestEntity | OwnedItemEntity              |
+|    - LanguageProgressEntity | ActivityLogEntity                  |
 |  DataStore Preferences                                            |
 |    - Onboarding, theme, difficulty, sound, motion, DND, colors   |
 +------------------------------------------------------------------+
 ```
 
-**Flujo de datos:**
+**Data flow:**
 ```
-Usuario → Composable (Screen) → ViewModel → Repository → DAO → SQLite
+User → Composable (Screen) → ViewModel → Repository → DAO → SQLite
                 ^                        |
                 +------- StateFlow ------+
 ```
 
-### Estructura del proyecto
+### Project structure
 
 ```
 CodePet/
@@ -244,162 +262,130 @@ CodePet/
 │   │   ├── ChallengesData.kt         # 88+ coding challenges
 │   │   ├── CodeReviewData.kt         # Code review snippets
 │   │   ├── PersonalityMissions.kt    # Mission definitions
-│   │   ├── database/
-│   │   │   ├── AppDatabase.kt        # Room DB (v5, migrations)
-│   │   │   ├── PetDao.kt             # DAO interface
-│   │   │   ├── PetStateEntity.kt     # Pet entity
-│   │   │   ├── ExpansionEntities.kt  # Moodlet, Skill, Hat, Mission entities
-│   │   │   ├── StudySessionEntity.kt # Study log entity
-│   │   │   └── FocusSessionEntity.kt # Pomodoro session entity
-│   │   └── repository/
-│   │       ├── PetRepository.kt      # Pet state CRUD
-│   │       ├── UserPreferencesRepository.kt  # DataStore prefs
-│   │       └── AchievementsRepository.kt     # Achievement system
+│   │   ├── database/                 # Room DB (v5, migrations, DAO, entities)
+│   │   └── repository/               # Pet, preferences & achievements repos
 │   ├── di/AppModule.kt               # Koin DI module
 │   ├── navigation/AppNavigation.kt   # NavHost, Routes, BottomNav
-│   ├── feature/
-│   │   ├── home/HomeScreen.kt        # Pet viewport & stats
-│   │   ├── learn/LearnScreen.kt      # Quiz & special challenges
-│   │   ├── focus/FocusScreen.kt      # Pomodoro timer & logs
-│   │   ├── shop/ShopScreen.kt        # In-game store + hats
-│   │   ├── editor/PetEditorScreen.kt # Pet color customization
-│   │   ├── onboarding/OnboardingScreen.kt  # 4-step intro
-│   │   ├── games/
-│   │   │   ├── GamesScreen.kt        # Game hub
-│   │   │   ├── BugHuntScreen.kt      # Bug hunting mini-game
-│   │   │   ├── GitRescueScreen.kt    # Git decision game
-│   │   │   ├── RefactorRushScreen.kt # Code ordering game
-│   │   │   ├── CodeReviewScreen.kt   # Code review mini-game
-│   │   │   └── HackathonScreen.kt    # Weekly hackathon event
-│   │   └── settings/
-│   │       ├── SettingsScreen.kt     # Full settings (theme, etc.)
-│   │       ├── GitHubSyncScreen.kt   # GitHub sync settings
-│   │       ├── SeasonPassScreen.kt   # Season Pass
-│   │       ├── SkillTreeScreen.kt    # Skill tree progression
-│   │       └── WeeklyMissionsScreen.kt # Weekly mission board
+│   ├── feature/                      # Screens: home, learn, focus, shop,
+│   │                                 # onboarding, games, settings, skills
 │   ├── ui/
-│   │   ├── components/
-│   │   │   ├── ViewportCard.kt       # Main pet card
-│   │   │   ├── MeterItem.kt          # Stat progress bars
-│   │   │   ├── AnimatedPetSprite.kt  # Animated pet rendering
-│   │   │   ├── AnimatedThemeBackground.kt  # 12 animated backgrounds
-│   │   │   └── PairBuddy.kt          # Pair programming buddy UI
-│   │   └── theme/
-│   │       ├── ThemeConfig.kt        # AppTheme data class + 12 themes
-│   │       ├── Theme.kt              # Compose theme bridge
-│   │       └── Type.kt               # Typography builder
-│   └── util/
-│       ├── DecayCalculator.kt        # Time-based stat decay
-│       ├── RewardCalculator.kt       # XP/Byte reward math
-│       ├── LevelCalculator.kt        # Level progression
-│       ├── StatusCalculator.kt       # Emotional state logic
-│       ├── SoundManager.kt           # Sound effects
-│       ├── MusicManager.kt           # Background music player
-│       ├── MoodletManager.kt         # Random mood event engine
-│       ├── PairBuddyManager.kt       # Pair programming buddy
-│       ├── SkillTreeManager.kt       # Skill tree logic
-│       ├── GitHubSyncManager.kt      # GitHub integration
-│       ├── CommitWorker.kt           # Daily commit generator
-│       └── PetCheckWorker.kt         # Periodic decay worker
+│   │   ├── components/               # Viewport, meters, animated sprites,
+│   │   │                             # 12 animated theme backgrounds, buddy
+│   │   └── theme/                    # ThemeConfig (12 themes), Theme, Type
+│   └── util/                         # Decay/reward/level/status calculators,
+│                                     # sound & music managers, daily commit
+│                                     # generator, periodic decay worker
 └── gradle/libs.versions.toml
 ```
 
 ---
 
-## 🎮 Cómo jugar
+## 🎮 How to Play
 
-| Paso | Acción | Recompensa |
+| Step | Action | Reward |
 |:----:|:-------|:-----------|
-| `01` | Nombra a tu mascota durante el onboarding | Comienzo de la aventura |
-| `02` | Completa retos en **LEARN** | XP, Bytes, salud y alimento |
-| `03` | Inicia un Pomodoro en **STUDY** | XP y Bytes por minuto |
-| `04` | Compra recursos en **SHOP** | Recupera estadísticas |
-| `05` | Juega minijuegos | Bytes y bonificaciones |
-| `06` | Mantén la racha diaria | Progreso constante |
-| `07` | Resuelve retos especiales | Desbloquea nuevos temas visuales |
+| `01` | Name your pet during onboarding | Start of the adventure |
+| `02` | Complete challenges in **LEARN** | XP, Bytes, health and food |
+| `03` | Start a Pomodoro in **STUDY** | XP and Bytes per minute |
+| `04` | Buy resources in **SHOP** | Restore stats |
+| `05` | Play minigames | Bytes and bonuses |
+| `06` | Keep the daily streak | Steady progress |
+| `07` | Solve special challenges | Unlock new visual themes |
 
-### Economía rápida
+### Quick economy
 
-| Actividad | Bytes | XP |
+| Activity | Bytes | XP |
 |:----------|:-----:|:--:|
-| Reto normal | +25 a +30 | +20 a +25 |
-| Reto especial | +50 | — |
-| Estudio por minuto | +2 | +3 |
-| Bonus de sesión 25+ min | +50 | +75 |
-| Code Review | Hasta +60 | — |
-| Hackathon (completo) | +180 | +175 |
+| Regular challenge | +25 to +30 | +20 to +25 |
+| Special challenge | +50 | — |
+| Study per minute | +2 | +3 |
+| 25+ min session bonus | +50 | +75 |
+| Code Review | Up to +60 | — |
+| Hackathon (full) | +180 | +175 |
 
 ---
 
-## 🎨 Temas visuales
+## 🎨 Themes
 
-Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno configura colores, tipografía, esquinas, gradientes y un fondo animado Canvas único.
+Code Tamagotchi ships with **12 premium themes**. Each configures colors, typography, corners, gradients and a unique animated Canvas background.
 
-| Tema | Personalidad |
+| Theme | Personality |
 |:-----|:-------------|
-| 🖥️ Matrix Green | Terminal hacker, monospace puro |
-| 🌌 Galáctico | Púrpuras profundos y destellos cósmicos |
-| 🌆 Cyberpunk | Rosa eléctrico y cian contra la oscuridad |
-| 🌸 Sakura | Elegancia japonesa en rosa suave |
-| ⚪ Minimalista | Blanco puro con acentos sutiles |
-| 💡 Neón | Oscuridad total con destellos vibrantes |
-| 🌊 Océano | Azules profundos, calma submarina |
-| 🌋 Volcánico | Fuego bajo la superficie |
-| ⚔️ Samurai | Acero, sangre y oro antiguo |
-| 🌌 Aurora | Luces del norte en el cielo oscuro |
-| 🌙 Nocturno | Noche elegante estilo iOS |
-| 🕹️ Retro Pixel | **TEMA FINAL** — 8-bit definitivo, pixel art |
+| 🖥️ Matrix Green | Hacker terminal, pure monospace |
+| 🌌 Galactic | Deep purples and cosmic flashes |
+| 🌆 Cyberpunk | Electric pink and cyan against the dark |
+| 🌸 Sakura | Japanese elegance in soft pink |
+| ⚪ Minimalist | Pure white with subtle accents |
+| 💡 Neon | Total darkness with vibrant flashes |
+| 🌊 Ocean | Deep blues, underwater calm |
+| 🌋 Volcanic | Fire under the surface |
+| ⚔️ Samurai | Steel, blood and ancient gold |
+| 🌌 Aurora | Northern lights on the dark sky |
+| 🌙 Night | Elegant iOS-style night |
+| 🕹️ Retro Pixel | **FINAL THEME** — definitive 8-bit, pixel art |
 
-> Selecciona desde un carrusel visual en **Configuración**. Resuelve desafíos especiales para desbloquear nuevos temas.
+> Pick one from the visual carousel in **Settings**. Solve special challenges to unlock new themes.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] 🐾 Mascota virtual con estados emocionales y decaimiento
-- [x] 💻 88+ retos de programación (Kotlin, JS, PHP, Python)
-- [x] ⏱️ Pomodoro persistente con reanudación automática
-- [x] 🎨 12 temas premium con fondos animados Canvas
-- [x] 🕹️ 6 minijuegos: Bug Hunt, Git Rescue, Refactor Rush, Code Review, Hackathon, Arcade Clásico
-- [x] 🏅 Evolución visual de la mascota (5 etapas: Huevo → Legendario)
-- [x] 🎩 5 sombreros coleccionables con efectos especiales
-- [x] 🎨 Editor RGB de mascota con paletas de color
-- [x] 😊 Sistema de Moodlets (6 eventos aleatorios)
+- [x] 🐾 Virtual pet with emotional states and decay
+- [x] 💻 88+ coding challenges (Kotlin, JS, PHP, Python)
+- [x] ⏱️ Persistent Pomodoro with auto-resume
+- [x] 🎨 12 premium themes with animated Canvas backgrounds
+- [x] 🕹️ 6 minigames: Bug Hunt, Git Rescue, Refactor Rush, Code Review, Hackathon, Classic Arcade
+- [x] 🏅 Visual pet evolution (5 stages: Egg → Legendary)
+- [x] 😊 Moodlet system (6 random events)
 - [x] 👫 Pair Programming Buddy (Buggy, XP ×1.5)
-- [x] 🔇 DND Mode (modo concentración +10% XP)
-- [x] 🎵 Reproductor de música de fondo (4 pistas)
-- [x] 🔗 Sincronización con GitHub (rachas y perfil)
-- [x] 🌳 Skill Tree (3 ramas, 9 nodos desbloqueables)
-- [x] 🎫 Season Pass (30 días, 20 niveles, free/premium)
-- [x] 📋 Weekly Missions (3 misiones, reset cada lunes)
-- [x] 🏆 Logros locales y sistema de recompensas
-- [ ] 🔔 Notificaciones para recordar cuidados y sesiones
-- [ ] 🌐 Retos en Ruby, Go, Rust y Swift
-- [ ] 📱 Widgets para pantalla de inicio
-- [ ] ☁️ Sincronización con Firebase Firestore
-- [ ] 👥 Funcionalidad multijugador y rankings
+- [x] 🔇 DND Mode (focus mode +10% XP)
+- [x] 🌳 Skill Tree (3 branches, 9 unlockable nodes)
+- [x] 🎫 Season Pass (30 days, 20 levels, free/premium)
+- [x] 📋 Weekly Missions (3 missions, reset every Monday)
+- [x] 🏆 Local achievements and reward system
+- [x] 🔔 Personality notifications (reminders & rewards)
+- [x] 📱 Home-screen widget
+- [ ] 🌐 Challenges in Ruby, Go, Rust and Swift ← **want to help? this is the easiest contribution!**
+- [ ] ☁️ Firebase Firestore sync
+- [ ] 👥 Multiplayer and leaderboards
 
 ---
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Haz fork del repositorio
-2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`)
-3. Haz commit de tus cambios (`git commit -m 'feat: agrega nueva funcionalidad'`)
-4. Haz push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un [Pull Request](https://github.com/fguzman-stack/CodePet/pulls)
+The fastest way in: **add coding challenges** for a language we don't cover yet (Rust, Go, Ruby, Swift...). Check [CONTRIBUTING.md](CONTRIBUTING.md) and the [`good first issue`](https://github.com/fguzman-stack/CodePet/labels/good%20first%20issue) label.
+
+1. Fork the repository
+2. Create a branch (`git checkout -b feature/new-challenges-rust`)
+3. Commit your changes (`git commit -m 'feat: add Rust challenges'`)
+4. Push the branch (`git push origin feature/new-challenges-rust`)
+5. Open a [Pull Request](https://github.com/fguzman-stack/CodePet/pulls)
+
+### Not a dev? Still useful:
+- 🐛 Report bugs and missing challenge answers
+- 🎨 Suggest theme palettes or hat designs
+- 🌍 Improve these translations (open a `docs:` PR)
+
+---
+
+## ⭐ Star History
+
+<a href="https://star-history.com/#fguzman-stack/CodePet&Date">
+  <img src="https://api.star-history.com/svg?repos=fguzman-stack/CodePet&type=Date" width="600" alt="Star History Chart"/>
+</a>
 
 ---
 
 <div align="center">
   <p>
     <a href="https://github.com/fguzman-stack/CodePet/stargazers">
-      <img src="https://img.shields.io/github/stars/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=FFD54F" alt="Estrellas del repositorio"/>
+      <img src="https://img.shields.io/github/stars/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=FFD54F" alt="Repository stars"/>
     </a>
     <a href="https://github.com/fguzman-stack/CodePet/fork">
-      <img src="https://img.shields.io/github/forks/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=64B5F6" alt="Forks del repositorio"/>
+      <img src="https://img.shields.io/github/forks/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=64B5F6" alt="Repository forks"/>
     </a>
   </p>
-  <p><b>Code Tamagotchi v3.0</b> — Donde los bugs se convierten en mascotas y el código en cariño.</p>
-  <p>¿Preguntas? Abre un <a href="https://github.com/fguzman-stack/CodePet/issues">issue</a> o consulta la <a href="documentacion.md">documentación completa</a>.</p>
+  <p><b>Code Tamagotchi v3.0</b> — where bugs become pets and code becomes affection.</p>
+  <p>Questions? Open an <a href="https://github.com/fguzman-stack/CodePet/issues">issue</a> or check the <a href="documentacion.md">full documentation</a> (ES).</p>
+  <p><sub>MIT License · Made with ☕ and 🐛</sub></p>
 </div>

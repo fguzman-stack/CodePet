@@ -1,0 +1,33 @@
+name: 🧩 New challenge / idioma
+description: Add coding challenges (Kotlin, JS, PHP, Python, Rust, Go...)
+labels: [challenges, good first issue]
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Kotlin, JavaScript, PHP, Python, SQL, Rust, Go, Ruby, Swift, C, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: challenges
+    attributes:
+      label: Challenges
+      description: Paste each challenge with question, options/answer and the *educational explanation*
+      placeholder: |
+        1. What does `Vec::len()` return on an empty vector?
+           a) null  b) 0 (correct)  c) panics
+           Explanation: len() returns usize 0...
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Quality checklist
+      options:
+        - label: Snippets actually compile/run in that language
+          required: true
+        - label: Explanations teach the concept, not just the answer
+          required: true
+        - label: No trick questions / unambiguous wording
+          required: true

@@ -13,5 +13,6 @@ local.properties
 .env
 *.jks
 debug.keystore
+keystore.properties
 
 .kotlin/

@@ -1,0 +1,40 @@
+name: 💡 Feature request
+description: Suggest an idea to make CodePet better
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Love the idea? Propose it! The most upvoted features go into the roadmap.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      placeholder: I always forget to feed Codey between study sessions...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should it work? (be specific, but keep it open to discussion)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Pet system
+        - Challenges / languages
+        - Arcade games
+        - Study / Pomodoro
+        - Themes / customization
+        - Social / leaderboards
+        - Other
+  - type: checkboxes
+    id: willing
+    attributes:
+      label: Are you willing to implement it?
+      options:
+        - label: Yes, I'd like to open a PR for this
