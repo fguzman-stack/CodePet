@@ -295,7 +295,7 @@ class PetViewModel(
             
             var newStatus = pet.currentStatus
             if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
-                newStatus = StatusCalculator.determineStatus(updatedHealth, pet.hunger, updatedEnergy, false, false)
+                newStatus = StatusCalculator.determineStatus(updatedHealth, pet.hunger, updatedEnergy, false, false, isDead = pet.isDead)
             }
             
             val updatedPet = pet.copy(
@@ -536,7 +536,8 @@ class PetViewModel(
                         hunger = newHunger,
                         energy = current.energy,
                         isSleeping = current.currentStatus == "SLEEPING",
-                        isStudying = current.currentStatus == "STUDYING"
+                        isStudying = current.currentStatus == "STUDYING",
+                        isDead = current.isDead
                     )
                 )
                 repository.savePetState(updated)
@@ -594,7 +595,7 @@ class PetViewModel(
             
             var newStatus = current.currentStatus
             if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
-                newStatus = StatusCalculator.determineStatus(updatedHealth, updatedHunger, updatedEnergy, false, false)
+                newStatus = StatusCalculator.determineStatus(updatedHealth, updatedHunger, updatedEnergy, false, false, isDead = current.isDead)
             }
 
             val updated = current.copy(
@@ -615,13 +616,15 @@ class PetViewModel(
         viewModelScope.launch {
             val current = petState.value ?: return@launch
             val isCurrentlySleeping = current.currentStatus == "SLEEPING"
+
+            if (current.isDead) return@launch
             
             if (!isCurrentlySleeping) {
                 soundManager.playSleep()
             }
             
             val newStatus = if (isCurrentlySleeping) {
-                StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false)
+                StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false, isDead = current.isDead)
             } else {
                 "SLEEPING"
             }
@@ -724,7 +727,7 @@ class PetViewModel(
                 activeFocusSessionId = null
             }
             val current = petState.value ?: return@launch
-            val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false)
+            val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false, isDead = current.isDead)
             val updated = current.copy(
                 currentStatus = newStatus,
                 lastUpdated = System.currentTimeMillis()
@@ -760,7 +763,7 @@ class PetViewModel(
 
         val now = System.currentTimeMillis()
         val updatedEnergy = (current.energy - reward.energyCost).coerceIn(0f, 100f)
-        val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, updatedEnergy, false, false)
+        val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, updatedEnergy, false, false, isDead = current.isDead)
 
         val updated = current.copy(
             xp = current.xp + adjustedXp,
@@ -787,7 +790,7 @@ class PetViewModel(
             val updatedEnergy = (current.energy + 15f).coerceIn(0f, 100f)
             val updatedHealth = (current.health + 5f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
-                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
+                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false, isDead = current.isDead)
             } else {
                 current.currentStatus
             }
@@ -811,7 +814,7 @@ class PetViewModel(
             val updatedHealth = (current.health + 12f).coerceIn(0f, 100f)
             val updatedEnergy = (current.energy + 8f).coerceIn(0f, 100f)
             val newStatus = if (current.currentStatus != "SLEEPING" && current.currentStatus != "STUDYING") {
-                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false)
+                StatusCalculator.determineStatus(updatedHealth, current.hunger, updatedEnergy, false, false, isDead = current.isDead)
             } else {
                 current.currentStatus
             }
@@ -1055,7 +1058,7 @@ class PetViewModel(
         }
     }
 
-    fun reviveWithAd() {
+    fun reviveForFree() {
         viewModelScope.launch {
             val pet = repository.petState.firstOrNull() ?: return@launch
             if (!pet.isDead) return@launch

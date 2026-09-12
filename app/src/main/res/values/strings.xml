@@ -84,10 +84,6 @@
     <string name="dialog_rename_label">Nuevo nombre (máx 15)</string>
     <string name="dialog_rename_confirm">Guardar</string>
     <string name="settings_profile_rename_humor">¿Ya te arrepentiste del nombre?</string>
-    <string name="dialog_rename_ad_title">¡Vaya, vaya!</string>
-    <string name="dialog_rename_ad_desc">Parece que alguien quiere cambiar de identidad. Para rebautizar a tu mascota, tendrás que ver un anuncio patrocinado por "Bugs &amp; Co."</string>
-    <string name="dialog_rename_ad_confirm">Ver anuncio y cambiar</string>
-    <string name="dialog_rename_ad_cancel">Mejor no</string>
 
     <!-- Settings Language Screen -->
     <string name="settings_lang_title">Lenguajes y Temas</string>

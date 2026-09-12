@@ -1,6 +1,5 @@
 package com.tamagotchi.code.feature.settings
 
-import android.app.Activity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -32,11 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.components.SweetAlertDialog
 import com.tamagotchi.code.ui.theme.AppTheme
 import com.tamagotchi.code.ui.theme.ThemeRegistry
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
-import com.tamagotchi.code.util.AdManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,30 +61,10 @@ fun SettingsScreen(
     var showResetStep1 by remember { mutableStateOf(false) }
     var showResetStep2 by remember { mutableStateOf(false) }
     var showRenameDialog by remember { mutableStateOf(false) }
-    var showAdDialog by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf("") }
     
     LaunchedEffect(Unit) {
-        AdManager.loadRewardedAd(context as Activity)
         viewModel.checkDndMode(context)
-    }
-
-    if (showAdDialog) {
-        SweetAlertDialog(
-            onDismissRequest = { showAdDialog = false },
-            title = stringResource(R.string.dialog_rename_ad_title),
-            text = stringResource(R.string.dialog_rename_ad_desc),
-            confirmButtonText = stringResource(R.string.dialog_rename_ad_confirm),
-            onConfirm = {
-                showAdDialog = false
-                AdManager.showRewardedAd(context as Activity) {
-                    showRenameDialog = true
-                    newName = petState?.name ?: ""
-                }
-            },
-            dismissButtonText = stringResource(R.string.dialog_rename_ad_cancel),
-            onDismiss = { showAdDialog = false }
-        )
     }
 
     if (showResetStep1) {
@@ -198,7 +175,10 @@ fun SettingsScreen(
             )
             SettingsItemClickable(
                 title = stringResource(R.string.settings_profile_rename_humor),
-                onClick = { showAdDialog = true }
+                onClick = {
+                    showRenameDialog = true
+                    newName = petState?.name ?: ""
+                }
             )
             SettingsItemInfo(
                 title = stringResource(R.string.settings_profile_level, petState?.level ?: 1)
@@ -636,7 +616,7 @@ fun SettingsItemInfo(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
-        Text(text = title, style = MaterialTheme.typography.bodyLarge)
+        Text(text = title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
         if (subtitle != null) {
             Text(text = subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
         }
@@ -657,7 +637,7 @@ fun SettingsItemSwitch(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = title, style = MaterialTheme.typography.bodyLarge)
+        Text(text = title, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
         Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }

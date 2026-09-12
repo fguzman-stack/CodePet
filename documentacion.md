@@ -13,7 +13,7 @@
 
 ## Índice
 
-1. [Origen e Inspiración](#1-origen-e-inspiración)
+1. [Origen](#1-origen)
 2. [Concepto y Propósito](#2-concepto-y-propósito)
 3. [Arquitectura General](#3-arquitectura-general)
 4. [Flujo Completo de la App](#4-flujo-completo-de-la-app)
@@ -34,39 +34,29 @@
 
 ---
 
-## 1. Origen e Inspiración
+## 1. Origen
 
-### 1.1 Genesis
+### 1.1 Génesis
 
-Code Tamagotchi fue creado por **FGuz20**, combinando el concepto clásico de mascota virtual (Tamagotchi) con elementos de productividad para programadores.
+Code Tamagotchi fue creado por **FGuz20**, combinando el cuidado de una mascota virtual con herramientas de productividad para programadores.
 
-### 1.2 Inspiraciones Directas
-
-| Inspiración | Elemento adoptado |
-|:------------|:-----------------|
-| **Tamagotchi original (Bandai, 1996)** | Mascota que requiere cuidado constante, estados emocionales, decaimiento por abandono |
-| **SUSH** | Menú limpio centrado en la mascota, animación de rebote al tocar, corazón flotante, fondo personalizable |
-| **Duolingo** | Sistema de rachas (streaks), gamificación del aprendizaje |
-| **Pomodoro Technique** | Temporizador de estudio con intervalos de 15/25/50 minutos |
-| **Terminales hacker / Matrix** | Estética visual: fondos oscuros, tipografía monospace, colores verde neón, decoración tipo terminal |
-| **Tamagotchi virtuales modernos** | Estados emocionales con frases contextuales, sistema de alimentación y limpieza |
-
-### 1.3 Propósito
+### 1.2 Propósito
 
 Code Tamagotchi busca **gamificar el hábito de estudio en programación**. A diferencia de otras mascotas virtuales, aquí el progreso real del usuario (resolver retos de código, estudiar temas técnicos) se refleja directamente en la salud y felicidad de la mascota.
 
-### 1.4 Público Objetivo
+### 1.3 Público Objetivo
 
 - Estudiantes de programación que quieren mantener constancia
 - Desarrolladores que disfrutan del humor técnico
 - Fans de mascotas virtuales con estética retro-tech
 - Personas que responden bien a la gamificación para mantener hábitos
 
-### 1.5 Estado Actual
+### 1.4 Estado Actual
 
 La app está completamente funcional pero en fase **beta**:
 - Builds: Solo debug (sin firma release configurada)
-- Sin sistema de notificaciones ni widgets todavía
+- Sistema de muerte con lápida (`mascota_dead`) y revivir con Bytes (o gratis con stats bajos)
+- Widget de pantalla de inicio con estado de la mascota
 
 ---
 
@@ -502,9 +492,9 @@ val currentHearts = (state.health / 20f).toInt().coerceIn(0, 5)
 | `RefactorRushScreen` | `feature/games/RefactorRushScreen.kt` | Ordena bloques (12 puzzles) |
 | `CodeReviewScreen` | `feature/games/CodeReviewScreen.kt` | Revisión de código real |
 | `HackathonScreen` | `feature/games/HackathonScreen.kt` | Evento semanal contrarreloj |
-| `PetEditorScreen` | `feature/editor/PetEditorScreen.kt` | Personalización RGB de Codey |
-| `GitHubSettingsScreen` | `feature/settings/GitHubSettingsScreen.kt` | Sincronización con GitHub |
-| `SeasonPassScreen` | `feature/settings/SeasonPassScreen.kt` | Pase de batalla por temporada |
+| `PetEditorScreen` | ~~`feature/editor/PetEditorScreen.kt`~~ | **REMOVIDO** — Personalización RGB (eliminada de Shop en v3.x) |
+| `GitHubSettingsScreen` | ~~`feature/settings/GitHubSettingsScreen.kt`~~ | **REMOVIDO** — la app es 100% offline |
+| `SeasonPassScreen` | `feature/skills/SeasonPassScreen.kt` | Pase de batalla por temporada |
 | `SkillTreeScreen` | `feature/settings/SkillTreeScreen.kt` | Árbol de habilidades |
 | `WeeklyMissionsScreen` | `feature/settings/WeeklyMissionsScreen.kt` | Misiones semanales |
 | `MinigamesDialog` | `feature/games/MinigamesDialog.kt` | Arcade clásico (3 juegos legacy) |
@@ -629,7 +619,7 @@ completeStudySession() {
 - Animación suave de borde con `animateColorAsState`
 - Persistencia en DataStore + CompositionLocal (`LocalAppTheme`)
 
-### 6.9 Editor de Mascota (`feature/editor/PetEditorScreen.kt`)
+### 6.9 Editor de Mascota (REMOVIDO — existed en versiones antiguas de `feature/editor/PetEditorScreen.kt`)
 
 **Propósito:** Personalizar el color de Codey con sliders RGB y paletas predefinidas.
 
@@ -4136,16 +4126,6 @@ class PetViewModel(
         if (newName.isBlank()) return
         viewModelScope.launch {
             val current = petState.value ?: return@launch
-            
-            // Si ya ha sido renombrado antes, simulamos un anuncio
-            if (current.hasRenamed) {
-                _challengeFeedback.value = "LOADING_AD"
-                delay(2000)
-                _challengeFeedback.value = "AD_COMPLETE"
-                delay(1000)
-                _challengeFeedback.value = null
-            }
-
             val updated = current.copy(
                 name = newName,
                 hasRenamed = true

@@ -3,9 +3,11 @@ package com.tamagotchi.code.util
 object StatusCalculator {
     fun determineStatus(
         health: Float, hunger: Float, energy: Float,
-        isSleeping: Boolean, isStudying: Boolean, isExcited: Boolean = false
+        isSleeping: Boolean, isStudying: Boolean, isExcited: Boolean = false,
+        isDead: Boolean = false
     ): String {
         return when {
+            isDead -> "DEAD"
             isExcited -> "EXCITED"
             isStudying -> "STUDYING"
             isSleeping -> "SLEEPING"

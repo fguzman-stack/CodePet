@@ -7,9 +7,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AllInbox
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Tv
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,8 +31,7 @@ import com.tamagotchi.code.ui.viewmodel.PetViewModel
 fun HomeScreen(
     viewModel: PetViewModel,
     onRenameClick: () -> Unit,
-    onPlayClick: () -> Unit,
-    onReviveWithAd: () -> Unit = {}
+    onPlayClick: () -> Unit
 ) {
     val petState by viewModel.petState.collectAsStateWithLifecycle()
     val state = petState
@@ -149,9 +148,9 @@ fun HomeScreen(
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Icon(Icons.Filled.Tv, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Filled.Bolt, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(16.dp))
                             Text(
-                                "Revivir viendo un anuncio",
+                                "Revivir gratis (stats bajos)",
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -180,14 +179,14 @@ fun HomeScreen(
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedButton(
-                            onClick = onReviveWithAd,
+                            onClick = { viewModel.reviveForFree() },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Icon(Icons.Filled.Tv, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                                Icon(Icons.Filled.Bolt, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                                 Text(
-                                    "Revivir con anuncio",
+                                    "Revivir gratis",
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
