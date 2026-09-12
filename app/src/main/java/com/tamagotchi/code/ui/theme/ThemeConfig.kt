@@ -438,6 +438,8 @@ object ThemeRegistry {
             textSecondary = Color(0xFFD0D4FF),
             primary = Color(0xFF7B83FF),
             secondary = Color(0xFFA5ABFF),
+            usesGradients = true,
+            gradientColors = listOf(Color(0xFF1A1A33), Color(0xFF0D0D1A), Color(0xFF060610)),
         )
     }
 }

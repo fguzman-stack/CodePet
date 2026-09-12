@@ -205,6 +205,7 @@ fun AnimatedPetSprite(
             .offset(
                 x = when {
                     status == "SICK" && !reduceMotion -> trembleOffset.dp
+                    status == "DEAD" -> 0.dp
                     !reduceMotion -> swayOffset.dp
                     else -> 0.dp
                 },
@@ -213,6 +214,7 @@ fun AnimatedPetSprite(
             .scale(
                 when {
                     status == "HUNGRY" && !reduceMotion -> hungryScale
+                    (status == "SLEEPING" || status == "DEAD") -> 1.0f * flashAnim.value
                     status != "SLEEPING" && !reduceMotion -> breathingScale * flashAnim.value
                     else -> 1.0f * flashAnim.value
                 } * when(evolutionStage) {
@@ -273,6 +275,7 @@ sealed class PetEvolutionStage {
      * Mapea el estado a su drawable base.
      */
     private fun getPetDrawable(status: String): Int = when (status) {
+        "DEAD" -> R.drawable.mascota_dead
         "SLEEPING" -> R.drawable.mascota_sleeping
         "STUDYING" -> R.drawable.mascota_studying
         "SICK" -> R.drawable.mascota_sick

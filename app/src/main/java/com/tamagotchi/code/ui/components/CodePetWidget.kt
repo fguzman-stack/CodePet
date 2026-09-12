@@ -27,8 +27,9 @@ fun CodePetWidget(
     petState: PetStateEntity?,
     modifier: Modifier = Modifier
 ) {
-    val status = petState?.currentStatus ?: "HAPPY"
+    val status = if (petState?.isDead == true) "DEAD" else petState?.currentStatus ?: "HAPPY"
     val petImageRes = when (status) {
+        "DEAD" -> R.drawable.mascota_dead
         "SLEEPING" -> R.drawable.mascota_sleeping
         "STUDYING" -> R.drawable.mascota_studying
         "SICK" -> R.drawable.mascota_sick

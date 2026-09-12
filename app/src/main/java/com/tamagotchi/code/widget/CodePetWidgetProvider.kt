@@ -37,7 +37,9 @@ class CodePetWidgetProvider : AppWidgetProvider() {
                 views.setTextViewText(R.id.widget_title, petState.name)
                 views.setTextViewText(R.id.widget_level, "Nv.${petState.level}")
 
-                val subtitle = when (petState.currentStatus) {
+                val effectiveStatus = if (petState.isDead) "DEAD" else petState.currentStatus
+
+                val subtitle = when (effectiveStatus) {
                     "HAPPY" -> "\u00a1Todo va genial!"
                     "SLEEPING" -> "Zzz... durmiendo"
                     "SICK" -> "No me siento bien"
@@ -45,11 +47,13 @@ class CodePetWidgetProvider : AppWidgetProvider() {
                     "SAD" -> "Estoy triste"
                     "STUDYING" -> "\u00a1Modo estudio!"
                     "EXCITED" -> "\u00a1Muy emocionado!"
+                    "DEAD" -> "Descansa en paz..."
                     else -> "\u00a1Todo va genial!"
                 }
                 views.setTextViewText(R.id.widget_subtitle, subtitle)
 
-                val imageRes = when (petState.currentStatus) {
+                val imageRes = when (effectiveStatus) {
+                    "DEAD" -> R.drawable.mascota_dead
                     "SLEEPING" -> R.drawable.mascota_sleeping
                     "SICK" -> R.drawable.mascota_sick
                     "HUNGRY" -> R.drawable.mascota_hungry

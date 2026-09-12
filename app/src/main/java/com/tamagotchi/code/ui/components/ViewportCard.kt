@@ -70,6 +70,7 @@ fun ViewportCard(
         "SAD" -> Color(0xFF90A4AE)
         "HUNGRY" -> Color(0xFFFFB74D)
         "EXCITED" -> Color(0xFFFF80AB)
+        "DEAD" -> Color(0xFF546E7A)
         else -> MaterialTheme.colorScheme.secondary
     }
 
@@ -117,6 +118,12 @@ fun ViewportCard(
                 "¡Siento que podría compilar el kernel de Linux en 1 segundo!",
                 "¡Soy el root de tu corazón! ¡Wiiiii!",
                 "¡Todo compila a la primera! ¡Esto es magia negra!"
+            )
+            "DEAD" -> listOf(
+                "R.I.P. Fue procesado por un segfault...",
+                "Aquí yace una mascota. Su código quedó sin mergear.",
+                "404: vida no encontrada. Revídame para continuar.",
+                "from grave import revive  # ¿todavía estás a tiempo?"
             )
             else -> listOf(
                 "¡Compilar sin advertencias es mi pasión!",
@@ -233,9 +240,10 @@ fun ViewportCard(
                 contentAlignment = Alignment.Center
             ) {
                 Box {
-                    if (equippedSkin != null) {
+                    val spriteStatus = if (state.isDead) "DEAD" else state.currentStatus
+                    if (equippedSkin != null && !state.isDead) {
                         PixelArtPetSprite(
-                            status = state.currentStatus,
+                            status = spriteStatus,
                             level = state.level,
                             equippedSkin = equippedSkin!!,
                             celebrationTrigger = viewModel.celebrationTrigger,
@@ -243,7 +251,7 @@ fun ViewportCard(
                         )
                     } else {
                         AnimatedPetSprite(
-                            status = state.currentStatus,
+                            status = spriteStatus,
                             level = state.level,
                             celebrationTrigger = viewModel.celebrationTrigger,
                             learningEventTrigger = viewModel.learningEventTrigger,
