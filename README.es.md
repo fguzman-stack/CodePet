@@ -402,6 +402,19 @@ Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno c
 
 ---
 
+## 📄 Licencia
+
+Bajo **licencia MIT** — que en cristiano significa que puedes:
+
+- ✅ Usarlo para lo que quieras, incluido uso comercial
+- ✅ Hacer fork y adaptarlo (retos de nuevos lenguajes, otras plataformas, uso en clases...)
+- ✅ Traducir la UI a cualquier idioma y publicar tu fork
+- ✅ Vender un servicio o derivado construido sobre CodePet
+
+El único requisito es conservar el aviso de copyright y el texto de licencia en las copias del código. Sin CLA, sin copyleft — con atribución en el código basta. Si construyes algo chulo sobre CodePet, un saludo en los [Discussions](https://github.com/fguzman-stack/CodePet/discussions) siempre se agradece, pero no es obligatorio. 😉
+
+---
+
 <div align="center">
   <p>
     <a href="https://github.com/fguzman-stack/CodePet/stargazers">

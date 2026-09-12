@@ -368,6 +368,19 @@ The fastest way in: **add coding challenges** for a language we don't cover yet 
 
 ---
 
+## 📄 License
+
+Released under the **MIT License** — which in plain language means you are free to:
+
+- ✅ Use it for anything, including commercial projects
+- ✅ Fork and adapt it (new challenge languages, other platforms, classroom tools...)
+- ✅ Translate the UI to any language and ship the fork publicly
+- ✅ Sell a service or derivative built on top of it
+
+The only requirement is keeping the copyright notice and license text in source copies. No CLA, no copyleft — attribution in the code is enough. If you build something cool on top of CodePet, a shout-out in the [Discussions](https://github.com/fguzman-stack/CodePet/discussions) is always welcome, but not required. 😉
+
+---
+
 ## ⭐ Star History
 
 <a href="https://star-history.com/#fguzman-stack/CodePet&Date">
