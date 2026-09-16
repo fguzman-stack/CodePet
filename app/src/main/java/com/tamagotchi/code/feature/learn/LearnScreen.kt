@@ -129,8 +129,8 @@ fun BadgesPanel(viewModel: PetViewModel) {
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        val languages = listOf("Kotlin", "JavaScript", "PHP", "Python")
-        val languageKeyMap = mapOf("Kotlin" to "KOTLIN", "JavaScript" to "JS", "PHP" to "PHP", "Python" to "PYTHON")
+        val languages = listOf("Kotlin", "JavaScript", "PHP", "Python", "Rust")
+        val languageKeyMap = mapOf("Kotlin" to "KOTLIN", "JavaScript" to "JS", "PHP" to "PHP", "Python" to "PYTHON", "Rust" to "RUST")
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             languages.forEach { langName ->
