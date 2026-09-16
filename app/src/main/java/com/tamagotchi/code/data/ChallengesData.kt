@@ -1394,5 +1394,163 @@ object ChallengesData {
             correctAnswerIndex = 0,
             explanation = "Las funciones asíncronas se definen con 'async def'. Dentro de ellas se usa 'await' para llamar a otras funciones asíncronas."
         ),
+        // ========== RUST ==========
+        CodingChallenge(
+            id = 201,
+            language = "Rust",
+            type = "TRIVIA",
+            title = "Ownership en asignaciones",
+            question = "¿Qué ocurre cuando asignas un String a otra variable? let s1 = String::from(\"hola\"); let s2 = s1;",
+            options = listOf(
+                "Se copia el contenido y ambas variables son válidas",
+                "La propiedad (ownership) se mueve a s2; usar s1 después es un error de compilación",
+                "Ambas apuntan al mismo String y comparten la propiedad",
+                "s1 se convierte automáticamente en Option<String>"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "En Rust, los tipos con heap (como String) tienen un único dueño. Al asignar s1 a s2, la propiedad se 'mueve' y s1 queda invalidada. El borrow checker lo detecta en tiempo de compilación."
+        ),
+        CodingChallenge(
+            id = 202,
+            language = "Rust",
+            type = "PRINT",
+            title = "Sumando con iteradores",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "fn main() {\n    let mut v = vec![1, 2, 3];\n    v.push(4);\n    let total: i32 = v.iter().sum();\n    println!(\"{total}\");\n}",
+            options = listOf(
+                "10",
+                "6",
+                "[1, 2, 3, 4]",
+                "Error de compilación"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "'iter()' recorre el vector sin tomar posesión (préstamo inmutable) y 'sum()' acumula los elementos: 1+2+3+4 = 10."
+        ),
+        CodingChallenge(
+            id = 203,
+            language = "Rust",
+            type = "DEBUG",
+            title = "Conflicto de préstamos",
+            question = "Este código no compila. ¿Cuál es el error?",
+            codeSnippet = "fn main() {\n    let mut s = String::from(\"hola\");\n    let r1 = &s;\n    let r2 = &mut s;\n    println!(\"{}, {}\", r1, r2);\n}",
+            options = listOf(
+                "No se puede tomar la referencia de un String",
+                "No puedes tener a la vez una referencia inmutable (&s) y una mutable (&mut s) vivas (E0502)",
+                "Falta 'ref' en las declaraciones de r1 y r2",
+                "println! no acepta dos argumentos"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "El borrow checker prohíbe que existan simultáneamente préstamos inmutables y mutables sobre los mismos datos. Es la garantía de Rust contra data races, sin necesidad de runtime (error E0502)."
+        ),
+        CodingChallenge(
+            id = 204,
+            language = "Rust",
+            type = "TRIVIA",
+            title = "El tipo Result",
+            question = "¿Qué representa Result<T, E> en Rust?",
+            options = listOf(
+                "Un valor que puede ser nulo",
+                "El resultado de una operación: éxito con un valor T o fallo con un error E",
+                "Una comparación entre dos valores",
+                "El retorno de una función asíncrona"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Result<T, E> es una enumeración con dos variantes: Ok(T) para el éxito y Err(E) para el fallo. Es la forma idiomática de manejar errores recuperables en Rust (a diferencia de Option<T>, que modela ausencia de valor)."
+        ),
+        CodingChallenge(
+            id = 205,
+            language = "Rust",
+            type = "PRINT",
+            title = "unwrap_or en acción",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "fn main() {\n    let x: i32 = 10;\n    let y: Option<i32> = if x > 5 { Some(x) } else { None };\n    println!(\"{}\", y.unwrap_or(0));\n}",
+            options = listOf(
+                "0",
+                "Some(10)",
+                "10",
+                "Error en tiempo de ejecución"
+            ),
+            correctAnswerIndex = 2,
+            explanation = "Como x > 5, y es Some(10). 'unwrap_or(0)' devuelve el valor interno si es Some, o el valor por defecto (0) si es None. Aquí imprime 10."
+        ),
+        CodingChallenge(
+            id = 206,
+            language = "Rust",
+            type = "TRIVIA",
+            title = "El operador ?",
+            question = "¿Qué hace el operador '?' en una función que devuelve Result?",
+            options = listOf(
+                "Convierte un Err en Ok automáticamente",
+                "Propaga el error: si es Err, retorna temprano de la función; si es Ok, continúa con el valor",
+                "Captura la excepción y continúa la ejecución",
+                "Pregunta al usuario si desea continuar"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "'expr?' es azúcar sintáctico: si el valor es Ok(x) devuelve x, y si es Err(e) hace 'return Err(e)' desde la función actual. Equivale a match { Ok(v) => v, Err(e) => return Err(e) }."
+        ),
+        CodingChallenge(
+            id = 207,
+            language = "Rust",
+            type = "PRINT",
+            title = "String slices",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "fn main() {\n    let s = String::from(\"rustlang\");\n    let slice = &s[0..4];\n    println!(\"{slice}\");\n}",
+            options = listOf(
+                "rustlang",
+                "lang",
+                "rust",
+                "Error: los índices deben ser negativos"
+            ),
+            correctAnswerIndex = 2,
+            explanation = "'&s[0..4]' crea una rebanadura (slice) de tipo &str con los bytes de 0 a 3 (el límite superior se excluye), es decir, \"rust\"."
+        ),
+        CodingChallenge(
+            id = 208,
+            language = "Rust",
+            type = "DEBUG",
+            title = "Valor movido",
+            question = "Este código falla al compilar. ¿Cómo se corrige?",
+            codeSnippet = "fn main() {\n    let s = String::from(\"hola\");\n    print_len(s);\n    println!(\"{s}\");\n}\nfn print_len(text: String) {\n    println!(\"{}\", text.len());\n}",
+            options = listOf(
+                "Cambiar print_len para que reciba text: &String y llamarlo con print_len(&s)",
+                "Declarar s como 'let mut s'",
+                "Copiar s con s.clone() al final del programa",
+                "No se puede corregir, Rust no permite funciones auxiliares"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Al pasar 's' por valor, la propiedad se mueve a print_len y s queda inutilizable (E0382). La solución idiomática es prestar el dato: recibir &String (o mejor &str) y llamar con &s."
+        ),
+        CodingChallenge(
+            id = 209,
+            language = "Rust",
+            type = "PRINT",
+            title = "Pipeline de iteradores",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "fn main() {\n    let v: Vec<i32> = (1..=5).filter(|n| n % 2 == 1).map(|n| n * n).collect();\n    println!(\"{:?}\", v);\n}",
+            options = listOf(
+                "[1, 4, 9, 16, 25]",
+                "[1, 9, 25]",
+                "[9, 25]",
+                "(1..=5)"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "El rango 1..=5 incluye ambos extremos. 'filter' deja los impares (1, 3, 5) y 'map' los eleva al cuadrado: [1, 9, 25]. Los iteradores son perezosos: nada se calcula hasta llamar a collect()."
+        ),
+        CodingChallenge(
+            id = 210,
+            language = "Rust",
+            type = "PRINT",
+            title = "Derivar Debug",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "#[derive(Debug)]\nstruct Punto { x: i32, y: i32 }\nfn main() {\n    let p = Punto { x: 1, y: 2 };\n    println!(\"{p:?}\");\n}",
+            options = listOf(
+                "Punto { x: 1, y: 2 }",
+                "{x: 1, y: 2}",
+                "Punto(1, 2)",
+                "Error: struct no implementa Display"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "El formato '{:?}' invoca el trait Debug. Con '#[derive(Debug)]' el compilador genera una implementación que imprime el nombre del tipo y sus campos: Punto { x: 1, y: 2 }."
+        ),
     )
 }

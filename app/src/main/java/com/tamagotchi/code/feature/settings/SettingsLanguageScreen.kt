@@ -39,7 +39,7 @@ fun SettingsLanguageScreen(
         stringResource(R.string.topic_data_structures)
     )
     
-    val allLanguages = listOf("Kotlin", "JavaScript", "Python", "PHP")
+    val allLanguages = listOf("Kotlin", "JavaScript", "Python", "PHP", "Rust")
 
     Scaffold(
         containerColor = Color.Transparent,
