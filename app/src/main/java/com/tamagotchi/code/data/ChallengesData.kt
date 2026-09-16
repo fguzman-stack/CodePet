@@ -1394,5 +1394,162 @@ object ChallengesData {
             correctAnswerIndex = 0,
             explanation = "Las funciones asíncronas se definen con 'async def'. Dentro de ellas se usa 'await' para llamar a otras funciones asíncronas."
         ),
+        // ========== GO ==========
+        CodingChallenge(
+            id = 211,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Arrays vs Slices",
+            question = "¿Cuál es la diferencia principal entre un array [3]int y un slice []int en Go?",
+            options = listOf(
+                "Son sinónimos, el compilador los trata igual",
+                "El array tiene longitud fija y se copia por valor; el slice es una vista dinámica sobre un array subyacente",
+                "El slice solo puede contener enteros, el array cualquier tipo",
+                "Los arrays se asignan en el heap y los slices en el stack"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "En Go, [3]int es un valor de longitud fija que se copia completo al pasarlo a una función. []int es un slice: una estructura (puntero, longitud, capacidad) que apunta a un array subyacente y puede crecer con append()."
+        ),
+        CodingChallenge(
+            id = 212,
+            language = "Go",
+            type = "PRINT",
+            title = "Longitud tras append",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := []int{1, 2, 3}\n\tt := append(s, 4)\n\tfmt.Println(len(s), len(t))\n}",
+            options = listOf(
+                "3 4",
+                "4 4",
+                "3 3",
+                "4 3"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "append puede reutilizar la capacidad del array subyacente, pero la variable 's' conserva su longitud original (3). El slice devuelto 't' tiene 4 elementos. Salida: '3 4'."
+        ),
+        CodingChallenge(
+            id = 213,
+            language = "Go",
+            type = "DEBUG",
+            title = "Variable sin usar",
+            question = "Este código no compila en Go. ¿Por qué?",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tx := 5\n\tfmt.Println(\"listo\")\n}",
+            options = listOf(
+                "Falta inicializar x con var",
+                "Go no permite variables declaradas y nunca usadas; hay que eliminar x o usarla (o asignarla a _)",
+                "import \"fmt\" debe ir después del main",
+                ":= solo es válido con variables de paquete"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Go es estricto: 'declared and not used: x' es un error de compilación, no un warning. Soluciones típicas: borrar la variable, usarla, o asignarla al identificador en blanco _."
+        ),
+        CodingChallenge(
+            id = 214,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Esperar goroutines",
+            question = "¿Cuál es la forma idiomática de esperar a que un grupo de goroutines termine antes de salir del main?",
+            options = listOf(
+                "Dormir con time.Sleep(10 * time.Second)",
+                "Usar sync.WaitGroup: wg.Add(1) antes de lanzar y wg.Done() dentro de cada goroutine, luego wg.Wait()",
+                "Declarar main como func() error",
+                "Usar runtime.Goexit() en cada goroutine"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "El main termina cuando acaba su función: si lanza goroutines sin sincronizar, pueden no ejecutarse nunca. sync.WaitGroup cuenta las goroutines activas y Wait() bloquea hasta que todas llamen a Done(). Sleep es un antipadrón: depende del tiempo, no del trabajo real."
+        ),
+        CodingChallenge(
+            id = 215,
+            language = "Go",
+            type = "PRINT",
+            title = "Orden de defer",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tdefer fmt.Println(\"a\")\n\tfmt.Println(\"b\")\n}",
+            options = listOf(
+                "a luego b",
+                "b luego a",
+                "Solamente b",
+                "Solamente a"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "'defer' pospone la llamada hasta el final de la función circundante: primero se ejecuta Println(\"b\") y, al retornar main, se ejecuta la diferida 'a'. Si hay varios defer, se ejecutan en orden LIFO (pila)."
+        ),
+        CodingChallenge(
+            id = 216,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Visibilidad en Go",
+            question = "En Go, ¿cómo se hace que un identificador (función, struct, campo) sea público/exportado fuera de su paquete?",
+            options = listOf(
+                "Añadiendo la palabra clave public",
+                "Comenzando el nombre con letra mayúscula",
+                "Marcándolo con el comentario //export",
+                "Declarándolo dentro de un bloque exported{}"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Go no tiene modificadores public/private: la visibilidad la decide la primera letra. 'Sumar' es accesible desde otros paquetes; 'sumar' es privado del paquete. Aplica a funciones, tipos, campos y métodos."
+        ),
+        CodingChallenge(
+            id = 217,
+            language = "Go",
+            type = "PRINT",
+            title = "Longitud y capacidad",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := []int{1, 2, 3, 4}\n\tp := s[1:3]\n\tfmt.Println(len(p), cap(p))\n}",
+            options = listOf(
+                "2 2",
+                "2 3",
+                "3 3",
+                "2 4"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "p = s[1:3] toma los elementos {2, 3}: longitud 2. Pero la capacidad llega hasta el final del array subyacente: desde el índice 1 hay 3 elementos (2, 3, 4), así que cap = 3. Por eso append a p puede modificar s[3]."
+        ),
+        CodingChallenge(
+            id = 218,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Manejo de errores",
+            question = "¿Cuál es la convención idiomatica de manejo de errores en Go?",
+            options = listOf(
+                "Lanzar excepciones con try/catch",
+                "Retornar el error como último valor y comprobar 'if err != nil' en la llamada",
+                "Usar códigos de retorno negativos",
+                "Registrar el error en un log global y continuar"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Go no usa excepciones para errores recuperables: las funciones devuelven (valor, error) y el llamador inspecciona 'if err != nil { ... }'. Existe panic/recover, pero se reserva para fallos irrecuperables del programa."
+        ),
+        CodingChallenge(
+            id = 219,
+            language = "Go",
+            type = "PRINT",
+            title = "Sombras dentro de un bloque",
+            question = "¿Qué imprime este código?",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tx := 1\n\tif x > 0 {\n\t\tx := 2\n\t\tfmt.Println(x)\n\t}\n\tfmt.Println(x)\n}",
+            options = listOf(
+                "1 luego 1",
+                "2 luego 2",
+                "2 luego 1",
+                "Error: redeclaración de x"
+            ),
+            correctAnswerIndex = 2,
+            explanation = "'x := 2' dentro del if crea una NUEVA variable que 'sombrea' (shadows) a la exterior solo dentro de ese bloque: imprime 2 dentro y 1 fuera. Ojo con este bug clásico al reusar := en lugar de =."
+        ),
+        CodingChallenge(
+            id = 220,
+            language = "Go",
+            type = "PRINT",
+            title = "defer con argumentos",
+            question = "¿Qué imprime este código? (sin salto de línea, es un Print)",
+            codeSnippet = "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfor i := 0; i < 3; i++ {\n\t\tdefer fmt.Print(i)\n\t}\n}",
+            options = listOf(
+                "012",
+                "210",
+                "222",
+                "000"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Los argumentos de una llamada diferida se evalúan EN EL MOMENTO del defer (i vale 0, 1, 2), pero las llamadas se ejecutan al final en orden LIFO: 2, 1, 0 → imprime '210'."
+        ),
     )
 }

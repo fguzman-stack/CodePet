@@ -12,6 +12,7 @@ fun topicIconRes(topic: String): Int = when {
     topic.contains("JavaScript", ignoreCase = true) -> R.drawable.ic_lang_javascript
     topic.contains("Python", ignoreCase = true) -> R.drawable.ic_lang_python
     topic.contains("PHP", ignoreCase = true) -> R.drawable.ic_lang_php
+    topic.contains("Go", ignoreCase = true) -> R.drawable.ic_lang_go
     topic.contains("SQL", ignoreCase = true) -> R.drawable.ic_lang_sql
     topic.contains("Git", ignoreCase = true) -> R.drawable.ic_lang_git
     topic.contains("Clean Code", ignoreCase = true) || topic.contains("clean_code", ignoreCase = true) -> R.drawable.ic_lang_cleancode

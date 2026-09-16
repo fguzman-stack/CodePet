@@ -97,7 +97,7 @@ fun TimerPanel(
     var tempTopic by remember { mutableStateOf("Kotlin") }
     var showDropdown by remember { mutableStateOf(false) }
 
-    val topics = listOf("Kotlin", "JavaScript", "PHP", "Python", "SQL", "Clean Code", "Git", "Estructuras de Datos")
+    val topics = listOf("Kotlin", "JavaScript", "PHP", "Python", "Go", "SQL", "Clean Code", "Git", "Estructuras de Datos")
 
     Column(
         modifier = Modifier.fillMaxWidth(),
