@@ -103,8 +103,8 @@ fun GamesScreen(
 
             // Game 4: Code Review
             GameCard(
-                title = "Code Review",
-                description = "Revisa snippets de código y detecta bugs.",
+                title = stringResource(R.string.games_code_review_title),
+                description = stringResource(R.string.games_code_review_desc),
                 canPlay = canPlay("code_review"),
                 onCooldownText = stringResource(R.string.games_cooldown),
                 onClick = { handleGameClick("code_review", onNavigateToCodeReview) }
@@ -112,8 +112,8 @@ fun GamesScreen(
 
             // Game 5: Hackatón Semanal
             GameCard(
-                title = "Hackatón Semanal",
-                description = "Desafío de algoritmo de fin de semana.",
+                title = stringResource(R.string.games_hackathon_title),
+                description = stringResource(R.string.games_hackathon_desc),
                 canPlay = canPlay("hackathon"),
                 onCooldownText = stringResource(R.string.games_cooldown),
                 onClick = { handleGameClick("hackathon", onNavigateToHackathon) }

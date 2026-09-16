@@ -127,4 +127,348 @@
     <string name="game_result_reward">Ganaste %1$d Bytes.</string>
     <string name="game_result_finish">Finalizar</string>
 
+    <!-- Shared game UI -->
+    <string name="dialog_accept">Aceptar</string>
+    <string name="codey_says">Codey: %1$s</string>
+    <string name="game_back">VOLVER</string>
+    <string name="game_start">¡Comenzar!</string>
+    <string name="game_claim_rewards">Cobrar Recompensas</string>
+    <string name="game_next_round">Siguiente ronda</string>
+    <string name="game_next_decision">Siguiente decisión</string>
+    <string name="game_see_results">Ver resultados</string>
+    <string name="game_move_up">Up</string>
+    <string name="game_move_down">Down</string>
+
+    <!-- Home Screen -->
+    <string name="home_daily_claimed">RECOMPENSAS DIARIAS (RECLAMADO)</string>
+    <string name="home_daily_available">RECOMPENSAS DIARIAS (¡DISPONIBLE!)</string>
+    <string name="home_offline_title">Sesión completada mientras estabas fuera</string>
+    <string name="home_offline_text">¡Felicidades! Has ganado %1$d XP y %2$d Bytes por tu sesión de Focus.</string>
+    <string name="home_death_title">%1$s ha muerto</string>
+    <string name="home_death_desc">Tu mascota ha fallecido por falta de cuidados.\n\nPero no todo está perdido... puedes revivirla:</string>
+    <string name="home_revive_bytes_desc">Revivir por %1$d Bytes</string>
+    <string name="home_revive_free_desc">Revivir gratis (stats bajos)</string>
+    <string name="home_revive_bytes_button">Revivir (%1$d Bytes)</string>
+    <string name="home_revive_free">Revivir gratis</string>
+    <string name="home_commit_title">Codey hizo commit</string>
+    <string name="home_commit_summary">Resumen de ayer:</string>
+    <string name="home_commit_merge">Fusionar (Aceptar)</string>
+
+    <!-- Focus Screen -->
+    <string name="focus_tab_timer">Temporizador</string>
+    <string name="focus_tab_logs">Bitácora</string>
+    <string name="focus_header">&gt;&gt;&gt; MODO FOCO</string>
+    <string name="focus_dnd_banner">MODO NO MOLESTAR ACTIVO: XP x1.5 en sesiones de foco</string>
+    <string name="focus_start_logs">&gt;&gt;&gt; INICIAR BITÁCORA DE ESTUDIO</string>
+    <string name="focus_topic_label">Materia:</string>
+    <string name="focus_time_label">Tiempo:</string>
+    <string name="focus_change">Cambiar</string>
+    <string name="focus_min_label">%1$d min</string>
+    <string name="focus_studying_desc">Al estudiar: El Tamagotchi entrará en modo concentrado. Completar la sesión te recompensa con Bytes y XP de estudio, pero drenará energía mental.</string>
+    <string name="focus_start_button">EMPEZAR COMPILACIÓN</string>
+    <string name="focus_compiling_header">&gt;&gt;&gt; MODO: COMPILANDO HORAS DE ESTUDIO</string>
+    <string name="focus_enfoque">Enfoque: %1$s</string>
+    <string name="focus_pet_studying">Mascota: %1$s está estudiando contigo...</string>
+    <string name="focus_cancel_button">CANCELAR COMPILACIÓN</string>
+    <string name="focus_logs_header">&gt;&gt;&gt; BITÁCORA DE COMPILACIÓN (ESTUDIOS)</string>
+    <string name="focus_logs_empty">[Sin registros de estudio aún]\n¡Empieza un temporizador para compilar tus primeras horas!</string>
+    <string name="focus_logs_entry">Estudio: %1$s</string>
+    <string name="focus_logs_min">+%1$d Min</string>
+    <string name="focus_note_title">[!] NOTA DEL COMPILADOR DE VIDA:</string>
+    <string name="focus_note_body">Si dejas de registrar sesiones por más de 36 horas, tu racha de estudio se reiniciará a 0, y tu mascota perderá salud por falta de mantenimiento.</string>
+
+    <!-- Learn Screen -->
+    <string name="learn_tab_quiz">Retos Normales</string>
+    <string name="learn_tab_special">Retos Especiales</string>
+    <string name="learn_tab_badges">Insignias</string>
+    <string name="learn_header">&gt;&gt;&gt; APRENDER</string>
+    <string name="learn_subtitle_studying">Estudiando con %1$s</string>
+    <string name="learn_subtitle_elite">Desafíos de élite</string>
+    <string name="learn_arena">&gt;&gt;&gt; DESAFÍO DE PROGRAMACIÓN: Arena %1$s</string>
+    <string name="learn_loading">Cargando acertijos...</string>
+    <string name="learn_tip_debug">¡Cuidado! Ese bug muerde. Revisa bien los puntos y coma.</string>
+    <string name="learn_tip_trivia">Esta es fácil... si has leído la documentación.</string>
+    <string name="learn_tip_default">Concéntrate, mi CPU depende de tu respuesta.</string>
+    <string name="learn_challenge_counter">Desafío %1$d de %2$d (%3$s):</string>
+    <string name="learn_type_debug">Desbuguear</string>
+    <string name="learn_type_trivia">Trivia</string>
+    <string name="learn_correct">¡ACERTADO! +Alimento +Bytes +XP</string>
+    <string name="learn_incorrect">RESPUESTA INCORRECTA</string>
+    <string name="learn_next">SIGUIENTE ACERTIJO</string>
+    <string name="learn_load_more">CARGAR MÁS RETOS</string>
+
+    <!-- Badges -->
+    <string name="badges_header">&gt;&gt;&gt; INSIGNIAS POR LENGUAJE</string>
+    <string name="badges_hint">Completa retos para desbloquear insignias: Bronce (50%), Plata (75%), Oro (100%)</string>
+    <string name="badges_progress">%1$d/%2$d retos (%3$d%%)</string>
+    <string name="badge_bronze">BRONCE</string>
+    <string name="badge_silver">PLATA</string>
+    <string name="badge_gold">ORO</string>
+
+    <!-- Special Challenges -->
+    <string name="special_title">RETOS ESPECIALES</string>
+    <string name="special_cd">Especial</string>
+    <string name="special_desc">Resuelve ejercicios avanzados de lógica y algoritmos para desbloquear nuevos temas visuales exclusivos.</string>
+    <string name="special_all_unlocked">¡Ya tienes todos!</string>
+    <string name="special_correct">¡Respuesta Correcta!</string>
+    <string name="special_incorrect">Incorrecto.</string>
+    <string name="special_theme_unlocked">¡Nuevo tema desbloqueado: %1$s!</string>
+    <string name="special_next">Siguiente Reto</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_name_label">Nombre (máx 15)</string>
+
+    <!-- Games Screen -->
+    <string name="games_code_review_title">Code Review</string>
+    <string name="games_code_review_desc">Revisa snippets de código y detecta bugs.</string>
+    <string name="games_hackathon_title">Hackatón Semanal</string>
+    <string name="games_hackathon_desc">Desafío de algoritmo de fin de semana.</string>
+
+    <!-- Bug Hunt -->
+    <string name="bug_codey">Codey: %1$s</string>
+    <string name="bug_initial">¡Encuentra el bug antes de que el compilador explote!</string>
+    <string name="bug_wrong_line">¡Esa línea está bien! Sigue buscando...</string>
+    <string name="bug_next_round">¡Siguiente ronda! ¿Dónde se esconde el bug?</string>
+    <string name="bug_score">Acertaste %1$d de %2$d</string>
+    <string name="bug_explanation">Explicación: %1$s</string>
+    <string name="bug_expl_1">Falta el paréntesis de cierre en println.</string>
+    <string name="bug_humor_1">¡Era un paréntesis fugitivo! Se escapó sin pagar el alquiler.</string>
+    <string name="bug_expl_2">En Kotlin la comparación es == no =. = es asignación.</string>
+    <string name="bug_humor_2">Codey: ¡Un solo = es asignación, doble == es comparación! No confundas al compilador.</string>
+    <string name="bug_expl_3">Falta el tipo de retorno explícito, debería ser \': Int\'.</string>
+    <string name="bug_humor_3">Codey: Hasta una calculadora de bolsillo sabe qué va a devolver.</string>
+    <string name="bug_expl_4">En Kotlin el for usa paréntesis: for (i in nums).</string>
+    <string name="bug_humor_4">Codey: ¡Los paréntesis no son decoración! Son parte de la sintaxis.</string>
+    <string name="bug_expl_5">main no necesita paréntesis vacíos si es la entrada.</string>
+    <string name="bug_humor_5">Codey: En realidad main() está bien, ¡pero este bug es tramposo!</string>
+    <string name="bug_expl_6">Está decrementando count en vez de incrementarlo. Bucle infinito.</string>
+    <string name="bug_humor_6">Codey: ¡Así nunca llegarás a 5! Es como correr hacia atrás.</string>
+    <string name="bug_expl_7">No se puede asignar un String directamente a Int. Usa toInt().</string>
+    <string name="bug_humor_7">Codey: ¡No puedes convertir strings a Int por ósmosis! Usa .toInt().</string>
+    <string name="bug_expl_8">La función debe declarar tipo de retorno: fun isEven(n: Int): Boolean.</string>
+    <string name="bug_humor_8">Codey: El compilador no es adivino. Dile qué vas a devolver.</string>
+    <string name="bug_expl_9">listOf crea una lista inmutable. Usa mutableListOf.</string>
+    <string name="bug_humor_9">Codey: ¡No puedes modificar una lista inmutable! Es como intentar cambiar el pasado.</string>
+    <string name="bug_expl_10">Líneas vacías innecesarias. El código debe ser limpio.</string>
+    <string name="bug_humor_10">Codey: ¿Estás escribiendo código o una novela? Muy poético pero poco práctico.</string>
+
+    <!-- Git Rescue -->
+    <string name="git_initial">¡Rápido, el repo está en llamas!</string>
+    <string name="git_wrong">¡Esa no era la mejor opción!</string>
+    <string name="git_next">¡Siguiente decisión! El repo te necesita.</string>
+    <string name="git_decisions">Decisiones correctas: %1$d de %2$d</string>
+    <string name="git_progress">Progreso de la rama:</string>
+    <string name="git_step">Paso %1$d de %2$d</string>
+    <string name="git_sit_1">Acabas de clonar el repo y vas a trabajar en un nuevo feature. ¿Qué haces primero?</string>
+    <string name="git_opt_1a">git checkout -b feature/nuevo</string>
+    <string name="git_opt_1b">git commit -m \"inicio\"</string>
+    <string name="git_opt_1c">git push --force</string>
+    <string name="git_expl_1">Crear una rama nueva desde main es la forma correcta de empezar un feature.</string>
+    <string name="git_humor_1">Codey: ¡Nunca pushes a main sin antes crear una rama! Eres un cowboy.</string>
+    <string name="git_sit_2">Has hecho cambios locales y te das cuenta de que rompiste todo. Quieres volver al último commit limpio.</string>
+    <string name="git_opt_2a">git reset --hard HEAD</string>
+    <string name="git_opt_2b">git revert HEAD</string>
+    <string name="git_opt_2c">git rm -rf .</string>
+    <string name="git_expl_2">revert crea un nuevo commit que deshace los cambios, preservando la historia.</string>
+    <string name="git_humor_2">Codey: reset --hard es como una máquina del tiempo sin frenos. revert es más seguro.</string>
+    <string name="git_sit_3">Tienes un conflicto en un merge. ¿Cuál es el siguiente paso?</string>
+    <string name="git_opt_3a">Resolver el conflicto en el editor y luego git add</string>
+    <string name="git_opt_3b">git commit --amend</string>
+    <string name="git_opt_3c">git push --force origin main</string>
+    <string name="git_expl_3">Los conflictos se resuelven editando los archivos, luego git add y git commit.</string>
+    <string name="git_humor_3">Codey: push --force no resuelve conflictos, los empeora. Es como echar gasolina al fuego.</string>
+    <string name="git_sit_4">Trabajas en equipo y necesitas traerte los cambios más recientes de la rama main a tu rama feature.</string>
+    <string name="git_opt_4a">git pull origin main</string>
+    <string name="git_opt_4b">git merge feature main</string>
+    <string name="git_opt_4c">git branch -d main</string>
+    <string name="git_expl_4">git pull trae los cambios de main a tu rama actual. merge lo haría al revés.</string>
+    <string name="git_humor_4">Codey: No borres main. Nunca borres main. Es como borrar el diccionario.</string>
+    <string name="git_sit_5">Hiciste un commit pero olvidaste incluir un archivo. ¿Cómo lo arreglas?</string>
+    <string name="git_opt_5a">git add archivo &amp;&amp; git commit --amend</string>
+    <string name="git_opt_5b">git reset --hard HEAD~1</string>
+    <string name="git_opt_5c">git commit --allow-empty</string>
+    <string name="git_expl_5">Con amend puedes agregar archivos al commit anterior sin crear uno nuevo.</string>
+    <string name="git_humor_5">Codey: --allow-empty no arregla nada. Es como poner un post-it en una puerta cerrada.</string>
+    <string name="git_sit_6">Quieres ver qué archivos modificaste antes de hacer commit. ¿Qué comando usas?</string>
+    <string name="git_opt_6a">git diff</string>
+    <string name="git_opt_6b">git status</string>
+    <string name="git_opt_6c">git show</string>
+    <string name="git_expl_6">git status muestra el estado actual: archivos modificados, nuevos y eliminados.</string>
+    <string name="git_humor_6">Codey: diff es para ver el contenido exacto, status te da el resumen. Dos herramientas diferentes.</string>
+    <string name="git_sit_7">El historial de commits está lleno de mensajes como \'fix\' y \'update\'. Quieres limpiarlo antes de hacer merge.</string>
+    <string name="git_opt_7a">git rebase -i HEAD~5</string>
+    <string name="git_opt_7b">git reset --hard origin/main</string>
+    <string name="git_opt_7c">git commit --fixup</string>
+    <string name="git_expl_7">rebase interactivo te permite squash, reordenar y renombrar commits.</string>
+    <string name="git_humor_7">Codey: Los mensajes \'fix\' y \'update\' son como decir \'cosa\' en un examen. Sé descriptivo.</string>
+    <string name="git_sit_8">Tu rama feature quedó atrás de main y necesitas actualizarla sin crear commits de merge.</string>
+    <string name="git_opt_8a">git rebase main</string>
+    <string name="git_opt_8b">git merge main</string>
+    <string name="git_opt_8c">git pull --rebase</string>
+    <string name="git_expl_8">pull --rebase trae cambios y los aplica encima de tus commits locales.</string>
+    <string name="git_humor_8">Codey: El histórico lineal es como una carretera recta. Los merges son rotondas.</string>
+
+    <!-- Refactor Rush -->
+    <string name="refactor_initial">¡Ordena este desastre!</string>
+    <string name="refactor_win">¡Excelente! Código limpio y ordenado en %1$d intento(s).</string>
+    <string name="refactor_keep_trying">Sigue intentando, todavía no compila (intento %1$d).</string>
+    <string name="refactor_verify">Verificar</string>
+    <string name="refactor_puzzle_1">Calcular total</string>
+    <string name="refactor_puzzle_2">Filtrar pares</string>
+    <string name="refactor_puzzle_3">Saludo personalizado</string>
+    <string name="refactor_puzzle_4">Buscar máximo</string>
+    <string name="refactor_puzzle_5">Contar vocales</string>
+    <string name="refactor_puzzle_6">Invertir lista</string>
+    <string name="refactor_puzzle_7">Es palíndromo</string>
+    <string name="refactor_puzzle_8">Promedio de notas</string>
+    <string name="refactor_puzzle_9">Generar rango</string>
+    <string name="refactor_puzzle_10">Validar email</string>
+    <string name="refactor_puzzle_11">Fibonacci</string>
+    <string name="refactor_puzzle_12">Capitalizar palabras</string>
+
+    <!-- Binary Guess -->
+    <string name="binary_prompt">¿Cuál crees que es el bit secreto?</string>
+    <string name="binary_header">ADIVINA EL BIT (Ronda %1$d de 5)</string>
+    <string name="binary_fin">FIN</string>
+    <string name="binary_correct">¡Excelente! El bit secreto era %1$d.</string>
+    <string name="binary_wrong">Incorrecto. El bit secreto era %1$d.</string>
+    <string name="binary_gameover">¡Juego Terminado!\nAcertaste: %1$d de 5\nRecompensa: +%2$d Bytes, +%3$d%% Felicidad</string>
+    <string name="binary_next_round">Siguiente Ronda</string>
+
+    <!-- Bug Smasher -->
+    <string name="smasher_header">CAZA DE BUGS</string>
+    <string name="smasher_desc">Toca los bugs que aparecen en la cuadrícula de 3x3 tan rápido como puedas. ¡Tienes 10 segundos!</string>
+    <string name="smasher_gameover">¡Tiempo Agotado!\nBugs atrapados: %1$d\nRecompensa: +%2$d Bytes, +%3$d%% Felicidad</string>
+    <string name="smasher_bugs">Bugs: %1$d</string>
+    <string name="smasher_time">Tiempo: %1$ds</string>
+    <string name="smasher_bug_cd">BUG</string>
+
+    <!-- Rock Paper Sci -->
+    <string name="rps_initial">Elige tu jugada para iniciar la ronda.</string>
+    <string name="rps_choice_server">Servidor</string>
+    <string name="rps_choice_script">Script</string>
+    <string name="rps_choice_hacker">Hacker</string>
+    <string name="rps_header">SERVIDOR, SCRIPT, HACKER (RPS)</string>
+    <string name="rps_score">TÚ: %1$d | CPU: %2$d (Mejor de 3)</string>
+    <string name="rps_you">TÚ</string>
+    <string name="rps_compiler">COMPILADOR</string>
+    <string name="rps_question">Pregunta</string>
+    <string name="rps_select">Selecciona...</string>
+    <string name="rps_waiting">Esperando...</string>
+    <string name="rps_draw">Empate en esta ronda con %1$s.</string>
+    <string name="rps_round_win">¡Ganaste la ronda! %1$s vence a %2$s.</string>
+    <string name="rps_round_lose">Perdiste la ronda. %1$s vence a %2$s.</string>
+    <string name="rps_match_win">¡Has ganado la partida!</string>
+    <string name="rps_match_lose">El compilador ha ganado la partida.</string>
+    <string name="rps_game_win">¡Felicidades! Derrotaste al compilador.\nRecompensa: +%1$d Bytes, +%2$d%% Felicidad</string>
+    <string name="rps_game_lose">Has perdido contra el compilador.\nRecompensa: +%1$d Bytes, +%2$d%% Felicidad</string>
+
+    <!-- Minigames Dialog -->
+    <string name="mg_header">&gt;&gt;&gt; MINI-JUEGOS</string>
+    <string name="mg_detail">&gt;&gt;&gt; DETALLE DE JUEGO</string>
+    <string name="mg_back">Volver</string>
+    <string name="mg_intro">Juega con %1$s para aumentar su felicidad y conseguir Bytes extra.</string>
+    <string name="mg_binary_title">Adivina el Bit</string>
+    <string name="mg_binary_desc">Intenta predecir el siguiente bit binario (0 o 1). Juego rápido de 5 rondas.</string>
+    <string name="mg_smasher_title">Caza de Bugs</string>
+    <string name="mg_smasher_desc">¡Rápido! Los bugs se están escapando. Atrapa todos los que puedas en 10 segundos.</string>
+    <string name="mg_rps_title">Servidor, Script, Hacker</string>
+    <string name="mg_rps_desc">Piedra, Papel o Tijera versión informática. ¡Derrota al compilador!</string>
+
+    <!-- Code Review -->
+    <string name="review_round">&gt;&gt;&gt; CODE REVIEW: Ronda %1$d/5</string>
+    <string name="review_approve">APROBAR</string>
+    <string name="review_request_changes">SOLICITAR CAMBIOS</string>
+    <string name="review_hit">¡ACERTADO!</string>
+    <string name="review_miss">INCORRECTO</string>
+    <string name="review_continue">CONTINUAR</string>
+    <string name="review_done">REVISIÓN COMPLETADA</string>
+    <string name="review_score">Puntuación: %1$d / %2$d</string>
+    <string name="review_congrats">¡Buen trabajo SR. Developer!</string>
+    <string name="review_reward">+%1$d Bytes\n+%2$d XP</string>
+    <string name="review_back">VOLVER AL TERMINAL</string>
+
+    <!-- Hackathon -->
+    <string name="hack_header">&gt;&gt;&gt; HACKATHON SEMANAL</string>
+    <string name="hack_desc">Cada fin de semana un desafío especial de algoritmo.</string>
+    <string name="hack_this_week">Desafío de esta semana:</string>
+    <string name="hack_challenge">Ordena este array sin usar sort()\n\nEntrada: [3, 7, 1, 9, 4, 2, 8, 5, 6]\nSalida esperada: [1, 2, 3, 4, 5, 6, 7, 8, 9]</string>
+    <string name="hack_attempts">Intentos restantes: %1$d / 3</string>
+    <string name="hack_best_time">Mejor tiempo: %1$ds</string>
+    <string name="hack_solve">SOLUCIONAR DESAFÍO</string>
+    <string name="hack_reward">Recompensa: 200 XP + 500 Bytes + Skin exclusiva temporal</string>
+    <string name="hack_no_attempts">Sin intentos restantes. ¡Espera al próximo hackathon!</string>
+
+    <!-- Shop -->
+    <string name="shop_header">&gt;&gt;&gt; TIENDA</string>
+    <string name="shop_desc">Compra raciones o medicinas con tus Bytes de estudio acumulados.</string>
+    <string name="shop_item_cafe">Café Negro (CPU Booster)</string>
+    <string name="shop_item_cafe_effect">Restaura +20 Energía mental</string>
+    <string name="shop_item_pizza">Pizza de Código (Bytes Snack)</string>
+    <string name="shop_item_pizza_effect">Restaura +35 Alimento</string>
+    <string name="shop_item_pill">Píldora Desbugueadora</string>
+    <string name="shop_item_pill_effect">Cura de infecciones y sana +30 Salud</string>
+    <string name="shop_item_vaccine">Vacuna Super Compiler</string>
+    <string name="shop_item_vaccine_effect">Restaura +75 Salud, +40 Alimento, +40 Energía</string>
+
+    <!-- Settings extra -->
+    <string name="settings_theme_mode">Modo de tema base</string>
+    <string name="theme_mode_system">Sistema</string>
+    <string name="theme_mode_light">Claro</string>
+    <string name="theme_mode_dark">Oscuro</string>
+    <string name="theme_locked">Bloqueado</string>
+    <string name="theme_selected">Seleccionado</string>
+    <string name="settings_section_advanced">Características Avanzadas</string>
+    <string name="settings_advanced_skilltree">Árbol de Habilidades</string>
+    <string name="settings_advanced_skilltree_sub">Desbloquea habilidades pasivas con XP</string>
+    <string name="settings_advanced_seasonpass">Pase de Temporada</string>
+    <string name="settings_advanced_seasonpass_sub">20 niveles de recompensas</string>
+    <string name="settings_advanced_weekly">Misiones Semanales</string>
+    <string name="settings_advanced_weekly_sub">3 misiones rotativas cada lunes</string>
+    <string name="settings_moodlet">Moodlet: %1$s</string>
+    <string name="settings_dnd_active">Modo No Molestar activo: XP x1.5 en modo foco</string>
+
+    <!-- About -->
+    <string name="about_title">Acerca de</string>
+    <string name="about_version">Versión 1.0.0</string>
+    <string name="about_what">¿Qué es Code Tamagotchi?</string>
+    <string name="about_what_desc">Code Tamagotchi es una aplicación que combina el aprendizaje de programación con el cuidado de una mascota virtual. Resuelve desafíos de código, completa sesiones de estudio y juega minijuegos para mantener a tu mascota feliz y saludable mientras mejoras tus habilidades de programación.</string>
+    <string name="about_features_title">Características principales</string>
+    <string name="about_feature_1">• Desafíos de código en Kotlin, JavaScript, PHP, Python y más</string>
+    <string name="about_feature_2">• Temporizador de estudio Pomodoro integrado</string>
+    <string name="about_feature_3">• Minijuegos: Bug Hunt, Git Rescue, Refactor Rush</string>
+    <string name="about_feature_4">• Mascota virtual con estados de ánimo y necesidades</string>
+    <string name="about_feature_5">• Múltiples temas visuales para personalizar la experiencia</string>
+    <string name="about_feature_6">• Sistema de logros y recompensas</string>
+    <string name="about_feature_7">• Widget para la pantalla de inicio</string>
+    <string name="about_tech_title">Tecnologías usadas</string>
+    <string name="about_tech">Desarrollada con Jetpack Compose, Kotlin, Room, Koin y WorkManager.</string>
+    <string name="about_copyright">© 2026 Code Tamagotchi. Todos los derechos reservados.</string>
+
+    <!-- Skill Tree -->
+    <string name="skill_header">&gt;&gt;&gt; ÁRBOL DE HABILIDADES</string>
+    <string name="skill_desc">Gasta XP para desbloquear habilidades pasivas. Cada nivel cuesta más XP.</string>
+    <string name="skill_xp_available">XP disponible: %1$d</string>
+    <string name="skill_level">Nivel %1$d/%2$d</string>
+    <string name="skill_cost">%1$d XP</string>
+    <string name="skill_maxed">Maxed</string>
+
+    <!-- Season Pass -->
+    <string name="season_header">&gt;&gt;&gt; PASE DE TEMPORADA</string>
+    <string name="season_desc">Gana XP de pase completando actividades. 20 niveles de recompensas!</string>
+    <string name="season_level">NIVEL %1$d / 20</string>
+    <string name="season_xp">XP del pase: %1$d/100</string>
+    <string name="season_premium">PASE PREMIUM: Skins exclusivas + sombreros raros + XP boost</string>
+    <string name="season_rewards_title">Recompensas del pase:</string>
+    <string name="season_reward_1">Nivel 1: 50 Bytes</string>
+    <string name="season_reward_5">Nivel 5: Sombrero básico</string>
+    <string name="season_reward_10">Nivel 10: 200 XP</string>
+    <string name="season_reward_15">Nivel 15: Carta de código rara</string>
+    <string name="season_reward_20">Nivel 20: Skin legendaria!</string>
+
+    <!-- Weekly Missions -->
+    <string name="weekly_header">&gt;&gt;&gt; MISIONES SEMANALES</string>
+    <string name="weekly_bonus">BONUS COMPLETO: 500 XP + Sombrero exclusivo!</string>
+    <string name="weekly_desc">Completa las 3 misiones semanales para un bonus especial.</string>
+
 </resources>

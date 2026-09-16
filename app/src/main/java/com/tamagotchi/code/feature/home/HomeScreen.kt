@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.components.DailyRewardDialog
 import com.tamagotchi.code.ui.components.CodeCardDialog
@@ -73,7 +75,7 @@ fun HomeScreen(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = if (viewModel.isDailyRewardClaimedToday.value) "RECOMPENSAS DIARIAS (RECLAMADO)" else "RECOMPENSAS DIARIAS (¡DISPONIBLE!)",
+                        text = if (viewModel.isDailyRewardClaimedToday.value) stringResource(R.string.home_daily_claimed) else stringResource(R.string.home_daily_available),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
@@ -91,11 +93,11 @@ fun HomeScreen(
         if (viewModel.showOfflineRewardDialog.value) {
             AlertDialog(
                 onDismissRequest = { viewModel.dismissOfflineRewardDialog() },
-                title = { Text("Sesión completada mientras estabas fuera") },
-                text = { Text("¡Felicidades! Has ganado ${viewModel.offlineRewardXp.value} XP y ${viewModel.offlineRewardBytes.value} Bytes por tu sesión de Focus.") },
+                title = { Text(stringResource(R.string.home_offline_title)) },
+                text = { Text(stringResource(R.string.home_offline_text, viewModel.offlineRewardXp.value, viewModel.offlineRewardBytes.value)) },
                 confirmButton = {
                     TextButton(onClick = { viewModel.dismissOfflineRewardDialog() }) {
-                        Text("Aceptar")
+                        Text(stringResource(R.string.dialog_accept))
                     }
                 }
             )
@@ -120,7 +122,7 @@ fun HomeScreen(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            "${state?.name ?: "Codey"} ha muerto",
+                            stringResource(R.string.home_death_title, state?.name ?: stringResource(R.string.default_pet_name)),
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold
                         )
@@ -129,8 +131,7 @@ fun HomeScreen(
                 text = {
                     Column {
                         Text(
-                            "Tu mascota ha fallecido por falta de cuidados.\n\n" +
-                                    "Pero no todo está perdido... puedes revivirla:",
+                            stringResource(R.string.home_death_desc),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 13.sp,
                             lineHeight = 18.sp
@@ -139,7 +140,7 @@ fun HomeScreen(
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Icon(Icons.Filled.Save, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                             Text(
-                                "Revivir por ${viewModel.deathReviveCost.value} Bytes",
+                                stringResource(R.string.home_revive_bytes_desc, viewModel.deathReviveCost.value),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -150,7 +151,7 @@ fun HomeScreen(
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Icon(Icons.Filled.Bolt, contentDescription = null, tint = MaterialTheme.colorScheme.secondary, modifier = Modifier.size(16.dp))
                             Text(
-                                "Revivir gratis (stats bajos)",
+                                stringResource(R.string.home_revive_free_desc),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -170,7 +171,7 @@ fun HomeScreen(
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 Icon(Icons.Filled.Save, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(16.dp))
                                 Text(
-                                    "Revivir (${viewModel.deathReviveCost.value} Bytes)",
+                                    stringResource(R.string.home_revive_bytes_button, viewModel.deathReviveCost.value),
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
@@ -186,7 +187,7 @@ fun HomeScreen(
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                 Icon(Icons.Filled.Bolt, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                                 Text(
-                                    "Revivir gratis",
+                                    stringResource(R.string.home_revive_free),
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp
@@ -217,7 +218,7 @@ fun HomeScreen(
                             modifier = Modifier.size(24.dp)
                         )
                         Text(
-                            "Codey hizo commit",
+                            stringResource(R.string.home_commit_title),
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold
                         )
@@ -226,7 +227,7 @@ fun HomeScreen(
                 text = {
                     Column {
                         Text(
-                            "Resumen de ayer:",
+                            stringResource(R.string.home_commit_summary),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -250,7 +251,7 @@ fun HomeScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { viewModel.dismissCommitDialog() }) {
-                        Text("Fusionar (Aceptar)", fontFamily = FontFamily.Monospace)
+                        Text(stringResource(R.string.home_commit_merge), fontFamily = FontFamily.Monospace)
                     }
                 }
             )

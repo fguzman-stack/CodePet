@@ -18,11 +18,13 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.viewmodel.SkillNodeData
 
@@ -43,7 +45,7 @@ fun SkillTreeScreen(
             Icon(Icons.Default.AccountTree, contentDescription = null, tint = Color(0xFF81C784))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = ">>> ÁRBOL DE HABILIDADES",
+                text = stringResource(R.string.skill_header),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -52,14 +54,14 @@ fun SkillTreeScreen(
         }
 
         Text(
-            text = "Gasta XP para desbloquear habilidades pasivas. Cada nivel cuesta más XP.",
+            text = stringResource(R.string.skill_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
             color = Color.Gray
         )
 
         Text(
-            text = "XP disponible: $xp",
+            text = stringResource(R.string.skill_xp_available, xp),
             fontFamily = FontFamily.Monospace,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
@@ -135,7 +137,7 @@ fun SkillTreeScreen(
                             modifier = Modifier.fillMaxWidth().height(4.dp)
                         )
                         Text(
-                            text = "Nivel ${skill.currentTier}/${skill.maxTier}",
+                            text = stringResource(R.string.skill_level, skill.currentTier, skill.maxTier),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 9.sp,
                             color = Color.Gray
@@ -153,7 +155,7 @@ fun SkillTreeScreen(
                             modifier = Modifier.height(28.dp)
                         ) {
                             Text(
-                                text = "$cost XP",
+                                text = stringResource(R.string.skill_cost, cost),
                                 color = Color.Black,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 9.sp,
@@ -163,7 +165,7 @@ fun SkillTreeScreen(
                     } else {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Maxed",
+                            contentDescription = stringResource(R.string.skill_maxed),
                             tint = Color(0xFFFFD700),
                             modifier = Modifier.size(20.dp)
                         )
@@ -180,7 +182,7 @@ fun SkillTreeScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth().height(40.dp)
         ) {
-            Text("VOLVER", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }
     }
 }

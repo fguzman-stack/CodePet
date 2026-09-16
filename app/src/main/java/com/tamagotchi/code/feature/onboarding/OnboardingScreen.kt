@@ -510,7 +510,7 @@ private fun Step4Content(
                 onNameChange(it)
                 if (it.isNotEmpty()) onUseDefaultChange(false)
             },
-            label = { Text("Nombre (máx 15)") },
+            label = { Text(stringResource(R.string.onboarding_name_label)) },
             singleLine = true,
             enabled = !useDefaultName,
             modifier = Modifier.fillMaxWidth(),

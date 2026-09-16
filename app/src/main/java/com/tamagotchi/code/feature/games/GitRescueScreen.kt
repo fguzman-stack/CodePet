@@ -20,101 +20,101 @@ import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import kotlinx.coroutines.delay
 
 private data class GitScenario(
-    val situation: String,
-    val options: List<String>,
+    val situationRes: Int,
+    val optionsRes: List<Int>,
     val correctIndex: Int,
-    val explanation: String,
-    val humor: String
+    val explanationRes: Int,
+    val humorRes: Int
 )
 
 private val scenarioPool = listOf(
     GitScenario(
-        situation = "Acabas de clonar el repo y vas a trabajar en un nuevo feature. ¿Qué haces primero?",
-        options = listOf(
-            "git checkout -b feature/nuevo",
-            "git commit -m \"inicio\"",
-            "git push --force"
+        situationRes = R.string.git_sit_1,
+        optionsRes = listOf(
+            R.string.git_opt_1a,
+            R.string.git_opt_1b,
+            R.string.git_opt_1c
         ),
         correctIndex = 0,
-        explanation = "Crear una rama nueva desde main es la forma correcta de empezar un feature.",
-        humor = "Codey: ¡Nunca pushes a main sin antes crear una rama! Eres un cowboy."
+        explanationRes = R.string.git_expl_1,
+        humorRes = R.string.git_humor_1
     ),
     GitScenario(
-        situation = "Has hecho cambios locales y te das cuenta de que rompiste todo. Quieres volver al último commit limpio.",
-        options = listOf(
-            "git reset --hard HEAD",
-            "git revert HEAD",
-            "git rm -rf ."
+        situationRes = R.string.git_sit_2,
+        optionsRes = listOf(
+            R.string.git_opt_2a,
+            R.string.git_opt_2b,
+            R.string.git_opt_2c
         ),
         correctIndex = 1,
-        explanation = "revert crea un nuevo commit que deshace los cambios, preservando la historia.",
-        humor = "Codey: reset --hard es como una máquina del tiempo sin frenos. revert es más seguro."
+        explanationRes = R.string.git_expl_2,
+        humorRes = R.string.git_humor_2
     ),
     GitScenario(
-        situation = "Tienes un conflicto en un merge. ¿Cuál es el siguiente paso?",
-        options = listOf(
-            "Resolver el conflicto en el editor y luego git add",
-            "git commit --amend",
-            "git push --force origin main"
+        situationRes = R.string.git_sit_3,
+        optionsRes = listOf(
+            R.string.git_opt_3a,
+            R.string.git_opt_3b,
+            R.string.git_opt_3c
         ),
         correctIndex = 0,
-        explanation = "Los conflictos se resuelven editando los archivos, luego git add y git commit.",
-        humor = "Codey: push --force no resuelve conflictos, los empeora. Es como echar gasolina al fuego."
+        explanationRes = R.string.git_expl_3,
+        humorRes = R.string.git_humor_3
     ),
     GitScenario(
-        situation = "Trabajas en equipo y necesitas traerte los cambios más recientes de la rama main a tu rama feature.",
-        options = listOf(
-            "git pull origin main",
-            "git merge feature main",
-            "git branch -d main"
+        situationRes = R.string.git_sit_4,
+        optionsRes = listOf(
+            R.string.git_opt_4a,
+            R.string.git_opt_4b,
+            R.string.git_opt_4c
         ),
         correctIndex = 0,
-        explanation = "git pull trae los cambios de main a tu rama actual. merge lo haría al revés.",
-        humor = "Codey: No borres main. Nunca borres main. Es como borrar el diccionario."
+        explanationRes = R.string.git_expl_4,
+        humorRes = R.string.git_humor_4
     ),
     GitScenario(
-        situation = "Hiciste un commit pero olvidaste incluir un archivo. ¿Cómo lo arreglas?",
-        options = listOf(
-            "git add archivo && git commit --amend",
-            "git reset --hard HEAD~1",
-            "git commit --allow-empty"
+        situationRes = R.string.git_sit_5,
+        optionsRes = listOf(
+            R.string.git_opt_5a,
+            R.string.git_opt_5b,
+            R.string.git_opt_5c
         ),
         correctIndex = 0,
-        explanation = "Con amend puedes agregar archivos al commit anterior sin crear uno nuevo.",
-        humor = "Codey: --allow-empty no arregla nada. Es como poner un post-it en una puerta cerrada."
+        explanationRes = R.string.git_expl_5,
+        humorRes = R.string.git_humor_5
     ),
     GitScenario(
-        situation = "Quieres ver qué archivos modificaste antes de hacer commit. ¿Qué comando usas?",
-        options = listOf(
-            "git diff",
-            "git status",
-            "git show"
+        situationRes = R.string.git_sit_6,
+        optionsRes = listOf(
+            R.string.git_opt_6a,
+            R.string.git_opt_6b,
+            R.string.git_opt_6c
         ),
         correctIndex = 1,
-        explanation = "git status muestra el estado actual: archivos modificados, nuevos y eliminados.",
-        humor = "Codey: diff es para ver el contenido exacto, status te da el resumen. Dos herramientas diferentes."
+        explanationRes = R.string.git_expl_6,
+        humorRes = R.string.git_humor_6
     ),
     GitScenario(
-        situation = "El historial de commits está lleno de mensajes como 'fix' y 'update'. Quieres limpiarlo antes de hacer merge.",
-        options = listOf(
-            "git rebase -i HEAD~5",
-            "git reset --hard origin/main",
-            "git commit --fixup"
+        situationRes = R.string.git_sit_7,
+        optionsRes = listOf(
+            R.string.git_opt_7a,
+            R.string.git_opt_7b,
+            R.string.git_opt_7c
         ),
         correctIndex = 0,
-        explanation = "rebase interactivo te permite squash, reordenar y renombrar commits.",
-        humor = "Codey: Los mensajes 'fix' y 'update' son como decir 'cosa' en un examen. Sé descriptivo."
+        explanationRes = R.string.git_expl_7,
+        humorRes = R.string.git_humor_7
     ),
     GitScenario(
-        situation = "Tu rama feature quedó atrás de main y necesitas actualizarla sin crear commits de merge.",
-        options = listOf(
-            "git rebase main",
-            "git merge main",
-            "git pull --rebase"
+        situationRes = R.string.git_sit_8,
+        optionsRes = listOf(
+            R.string.git_opt_8a,
+            R.string.git_opt_8b,
+            R.string.git_opt_8c
         ),
         correctIndex = 2,
-        explanation = "pull --rebase trae cambios y los aplica encima de tus commits locales.",
-        humor = "Codey: El histórico lineal es como una carretera recta. Los merges son rotondas."
+        explanationRes = R.string.git_expl_8,
+        humorRes = R.string.git_humor_8
     )
 )
 
@@ -129,8 +129,8 @@ fun GitRescueScreen(
     var currentStep by remember { mutableStateOf(0) }
     var score by remember { mutableStateOf(0) }
     var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("¡Rápido, el repo está en llamas!") }
-    var lastExplanation by remember { mutableStateOf<String?>(null) }
+    var codeyReactionRes by remember { mutableStateOf(R.string.git_initial) }
+    var lastExplanationRes by remember { mutableStateOf<Int?>(null) }
     var answeredStep by remember { mutableStateOf(false) }
     var branchPosition by remember { mutableStateOf(0f) }
     var maxBranchSteps by remember { mutableStateOf(scenarios.size.toFloat()) }
@@ -162,7 +162,7 @@ fun GitRescueScreen(
                 Text(stringResource(R.string.game_result_reward, bytesEarned))
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Decisiones correctas: $score de ${scenarios.size}",
+                    text = stringResource(R.string.git_decisions, score, scenarios.size),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -182,7 +182,7 @@ fun GitRescueScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Progreso de la rama:", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(stringResource(R.string.git_progress), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -229,17 +229,17 @@ fun GitRescueScreen(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Text(stringResource(R.string.codey_says, stringResource(codeyReactionRes)), modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text("Paso ${currentStep + 1} de ${scenarios.size}", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.git_step, currentStep + 1, scenarios.size), fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(scenarios[currentStep].situation, style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(scenarios[currentStep].situationRes), style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                scenarios[currentStep].options.forEachIndexed { index, option ->
+                scenarios[currentStep].optionsRes.forEachIndexed { index, optionRes ->
                     val isCorrect = answeredStep && index == scenarios[currentStep].correctIndex
                     val isWrong = answeredStep && index != scenarios[currentStep].correctIndex
 
@@ -256,23 +256,23 @@ fun GitRescueScreen(
                             .clickable(enabled = !answeredStep) {
                                 if (index == scenarios[currentStep].correctIndex) {
                                     score++
-                                    codeyReaction = scenarios[currentStep].humor
+                                    codeyReactionRes = scenarios[currentStep].humorRes
                                 } else {
-                                    codeyReaction = "¡Esa no era la mejor opción!"
+                                    codeyReactionRes = R.string.git_wrong
                                 }
-                                lastExplanation = scenarios[currentStep].explanation
+                                lastExplanationRes = scenarios[currentStep].explanationRes
                                 answeredStep = true
                             }
                     ) {
                         Text(
-                            text = "> $option",
+                            text = "> " + stringResource(optionRes),
                             fontFamily = FontFamily.Monospace,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
                 }
 
-                if (answeredStep && lastExplanation != null) {
+                if (answeredStep && lastExplanationRes != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Surface(
                         color = Color(0xFF1B5E20).copy(alpha = 0.1f),
@@ -280,7 +280,7 @@ fun GitRescueScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = lastExplanation!!,
+                            text = stringResource(lastExplanationRes!!),
                             modifier = Modifier.padding(12.dp),
                             fontFamily = FontFamily.Monospace,
                             fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -293,13 +293,13 @@ fun GitRescueScreen(
                         if (currentStep < scenarios.size - 1) {
                             currentStep++
                             answeredStep = false
-                            lastExplanation = null
-                            codeyReaction = "¡Siguiente decisión! El repo te necesita."
+                            lastExplanationRes = null
+                            codeyReactionRes = R.string.git_next
                         } else {
                             isGameOver = true
                         }
                     }) {
-                        Text(if (currentStep < scenarios.size - 1) "Siguiente decisión" else "Ver resultados")
+                        Text(if (currentStep < scenarios.size - 1) stringResource(R.string.game_next_decision) else stringResource(R.string.game_see_results))
                     }
                 }
             }

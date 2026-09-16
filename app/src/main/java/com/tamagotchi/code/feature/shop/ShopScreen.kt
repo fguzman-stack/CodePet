@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
@@ -35,7 +37,7 @@ fun ShopScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = ">>> TIENDA",
+            text = stringResource(R.string.shop_header),
             fontSize = 14.sp,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
@@ -56,15 +58,15 @@ fun ShopPanel(
     val appTheme = LocalAppTheme.current
     
     val shopItems = listOf(
-        ShopItemData("Café Negro (CPU Booster)", 10, "Restaura +20 Energía mental", 0f, 0f, 20f, Icons.Default.Coffee),
-        ShopItemData("Pizza de Código (Bytes Snack)", 15, "Restaura +35 Alimento", 35f, 0f, 0f, Icons.Default.LocalPizza),
-        ShopItemData("Píldora Desbugueadora", 25, "Cura de infecciones y sana +30 Salud", 0f, 30f, 0f, Icons.Default.Medication),
-        ShopItemData("Vacuna Super Compiler", 55, "Restaura +75 Salud, +40 Alimento, +40 Energía", 40f, 75f, 40f, Icons.Default.Shield)
+        ShopItemData(R.string.shop_item_cafe, R.string.shop_item_cafe_effect, 10, 0f, 0f, 20f, Icons.Default.Coffee, "cafe"),
+        ShopItemData(R.string.shop_item_pizza, R.string.shop_item_pizza_effect, 15, 35f, 0f, 0f, Icons.Default.LocalPizza, "pizza"),
+        ShopItemData(R.string.shop_item_pill, R.string.shop_item_pill_effect, 25, 0f, 30f, 0f, Icons.Default.Medication, "pill"),
+        ShopItemData(R.string.shop_item_vaccine, R.string.shop_item_vaccine_effect, 55, 40f, 75f, 40f, Icons.Default.Shield, "vaccine")
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Compra raciones o medicinas con tus Bytes de estudio acumulados.",
+            text = stringResource(R.string.shop_desc),
             fontSize = 11.sp,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -74,6 +76,7 @@ fun ShopPanel(
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             shopItems.forEach { item ->
+                val itemName = stringResource(item.nameRes)
                 val canAfford = state.bytes >= item.cost
                 Surface(
                     shape = RoundedCornerShape(appTheme.cornerRadius.coerceAtMost(8.dp)),
@@ -87,7 +90,7 @@ fun ShopPanel(
                     ) {
                         Icon(
                             imageVector = item.icon,
-                            contentDescription = item.name,
+                            contentDescription = itemName,
                             tint = if (canAfford) appTheme.accent else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                             modifier = Modifier.size(24.dp)
                         )
@@ -95,14 +98,14 @@ fun ShopPanel(
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = item.name,
+                                text = itemName,
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = item.effect,
+                                text = stringResource(item.effectRes),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -112,7 +115,7 @@ fun ShopPanel(
                         Button(
                             onClick = {
                                 viewModel.buyShopItem(
-                                    itemName = item.name,
+                                    itemName = itemName,
                                     cost = item.cost,
                                     hungerRestore = item.hungerRestore,
                                     healthRestore = item.healthRestore,
@@ -128,7 +131,7 @@ fun ShopPanel(
                             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                             modifier = Modifier
                                 .height(32.dp)
-                                .testTag("shop_buy_${item.name.lowercase().replace(" ", "_")}")
+                                .testTag("shop_buy_${item.id}")
                         ) {
                             Text(
                                 text = "${item.cost} B",
@@ -146,11 +149,12 @@ fun ShopPanel(
 }
 
 data class ShopItemData(
-    val name: String,
+    val nameRes: Int,
+    val effectRes: Int,
     val cost: Int,
-    val effect: String,
     val hungerRestore: Float,
     val healthRestore: Float,
     val energyRestore: Float,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val id: String
 )

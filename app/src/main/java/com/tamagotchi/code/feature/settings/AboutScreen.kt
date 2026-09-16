@@ -9,10 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,7 +23,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
         containerColor = androidx.compose.ui.graphics.Color.Transparent,
         topBar = {
             TopAppBar(
-                title = { Text("Acerca de", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.about_title), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Text("<", style = MaterialTheme.typography.titleLarge)
@@ -50,7 +52,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Code Tamagotchi",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -60,7 +62,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Versión 1.0.0",
+                text = stringResource(R.string.about_version),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -73,7 +75,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "¿Qué es Code Tamagotchi?",
+                text = stringResource(R.string.about_what),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
@@ -83,7 +85,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Code Tamagotchi es una aplicación que combina el aprendizaje de programación con el cuidado de una mascota virtual. Resuelve desafíos de código, completa sesiones de estudio y juega minijuegos para mantener a tu mascota feliz y saludable mientras mejoras tus habilidades de programación.",
+                text = stringResource(R.string.about_what_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start
@@ -92,7 +94,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Características principales",
+                text = stringResource(R.string.about_features_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
@@ -102,13 +104,13 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             val features = listOf(
-                "\u2022 Desafíos de código en Kotlin, JavaScript, PHP, Python y más",
-                "\u2022 Temporizador de estudio Pomodoro integrado",
-                "\u2022 Minijuegos: Bug Hunt, Git Rescue, Refactor Rush",
-                "\u2022 Mascota virtual con estados de ánimo y necesidades",
-                "\u2022 Múltiples temas visuales para personalizar la experiencia",
-                "\u2022 Sistema de logros y recompensas",
-                "\u2022 Widget para la pantalla de inicio"
+                stringResource(R.string.about_feature_1),
+                stringResource(R.string.about_feature_2),
+                stringResource(R.string.about_feature_3),
+                stringResource(R.string.about_feature_4),
+                stringResource(R.string.about_feature_5),
+                stringResource(R.string.about_feature_6),
+                stringResource(R.string.about_feature_7)
             )
 
             features.forEach { feature ->
@@ -127,7 +129,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Tecnologías usadas",
+                text = stringResource(R.string.about_tech_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
@@ -137,7 +139,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Desarrollada con Jetpack Compose, Kotlin, Room, Koin y WorkManager.",
+                text = stringResource(R.string.about_tech),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -145,7 +147,7 @@ fun AboutScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "\u00A9 2026 Code Tamagotchi. Todos los derechos reservados.",
+                text = stringResource(R.string.about_copyright),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
