@@ -19,13 +19,13 @@ import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 private data class RefactorPuzzle(
-    val title: String,
+    val titleRes: Int,
     val blocks: List<String>
 )
 
 private val puzzleBank = listOf(
     RefactorPuzzle(
-        "Calcular total",
+        R.string.refactor_puzzle_1,
         listOf(
             "fun calculateTotal(items: List<Int>): Int {",
             "    var total = 0",
@@ -37,7 +37,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Filtrar pares",
+        R.string.refactor_puzzle_2,
         listOf(
             "fun filterEven(numbers: List<Int>): List<Int> {",
             "    val result = mutableListOf<Int>()",
@@ -51,17 +51,17 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Saludo personalizado",
+        R.string.refactor_puzzle_3,
         listOf(
             "fun greet(name: String, age: Int): String {",
-            "    val greeting = \"Hola, \$name\"",
-            "    val ageMsg = if (age >= 18) \"Eres mayor\" else \"Eres menor\"",
+            "    val greeting = \"Hello, \$name\"",
+            "    val ageMsg = if (age >= 18) \"Adult\" else \"Minor\"",
             "    return \"\$greeting. \$ageMsg\"",
             "}"
         )
     ),
     RefactorPuzzle(
-        "Buscar máximo",
+        R.string.refactor_puzzle_4,
         listOf(
             "fun findMax(values: List<Int>): Int? {",
             "    if (values.isEmpty()) return null",
@@ -74,7 +74,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Contar vocales",
+        R.string.refactor_puzzle_5,
         listOf(
             "fun countVowels(text: String): Int {",
             "    val vowels = setOf('a', 'e', 'i', 'o', 'u')",
@@ -87,7 +87,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Invertir lista",
+        R.string.refactor_puzzle_6,
         listOf(
             "fun reverseList<T>(items: List<T>): List<T> {",
             "    val result = mutableListOf<T>()",
@@ -99,7 +99,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Es palíndromo",
+        R.string.refactor_puzzle_7,
         listOf(
             "fun isPalindrome(word: String): Boolean {",
             "    val cleaned = word.lowercase().filter { it.isLetter() }",
@@ -108,7 +108,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Promedio de notas",
+        R.string.refactor_puzzle_8,
         listOf(
             "fun average(grades: List<Double>): Double {",
             "    if (grades.isEmpty()) return 0.0",
@@ -118,7 +118,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Generar rango",
+        R.string.refactor_puzzle_9,
         listOf(
             "fun generateRange(start: Int, end: Int): List<Int> {",
             "    val range = mutableListOf<Int>()",
@@ -130,7 +130,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Validar email",
+        R.string.refactor_puzzle_10,
         listOf(
             "fun isValidEmail(email: String): Boolean {",
             "    if (!email.contains('@')) return false",
@@ -141,7 +141,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Fibonacci",
+        R.string.refactor_puzzle_11,
         listOf(
             "fun fibonacci(n: Int): List<Int> {",
             "    if (n <= 0) return emptyList()",
@@ -154,7 +154,7 @@ private val puzzleBank = listOf(
         )
     ),
     RefactorPuzzle(
-        "Capitalizar palabras",
+        R.string.refactor_puzzle_12,
         listOf(
             "fun capitalizeWords(sentence: String): String {",
             "    return sentence.split(\" \")",
@@ -176,7 +176,8 @@ fun RefactorRushScreen(
     val originalBlocks = remember { puzzle.blocks }
 
     var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("¡Ordena este desastre!") }
+    var codeyReactionRes by remember { mutableStateOf(R.string.refactor_initial) }
+    var reactionAttempts by remember { mutableIntStateOf(0) }
     var currentBlocks by remember { mutableStateOf(originalBlocks.shuffled()) }
     var attempts by remember { mutableStateOf(0) }
 
@@ -203,10 +204,12 @@ fun RefactorRushScreen(
     fun checkResult() {
         attempts++
         if (currentBlocks == originalBlocks) {
-            codeyReaction = "¡Excelente! Código limpio y ordenado en $attempts intento(s)."
+            codeyReactionRes = R.string.refactor_win
+            reactionAttempts = attempts
             isGameOver = true
         } else {
-            codeyReaction = "Sigue intentando, todavía no compila (intento $attempts)."
+            codeyReactionRes = R.string.refactor_keep_trying
+            reactionAttempts = attempts
         }
     }
 
@@ -233,7 +236,7 @@ fun RefactorRushScreen(
             if (isGameOver) {
                 Text(stringResource(R.string.game_result_title), style = MaterialTheme.typography.headlineMedium)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(puzzle.titleRes), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(16.dp))
                 val bytesEarned = maxOf(50 - (attempts * 5), 10)
                 Text(stringResource(R.string.game_result_reward, bytesEarned))
@@ -251,12 +254,12 @@ fun RefactorRushScreen(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Text(stringResource(R.string.codey_says, stringResource(codeyReactionRes, reactionAttempts)), modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(puzzle.title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(puzzle.titleRes), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(stringResource(R.string.refactor_rush_instruction), style = MaterialTheme.typography.bodyMedium)
 
@@ -276,10 +279,10 @@ fun RefactorRushScreen(
                         ) {
                             Column {
                                 IconButton(onClick = { moveUp(index) }, enabled = index > 0) {
-                                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Up")
+                                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = stringResource(R.string.game_move_up))
                                 }
                                 IconButton(onClick = { moveDown(index) }, enabled = index < currentBlocks.size - 1) {
-                                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Down")
+                                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(R.string.game_move_down))
                                 }
                             }
                             Text(
@@ -295,7 +298,7 @@ fun RefactorRushScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
                 Button(onClick = { checkResult() }) {
-                    Text("Verificar")
+                    Text(stringResource(R.string.refactor_verify))
                 }
             }
         }

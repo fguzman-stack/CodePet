@@ -12,11 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -26,12 +29,19 @@ fun RockPaperSciGame(
     viewModel: PetViewModel,
     onFinish: () -> Unit
 ) {
+    val context = LocalContext.current
     var userWins by remember { mutableStateOf(0) }
     var cpuWins by remember { mutableStateOf(0) }
-    var roundMessage by remember { mutableStateOf("Elige tu jugada para iniciar la ronda.") }
+    var roundMessage by remember { mutableStateOf(context.getString(R.string.rps_initial)) }
     var userChoice by remember { mutableStateOf<String?>(null) }
     var cpuChoice by remember { mutableStateOf<String?>(null) }
     var isGameOver by remember { mutableStateOf(false) }
+
+    fun choiceName(choice: String): String = when (choice) {
+        "Servidor" -> context.getString(R.string.rps_choice_server)
+        "Script" -> context.getString(R.string.rps_choice_script)
+        else -> context.getString(R.string.rps_choice_hacker)
+    }
 
     val choices = listOf("Servidor", "Script", "Hacker")
     val icons = mapOf(
@@ -45,7 +55,7 @@ fun RockPaperSciGame(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "SERVIDOR, SCRIPT, HACKER (RPS)",
+            text = stringResource(R.string.rps_header),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -54,7 +64,7 @@ fun RockPaperSciGame(
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "TÚ: $userWins | CPU: $cpuWins (Mejor de 3)",
+            text = stringResource(R.string.rps_score, userWins, cpuWins),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -72,31 +82,31 @@ fun RockPaperSciGame(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("TÚ", fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
+                Text(stringResource(R.string.rps_you), fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
                 Spacer(modifier = Modifier.height(4.dp))
                 Icon(
                     imageVector = icons[userChoice] ?: Icons.Default.QuestionMark,
-                    contentDescription = userChoice ?: "Pregunta",
+                    contentDescription = userChoice?.let { choiceName(it) } ?: stringResource(R.string.rps_question),
                     tint = if (userChoice != null) Color(0xFF81C784) else Color.Gray,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(userChoice ?: "Selecciona...", fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color.White)
+                Text(userChoice?.let { choiceName(it) } ?: stringResource(R.string.rps_select), fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color.White)
             }
 
             Text("VS", fontSize = 14.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, color = Color(0xFFEF5350))
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("COMPILADOR", fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
+                Text(stringResource(R.string.rps_compiler), fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color.Gray)
                 Spacer(modifier = Modifier.height(4.dp))
                 Icon(
                     imageVector = icons[cpuChoice] ?: Icons.Default.QuestionMark,
-                    contentDescription = cpuChoice ?: "Pregunta",
+                    contentDescription = cpuChoice?.let { choiceName(it) } ?: stringResource(R.string.rps_question),
                     tint = if (cpuChoice != null) Color(0xFFEF5350) else Color.Gray,
                     modifier = Modifier.size(32.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(cpuChoice ?: "Esperando...", fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color.White)
+                Text(cpuChoice?.let { choiceName(it) } ?: stringResource(R.string.rps_waiting), fontSize = 11.sp, fontFamily = FontFamily.Monospace, color = Color.White)
             }
         }
 
@@ -117,7 +127,7 @@ fun RockPaperSciGame(
             val bytesReward = if (playerWon) 20 else 5
             val healthReward = if (playerWon) 25f else 10f
             Text(
-                text = if (playerWon) "¡Felicidades! Derrotaste al compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad" else "Has perdido contra el compilador.\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = stringResource(if (playerWon) R.string.rps_game_win else R.string.rps_game_lose, bytesReward, healthReward.toInt()),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -134,7 +144,7 @@ fun RockPaperSciGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cobrar Recompensas", fontFamily = FontFamily.Monospace)
+                Text(stringResource(R.string.game_claim_rewards), fontFamily = FontFamily.Monospace)
             }
         } else {
             Row(
@@ -149,22 +159,22 @@ fun RockPaperSciGame(
                             cpuChoice = selectedCpu
 
                             if (choice == selectedCpu) {
-                                roundMessage = "Empate en esta ronda con $choice."
+                                roundMessage = context.getString(R.string.rps_draw, choiceName(choice))
                             } else if (
                                 (choice == "Servidor" && selectedCpu == "Hacker") ||
                                 (choice == "Script" && selectedCpu == "Servidor") ||
                                 (choice == "Hacker" && selectedCpu == "Script")
                             ) {
                                 userWins += 1
-                                roundMessage = "¡Ganaste la ronda! $choice vence a $selectedCpu."
+                                roundMessage = context.getString(R.string.rps_round_win, choiceName(choice), choiceName(selectedCpu))
                             } else {
                                 cpuWins += 1
-                                roundMessage = "Perdiste la ronda. $selectedCpu vence a $choice."
+                                roundMessage = context.getString(R.string.rps_round_lose, choiceName(selectedCpu), choiceName(choice))
                             }
 
                             if (userWins >= 2 || cpuWins >= 2) {
                                 isGameOver = true
-                                roundMessage = if (userWins >= 2) "¡Has ganado la partida!" else "El compilador ha ganado la partida."
+                                roundMessage = context.getString(if (userWins >= 2) R.string.rps_match_win else R.string.rps_match_lose)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF151D16)),

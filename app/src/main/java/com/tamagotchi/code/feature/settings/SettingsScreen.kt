@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.achievementDescription
+import com.tamagotchi.code.ui.components.achievementName
+import com.tamagotchi.code.ui.components.moodletLabel
 import com.tamagotchi.code.ui.theme.AppTheme
 import com.tamagotchi.code.ui.theme.ThemeRegistry
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
@@ -220,7 +223,7 @@ fun SettingsScreen(
 
             // Default theme mode selector
             Text(
-                text = "Modo de tema base",
+                text = stringResource(R.string.settings_theme_mode),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -232,7 +235,11 @@ fun SettingsScreen(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Sistema" to "SYSTEM", "Claro" to "LIGHT", "Oscuro" to "DARK").forEach { (label, mode) ->
+                listOf(
+                    stringResource(R.string.theme_mode_system) to "SYSTEM",
+                    stringResource(R.string.theme_mode_light) to "LIGHT",
+                    stringResource(R.string.theme_mode_dark) to "DARK"
+                ).forEach { (label, mode) ->
                     FilterChip(
                         selected = defaultThemeMode == mode,
                         onClick = { viewModel.setDefaultThemeMode(mode) },
@@ -294,14 +301,14 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = achievement.name,
+                                text = achievementName(achievement.id, achievement.name),
                                 fontWeight = if (isUnlocked) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 14.sp,
                                 color = if (isUnlocked) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = achievement.description,
+                                text = achievementDescription(achievement.id, achievement.description),
                                 fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -313,24 +320,25 @@ fun SettingsScreen(
             HorizontalDivider()
 
             // D3. Características avanzadas
-            SettingsSectionTitle("Características Avanzadas")
+            SettingsSectionTitle(stringResource(R.string.settings_section_advanced))
             SettingsItemClickable(
-                title = "Árbol de Habilidades",
-                subtitle = "Desbloquea habilidades pasivas con XP",
+                title = stringResource(R.string.settings_advanced_skilltree),
+                subtitle = stringResource(R.string.settings_advanced_skilltree_sub),
                 onClick = onNavigateToSkillTree
             )
             SettingsItemClickable(
-                title = "Pase de Temporada",
-                subtitle = "20 niveles de recompensas",
+                title = stringResource(R.string.settings_advanced_seasonpass),
+                subtitle = stringResource(R.string.settings_advanced_seasonpass_sub),
                 onClick = onNavigateToSeasonPass
             )
             SettingsItemClickable(
-                title = "Misiones Semanales",
-                subtitle = "3 misiones rotativas cada lunes",
+                title = stringResource(R.string.settings_advanced_weekly),
+                subtitle = stringResource(R.string.settings_advanced_weekly_sub),
                 onClick = onNavigateToWeeklyMissions
             )
 
             if (moodlet != null) {
+                val moodletTypeLabel = moodletLabel(moodlet!!.moodletType)
                 Spacer(modifier = Modifier.height(4.dp))
                 Surface(
                     shape = RoundedCornerShape(6.dp),
@@ -338,7 +346,7 @@ fun SettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Moodlet: ${moodlet!!.moodletType}",
+                        text = stringResource(R.string.settings_moodlet, moodletTypeLabel),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(8.dp)
@@ -354,7 +362,7 @@ fun SettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = "Modo No Molestar activo: XP x1.5 en modo foco",
+                        text = stringResource(R.string.settings_dnd_active),
                         fontSize = 11.sp,
                         color = Color(0xFFFFB74D),
                         modifier = Modifier.padding(8.dp)
@@ -473,7 +481,7 @@ fun ThemePreviewCard(
                 if (!isUnlocked) {
                     Icon(
                         imageVector = Icons.Default.Lock,
-                        contentDescription = "Bloqueado",
+                        contentDescription = stringResource(R.string.theme_locked),
                         tint = Color.White.copy(alpha = 0.6f),
                         modifier = Modifier.size(18.dp)
                     )
@@ -486,7 +494,7 @@ fun ThemePreviewCard(
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "Seleccionado",
+                                contentDescription = stringResource(R.string.theme_selected),
                                 tint = theme.primary,
                                 modifier = Modifier.size(14.dp)
                             )
@@ -525,7 +533,7 @@ fun ThemePreviewCard(
 
             // Description
             Text(
-                text = if (isUnlocked) theme.description else "Bloqueado",
+                text = if (isUnlocked) theme.description else stringResource(R.string.theme_locked),
                 fontSize = 9.sp,
                 color = if (isUnlocked) {
                     if (theme.isDark) Color.LightGray else theme.textSecondary

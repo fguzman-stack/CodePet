@@ -12,11 +12,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.weeklyMissionDescription
+import com.tamagotchi.code.ui.components.weeklyMissionTitle
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -35,7 +39,7 @@ fun WeeklyMissionsScreen(
             Icon(Icons.Default.Assignment, contentDescription = null, tint = Color(0xFF81C784))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = ">>> MISIONES SEMANALES",
+                text = stringResource(R.string.weekly_header),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -57,7 +61,7 @@ fun WeeklyMissionsScreen(
                     Icon(Icons.Default.EmojiEvents, contentDescription = null, tint = Color(0xFFFFD700))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "BONUS COMPLETO: 500 XP + Sombrero exclusivo!",
+                        text = stringResource(R.string.weekly_bonus),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
@@ -68,7 +72,7 @@ fun WeeklyMissionsScreen(
         }
 
         Text(
-            text = "Completa las 3 misiones semanales para un bonus especial.",
+            text = stringResource(R.string.weekly_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
             color = Color.Gray
@@ -100,14 +104,14 @@ fun WeeklyMissionsScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = mission.title,
+                            text = weeklyMissionTitle(mission.id, mission.title),
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
                             color = if (mission.completed) Color(0xFF81C784) else Color.White
                         )
                         Text(
-                            text = mission.description,
+                            text = weeklyMissionDescription(mission.id, mission.description),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = Color.Gray
@@ -142,7 +146,7 @@ fun WeeklyMissionsScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth().height(40.dp)
         ) {
-            Text("VOLVER", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }
     }
 }

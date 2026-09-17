@@ -1,0 +1,47 @@
+package com.tamagotchi.code.data
+
+// English translations keyed by CodeCard.id. Jokes land in English.
+object CodeCardsEn {
+    val texts: Map<Int, String> = mapOf(
+        1 to "The first bug in history was an actual moth trapped in a relay of the Harvard Mark II in 1947.",
+        2 to "Did you know the most expensive programming language in the world is APL? It required a special keyboard.",
+        3 to "Tip: Use descriptive names for your variables. Future you will thank you.",
+        4 to "The term 'debugging' comes from removing moths (bugs) from computers.",
+        5 to "What is a cat's favorite programming language? Scratch.",
+        6 to "In 1960 there were more than 2000 programming languages. Today about 250 survive.",
+        7 to "The first compiler was written by Grace Hopper in 1952. She also popularized the term 'bug'.",
+        8 to "Tip: Good code doesn't need comments. Excellent code has clear ones.",
+        9 to "Did you know Python is named after Monty Python? Not the snake.",
+        10 to "The {} symbol is called 'llave' in Spanish, 'curly brace' in English, and 'accolade' in French.",
+        11 to "Why do programmers confuse Halloween with Christmas? Because Oct 31 == Dec 25.",
+        12 to "There are 10 types of people: those who understand binary and those who don't.",
+        13 to "Tip: Write tests before the code. Future you (and your team) will thank you.",
+        14 to "The oldest programming language still in use today is Fortran (1957).",
+        15 to "What did one bit say to the other? 'See you on the bus'.",
+        16 to "Tip: One commit per logical change. Don't do 'fixed stuff' in a single giant commit.",
+        17 to "The first computer virus was created in 1971 and was called 'Creeper'.",
+        18 to "How does a programmer get out of the shower? With 'shower -exit'.",
+        19 to "Tip: Learn a new keyboard shortcut every week. Small changes, big impact.",
+        20 to "Java was originally called 'Oak'. It was renamed because a trademark already existed.",
+        21 to "How many programmers does it take to change a light bulb? None, that's a hardware problem.",
+        22 to "Tip: Code is written for people, not machines. Readability matters.",
+        23 to "The first website in history is still online: info.cern.ch",
+        24 to "Why did the programmer quit his job? Because he didn't get arrays.",
+        25 to "Tip: If your code works but you don't know why, that's called 'programming by coincidence'.",
+        26 to "The # symbol is called 'hash', 'pound' or 'number sign'. In programming it's 'sharp' or 'hashtag'.",
+        27 to "What is a programmer's favorite drink? Java.",
+        28 to "Tip: Technical debt is paid with interest. Better refactor today.",
+        29 to "The CD-ROM was invented in 1982. It could store 650 MB, which today fits in a single photo.",
+        30 to "Why do programmers hate nature? It has too many bugs.",
+        31 to "Tip: Don't optimize prematurely. First make it work, then make it fast.",
+        32 to "Linux has more than 27 million lines of code. And it keeps growing.",
+        33 to "What is an algorithm? A word programmers use instead of saying 'I don't know how to do it'.",
+        34 to "Tip: Use version control even if you work alone. Your past self will thank you.",
+        35 to "The first programmer in history was Ada Lovelace, in 1843.",
+        36 to "What does a programmer do when they're cold? Close all the windows except the terminal.",
+        37 to "Tip: The best documentation is the code itself. Code lies less than comments.",
+        38 to "The HTTP protocol has status code 418: 'I'm a teapot'.",
+        39 to "What is a programmer's favorite animal? The moth (because of the bugs).",
+        40 to "Tip: Divide and conquer. One big problem is just several small problems."
+    )
+}

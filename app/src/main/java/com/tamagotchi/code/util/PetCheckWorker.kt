@@ -51,22 +51,22 @@ class PetCheckWorker(
         }
 
         val title = when {
-            petState.health <= 0 -> "${petState.name} ha muerto"
-            petState.health < 5 -> "${petState.name} está al borde de la muerte"
-            petState.hunger < 5 -> "${petState.name} se muere de hambre"
-            petState.energy < 5 -> "${petState.name} está en las últimas"
-            else -> "${petState.name} te necesita"
+            petState.health <= 0 -> applicationContext.getString(R.string.notif_title_dead, petState.name)
+            petState.health < 5 -> applicationContext.getString(R.string.notif_title_dying, petState.name)
+            petState.hunger < 5 -> applicationContext.getString(R.string.notif_title_starving, petState.name)
+            petState.energy < 5 -> applicationContext.getString(R.string.notif_title_exhausted, petState.name)
+            else -> applicationContext.getString(R.string.notif_title_needs_you, petState.name)
         }
 
         val reason = when {
-            petState.health <= 0f -> "Me he ido al otro lado del compilador... ¿me rescatas?"
-            petState.health < 5f -> "Me duele hasta el último bit... ¿puedes revisarme? (Salud: ${petState.health.toInt()}%)"
-            petState.health < 20f -> "Noto que el Blue Screen of Death se acerca... (Salud: ${petState.health.toInt()}%)"
-            petState.hunger < 5f -> "Llevo horas sin comer, ¿crees que soy un microservicio? (Hambre: ${petState.hunger.toInt()}%)"
-            petState.hunger < 20f -> "Mi estómago está haciendo un loop infinito de ruidos. (Hambre: ${petState.hunger.toInt()}%)"
-            petState.energy < 5f -> "Mi batería está en rojo. Y no es una metáfora de código. (Energía: ${petState.energy.toInt()}%)"
-            petState.energy < 15f -> "Oye, ¿has visto mis logs? Están llenos de NullPointerException existenciales. (Energía: ${petState.energy.toInt()}%)"
-            else -> "¡Necesito atención!"
+            petState.health <= 0f -> applicationContext.getString(R.string.notif_reason_dead)
+            petState.health < 5f -> applicationContext.getString(R.string.notif_reason_health_pain, petState.health.toInt())
+            petState.health < 20f -> applicationContext.getString(R.string.notif_reason_health_low, petState.health.toInt())
+            petState.hunger < 5f -> applicationContext.getString(R.string.notif_reason_hunger_extreme, petState.hunger.toInt())
+            petState.hunger < 20f -> applicationContext.getString(R.string.notif_reason_hunger_loop, petState.hunger.toInt())
+            petState.energy < 5f -> applicationContext.getString(R.string.notif_reason_energy_red, petState.energy.toInt())
+            petState.energy < 15f -> applicationContext.getString(R.string.notif_reason_energy_logs, petState.energy.toInt())
+            else -> applicationContext.getString(R.string.notif_reason_general)
         }
 
         val intent = Intent(applicationContext, MainActivity::class.java).apply {

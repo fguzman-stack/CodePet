@@ -10,12 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.HackathonData
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import kotlin.math.min
@@ -36,7 +38,7 @@ fun HackathonScreen(
             Icon(Icons.Default.EmojiEvents, contentDescription = null, tint = Color(0xFFFFD700))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = ">>> HACKATHON SEMANAL",
+                text = stringResource(R.string.hack_header),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -45,7 +47,7 @@ fun HackathonScreen(
         }
 
         Text(
-            text = "Cada fin de semana un desafío especial de algoritmo.",
+            text = stringResource(R.string.hack_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 12.sp,
             color = Color.Gray
@@ -59,14 +61,14 @@ fun HackathonScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Desafío de esta semana:",
+                    text = stringResource(R.string.hack_this_week),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = Color(0xFF81C784)
                 )
                 Text(
-                    text = "Ordena este array sin usar sort()\n\nEntrada: [3, 7, 1, 9, 4, 2, 8, 5, 6]\nSalida esperada: [1, 2, 3, 4, 5, 6, 7, 8, 9]",
+                    text = stringResource(R.string.hack_challenge),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 11.sp,
                     color = Color.LightGray,
@@ -87,7 +89,7 @@ fun HackathonScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Intentos restantes: ${3 - data.attempts} / 3",
+                    text = stringResource(R.string.hack_attempts, 3 - data.attempts),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
@@ -95,7 +97,7 @@ fun HackathonScreen(
                 )
                 if (data.bestTimeMs < Long.MAX_VALUE) {
                     Text(
-                        text = "Mejor tiempo: ${data.bestTimeMs / 1000}s",
+                        text = stringResource(R.string.hack_best_time, data.bestTimeMs / 1000),
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp,
                         color = Color.Gray
@@ -122,14 +124,14 @@ fun HackathonScreen(
                 Icon(Icons.Default.PlayArrow, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "SOLUCIONAR DESAFÍO",
+                    text = stringResource(R.string.hack_solve),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
                 )
             }
 
             Text(
-                text = "Recompensa: 200 XP + 500 Bytes + Skin exclusiva temporal",
+                text = stringResource(R.string.hack_reward),
                 fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp,
                 color = Color(0xFFFFB74D),
@@ -138,7 +140,7 @@ fun HackathonScreen(
             )
         } else {
             Text(
-                text = "Sin intentos restantes. ¡Espera al próximo hackathon!",
+                text = stringResource(R.string.hack_no_attempts),
                 fontFamily = FontFamily.Monospace,
                 fontSize = 12.sp,
                 color = Color(0xFFEF5350),
@@ -155,7 +157,7 @@ fun HackathonScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth().height(40.dp)
         ) {
-            Text("VOLVER", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }
     }
 }

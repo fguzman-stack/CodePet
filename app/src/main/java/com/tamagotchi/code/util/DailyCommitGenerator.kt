@@ -1,19 +1,18 @@
 package com.tamagotchi.code.util
 
+import android.content.Context
+import androidx.annotation.StringRes
+import com.tamagotchi.code.R
 import kotlin.random.Random
 
 object DailyCommitGenerator {
 
-    fun generateCommit(activities: Set<String>, petName: String): String {
+    fun generateCommit(context: Context, activities: Set<String>, petName: String): String {
         if (activities.isEmpty()) {
-            return Random.nextCommitMsg(
-                listOf(
-                    "docs: hoy no hice nada productivo",
-                    "chore: día de procrastinación técnica",
-                    "fix: sobreviví otro día sin crashear",
-                    "style: no toqué nada pero me veo bien",
-                    "refactor: moví archivos de lugar sin motivo aparente"
-                )
+            return randomOf(
+                context, petName,
+                R.string.commit_idle_1, R.string.commit_idle_2, R.string.commit_idle_3,
+                R.string.commit_idle_4, R.string.commit_idle_5
             )
         }
 
@@ -28,68 +27,44 @@ object DailyCommitGenerator {
         val activeCount = listOf(hasStudied, hasShopped, hasPlayed, hasSlept, hasPetted, hasClean, hasChallenge).count { it }
 
         return when {
-            activeCount >= 3 -> Random.nextCommitMsg(
-                listOf(
-                    "feat: hoy fue un día completo, hasta hice merge",
-                    "feat: commit masivo con varias funcionalidades",
-                    "chore: $petName tuvo un día ocupado"
-                )
+            activeCount >= 3 -> randomOf(
+                context, petName,
+                R.string.commit_busy_1, R.string.commit_busy_2, R.string.commit_busy_3
             )
-            hasStudied && hasPetted -> "feat: aprendí cosas nuevas mientras recibía cariño"
-            hasStudied -> Random.nextCommitMsg(
-                listOf(
-                    "feat: aprendí cosas nuevas hoy",
-                    "feat: $petName estudió y ganó XP",
-                    "docs: sesión de estudio completada"
-                )
+            hasStudied && hasPetted -> context.getString(R.string.commit_study_love)
+            hasStudied -> randomOf(
+                context, petName,
+                R.string.commit_study_1, R.string.commit_study_2, R.string.commit_study_3
             )
-            hasShopped -> Random.nextCommitMsg(
-                listOf(
-                    "chore: gasté bytes en cosas innecesarias",
-                    "chore: compras impulsivas en la tienda",
-                    "feat: nuevos items adquiridos"
-                )
+            hasShopped -> randomOf(
+                context, petName,
+                R.string.commit_shop_1, R.string.commit_shop_2, R.string.commit_shop_3
             )
-            hasPlayed -> Random.nextCommitMsg(
-                listOf(
-                    "refactor: me distraje un rato",
-                    "feat: sesión de juegos completada",
-                    "test: probé mis reflejos en los minijuegos"
-                )
+            hasPlayed -> randomOf(
+                context, petName,
+                R.string.commit_play_1, R.string.commit_play_2, R.string.commit_play_3
             )
-            hasSlept -> Random.nextCommitMsg(
-                listOf(
-                    "fix: pausa activa para recargar baterías",
-                    "fix: $petName durmió y recuperó energía",
-                    "chore: modo ahorro de energía activado"
-                )
+            hasSlept -> randomOf(
+                context, petName,
+                R.string.commit_sleep_1, R.string.commit_sleep_2, R.string.commit_sleep_3
             )
-            hasPetted -> Random.nextCommitMsg(
-                listOf(
-                    "style: recibí cariño y eso mejora el código",
-                    "feat: ++felicidad, --bugs",
-                    "chore: mantenimiento emocional completado"
-                )
+            hasPetted -> randomOf(
+                context, petName,
+                R.string.commit_pet_1, R.string.commit_pet_2, R.string.commit_pet_3
             )
-            hasClean -> "refactor: limpieza profunda del sistema"
-            hasChallenge -> Random.nextCommitMsg(
-                listOf(
-                    "feat: desafío de código completado",
-                    "fix: bugs eliminados con éxito",
-                    "test: retos de programación superados"
-                )
+            hasClean -> context.getString(R.string.commit_clean_1)
+            hasChallenge -> randomOf(
+                context, petName,
+                R.string.commit_challenge_1, R.string.commit_challenge_2, R.string.commit_challenge_3
             )
-            else -> Random.nextCommitMsg(
-                listOf(
-                    "chore: día normal, nada especial",
-                    "docs: $petName estuvo tranquilo hoy",
-                    "style: sin cambios aparentes"
-                )
+            else -> randomOf(
+                context, petName,
+                R.string.commit_normal_1, R.string.commit_normal_2, R.string.commit_normal_3
             )
         }
     }
 
-    private fun Random.nextCommitMsg(messages: List<String>): String {
-        return messages[this.nextInt(messages.size)]
+    private fun randomOf(context: Context, petName: String, @StringRes vararg messages: Int): String {
+        return context.getString(messages[Random.nextInt(messages.size)], petName)
     }
 }

@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -44,7 +46,7 @@ fun BugSmasherGame(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "CAZA DE BUGS",
+            text = stringResource(R.string.smasher_header),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -54,7 +56,7 @@ fun BugSmasherGame(
 
         if (!isStarted) {
             Text(
-                text = "Toca los bugs que aparecen en la cuadrícula de 3x3 tan rápido como puedas. ¡Tienes 10 segundos!",
+                text = stringResource(R.string.smasher_desc),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.White,
@@ -68,13 +70,13 @@ fun BugSmasherGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("¡Comenzar!", fontFamily = FontFamily.Monospace)
+                Text(stringResource(R.string.game_start), fontFamily = FontFamily.Monospace)
             }
         } else if (timeRemaining <= 0) {
             val bytesReward = score * 2
             val healthReward = (score * 1.5f).coerceAtMost(30f)
             Text(
-                text = "¡Tiempo Agotado!\nBugs atrapados: $score\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = stringResource(R.string.smasher_gameover, score, bytesReward, healthReward.toInt()),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -91,7 +93,7 @@ fun BugSmasherGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cobrar Recompensas", fontFamily = FontFamily.Monospace)
+                Text(stringResource(R.string.game_claim_rewards), fontFamily = FontFamily.Monospace)
             }
         } else {
             Row(
@@ -99,14 +101,14 @@ fun BugSmasherGame(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Bugs: $score",
+                    text = stringResource(R.string.smasher_bugs, score),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
-                    text = "Tiempo: ${timeRemaining}s",
+                    text = stringResource(R.string.smasher_time, timeRemaining),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -145,7 +147,7 @@ fun BugSmasherGame(
                                 if (isBug) {
                                     Icon(
                                         imageVector = Icons.Default.BugReport,
-                                        contentDescription = "BUG",
+                                        contentDescription = stringResource(R.string.smasher_bug_cd),
                                         tint = Color(0xFFEF5350),
                                         modifier = Modifier.size(36.dp)
                                     )

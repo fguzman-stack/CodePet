@@ -35,22 +35,22 @@ class CodePetWidgetProvider : AppWidgetProvider() {
 
             if (petState != null) {
                 views.setTextViewText(R.id.widget_title, petState.name)
-                views.setTextViewText(R.id.widget_level, "Nv.${petState.level}")
+                views.setTextViewText(R.id.widget_level, context.getString(R.string.widget_level, petState.level))
 
                 val effectiveStatus = if (petState.isDead) "DEAD" else petState.currentStatus
 
-                val subtitle = when (effectiveStatus) {
-                    "HAPPY" -> "\u00a1Todo va genial!"
-                    "SLEEPING" -> "Zzz... durmiendo"
-                    "SICK" -> "No me siento bien"
-                    "HUNGRY" -> "\u00a1Tengo hambre!"
-                    "SAD" -> "Estoy triste"
-                    "STUDYING" -> "\u00a1Modo estudio!"
-                    "EXCITED" -> "\u00a1Muy emocionado!"
-                    "DEAD" -> "Descansa en paz..."
-                    else -> "\u00a1Todo va genial!"
+                val subtitleRes = when (effectiveStatus) {
+                    "HAPPY" -> R.string.widget_status_happy
+                    "SLEEPING" -> R.string.widget_status_sleeping
+                    "SICK" -> R.string.widget_status_sick
+                    "HUNGRY" -> R.string.widget_status_hungry
+                    "SAD" -> R.string.widget_status_sad
+                    "STUDYING" -> R.string.widget_status_studying
+                    "EXCITED" -> R.string.widget_status_excited
+                    "DEAD" -> R.string.widget_status_dead
+                    else -> R.string.widget_status_happy
                 }
-                views.setTextViewText(R.id.widget_subtitle, subtitle)
+                views.setTextViewText(R.id.widget_subtitle, context.getString(subtitleRes))
 
                 val imageRes = when (effectiveStatus) {
                     "DEAD" -> R.drawable.mascota_dead
@@ -74,19 +74,25 @@ class CodePetWidgetProvider : AppWidgetProvider() {
                 views.setProgressBar(R.id.hunger_bar, 100, hunger, false)
                 views.setTextViewText(R.id.energy_value, "${energy}%")
                 views.setTextViewText(R.id.hunger_value, "${hunger}%")
-                views.setTextViewText(R.id.widget_bytes, "${petState.bytes} bytes")
-                views.setTextViewText(R.id.widget_streak, "Racha: ${petState.streak} d\u00edas")
+                views.setTextViewText(R.id.widget_bytes, context.getString(R.string.widget_bytes, petState.bytes))
+                views.setTextViewText(
+                    R.id.widget_streak,
+                    context.resources.getQuantityString(R.plurals.widget_streak, petState.streak, petState.streak)
+                )
             } else {
-                views.setTextViewText(R.id.widget_title, "CodePet")
-                views.setTextViewText(R.id.widget_level, "Nv.1")
-                views.setTextViewText(R.id.widget_subtitle, "\u00a1Inicia la app!")
+                views.setTextViewText(R.id.widget_title, context.getString(R.string.default_pet_name))
+                views.setTextViewText(R.id.widget_level, context.getString(R.string.widget_level, 1))
+                views.setTextViewText(R.id.widget_subtitle, context.getString(R.string.widget_start_app))
                 views.setImageViewResource(R.id.widget_pet_image, R.drawable.mascota_happy)
                 views.setProgressBar(R.id.energy_bar, 100, 0, false)
                 views.setProgressBar(R.id.hunger_bar, 100, 0, false)
                 views.setTextViewText(R.id.energy_value, "0%")
                 views.setTextViewText(R.id.hunger_value, "0%")
-                views.setTextViewText(R.id.widget_bytes, "0 bytes")
-                views.setTextViewText(R.id.widget_streak, "Racha: 0 d\u00edas")
+                views.setTextViewText(R.id.widget_bytes, context.getString(R.string.widget_bytes, 0))
+                views.setTextViewText(
+                    R.id.widget_streak,
+                    context.resources.getQuantityString(R.plurals.widget_streak, 0, 0)
+                )
             }
 
             val launchIntent = Intent(context, MainActivity::class.java)

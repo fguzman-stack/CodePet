@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -35,7 +37,7 @@ fun SeasonPassScreen(
             Icon(Icons.Default.ConfirmationNumber, contentDescription = null, tint = Color(0xFF81C784))
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = ">>> PASE DE TEMPORADA",
+                text = stringResource(R.string.season_header),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -44,7 +46,7 @@ fun SeasonPassScreen(
         }
 
         Text(
-            text = "Gana XP de pase completando actividades. 20 niveles de recompensas!",
+            text = stringResource(R.string.season_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
             color = Color.Gray
@@ -62,7 +64,7 @@ fun SeasonPassScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "NIVEL ${data.level} / 20",
+                    text = stringResource(R.string.season_level, data.level),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
@@ -75,7 +77,7 @@ fun SeasonPassScreen(
                     modifier = Modifier.fillMaxWidth().height(8.dp)
                 )
                 Text(
-                    text = "XP del pase: ${data.xp}/100",
+                    text = stringResource(R.string.season_xp, data.xp),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 11.sp,
                     color = Color.Gray
@@ -90,7 +92,7 @@ fun SeasonPassScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "PASE PREMIUM: Skins exclusivas + sombreros raros + XP boost",
+                            text = stringResource(R.string.season_premium),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = Color(0xFFFFD700),
@@ -102,7 +104,7 @@ fun SeasonPassScreen(
         }
 
         Text(
-            text = "Recompensas del pase:",
+            text = stringResource(R.string.season_rewards_title),
             fontFamily = FontFamily.Monospace,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
@@ -110,11 +112,11 @@ fun SeasonPassScreen(
         )
 
         val rewards = listOf(
-            "Nivel 1: 50 Bytes",
-            "Nivel 5: Sombrero básico",
-            "Nivel 10: 200 XP",
-            "Nivel 15: Carta de código rara",
-            "Nivel 20: Skin legendaria!"
+            stringResource(R.string.season_reward_1),
+            stringResource(R.string.season_reward_5),
+            stringResource(R.string.season_reward_10),
+            stringResource(R.string.season_reward_15),
+            stringResource(R.string.season_reward_20)
         )
 
         rewards.forEachIndexed { idx, reward ->
@@ -157,7 +159,7 @@ fun SeasonPassScreen(
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth().height(40.dp)
         ) {
-            Text("VOLVER", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }
     }
 }

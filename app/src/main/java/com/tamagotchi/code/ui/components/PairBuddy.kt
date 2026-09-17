@@ -11,10 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PairBuddyState
 
 @Composable
@@ -40,21 +43,26 @@ fun PairBuddyOverlay(
             ) {
                 Icon(
                     imageVector = Icons.Default.BugReport,
-                    contentDescription = "Buggy",
+                    contentDescription = buddy.name,
                     tint = Color(0xFFFFB74D),
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${buddy.name} está aquí!",
+                        text = stringResource(R.string.pair_buddy_here, buddy.name),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.sp,
                         color = Color(0xFFFFB74D)
                     )
                     Text(
-                        text = "XP x${buddy.xpMultiplier} por ${buddy.remainingChallenges} reto(s) más",
+                        text = pluralStringResource(
+                            R.plurals.pair_buddy_xp,
+                            buddy.remainingChallenges,
+                            buddy.remainingChallenges,
+                            buddy.xpMultiplier
+                        ),
                         fontFamily = FontFamily.Monospace,
                         fontSize = 10.sp,
                         color = Color.LightGray

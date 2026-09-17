@@ -18,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.res.stringResource
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -48,7 +50,7 @@ fun MinigamesDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (selectedGame == null) ">>> MINI-JUEGOS" else ">>> DETALLE DE JUEGO",
+                        text = if (selectedGame == null) stringResource(R.string.mg_header) else stringResource(R.string.mg_detail),
                         fontFamily = FontFamily.Monospace,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
@@ -65,7 +67,7 @@ fun MinigamesDialog(
                     ) {
                         Icon(
                             imageVector = if (selectedGame != null) Icons.AutoMirrored.Filled.KeyboardArrowLeft else Icons.Default.Close,
-                            contentDescription = "Volver",
+                            contentDescription = stringResource(R.string.mg_back),
                             tint = Color.White
                         )
                     }
@@ -75,7 +77,7 @@ fun MinigamesDialog(
                 when (selectedGame) {
                     null -> {
                         Text(
-                            text = "Juega con ${state.name} para aumentar su felicidad y conseguir Bytes extra.",
+                            text = stringResource(R.string.mg_intro, state.name),
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace,
                             color = Color.LightGray,
@@ -85,24 +87,24 @@ fun MinigamesDialog(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         GameOptionCard(
-                            title = "Adivina el Bit",
-                            description = "Intenta predecir el siguiente bit binario (0 o 1). Juego rápido de 5 rondas.",
+                            title = stringResource(R.string.mg_binary_title),
+                            description = stringResource(R.string.mg_binary_desc),
                             icon = Icons.Default.Code,
                             onClick = { selectedGame = "BINARY_GUESS" }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
                         GameOptionCard(
-                            title = "Caza de Bugs",
-                            description = "¡Rápido! Los bugs se están escapando. Atrapa todos los que puedas en 10 segundos.",
+                            title = stringResource(R.string.mg_smasher_title),
+                            description = stringResource(R.string.mg_smasher_desc),
                             icon = Icons.Default.BugReport,
                             onClick = { selectedGame = "BUG_SMASHER" }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
                         GameOptionCard(
-                            title = "Servidor, Script, Hacker",
-                            description = "Piedra, Papel o Tijera versión informática. ¡Derrota al compilador!",
+                            title = stringResource(R.string.mg_rps_title),
+                            description = stringResource(R.string.mg_rps_desc),
                             icon = Icons.Default.Security,
                             onClick = { selectedGame = "ROCK_PAPER_SCI" }
                         )

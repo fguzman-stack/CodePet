@@ -16,13 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.CodingChallenge
+import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -37,7 +40,7 @@ fun LearnScreen(
     state: PetStateEntity
 ) {
     var activeTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Retos Normales", "Retos Especiales", "Insignias")
+    val tabs = listOf(stringResource(R.string.learn_tab_quiz), stringResource(R.string.learn_tab_special), stringResource(R.string.learn_tab_badges))
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -47,14 +50,14 @@ fun LearnScreen(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = ">>> APRENDER",
+                    text = stringResource(R.string.learn_header),
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color(0xFF81C784),
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = if (activeTab == 0) "Estudiando con ${state.name}" else "Desafíos de élite",
+                    text = if (activeTab == 0) stringResource(R.string.learn_subtitle_studying, state.name) else stringResource(R.string.learn_subtitle_elite),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray
@@ -113,7 +116,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> INSIGNIAS POR LENGUAJE",
+            text = stringResource(R.string.badges_header),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -122,7 +125,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Completa retos para desbloquear insignias: Bronce (50%), Plata (75%), Oro (100%)",
+            text = stringResource(R.string.badges_hint),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             color = Color.Gray
@@ -181,7 +184,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
                                 color = Color.White
                             )
                             Text(
-                                text = "$completed/$total retos ($pct%)",
+                                text = stringResource(R.string.badges_progress, completed, total, pct),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 10.sp,
                                 color = Color.Gray
@@ -200,9 +203,9 @@ fun BadgesPanel(viewModel: PetViewModel) {
                             enter = scaleIn() + fadeIn()
                         ) {
                             val badgeName = when (badgeLevel) {
-                                3 -> "ORO"
-                                2 -> "PLATA"
-                                1 -> "BRONCE"
+                                3 -> stringResource(R.string.badge_gold)
+                                2 -> stringResource(R.string.badge_silver)
+                                1 -> stringResource(R.string.badge_bronze)
                                 else -> ""
                             }
                             Text(
@@ -230,7 +233,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> DESAFÍO DE PROGRAMACIÓN: Arena $currentLang",
+            text = stringResource(R.string.learn_arena, currentLang),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -241,7 +244,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 
         if (challengesList.isEmpty()) {
             Text(
-                text = "Cargando acertijos...",
+                text = stringResource(R.string.learn_loading),
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray,
                 fontSize = 12.sp
@@ -250,12 +253,10 @@ fun QuizPanel(viewModel: PetViewModel) {
             val challenge = challengesList[currentIndex]
             
             // Comentario dinámico de la mascota
-            val petTip = remember(challenge.id) {
-                when(challenge.type) {
-                    "DEBUG" -> "¡Cuidado! Ese bug muerde. Revisa bien los puntos y coma."
-                    "TRIVIA" -> "Esta es fácil... si has leído la documentación."
-                    else -> "Concéntrate, mi CPU depende de tu respuesta."
-                }
+            val petTip = when(challenge.type) {
+                "DEBUG" -> stringResource(R.string.learn_tip_debug)
+                "TRIVIA" -> stringResource(R.string.learn_tip_trivia)
+                else -> stringResource(R.string.learn_tip_default)
             }
 
             Surface(
@@ -274,7 +275,12 @@ fun QuizPanel(viewModel: PetViewModel) {
             }
 
             Text(
-                text = "Desafío ${currentIndex + 1} de ${challengesList.size} (${if (challenge.type == "DEBUG") "Desbuguear" else "Trivia"}):",
+                text = stringResource(
+                    R.string.learn_challenge_counter,
+                    currentIndex + 1,
+                    challengesList.size,
+                    if (challenge.type == "DEBUG") stringResource(R.string.learn_type_debug) else stringResource(R.string.learn_type_trivia)
+                ),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray
@@ -388,7 +394,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = if (fb == "CORRECT") "¡ACERTADO! +Alimento +Bytes +XP" else "RESPUESTA INCORRECTA",
+                                text = if (fb == "CORRECT") stringResource(R.string.learn_correct) else stringResource(R.string.learn_incorrect),
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp,
@@ -418,7 +424,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                         .testTag("quiz_next_button")
                 ) {
                     Text(
-                        text = if (currentIndex + 1 < challengesList.size) "SIGUIENTE ACERTIJO" else "CARGAR MÁS RETOS",
+                        text = if (currentIndex + 1 < challengesList.size) stringResource(R.string.learn_next) else stringResource(R.string.learn_load_more),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -433,10 +439,11 @@ fun QuizPanel(viewModel: PetViewModel) {
 @Composable
 fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
     val unlockedThemes by viewModel.unlockedThemes.collectAsStateWithLifecycle()
-    var currentChallenge by remember { mutableStateOf(com.tamagotchi.code.data.SpecialChallengesData.challenges.random()) }
+    var currentChallenge by remember { mutableStateOf(com.tamagotchi.code.data.SpecialChallengesData.challenges.random().localized()) }
     var showFeedback by remember { mutableStateOf<Boolean?>(null) }
     var unlockedThemeName by remember { mutableStateOf<String?>(null) }
     var isAnswered by remember { mutableStateOf(false) }
+    val allThemesUnlocked = stringResource(R.string.special_all_unlocked)
 
     Column(
         modifier = Modifier
@@ -451,17 +458,17 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "RETOS ESPECIALES",
+                text = stringResource(R.string.special_title),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = MaterialTheme.colorScheme.primary
             )
-            Icon(Icons.Default.Star, contentDescription = "Especial", tint = MaterialTheme.colorScheme.primary)
+            Icon(Icons.Default.Star, contentDescription = stringResource(R.string.special_cd), tint = MaterialTheme.colorScheme.primary)
         }
 
         Text(
-            text = "Resuelve ejercicios avanzados de lógica y algoritmos para desbloquear nuevos temas visuales exclusivos.",
+            text = stringResource(R.string.special_desc),
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurface,
             fontFamily = FontFamily.Monospace
@@ -537,7 +544,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                                         unlockedThemeName = randomTheme
                                         viewModel.unlockTheme(randomTheme)
                                     } else {
-                                        unlockedThemeName = "¡Ya tienes todos!"
+                                        unlockedThemeName = allThemesUnlocked
                                     }
                                 } else {
                                     showFeedback = false
@@ -563,7 +570,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
         }
 
         if (isAnswered) {
-            val message = if (showFeedback == true) "¡Respuesta Correcta!" else "Incorrecto."
+            val message = if (showFeedback == true) stringResource(R.string.special_correct) else stringResource(R.string.special_incorrect)
             val color = if (showFeedback == true) Color(0xFF4CAF50) else Color(0xFFEF5350)
 
             Column(
@@ -587,10 +594,10 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                     textAlign = TextAlign.Center
                 )
 
-                if (showFeedback == true && unlockedThemeName != null && unlockedThemeName != "¡Ya tienes todos!") {
+                if (showFeedback == true && unlockedThemeName != null && unlockedThemeName != allThemesUnlocked) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "¡Nuevo tema desbloqueado: $unlockedThemeName!",
+                        text = stringResource(R.string.special_theme_unlocked, unlockedThemeName!!),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -606,11 +613,11 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                         isAnswered = false
                         showFeedback = null
                         unlockedThemeName = null
-                        currentChallenge = com.tamagotchi.code.data.SpecialChallengesData.challenges.random()
+                        currentChallenge = com.tamagotchi.code.data.SpecialChallengesData.challenges.random().localized()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Siguiente Reto", color = MaterialTheme.colorScheme.onPrimary, fontFamily = FontFamily.Monospace)
+                    Text(stringResource(R.string.special_next), color = MaterialTheme.colorScheme.onPrimary, fontFamily = FontFamily.Monospace)
                 }
             }
         }

@@ -15,13 +15,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.CodeReviewData
 import com.tamagotchi.code.data.CodeReviewSnippet
+import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -31,7 +34,7 @@ fun CodeReviewScreen(
 ) {
     var currentRound by remember { mutableIntStateOf(0) }
     var score by remember { mutableIntStateOf(0) }
-    val rounds = remember { CodeReviewData.snippets.shuffled().take(5) }
+    val rounds = remember { CodeReviewData.snippets.map { it.localized() }.shuffled().take(5) }
     var showResults by remember { mutableStateOf(false) }
     var selectedAnswer by remember { mutableStateOf<Boolean?>(null) }
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }
@@ -48,7 +51,7 @@ fun CodeReviewScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = ">>> CODE REVIEW: Ronda ${currentRound + 1}/5",
+                text = stringResource(R.string.review_round, currentRound + 1),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -94,7 +97,7 @@ fun CodeReviewScreen(
                     ) {
                         Icon(Icons.Default.CheckCircle, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("APROBAR", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.review_approve), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                     }
 
                     Button(
@@ -109,7 +112,7 @@ fun CodeReviewScreen(
                     ) {
                         Icon(Icons.Default.BugReport, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("SOLICITAR CAMBIOS", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.review_request_changes), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                     }
                 }
             } else {
@@ -121,7 +124,7 @@ fun CodeReviewScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = if (isCorrect == true) "¡ACERTADO!" else "INCORRECTO",
+                            text = if (isCorrect == true) stringResource(R.string.review_hit) else stringResource(R.string.review_miss),
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             color = if (isCorrect == true) Color(0xFF81C784) else Color(0xFFEF5350)
@@ -146,7 +149,7 @@ fun CodeReviewScreen(
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
                         ) {
-                            Text("CONTINUAR", fontFamily = FontFamily.Monospace)
+                            Text(stringResource(R.string.review_continue), fontFamily = FontFamily.Monospace)
                         }
                     }
                 }
@@ -176,7 +179,7 @@ fun CodeReviewResult(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "REVISIÓN COMPLETADA",
+            text = stringResource(R.string.review_done),
             fontFamily = FontFamily.Monospace,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -184,14 +187,14 @@ fun CodeReviewResult(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Puntuación: $score / $total",
+            text = stringResource(R.string.review_score, score, total),
             fontFamily = FontFamily.Monospace,
             fontSize = 18.sp,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = "¡Buen trabajo SR. Developer!",
+            text = stringResource(R.string.review_congrats),
             fontFamily = FontFamily.Monospace,
             fontSize = 14.sp,
             color = Color.Gray,
@@ -199,7 +202,7 @@ fun CodeReviewResult(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "+$bytesEarned Bytes\n+$xpEarned XP",
+            text = stringResource(R.string.review_reward, bytesEarned, xpEarned),
             fontFamily = FontFamily.Monospace,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
@@ -212,7 +215,7 @@ fun CodeReviewResult(
             modifier = Modifier.fillMaxWidth().height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
         ) {
-            Text("VOLVER AL TERMINAL", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.review_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }
     }
 }

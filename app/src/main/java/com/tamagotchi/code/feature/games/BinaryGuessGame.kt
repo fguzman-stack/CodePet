@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -29,7 +31,8 @@ fun BinaryGuessGame(
     var round by remember { mutableStateOf(1) }
     var score by remember { mutableStateOf(0) }
     var currentSecretBit by remember { mutableStateOf((0..1).random()) }
-    var feedbackMessage by remember { mutableStateOf("¿Cuál crees que es el bit secreto?") }
+    var feedbackRes by remember { mutableStateOf(R.string.binary_prompt) }
+    var feedbackBit by remember { mutableStateOf(0) }
     var showNextButton by remember { mutableStateOf(false) }
     var isGameOver by remember { mutableStateOf(false) }
 
@@ -38,7 +41,7 @@ fun BinaryGuessGame(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "ADIVINA EL BIT (Ronda $round de 5)",
+            text = stringResource(R.string.binary_header, round),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -54,7 +57,7 @@ fun BinaryGuessGame(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (isGameOver) "FIN" else if (showNextButton) "$currentSecretBit" else "?",
+                text = if (isGameOver) stringResource(R.string.binary_fin) else if (showNextButton) "$currentSecretBit" else "?",
                 fontSize = 42.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
@@ -64,7 +67,7 @@ fun BinaryGuessGame(
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = feedbackMessage,
+            text = stringResource(feedbackRes, feedbackBit),
             fontSize = 12.sp,
             fontFamily = FontFamily.Monospace,
             color = Color.White,
@@ -76,7 +79,7 @@ fun BinaryGuessGame(
             val bytesReward = score * 4
             val healthReward = score * 3f
             Text(
-                text = "¡Juego Terminado!\nAcertaste: $score de 5\nRecompensa: +$bytesReward Bytes, +${healthReward.toInt()}% Felicidad",
+                text = stringResource(R.string.binary_gameover, score, bytesReward, healthReward.toInt()),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFD54F),
@@ -93,7 +96,7 @@ fun BinaryGuessGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cobrar Recompensas", fontFamily = FontFamily.Monospace)
+                Text(stringResource(R.string.game_claim_rewards), fontFamily = FontFamily.Monospace)
             }
         } else if (showNextButton) {
             Button(
@@ -101,7 +104,7 @@ fun BinaryGuessGame(
                     if (round < 5) {
                         round += 1
                         currentSecretBit = (0..1).random()
-                        feedbackMessage = "¿Cuál crees que es el bit secreto?"
+                        feedbackRes = R.string.binary_prompt
                         showNextButton = false
                     } else {
                         isGameOver = true
@@ -111,7 +114,7 @@ fun BinaryGuessGame(
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Siguiente Ronda", fontFamily = FontFamily.Monospace)
+                Text(stringResource(R.string.binary_next_round), fontFamily = FontFamily.Monospace)
             }
         } else {
             Row(
@@ -123,10 +126,11 @@ fun BinaryGuessGame(
                         val isCorrect = currentSecretBit == 0
                         if (isCorrect) {
                             score += 1
-                            feedbackMessage = "¡Excelente! El bit secreto era 0."
+                            feedbackRes = R.string.binary_correct
                         } else {
-                            feedbackMessage = "Incorrecto. El bit secreto era 1."
+                            feedbackRes = R.string.binary_wrong
                         }
+                        feedbackBit = currentSecretBit
                         showNextButton = true
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF151D16)),
@@ -142,10 +146,11 @@ fun BinaryGuessGame(
                         val isCorrect = currentSecretBit == 1
                         if (isCorrect) {
                             score += 1
-                            feedbackMessage = "¡Excelente! El bit secreto era 1."
+                            feedbackRes = R.string.binary_correct
                         } else {
-                            feedbackMessage = "Incorrecto. El bit secreto era 0."
+                            feedbackRes = R.string.binary_wrong
                         }
+                        feedbackBit = currentSecretBit
                         showNextButton = true
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF151D16)),

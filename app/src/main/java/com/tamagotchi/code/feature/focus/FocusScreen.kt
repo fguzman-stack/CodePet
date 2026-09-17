@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.data.database.StudySessionEntity
@@ -37,11 +39,11 @@ fun FocusScreen(
     studySessions: List<StudySessionEntity>
 ) {
     var activeTab by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Temporizador", "Bitácora")
+    val tabs = listOf(stringResource(R.string.focus_tab_timer), stringResource(R.string.focus_tab_logs))
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> MODO FOCO",
+            text = stringResource(R.string.focus_header),
             fontSize = 14.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -97,7 +99,7 @@ fun TimerPanel(
     var tempTopic by remember { mutableStateOf("Kotlin") }
     var showDropdown by remember { mutableStateOf(false) }
 
-    val topics = listOf("Kotlin", "JavaScript", "PHP", "Python", "SQL", "Clean Code", "Git", "Estructuras de Datos")
+    val topics = listOf("Kotlin", "JavaScript", "PHP", "Python", "SQL", "Clean Code", "Git", stringResource(R.string.topic_data_structures))
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -111,7 +113,7 @@ fun TimerPanel(
                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
             ) {
                 Text(
-                    text = "MODO NO MOLESTAR ACTIVO: XP x1.5 en sesiones de foco",
+                    text = stringResource(R.string.focus_dnd_banner),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 10.sp,
                     color = Color(0xFFFFB74D),
@@ -122,7 +124,7 @@ fun TimerPanel(
         }
         if (!isRunning) {
             Text(
-                text = ">>> INICIAR BITÁCORA DE ESTUDIO",
+                text = stringResource(R.string.focus_start_logs),
                 fontSize = 13.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFF81C784),
@@ -136,7 +138,7 @@ fun TimerPanel(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Materia:",
+                    text = stringResource(R.string.focus_topic_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.White,
@@ -166,7 +168,7 @@ fun TimerPanel(
                             )
                             Icon(
                                 imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Cambiar",
+                                contentDescription = stringResource(R.string.focus_change),
                                 tint = Color(0xFF81C784)
                             )
                         }
@@ -204,7 +206,7 @@ fun TimerPanel(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Tiempo:",
+                    text = stringResource(R.string.focus_time_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.White,
@@ -231,7 +233,7 @@ fun TimerPanel(
                                 modifier = Modifier.fillMaxSize()
                             ) {
                                 Text(
-                                    text = "$mins min",
+                                    text = stringResource(R.string.focus_min_label, mins),
                                     color = if (isSelected) Color.Black else Color(0xFF81C784),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
@@ -246,7 +248,7 @@ fun TimerPanel(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Al estudiar: El Tamagotchi entrará en modo concentrado. Completar la sesión te recompensa con Bytes y XP de estudio, pero drenará energía mental.",
+                text = stringResource(R.string.focus_studying_desc),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray,
@@ -270,7 +272,7 @@ fun TimerPanel(
                     .testTag("timer_start_button")
             ) {
                 Text(
-                    text = "EMPEZAR COMPILACIÓN",
+                    text = stringResource(R.string.focus_start_button),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace
@@ -278,7 +280,7 @@ fun TimerPanel(
             }
         } else {
             Text(
-                text = ">>> MODO: COMPILANDO HORAS DE ESTUDIO",
+                text = stringResource(R.string.focus_compiling_header),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color(0xFFFFB74D),
@@ -287,7 +289,7 @@ fun TimerPanel(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Enfoque: $currentTopic",
+                text = stringResource(R.string.focus_enfoque, currentTopic),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
                 color = Color.Gray,
@@ -309,7 +311,7 @@ fun TimerPanel(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "Mascota: ${state.name} está estudiando contigo...",
+                    text = stringResource(R.string.focus_pet_studying, state.name),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray,
@@ -333,7 +335,7 @@ fun TimerPanel(
                         .testTag("timer_cancel_button")
                 ) {
                     Text(
-                        text = "CANCELAR COMPILACIÓN",
+                        text = stringResource(R.string.focus_cancel_button),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -355,7 +357,7 @@ fun LogsPanel(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = ">>> BITÁCORA DE COMPILACIÓN (ESTUDIOS)",
+            text = stringResource(R.string.focus_logs_header),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
             color = Color(0xFF81C784),
@@ -372,7 +374,7 @@ fun LogsPanel(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "[Sin registros de estudio aún]\n¡Empieza un temporizador para compilar tus primeras horas!",
+                    text = stringResource(R.string.focus_logs_empty),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Gray,
@@ -402,7 +404,7 @@ fun LogsPanel(
                         ) {
                             Column {
                                 Text(
-                                    text = "Estudio: ${session.topic}",
+                                    text = stringResource(R.string.focus_logs_entry, session.topic),
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = FontFamily.Monospace,
                                     fontSize = 12.sp,
@@ -417,7 +419,7 @@ fun LogsPanel(
                             }
 
                             Text(
-                                text = "+${session.durationMinutes} Min",
+                                text = stringResource(R.string.focus_logs_min, session.durationMinutes),
                                 color = Color(0xFF81C784),
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = FontFamily.Monospace,
@@ -439,14 +441,14 @@ fun LogsPanel(
         ) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = "[!] NOTA DEL COMPILADOR DE VIDA:",
+                    text = stringResource(R.string.focus_note_title),
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color(0xFFFFB74D),
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Si dejas de registrar sesiones por más de 36 horas, tu racha de estudio se reiniciará a 0, y tu mascota perderá salud por falta de mantenimiento.",
+                    text = stringResource(R.string.focus_note_body),
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     color = Color.LightGray,

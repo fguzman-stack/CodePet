@@ -10,9 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.annotation.StringRes
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -20,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.tamagotchi.code.R
 import com.tamagotchi.code.feature.focus.FocusScreen
 import com.tamagotchi.code.feature.home.HomeScreen
 import com.tamagotchi.code.feature.learn.LearnScreen
@@ -51,16 +54,16 @@ object Routes {
 }
 
 data class BottomNavItem(
-    val label: String,
+    @StringRes val labelRes: Int,
     val icon: ImageVector,
     val route: String
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem("Inicio", Icons.Default.Home, Routes.HOME),
-    BottomNavItem("Aprender", Icons.Default.Code, Routes.LEARN),
-    BottomNavItem("Estudio", Icons.Default.Timer, Routes.FOCUS),
-    BottomNavItem("Tienda", Icons.Default.ShoppingBag, Routes.SHOP)
+    BottomNavItem(R.string.nav_home, Icons.Default.Home, Routes.HOME),
+    BottomNavItem(R.string.nav_learn, Icons.Default.Code, Routes.LEARN),
+    BottomNavItem(R.string.nav_focus, Icons.Default.Timer, Routes.FOCUS),
+    BottomNavItem(R.string.nav_shop, Icons.Default.ShoppingBag, Routes.SHOP)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,12 +99,12 @@ fun AppNavigation(viewModel: PetViewModel) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Default.DeveloperMode,
-                                contentDescription = "Code Tamagotchi Icon",
+                                contentDescription = stringResource(R.string.cd_app_icon),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(end = 8.dp)
                             )
                             Text(
-                                text = "Code Tamagotchi",
+                                text = stringResource(R.string.app_name),
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontSize = 20.sp
@@ -118,7 +121,7 @@ fun AppNavigation(viewModel: PetViewModel) {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
-                                contentDescription = "Configurar Mascota",
+                                contentDescription = stringResource(R.string.cd_open_settings),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -143,8 +146,8 @@ fun AppNavigation(viewModel: PetViewModel) {
                                     restoreState = true
                                 }
                             },
-                            icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label, style = MaterialTheme.typography.labelSmall) }
+                            icon = { Icon(item.icon, contentDescription = stringResource(item.labelRes)) },
+                            label = { Text(stringResource(item.labelRes), style = MaterialTheme.typography.labelSmall) }
                         )
                     }
                 }

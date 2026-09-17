@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,13 +66,13 @@ fun CodePetWidget(
                 ) {
                     Column {
                         Text(
-                            text = petState?.name ?: "Codey",
+                            text = petState?.name ?: stringResource(R.string.default_pet_name),
                             color = Color.White,
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 18.sp
                         )
                         Text(
-                            text = "Nivel ${petState?.level ?: 1}",
+                            text = stringResource(R.string.season_level_short, petState?.level ?: 1),
                             color = Color(0xFF7C8CFB),
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
@@ -105,7 +106,7 @@ fun CodePetWidget(
                 ) {
                     Image(
                         painter = painterResource(id = petImageRes),
-                        contentDescription = "Mascota Code Pet",
+                        contentDescription = stringResource(R.string.cd_widget_pet),
                         modifier = Modifier.size(100.dp),
                         contentScale = ContentScale.Fit
                     )
@@ -114,9 +115,9 @@ fun CodePetWidget(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Stats bars
-                StatBar(label = "Energía", value = (petState?.energy ?: 100f) / 100f, color = Color(0xFF4CAF50))
+                StatBar(label = stringResource(R.string.meter_energy), value = (petState?.energy ?: 100f) / 100f, color = Color(0xFF4CAF50))
                 Spacer(modifier = Modifier.height(8.dp))
-                StatBar(label = "Hambre", value = (petState?.hunger ?: 100f) / 100f, color = Color(0xFFFF9800))
+                StatBar(label = stringResource(R.string.widget_hunger), value = (petState?.hunger ?: 100f) / 100f, color = Color(0xFFFF9800))
             }
         }
     }

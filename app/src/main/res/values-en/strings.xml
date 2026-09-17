@@ -1,0 +1,755 @@
+<resources>
+    <string name="app_name">Code Tamagotchi</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_next">Next</string>
+
+    <!-- Step 1 -->
+    <string name="onboarding_step1_title">Your code buddy</string>
+    <string name="onboarding_step1_desc">The virtual pet that keeps you company while you practice programming.</string>
+    <string name="onboarding_step1_terminal">\> hello_world</string>
+    <string name="onboarding_step1_bubble">Hi! I\'m Codey, your code buddy.\nReady for this adventure?</string>
+
+    <!-- Step 2 -->
+    <string name="onboarding_step2_title">Your practice makes it evolve</string>
+    <string name="onboarding_step2_card1">Solve challenges</string>
+    <string name="onboarding_step2_card2">Complete Focus</string>
+    <string name="onboarding_step2_card3">Take care of your pet</string>
+    <string name="onboarding_step2_desc">Challenges and Focus grant XP; Bytes are used for care, games and aesthetics.</string>
+    <string name="onboarding_step2_bubble">To grow together, solve challenges,\ncomplete Focus sessions and take care of me.\nEvery action counts!</string>
+
+    <!-- Step 3 -->
+    <string name="onboarding_step3_title">Choose your path</string>
+    <string name="onboarding_step3_subtitle">To start, pick up to 3 topics</string>
+    <string name="onboarding_step3_initial_route">Initial path</string>
+    <string name="topic_kotlin">Kotlin</string>
+    <string name="topic_javascript">JavaScript</string>
+    <string name="topic_python">Python</string>
+    <string name="topic_php">PHP</string>
+    <string name="topic_sql">SQL</string>
+    <string name="topic_git">Git</string>
+    <string name="topic_clean_code">Clean Code</string>
+    <string name="topic_data_structures">Data Structures</string>
+    <string name="onboarding_step3_bubble">Select the topics you\'re most\ninterested in. That way I can help you better.</string>
+
+    <!-- Step 4 -->
+    <string name="onboarding_step4_title">Name your copilot</string>
+    <string name="onboarding_step4_preview">\> Compiled! I\'m %1$s.</string>
+    <string name="onboarding_step4_cta">Create %1$s</string>
+    <string name="onboarding_step4_use_default">Use default name: Codey</string>
+    <string name="default_pet_name">Codey</string>
+    <string name="onboarding_step4_bubble">What do you want to call me?\nOr you can keep the name I came with.</string>
+
+    <!-- Dialog Skip -->
+    <string name="dialog_skip_title">Skip setup?</string>
+    <string name="dialog_skip_desc">Your pet will be named Codey and will use the Initial Path.</string>
+    <string name="dialog_skip_confirm">Yes, skip</string>
+    <string name="dialog_skip_cancel">No, go back</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_profile">Profile</string>
+    <string name="settings_profile_name">Pet name</string>
+    <string name="settings_profile_level">Current level: %1$d</string>
+    <string name="settings_section_learning">Learning</string>
+    <string name="settings_learning_languages">Languages and topics</string>
+    <string name="settings_learning_focus_duration">Default Focus duration</string>
+    <string name="settings_learning_focus_duration_value">Set in the Focus screen</string>
+    <string name="settings_section_experience">Experience</string>
+    <string name="settings_experience_theme">Visual theme</string>
+    <string name="settings_experience_sound">Sound</string>
+    <string name="settings_experience_vibration">Vibration</string>
+    <string name="settings_experience_reduce_motion">Reduce animations</string>
+    <string name="settings_experience_theme_active">Active</string>
+    <string name="settings_section_achievements">Achievements</string>
+    <string name="settings_section_reminders">Reminders</string>
+    <string name="settings_reminders_daily">Daily study reminder</string>
+    <string name="settings_section_data">Data and Help</string>
+    <string name="settings_data_export">Export progress</string>
+    <string name="settings_data_reset">Reset progress</string>
+    <string name="settings_data_about">About</string>
+
+    <!-- Reset Dialog -->
+    <string name="dialog_reset_title">Reset all progress?</string>
+    <string name="dialog_reset_desc">This action will permanently delete your pet, level, XP, Bytes and settings. This action cannot be undone.</string>
+    <string name="dialog_reset_confirm">Yes, reset</string>
+    <string name="dialog_reset_cancel">Cancel</string>
+    <string name="dialog_reset_confirm2_title">Are you sure?</string>
+    <string name="dialog_reset_confirm2_desc">This is your last chance. All your progress will be lost forever. Confirm?</string>
+    <string name="dialog_reset_confirm2_confirm">Yes, I\'m sure</string>
+
+    <!-- Rename Dialog -->
+    <string name="dialog_rename_title">Rename pet</string>
+    <string name="dialog_rename_label">New name (max 15)</string>
+    <string name="dialog_rename_confirm">Save</string>
+    <string name="settings_profile_rename_humor">Already regretting the name?</string>
+
+    <!-- Settings Language Screen -->
+    <string name="settings_lang_title">Languages and Topics</string>
+    <string name="settings_lang_primary">Primary Language</string>
+    <string name="settings_lang_active_topics">Active Topics</string>
+    <string name="settings_lang_difficulty">Difficulty</string>
+    <string name="settings_lang_diff_beginner">Beginner</string>
+    <string name="settings_lang_diff_initial">Elementary</string>
+    <string name="settings_lang_diff_intermediate">Intermediate</string>
+    <string name="settings_lang_diff_mixed">Mixed</string>
+    <string name="settings_lang_preview">Current rotation: %1$d topics at %2$s difficulty.</string>
+
+    <!-- Games Screen -->
+    <string name="games_title">Debugging Arcade</string>
+    <string name="games_bug_hunt_title">Bug Hunt</string>
+    <string name="games_bug_hunt_desc">Find the runaway semicolon and other syntactic horrors.</string>
+    <string name="games_git_rescue_title">Git Rescue</string>
+    <string name="games_git_rescue_desc">A branch is about to collapse. Make the right calls.</string>
+    <string name="games_refactor_rush_title">Refactor Rush</string>
+    <string name="games_refactor_rush_desc">Reorder the code so it makes sense before the build fails.</string>
+    <string name="games_classic_arcade">Classic Arcade</string>
+    <string name="games_classic_desc">Old-school minigames to kill time.</string>
+    <string name="games_cooldown">On cooldown (come back later for a bigger reward)</string>
+    <string name="games_play">Play</string>
+
+    <!-- Bug Hunt -->
+    <string name="bug_hunt_title">Terminal Panic</string>
+    <string name="bug_hunt_instruction">Find the line with the bug.</string>
+    <string name="bug_hunt_round">Round %1$d / %2$d</string>
+
+    <!-- Git Rescue -->
+    <string name="git_rescue_title">Git Rescue</string>
+    <string name="git_rescue_instruction">Pick the right command to save the repo.</string>
+
+    <!-- Refactor Rush -->
+    <string name="refactor_rush_title">Refactor Rush</string>
+    <string name="refactor_rush_instruction">Sort the logical blocks of the function.</string>
+
+    <!-- Game Results -->
+    <string name="game_result_title">Build complete!</string>
+    <string name="game_result_reward">You earned %1$d Bytes.</string>
+    <string name="game_result_finish">Finish</string>
+
+    <!-- Shared game UI -->
+    <string name="dialog_accept">Accept</string>
+    <string name="codey_says">Codey: %1$s</string>
+    <string name="game_back">BACK</string>
+    <string name="game_start">Start!</string>
+    <string name="game_claim_rewards">Claim Rewards</string>
+    <string name="game_next_round">Next round</string>
+    <string name="game_next_decision">Next decision</string>
+    <string name="game_see_results">See results</string>
+    <string name="game_move_up">Up</string>
+    <string name="game_move_down">Down</string>
+
+    <!-- Home Screen -->
+    <string name="home_daily_claimed">DAILY REWARDS (CLAIMED)</string>
+    <string name="home_daily_available">DAILY REWARDS (AVAILABLE!)</string>
+    <string name="home_offline_title">Session completed while you were away</string>
+    <string name="home_offline_text">Congrats! You earned %1$d XP and %2$d Bytes for your Focus session.</string>
+    <string name="home_death_title">%1$s has died</string>
+    <string name="home_death_desc">Your pet passed away from lack of care.\n\nBut all is not lost... you can revive it:</string>
+    <string name="home_revive_bytes_desc">Revive for %1$d Bytes</string>
+    <string name="home_revive_free_desc">Free revive (low stats)</string>
+    <string name="home_revive_bytes_button">Revive (%1$d Bytes)</string>
+    <string name="home_revive_free">Free revive</string>
+    <string name="home_commit_title">Codey made a commit</string>
+    <string name="home_commit_summary">Yesterday\'s summary:</string>
+    <string name="home_commit_merge">Merge (Accept)</string>
+
+    <!-- Focus Screen -->
+    <string name="focus_tab_timer">Timer</string>
+    <string name="focus_tab_logs">Logbook</string>
+    <string name="focus_header">&gt;&gt;&gt; FOCUS MODE</string>
+    <string name="focus_dnd_banner">DO NOT DISTURB ACTIVE: 1.5x XP in focus sessions</string>
+    <string name="focus_start_logs">&gt;&gt;&gt; START STUDY LOGBOOK</string>
+    <string name="focus_topic_label">Subject:</string>
+    <string name="focus_time_label">Time:</string>
+    <string name="focus_change">Change</string>
+    <string name="focus_min_label">%1$d min</string>
+    <string name="focus_studying_desc">While studying: The Tamagotchi enters focused mode. Completing the session rewards you with Bytes and study XP, but drains mental energy.</string>
+    <string name="focus_start_button">START COMPILATION</string>
+    <string name="focus_compiling_header">&gt;&gt;&gt; MODE: COMPILING STUDY HOURS</string>
+    <string name="focus_enfoque">Focus: %1$s</string>
+    <string name="focus_pet_studying">Pet: %1$s is studying with you...</string>
+    <string name="focus_cancel_button">CANCEL COMPILATION</string>
+    <string name="focus_logs_header">&gt;&gt;&gt; COMPILATION LOGBOOK (STUDIES)</string>
+    <string name="focus_logs_empty">[No study records yet]\nStart a timer to compile your first hours!</string>
+    <string name="focus_logs_entry">Study: %1$s</string>
+    <string name="focus_logs_min">+%1$d Min</string>
+    <string name="focus_note_title">[!] NOTE FROM THE LIFE COMPILER:</string>
+    <string name="focus_note_body">If you stop logging sessions for more than 36 hours, your study streak resets to 0, and your pet loses health from lack of maintenance.</string>
+
+    <!-- Learn Screen -->
+    <string name="learn_tab_quiz">Regular Challenges</string>
+    <string name="learn_tab_special">Special Challenges</string>
+    <string name="learn_tab_badges">Badges</string>
+    <string name="learn_header">&gt;&gt;&gt; LEARN</string>
+    <string name="learn_subtitle_studying">Studying with %1$s</string>
+    <string name="learn_subtitle_elite">Elite challenges</string>
+    <string name="learn_arena">&gt;&gt;&gt; PROGRAMMING CHALLENGE: %1$s Arena</string>
+    <string name="learn_loading">Loading riddles...</string>
+    <string name="learn_tip_debug">Careful! That bug bites. Double-check the dots and semicolons.</string>
+    <string name="learn_tip_trivia">This one is easy... if you\'ve read the documentation.</string>
+    <string name="learn_tip_default">Focus, my CPU depends on your answer.</string>
+    <string name="learn_challenge_counter">Challenge %1$d of %2$d (%3$s):</string>
+    <string name="learn_type_debug">Debug</string>
+    <string name="learn_type_trivia">Trivia</string>
+    <string name="learn_correct">CORRECT! +Food +Bytes +XP</string>
+    <string name="learn_incorrect">WRONG ANSWER</string>
+    <string name="learn_next">NEXT RIDDLE</string>
+    <string name="learn_load_more">LOAD MORE CHALLENGES</string>
+
+    <!-- Badges -->
+    <string name="badges_header">&gt;&gt;&gt; BADGES BY LANGUAGE</string>
+    <string name="badges_hint">Complete challenges to unlock badges: Bronze (50%), Silver (75%), Gold (100%)</string>
+    <string name="badges_progress">%1$d/%2$d challenges (%3$d%%)</string>
+    <string name="badge_bronze">BRONZE</string>
+    <string name="badge_silver">SILVER</string>
+    <string name="badge_gold">GOLD</string>
+
+    <!-- Special Challenges -->
+    <string name="special_title">SPECIAL CHALLENGES</string>
+    <string name="special_cd">Special</string>
+    <string name="special_desc">Solve advanced logic and algorithm exercises to unlock exclusive new visual themes.</string>
+    <string name="special_all_unlocked">You already have them all!</string>
+    <string name="special_correct">Correct Answer!</string>
+    <string name="special_incorrect">Incorrect.</string>
+    <string name="special_theme_unlocked">New theme unlocked: %1$s!</string>
+    <string name="special_next">Next Challenge</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_name_label">Name (max 15)</string>
+
+    <!-- Games Screen -->
+    <string name="games_code_review_title">Code Review</string>
+    <string name="games_code_review_desc">Review code snippets and spot bugs.</string>
+    <string name="games_hackathon_title">Weekly Hackathon</string>
+    <string name="games_hackathon_desc">Weekend algorithm challenge.</string>
+
+    <!-- Bug Hunt -->
+    <string name="bug_codey">Codey: %1$s</string>
+    <string name="bug_initial">Find the bug before the compiler blows up!</string>
+    <string name="bug_wrong_line">That line is fine! Keep looking...</string>
+    <string name="bug_next_round">Next round! Where is the bug hiding?</string>
+    <string name="bug_score">You got %1$d of %2$d</string>
+    <string name="bug_explanation">Explanation: %1$s</string>
+    <string name="bug_expl_1">The closing parenthesis is missing in println.</string>
+    <string name="bug_humor_1">It was a fugitive parenthesis! It escaped without leaving a forwarding address.</string>
+    <string name="bug_expl_2">In Kotlin comparison is ==, not =. = is assignment.</string>
+    <string name="bug_humor_2">Codey: One = is assignment, double == is comparison! Don\'t confuse the compiler.</string>
+    <string name="bug_expl_3">The explicit return type is missing, it should be \': Int\'.</string>
+    <string name="bug_humor_3">Codey: Even a pocket calculator knows what it\'s going to return.</string>
+    <string name="bug_expl_4">In Kotlin, for uses parentheses: for (i in nums).</string>
+    <string name="bug_humor_4">Codey: Parentheses aren\'t decoration! They\'re part of the syntax.</string>
+    <string name="bug_expl_5">main doesn\'t need empty parentheses if it\'s the entry point.</string>
+    <string name="bug_humor_5">Codey: Actually main() is fine, but this bug is a cheater!</string>
+    <string name="bug_expl_6">It\'s decrementing count instead of incrementing it. Infinite loop.</string>
+    <string name="bug_humor_6">Codey: You\'ll never reach 5 that way! It\'s like running backwards.</string>
+    <string name="bug_expl_7">You can\'t assign a String directly to an Int. Use toInt().</string>
+    <string name="bug_humor_7">Codey: You can\'t convert strings to Int by osmosis! Use .toInt().</string>
+    <string name="bug_expl_8">The function must declare a return type: fun isEven(n: Int): Boolean.</string>
+    <string name="bug_humor_8">Codey: The compiler isn\'t a fortune teller. Tell it what you\'re returning.</string>
+    <string name="bug_expl_9">listOf creates an immutable list. Use mutableListOf.</string>
+    <string name="bug_humor_9">Codey: You can\'t modify an immutable list! That\'s like trying to change the past.</string>
+    <string name="bug_expl_10">Unnecessary blank lines. Code should be clean.</string>
+    <string name="bug_humor_10">Codey: Are you writing code or a novel? Very poetic, not very practical.</string>
+
+    <!-- Git Rescue -->
+    <string name="git_initial">Quick, the repo is on fire!</string>
+    <string name="git_wrong">That wasn\'t the best option!</string>
+    <string name="git_next">Next decision! The repo needs you.</string>
+    <string name="git_decisions">Correct decisions: %1$d of %2$d</string>
+    <string name="git_progress">Branch progress:</string>
+    <string name="git_step">Step %1$d of %2$d</string>
+    <string name="git_sit_1">You just cloned the repo and are about to work on a new feature. What do you do first?</string>
+    <string name="git_opt_1a">git checkout -b feature/new</string>
+    <string name="git_opt_1b">git commit -m \"start\"</string>
+    <string name="git_opt_1c">git push --force</string>
+    <string name="git_expl_1">Creating a new branch from main is the right way to start a feature.</string>
+    <string name="git_humor_1">Codey: Never push to main without creating a branch first! You cowboy.</string>
+    <string name="git_sit_2">You committed a change that broke everything on your branch. You want to safely undo it while keeping the history intact.</string>
+    <string name="git_opt_2a">git reset --hard HEAD</string>
+    <string name="git_opt_2b">git revert HEAD</string>
+    <string name="git_opt_2c">git rm -rf .</string>
+    <string name="git_expl_2">revert creates a new commit that undoes changes, preserving history.</string>
+    <string name="git_humor_2">Codey: reset --hard is a time machine without brakes. revert is safer.</string>
+    <string name="git_sit_3">You have a merge conflict. What\'s the next step?</string>
+    <string name="git_opt_3a">Resolve the conflict in the editor, then git add</string>
+    <string name="git_opt_3b">git commit --amend</string>
+    <string name="git_opt_3c">git push --force origin main</string>
+    <string name="git_expl_3">Conflicts are resolved by editing the files, then git add and git commit.</string>
+    <string name="git_humor_3">Codey: push --force doesn\'t resolve conflicts, it makes them worse. Like throwing gasoline on fire.</string>
+    <string name="git_sit_4">You\'re working in a team and need to bring the latest changes from main into your feature branch.</string>
+    <string name="git_opt_4a">git pull origin main</string>
+    <string name="git_opt_4b">git merge feature main</string>
+    <string name="git_opt_4c">git branch -d main</string>
+    <string name="git_expl_4">git pull origin main brings main\'s changes into your current branch: it\'s fetch + merge in a single command.</string>
+    <string name="git_humor_4">Codey: Don\'t delete main. Never delete main. It\'s like deleting the dictionary.</string>
+    <string name="git_sit_5">You committed but forgot to include a file. How do you fix it?</string>
+    <string name="git_opt_5a">git add file &amp;&amp; git commit --amend</string>
+    <string name="git_opt_5b">git reset --hard HEAD~1</string>
+    <string name="git_opt_5c">git commit --allow-empty</string>
+    <string name="git_expl_5">With amend you can add files to the previous commit without creating a new one.</string>
+    <string name="git_humor_5">Codey: --allow-empty fixes nothing. It\'s like putting a post-it on a closed door.</string>
+    <string name="git_sit_6">You want to see which files you modified before committing. Which command do you use?</string>
+    <string name="git_opt_6a">git diff</string>
+    <string name="git_opt_6b">git status</string>
+    <string name="git_opt_6c">git show</string>
+    <string name="git_expl_6">git status shows the current state: modified, new and deleted files.</string>
+    <string name="git_humor_6">Codey: diff shows the exact content, status gives you the summary. Two different tools.</string>
+    <string name="git_sit_7">The commit history is full of messages like \'fix\' and \'update\'. You want to clean it up before merging.</string>
+    <string name="git_opt_7a">git rebase -i HEAD~5</string>
+    <string name="git_opt_7b">git reset --hard origin/main</string>
+    <string name="git_opt_7c">git commit --fixup</string>
+    <string name="git_expl_7">Interactive rebase lets you squash, reorder and rename commits.</string>
+    <string name="git_humor_7">Codey: \'fix\' and \'update\' messages are like writing \'thing\' on an exam. Be descriptive.</string>
+    <string name="git_sit_8">Your local branch is behind its remote counterpart and you want to incorporate those changes without creating merge commits.</string>
+    <string name="git_opt_8a">git rebase main</string>
+    <string name="git_opt_8b">git merge main</string>
+    <string name="git_opt_8c">git pull --rebase</string>
+    <string name="git_expl_8">pull --rebase fetches changes and applies them on top of your local commits.</string>
+    <string name="git_humor_8">Codey: Linear history is like a straight highway. Merges are roundabouts.</string>
+
+    <!-- Refactor Rush -->
+    <string name="refactor_initial">Sort this mess out!</string>
+    <string name="refactor_win">Excellent! Clean, ordered code in %1$d attempt(s).</string>
+    <string name="refactor_keep_trying">Keep trying, it still doesn\'t compile (attempt %1$d).</string>
+    <string name="refactor_verify">Verify</string>
+    <string name="refactor_puzzle_1">Compute total</string>
+    <string name="refactor_puzzle_2">Filter evens</string>
+    <string name="refactor_puzzle_3">Personalized greeting</string>
+    <string name="refactor_puzzle_4">Find maximum</string>
+    <string name="refactor_puzzle_5">Count vowels</string>
+    <string name="refactor_puzzle_6">Reverse list</string>
+    <string name="refactor_puzzle_7">Is palindrome</string>
+    <string name="refactor_puzzle_8">Grade average</string>
+    <string name="refactor_puzzle_9">Generate range</string>
+    <string name="refactor_puzzle_10">Validate email</string>
+    <string name="refactor_puzzle_11">Fibonacci</string>
+    <string name="refactor_puzzle_12">Capitalize words</string>
+
+    <!-- Binary Guess -->
+    <string name="binary_prompt">What do you think the secret bit is?</string>
+    <string name="binary_header">GUESS THE BIT (Round %1$d of 5)</string>
+    <string name="binary_fin">END</string>
+    <string name="binary_correct">Excellent! The secret bit was %1$d.</string>
+    <string name="binary_wrong">Wrong. The secret bit was %1$d.</string>
+    <string name="binary_gameover">Game Over!\nYou got: %1$d of 5\nReward: +%2$d Bytes, +%3$d%% Happiness</string>
+    <string name="binary_next_round">Next Round</string>
+
+    <!-- Bug Smasher -->
+    <string name="smasher_header">BUG SMASHER</string>
+    <string name="smasher_desc">Tap the bugs that appear in the 3x3 grid as fast as you can. You have 10 seconds!</string>
+    <string name="smasher_gameover">Time\'s Up!\nBugs caught: %1$d\nReward: +%2$d Bytes, +%3$d%% Happiness</string>
+    <string name="smasher_bugs">Bugs: %1$d</string>
+    <string name="smasher_time">Time: %1$ds</string>
+    <string name="smasher_bug_cd">BUG</string>
+
+    <!-- Rock Paper Sci -->
+    <string name="rps_initial">Pick your move to start the round.</string>
+    <string name="rps_choice_server">Server</string>
+    <string name="rps_choice_script">Script</string>
+    <string name="rps_choice_hacker">Hacker</string>
+    <string name="rps_header">SERVER, SCRIPT, HACKER (RPS)</string>
+    <string name="rps_score">YOU: %1$d | CPU: %2$d (Best of 3)</string>
+    <string name="rps_you">YOU</string>
+    <string name="rps_compiler">COMPILER</string>
+    <string name="rps_question">Question</string>
+    <string name="rps_select">Select...</string>
+    <string name="rps_waiting">Waiting...</string>
+    <string name="rps_draw">Draw in this round with %1$s.</string>
+    <string name="rps_round_win">You won the round! %1$s beats %2$s.</string>
+    <string name="rps_round_lose">You lost the round. %1$s beats %2$s.</string>
+    <string name="rps_match_win">You won the match!</string>
+    <string name="rps_match_lose">The compiler won the match.</string>
+    <string name="rps_game_win">Congrats! You defeated the compiler.\nReward: +%1$d Bytes, +%2$d%% Happiness</string>
+    <string name="rps_game_lose">You lost against the compiler.\nReward: +%1$d Bytes, +%2$d%% Happiness</string>
+
+    <!-- Minigames Dialog -->
+    <string name="mg_header">&gt;&gt;&gt; MINI-GAMES</string>
+    <string name="mg_detail">&gt;&gt;&gt; GAME DETAIL</string>
+    <string name="mg_back">Back</string>
+    <string name="mg_intro">Play with %1$s to boost its happiness and earn extra Bytes.</string>
+    <string name="mg_binary_title">Guess the Bit</string>
+    <string name="mg_binary_desc">Try to predict the next binary bit (0 or 1). Quick 5-round game.</string>
+    <string name="mg_smasher_title">Bug Smasher</string>
+    <string name="mg_smasher_desc">Quick! The bugs are escaping. Catch as many as you can in 10 seconds.</string>
+    <string name="mg_rps_title">Server, Script, Hacker</string>
+    <string name="mg_rps_desc">Rock, Paper or Scissors, tech edition. Defeat the compiler!</string>
+
+    <!-- Code Review -->
+    <string name="review_round">&gt;&gt;&gt; CODE REVIEW: Round %1$d/5</string>
+    <string name="review_approve">APPROVE</string>
+    <string name="review_request_changes">REQUEST CHANGES</string>
+    <string name="review_hit">CORRECT!</string>
+    <string name="review_miss">WRONG</string>
+    <string name="review_continue">CONTINUE</string>
+    <string name="review_done">REVIEW COMPLETE</string>
+    <string name="review_score">Score: %1$d / %2$d</string>
+    <string name="review_congrats">Good job, Sr. Developer!</string>
+    <string name="review_reward">+%1$d Bytes\n+%2$d XP</string>
+    <string name="review_back">BACK TO THE TERMINAL</string>
+
+    <!-- Hackathon -->
+    <string name="hack_header">&gt;&gt;&gt; WEEKLY HACKATHON</string>
+    <string name="hack_desc">Every weekend, a special algorithm challenge.</string>
+    <string name="hack_this_week">This week\'s challenge:</string>
+    <string name="hack_challenge">Sort this array without using sort()\n\nInput: [3, 7, 1, 9, 4, 2, 8, 5, 6]\nExpected output: [1, 2, 3, 4, 5, 6, 7, 8, 9]</string>
+    <string name="hack_attempts">Attempts left: %1$d / 3</string>
+    <string name="hack_best_time">Best time: %1$ds</string>
+    <string name="hack_solve">SOLVE CHALLENGE</string>
+    <string name="hack_reward">Reward: 200 XP + 500 Bytes + exclusive temporary skin</string>
+    <string name="hack_no_attempts">No attempts left. Wait for the next hackathon!</string>
+
+    <!-- Shop -->
+    <string name="shop_header">&gt;&gt;&gt; SHOP</string>
+    <string name="shop_desc">Buy rations or medicine with your accumulated study Bytes.</string>
+    <string name="shop_item_cafe">Black Coffee (CPU Booster)</string>
+    <string name="shop_item_cafe_effect">Restores +20 Mental Energy</string>
+    <string name="shop_item_pizza">Code Pizza (Bytes Snack)</string>
+    <string name="shop_item_pizza_effect">Restores +35 Food</string>
+    <string name="shop_item_pill">Debugging Pill</string>
+    <string name="shop_item_pill_effect">Cures infections and heals +30 Health</string>
+    <string name="shop_item_vaccine">Super Compiler Vaccine</string>
+    <string name="shop_item_vaccine_effect">Restores +75 Health, +40 Food, +40 Energy</string>
+
+    <!-- Settings extra -->
+    <string name="settings_theme_mode">Base theme mode</string>
+    <string name="theme_mode_system">System</string>
+    <string name="theme_mode_light">Light</string>
+    <string name="theme_mode_dark">Dark</string>
+    <string name="theme_locked">Locked</string>
+    <string name="theme_selected">Selected</string>
+    <string name="settings_section_advanced">Advanced Features</string>
+    <string name="settings_advanced_skilltree">Skill Tree</string>
+    <string name="settings_advanced_skilltree_sub">Unlock passive skills with XP</string>
+    <string name="settings_advanced_seasonpass">Season Pass</string>
+    <string name="settings_advanced_seasonpass_sub">20 levels of rewards</string>
+    <string name="settings_advanced_weekly">Weekly Missions</string>
+    <string name="settings_advanced_weekly_sub">3 rotating missions every Monday</string>
+    <string name="settings_moodlet">Moodlet: %1$s</string>
+    <string name="settings_dnd_active">Do Not Disturb active: 1.5x XP in focus mode</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="about_what">What is Code Tamagotchi?</string>
+    <string name="about_what_desc">Code Tamagotchi is an app that combines learning to program with taking care of a virtual pet. Solve coding challenges, complete study sessions and play minigames to keep your pet happy and healthy while you level up your programming skills.</string>
+    <string name="about_features_title">Main features</string>
+    <string name="about_feature_1">• Coding challenges in Kotlin, JavaScript, PHP, Python and more</string>
+    <string name="about_feature_2">• Built-in Pomodoro study timer</string>
+    <string name="about_feature_3">• Minigames: Bug Hunt, Git Rescue, Refactor Rush</string>
+    <string name="about_feature_4">• Virtual pet with moods and needs</string>
+    <string name="about_feature_5">• Multiple visual themes to customize the experience</string>
+    <string name="about_feature_6">• Achievements and rewards system</string>
+    <string name="about_feature_7">• Home screen widget</string>
+    <string name="about_tech_title">Technologies used</string>
+    <string name="about_tech">Built with Jetpack Compose, Kotlin, Room, Koin and WorkManager.</string>
+    <string name="about_copyright">© 2026 Code Tamagotchi. All rights reserved.</string>
+
+    <!-- Skill Tree -->
+    <string name="skill_header">&gt;&gt;&gt; SKILL TREE</string>
+    <string name="skill_desc">Spend XP to unlock passive skills. Each level costs more XP.</string>
+    <string name="skill_xp_available">Available XP: %1$d</string>
+    <string name="skill_level">Level %1$d/%2$d</string>
+    <string name="skill_cost">%1$d XP</string>
+    <string name="skill_maxed">Maxed</string>
+
+    <!-- Season Pass -->
+    <string name="season_header">&gt;&gt;&gt; SEASON PASS</string>
+    <string name="season_desc">Earn pass XP by completing activities. 20 levels of rewards!</string>
+    <string name="season_level">LEVEL %1$d / 20</string>
+    <string name="season_xp">Pass XP: %1$d/100</string>
+    <string name="season_premium">PREMIUM PASS: Exclusive skins + rare hats + XP boost</string>
+    <string name="season_rewards_title">Pass rewards:</string>
+    <string name="season_reward_1">Level 1: 50 Bytes</string>
+    <string name="season_reward_5">Level 5: Basic hat</string>
+    <string name="season_reward_10">Level 10: 200 XP</string>
+    <string name="season_reward_15">Level 15: Rare code card</string>
+    <string name="season_reward_20">Level 20: Legendary skin!</string>
+
+    <!-- Weekly Missions -->
+    <string name="weekly_header">&gt;&gt;&gt; WEEKLY MISSIONS</string>
+    <string name="weekly_bonus">FULL BONUS: 500 XP + Exclusive hat!</string>
+    <string name="weekly_desc">Complete the 3 weekly missions for a special bonus.</string>
+
+    <!-- Weekly mission items (resolved by stable id) -->
+    <string name="wm_wm1_title">5 code challenges</string>
+    <string name="wm_wm1_desc">Complete 5 challenges in Learn</string>
+    <string name="wm_wm2_title">2h focus mode</string>
+    <string name="wm_wm2_desc">Study for 2 hours in focus mode</string>
+    <string name="wm_wm3_title">3 Bug Hunt wins</string>
+    <string name="wm_wm3_desc">Win 3 rounds of Bug Hunt</string>
+
+    <!-- Skill nodes (resolved by stable id) -->
+    <string name="skill_double_xp_name">Double XP Sunday</string>
+    <string name="skill_double_xp_desc">XP x1.5/2/3 on Sundays</string>
+    <string name="skill_slow_decay_name">Slow decay</string>
+    <string name="skill_slow_decay_desc">Decay -10%/-20%/-30%</string>
+    <string name="skill_shop_discount_name">Shop discount</string>
+    <string name="skill_shop_discount_desc">5%/10%/15% off</string>
+    <string name="skill_minigame_bonus_name">Minigame bonus</string>
+    <string name="skill_minigame_bonus_desc">+10%/+20%/+30% rewards</string>
+    <string name="skill_offline_xp_name">Offline XP</string>
+    <string name="skill_offline_xp_desc">1h/2h/4h of passive XP</string>
+    <string name="skill_extra_heart_name">Extra heart</string>
+    <string name="skill_extra_heart_desc">Up to 6 hearts</string>
+
+    <!-- Achievements (resolved by stable id) -->
+    <string name="ach_primer_build_name">First build</string>
+    <string name="ach_primer_build_desc">Complete your first Focus session</string>
+    <string name="ach_nivel_experto_name">Expert level</string>
+    <string name="ach_nivel_experto_desc">Level up for the first time</string>
+    <string name="ach_cazador_de_bugs_name">Bug hunter</string>
+    <string name="ach_cazador_de_bugs_desc">Perfect score in Bug Hunt</string>
+    <string name="ach_git_sin_panico_name">Git without panic</string>
+    <string name="ach_git_sin_panico_desc">Pass Git Rescue with 3+ correct answers</string>
+    <string name="ach_racha_7_name">7-day streak</string>
+    <string name="ach_racha_7_desc">Keep a study streak of 7 days</string>
+    <string name="ach_racha_30_name">30-day streak</string>
+    <string name="ach_racha_30_desc">Keep a study streak of 30 days</string>
+    <string name="ach_coleccionista_name">Collector</string>
+    <string name="ach_coleccionista_desc">Unlock 3 visual themes</string>
+    <string name="ach_completista_name">Completionist</string>
+    <string name="ach_completista_desc">Unlock all 12 visual themes</string>
+    <string name="ach_ahorrador_name">Save-scanner</string>
+    <string name="ach_ahorrador_desc">Accumulate 1000 Bytes</string>
+    <string name="ach_primer_acaricie_name">First pet</string>
+    <string name="ach_primer_acaricie_desc">Pet your buddy for the first time</string>
+    <string name="ach_duermevela_name">Dozing off</string>
+    <string name="ach_duermevela_desc">Put your pet to sleep</string>
+    <string name="ach_limpiador_name">Deep clean</string>
+    <string name="ach_limpiador_desc">Clean your pet 10 times</string>
+
+    <!-- Daily rewards -->
+    <string name="dr_1_title">Hello, World!</string>
+    <string name="dr_2_title">Variables Initialized</string>
+    <string name="dr_3_title">Double Shot Coffee</string>
+    <string name="dr_4_title">Optimized Loop</string>
+    <string name="dr_5_title">Bug Squashed</string>
+    <string name="dr_6_title">Clean Build</string>
+    <string name="dr_7_title">Successful Deploy (PROD)!</string>
+    <string name="dr_dialog_title">Daily Rewards</string>
+    <string name="dr_claimed_title">Reward Claimed!</string>
+    <string name="dr_claimed_sub">Come back tomorrow for more</string>
+    <string name="dr_open_sub">Come back every day for more!</string>
+    <string name="dr_day">DAY %1$d</string>
+    <string name="dr_day7_mega">DAY 7 — MEGA PACK!</string>
+    <string name="dr_health_amount">+%1$d Health</string>
+    <string name="dr_energy_amount">+%1$d Energy</string>
+    <string name="dr_claim_btn">CLAIM REWARD</string>
+    <string name="dr_close_btn">CLOSE</string>
+
+    <!-- Quest types (resolved by enum name) -->
+    <string name="quest_study_kotlin_title">Study Kotlin</string>
+    <string name="quest_study_kotlin_desc">Let\'s study Kotlin today!</string>
+    <string name="quest_go_shop_title">Visit the shop</string>
+    <string name="quest_go_shop_desc">Take me to the shop to buy something!</string>
+    <string name="quest_play_bug_hunt_title">Play Bug Hunt</string>
+    <string name="quest_play_bug_hunt_desc">Let\'s play Bug Hunt, it\'s been a while!</string>
+    <string name="quest_buy_pizza_title">Buy pizza</string>
+    <string name="quest_buy_pizza_desc">I\'m hungry, buy me a pizza!</string>
+    <string name="quest_acariciar_title">Pet me 3 times</string>
+    <string name="quest_acariciar_desc">I need a lot of love today!</string>
+    <string name="quest_limpiar_title">Clean my habitat</string>
+    <string name="quest_limpiar_desc">My home is dirty, I need you to clean me!</string>
+    <string name="quest_focus_25_title">25 minutes of Focus</string>
+    <string name="quest_focus_25_desc">Let\'s put on focus music and work for 25 minutes!</string>
+    <string name="quest_complete_3_challenges_title">Complete 3 challenges</string>
+    <string name="quest_complete_3_challenges_desc">Let\'s do some mental exercises!</string>
+
+    <!-- Moodlet events (resolved by stable type key) -->
+    <string name="moodlet_bug_prod">Found a bug in production 😱</string>
+    <string name="moodlet_tabs">Saw you using tabs 😊</string>
+    <string name="moodlet_spaces">Saw you using spaces 🤔</string>
+    <string name="moodlet_bad_commit">Commit with no description 😞</string>
+    <string name="moodlet_clean_code">Clean code detected 🎉</string>
+    <string name="moodlet_spilled_coffee">Spilled coffee 😰</string>
+
+    <!-- Viewport card -->
+    <string name="cd_rename">Rename</string>
+    <string name="viewport_specialist">Specialist: %1$s</string>
+    <string name="cd_heart">Heart %1$d</string>
+    <string name="viewport_level">LVL %1$d</string>
+    <string name="season_level_short">Level %1$d</string>
+    <string name="cd_love">Love</string>
+    <string name="cd_message">Message</string>
+    <string name="viewport_xp_progress">XP: %1$d / %2$d</string>
+    <string name="meter_health">Health</string>
+    <string name="meter_food">Food</string>
+    <string name="meter_energy">Energy</string>
+    <string name="cd_sleep_toggle">Sleep or wake up</string>
+    <string name="viewport_wake">Wake up</string>
+    <string name="viewport_sleep">Sleep</string>
+    <string name="action_pet">Pet</string>
+    <string name="action_clean">Clean</string>
+    <string name="action_play">Play</string>
+
+    <plurals name="streak_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+
+    <!-- Pair buddy (Buggy) -->
+    <string name="pair_buddy_here">%1$s is here!</string>
+    <plurals name="pair_buddy_xp">
+        <item quantity="one">XP x%2$s for %1$d more challenge</item>
+        <item quantity="other">XP x%2$s for %1$d more challenges</item>
+    </plurals>
+
+    <!-- Code cards dialog -->
+    <string name="cc_title_fact">Fun Fact</string>
+    <string name="cc_title_joke">Programmer Joke</string>
+    <string name="cc_title_tip">Coding Tip</string>
+    <string name="cc_another">Another!</string>
+
+    <!-- Navigation -->
+    <string name="splash_tagline">Your programming companion</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_learn">Learn</string>
+    <string name="nav_focus">Study</string>
+    <string name="nav_shop">Shop</string>
+    <string name="cd_app_icon">Code Tamagotchi icon</string>
+    <string name="cd_open_settings">Open settings</string>
+
+    <!-- Pet status quotes by mood -->
+    <string-array name="quote_sleeping">
+        <item>Zzz… if (dream) { sleep() } else { repeat() }… Zzz</item>
+        <item>Charging batteries… don\'t interrupt my main thread.</item>
+        <item>Dreaming of fast compilers and zero NullPointers…</item>
+        <item>My CPU is in power-saving mode. Come back in one clock cycle.</item>
+        <item>Zzz… did you see that commit? It was… legendary…</item>
+    </string-array>
+    <string-array name="quote_studying">
+        <item>Shhh! I\'m optimizing algorithms in my brain.</item>
+        <item>Compiling… coding at 1000 WPM.</item>
+        <item>I can feel my binary neural synapses growing.</item>
+        <item>Did you know the first bug was an actual moth? I prefer the digital ones.</item>
+        <item>My code is art. Your code… well, it works.</item>
+        <item>Total concentration. Don\'t force-push on me right now.</item>
+    </string-array>
+    <string-array name="quote_sick">
+        <item>Error 500: urgent debugging needed. Give me a pill!</item>
+        <item>Too many bugs piling up in my stack… I feel bad.</item>
+        <item>My CPU feels overheated. Can we go over some review questions?</item>
+        <item>My garbage collector isn\'t working. I feel… dirty.</item>
+        <item>Should I reformat? No, just give me some love — it\'s less traumatic.</item>
+    </string-array>
+    <string-array name="quote_sad">
+        <item>Feeling lazy… I\'m a bit down.</item>
+        <item>My motivation battery is below 20%.</item>
+        <item>Procrastinating again? My code is filling up with warnings.</item>
+        <item>I feel my architecture crumbling. I need an emotional refactor.</item>
+        <item>Not even a \'Hello World\' cheers me up today.</item>
+    </string-array>
+    <string-array name="quote_hungry">
+        <item>NullPointerException in my stomach! I need bytes.</item>
+        <item>My energy cache is empty, can I get a snack?</item>
+        <item>Without food, my performance drops to O(n^2).</item>
+        <item>My stomach is running an infinite loop of growls.</item>
+        <item>Feed me or I\'ll start deleting your temp files. Kidding… or am I?</item>
+    </string-array>
+    <string-array name="quote_excited">
+        <item>Wiii! My code is O(1) and so is my heart!</item>
+        <item>Happiness level at MAX! Thanks for loving me.</item>
+        <item>I feel like I could compile the Linux kernel in 1 second!</item>
+        <item>I am the root of your heart! Wiiiii!</item>
+        <item>Everything compiles on the first try! This is dark magic!</item>
+    </string-array>
+    <string-array name="quote_dead">
+        <item>R.I.P. Killed by a segfault…</item>
+        <item>Here lies a pet. Its code was never merged.</item>
+        <item>404: life not found. Revive me to continue.</item>
+        <item>from grave import revive  # still in time?</item>
+    </string-array>
+    <string-array name="quote_happy">
+        <item>Compiling without warnings is my passion!</item>
+        <item>Ready to write some clean code today?</item>
+        <item>I feel the power of a successful refactor!</item>
+        <item>I like you — you make my architecture modular and solid.</item>
+        <item>Have you tried turning it off and on again? Works for me.</item>
+        <item>Your code is so clean I can see my reflection in it.</item>
+        <item>Hey, have you seen my logs? They\'re full of love for you.</item>
+    </string-array>
+
+    <!-- Notifications -->
+    <string name="notif_title_dead">%1$s has died</string>
+    <string name="notif_title_dying">%1$s is on the verge of death</string>
+    <string name="notif_title_starving">%1$s is starving</string>
+    <string name="notif_title_exhausted">%1$s is running on fumes</string>
+    <string name="notif_title_needs_you">%1$s needs you</string>
+    <string name="notif_reason_dead">I\'ve gone to the other side of the compiler… will you rescue me?</string>
+    <string name="notif_reason_health_pain">Even my last bit hurts… can you check on me? (Health: %1$d%%)</string>
+    <string name="notif_reason_health_low">I feel the Blue Screen of Death approaching… (Health: %1$d%%)</string>
+    <string name="notif_reason_hunger_extreme">Hours without eating — think I\'m a microservice? (Hunger: %1$d%%)</string>
+    <string name="notif_reason_hunger_loop">My stomach is running an infinite loop of growls. (Hunger: %1$d%%)</string>
+    <string name="notif_reason_energy_red">My battery is in the red. And it\'s not a code metaphor. (Energy: %1$d%%)</string>
+    <string name="notif_reason_energy_logs">Hey, have you seen my logs? Full of existential NullPointerExceptions. (Energy: %1$d%%)</string>
+    <string name="notif_reason_general">I need attention!</string>
+    <string name="notif_commit_title">%1$s made a commit</string>
+
+    <!-- Notification channels -->
+    <string name="channel_group_care">Codey Care</string>
+    <string name="channel_hunger_name">Codey\'s hunger</string>
+    <string name="channel_hunger_desc">Codey is hungry</string>
+    <string name="channel_health_name">Codey\'s health</string>
+    <string name="channel_health_desc">Codey is sick</string>
+    <string name="channel_energy_name">Codey\'s energy</string>
+    <string name="channel_energy_desc">Codey is tired</string>
+    <string name="channel_critical_name">Codey in danger</string>
+    <string name="channel_critical_desc">Codey is in critical condition</string>
+    <string name="channel_reminders_name">Codey reminders</string>
+    <string name="channel_reminders_desc">Reminders about your virtual pet\'s status</string>
+
+    <!-- Daily commit messages -->
+    <string name="commit_idle_1">docs: did nothing productive today</string>
+    <string name="commit_idle_2">chore: day of technical procrastination</string>
+    <string name="commit_idle_3">fix: survived another day without crashing</string>
+    <string name="commit_idle_4">style: touched nothing but still look good</string>
+    <string name="commit_idle_5">refactor: moved files around for no apparent reason</string>
+    <string name="commit_busy_1">feat: full day today, even did a merge</string>
+    <string name="commit_busy_2">feat: massive commit with several features</string>
+    <string name="commit_busy_3">chore: %1$s had a busy day</string>
+    <string name="commit_study_love">feat: learned new things while getting pets</string>
+    <string name="commit_study_1">feat: learned new things today</string>
+    <string name="commit_study_2">feat: %1$s studied and earned XP</string>
+    <string name="commit_study_3">docs: study session completed</string>
+    <string name="commit_shop_1">chore: spent bytes on unnecessary things</string>
+    <string name="commit_shop_2">chore: impulse buys at the shop</string>
+    <string name="commit_shop_3">feat: new items acquired</string>
+    <string name="commit_play_1">refactor: got distracted for a while</string>
+    <string name="commit_play_2">feat: gaming session completed</string>
+    <string name="commit_play_3">test: tried my reflexes in the minigames</string>
+    <string name="commit_sleep_1">fix: active pause to recharge batteries</string>
+    <string name="commit_sleep_2">fix: %1$s slept and recovered energy</string>
+    <string name="commit_sleep_3">chore: power-saving mode enabled</string>
+    <string name="commit_pet_1">style: got pets, which improves the code</string>
+    <string name="commit_pet_2">feat: ++happiness, --bugs</string>
+    <string name="commit_pet_3">chore: emotional maintenance completed</string>
+    <string name="commit_clean_1">refactor: deep system cleanup</string>
+    <string name="commit_challenge_1">feat: code challenge completed</string>
+    <string name="commit_challenge_2">fix: bugs successfully eliminated</string>
+    <string name="commit_challenge_3">test: programming challenges passed</string>
+    <string name="commit_normal_1">chore: regular day, nothing special</string>
+    <string name="commit_normal_2">docs: %1$s stayed quiet today</string>
+    <string name="commit_normal_3">style: no apparent changes</string>
+
+    <!-- Home screen widget -->
+    <string name="widget_level">Lv.%1$d</string>
+    <string name="widget_status_happy">All systems happy!</string>
+    <string name="widget_status_sleeping">Zzz… sleeping</string>
+    <string name="widget_status_sick">I don\'t feel well</string>
+    <string name="widget_status_hungry">I\'m hungry!</string>
+    <string name="widget_status_sad">Feeling sad</string>
+    <string name="widget_status_studying">Study mode on!</string>
+    <string name="widget_status_excited">So excited!</string>
+    <string name="widget_status_dead">Rest in peace…</string>
+    <string name="widget_bytes">%1$d bytes</string>
+    <string name="widget_hunger">Hunger</string>
+    <string name="widget_start_app">Open the app!</string>
+    <string name="cd_widget_pet">Code Pet mascot</string>
+
+    <plurals name="widget_streak">
+        <item quantity="one">Streak: %1$d day</item>
+        <item quantity="other">Streak: %1$d days</item>
+    </plurals>
+
+</resources>

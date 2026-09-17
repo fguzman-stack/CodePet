@@ -24,70 +24,70 @@ import kotlinx.coroutines.delay
 private data class BugSnippet(
     val lines: List<String>,
     val bugIndex: Int,
-    val explanation: String,
-    val humor: String
+    val explanationRes: Int,
+    val humorRes: Int
 )
 
 private val snippetPool = listOf(
     BugSnippet(
         listOf("val name = \"Codey\"", "println(name", "age++", "fun greet() { }"),
         bugIndex = 1,
-        explanation = "Falta el paréntesis de cierre en println.",
-        humor = "¡Era un paréntesis fugitivo! Se escapó sin pagar el alquiler."
+        explanationRes = R.string.bug_expl_1,
+        humorRes = R.string.bug_humor_1
     ),
     BugSnippet(
-        listOf("if (x = 5) {", "print(\"Cinco\")", "} else {", "print(\"Otro\")", "}"),
+        listOf("if (x = 5) {", "print(\"Five\")", "} else {", "print(\"Other\")", "}"),
         bugIndex = 0,
-        explanation = "En Kotlin la comparación es == no =. = es asignación.",
-        humor = "Codey: ¡Un solo = es asignación, doble == es comparación! No confundas al compilador."
+        explanationRes = R.string.bug_expl_2,
+        humorRes = R.string.bug_humor_2
     ),
     BugSnippet(
         listOf("fun add(a: Int, b: Int): Int {", "return a + b", "}", "add(2, 3)"),
         bugIndex = 1,
-        explanation = "Falta el tipo de retorno explícito, debería ser ': Int'.",
-        humor = "Codey: Hasta una calculadora de bolsillo sabe qué va a devolver."
+        explanationRes = R.string.bug_expl_3,
+        humorRes = R.string.bug_humor_3
     ),
     BugSnippet(
         listOf("val nums = listOf(1, 2, 3)", "for i in nums {", "print(i)", "}"),
         bugIndex = 1,
-        explanation = "En Kotlin el for usa paréntesis: for (i in nums).",
-        humor = "Codey: ¡Los paréntesis no son decoración! Son parte de la sintaxis."
+        explanationRes = R.string.bug_expl_4,
+        humorRes = R.string.bug_humor_4
     ),
     BugSnippet(
-        listOf("fun main() {", "val msg = \"Hola\"", "println(msg)", "}//fin"),
+        listOf("fun main() {", "val msg = \"Hello\"", "println(msg)", "}//end"),
         bugIndex = 0,
-        explanation = "main no necesita paréntesis vacíos si es la entrada.",
-        humor = "Codey: En realidad main() está bien, ¡pero este bug es tramposo!"
+        explanationRes = R.string.bug_expl_5,
+        humorRes = R.string.bug_humor_5
     ),
     BugSnippet(
         listOf("val count = 0", "while (count < 5) {", "println(count)", "count--", "}"),
         bugIndex = 3,
-        explanation = "Está decrementando count en vez de incrementarlo. Bucle infinito.",
-        humor = "Codey: ¡Así nunca llegarás a 5! Es como correr hacia atrás."
+        explanationRes = R.string.bug_expl_6,
+        humorRes = R.string.bug_humor_6
     ),
     BugSnippet(
         listOf("val data = \"123\"", "val number: Int = data", "println(number + 1)"),
         bugIndex = 1,
-        explanation = "No se puede asignar un String directamente a Int. Usa toInt().",
-        humor = "Codey: ¡No puedes convertir strings a Int por ósmosis! Usa .toInt()."
+        explanationRes = R.string.bug_expl_7,
+        humorRes = R.string.bug_humor_7
     ),
     BugSnippet(
         listOf("fun isEven(n: Int) {", "return n % 2 == 0", "}", "val r = isEven(4)"),
         bugIndex = 0,
-        explanation = "La función debe declarar tipo de retorno: fun isEven(n: Int): Boolean.",
-        humor = "Codey: El compilador no es adivino. Dile qué vas a devolver."
+        explanationRes = R.string.bug_expl_8,
+        humorRes = R.string.bug_humor_8
     ),
     BugSnippet(
         listOf("val items = listOf(1, 2, 3)", "items.add(4)", "println(items)"),
         bugIndex = 1,
-        explanation = "listOf crea una lista inmutable. Usa mutableListOf.",
-        humor = "Codey: ¡No puedes modificar una lista inmutable! Es como intentar cambiar el pasado."
+        explanationRes = R.string.bug_expl_9,
+        humorRes = R.string.bug_humor_9
     ),
     BugSnippet(
-        listOf("fun greet() {", "println(\"Hola\")", "", "", "", "}"),
+        listOf("fun greet() {", "println(\"Hello\")", "", "", "", "}"),
         bugIndex = 2,
-        explanation = "Líneas vacías innecesarias. El código debe ser limpio.",
-        humor = "Codey: ¿Estás escribiendo código o una novela? Muy poético pero poco práctico."
+        explanationRes = R.string.bug_expl_10,
+        humorRes = R.string.bug_humor_10
     )
 )
 
@@ -104,9 +104,9 @@ fun BugHuntScreen(
     var timeRemaining by remember { mutableStateOf(60) }
     var score by remember { mutableStateOf(0) }
     var isGameOver by remember { mutableStateOf(false) }
-    var codeyReaction by remember { mutableStateOf("¡Encuentra el bug antes de que el compilador explote!") }
-    var lastExplanation by remember { mutableStateOf<String?>(null) }
-    var lastHumor by remember { mutableStateOf<String?>(null) }
+    var codeyReactionRes by remember { mutableStateOf(R.string.bug_initial) }
+    var lastExplanationRes by remember { mutableStateOf<Int?>(null) }
+    var lastHumor by remember { mutableStateOf<Int?>(null) }
     var answeredRound by remember { mutableStateOf(false) }
 
     val currentSnippet = snippets.getOrNull(currentRound - 1)
@@ -148,7 +148,7 @@ fun BugHuntScreen(
                 Text(stringResource(R.string.game_result_reward, bytesEarned))
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Acertaste $score de $totalRounds",
+                    text = stringResource(R.string.bug_score, score, totalRounds),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -184,7 +184,7 @@ fun BugHuntScreen(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Codey: $codeyReaction", modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Text(stringResource(R.string.bug_codey, stringResource(codeyReactionRes)), modifier = Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -194,8 +194,8 @@ fun BugHuntScreen(
 
                 if (currentSnippet != null) {
                     currentSnippet.lines.forEachIndexed { index, line ->
-                        val isCorrectLine = index == currentSnippet.bugIndex && answeredRound && lastExplanation != null
-                        val isWrongPick = answeredRound && lastExplanation != null && index != currentSnippet.bugIndex
+                        val isCorrectLine = index == currentSnippet.bugIndex && answeredRound && lastExplanationRes != null
+                        val isWrongPick = answeredRound && lastExplanationRes != null && index != currentSnippet.bugIndex
 
                         Surface(
                             color = when {
@@ -210,12 +210,12 @@ fun BugHuntScreen(
                                 .clickable(enabled = !answeredRound) {
                                     if (index == currentSnippet.bugIndex) {
                                         score++
-                                        codeyReaction = currentSnippet.humor
+                                        codeyReactionRes = currentSnippet.humorRes
                                     } else {
-                                        codeyReaction = "¡Esa línea está bien! Sigue buscando..."
+                                        codeyReactionRes = R.string.bug_wrong_line
                                     }
-                                    lastExplanation = currentSnippet.explanation
-                                    lastHumor = currentSnippet.humor
+                                    lastExplanationRes = currentSnippet.explanationRes
+                                    lastHumor = currentSnippet.humorRes
                                     answeredRound = true
                                 }
                         ) {
@@ -227,7 +227,7 @@ fun BugHuntScreen(
                         }
                     }
 
-                    if (answeredRound && lastExplanation != null) {
+                    if (answeredRound && lastExplanationRes != null) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Surface(
                             color = if (lastHumor != null && score > 0) Color(0xFF1B5E20).copy(alpha = 0.15f) else Color(0xFFB71C1C).copy(alpha = 0.1f),
@@ -235,7 +235,7 @@ fun BugHuntScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                text = "Explicación: ${lastExplanation}",
+                                text = stringResource(R.string.bug_explanation, stringResource(lastExplanationRes!!)),
                                 modifier = Modifier.padding(12.dp),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = MaterialTheme.typography.bodySmall.fontSize,
@@ -248,14 +248,14 @@ fun BugHuntScreen(
                             if (currentRound < totalRounds) {
                                 currentRound++
                                 answeredRound = false
-                                lastExplanation = null
+                                lastExplanationRes = null
                                 lastHumor = null
-                                codeyReaction = "¡Siguiente ronda! ¿Dónde se esconde el bug?"
+                                codeyReactionRes = R.string.bug_next_round
                             } else {
                                 isGameOver = true
                             }
                         }) {
-                            Text(if (currentRound < totalRounds) "Siguiente ronda" else "Ver resultados")
+                            Text(if (currentRound < totalRounds) stringResource(R.string.game_next_round) else stringResource(R.string.game_see_results))
                         }
                     }
                 }

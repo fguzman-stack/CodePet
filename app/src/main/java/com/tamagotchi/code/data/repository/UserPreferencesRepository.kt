@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.tamagotchi.code.ui.theme.ThemeRegistry
+import com.tamagotchi.code.util.DifficultyKey
+import com.tamagotchi.code.util.TopicKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -68,11 +70,12 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
-        prefs[KEY_SELECTED_TOPICS] ?: setOf("Kotlin", "Estructuras de Datos", "Git")
+        (prefs[KEY_SELECTED_TOPICS] ?: setOf("Kotlin", "Estructuras de Datos", "Git"))
+            .map { TopicKey.normalize(it) }.toSet()
     }
 
     val difficulty: Flow<String> = context.dataStore.data.map { prefs ->
-        prefs[KEY_DIFFICULTY] ?: "Inicial"
+        DifficultyKey.normalize(prefs[KEY_DIFFICULTY] ?: "Inicial")
     }
 
     val focusDurationDefault: Flow<Int> = context.dataStore.data.map { prefs ->
