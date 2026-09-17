@@ -41,6 +41,7 @@
   [⚡ Quick Start](#-quick-start) ·
   [🎮 How to Play](#-how-to-play) ·
   [🎨 Themes](#-themes) ·
+  [🌍 Localization](#-localization) ·
   [🗺️ Roadmap](#️-roadmap) ·
   [🤝 Contributing](#-contributing)
 </div>
@@ -325,6 +326,19 @@ Code Tamagotchi ships with **12 premium themes**. Each configures colors, typogr
 | 🕹️ Retro Pixel | **FINAL THEME** — definitive 8-bit, pixel art |
 
 > Pick one from the visual carousel in **Settings**. Solve special challenges to unlock new themes.
+
+---
+
+## 🌍 Localization
+
+Code Tamagotchi is fully bilingual (**English + Spanish**) and follows your **system language** automatically — there is no in-app switcher:
+
+- ✅ UI, dialogs, game texts, notifications and widget: `values/` (es) + `values-en/` (en)
+- ✅ Learning content: 90 code challenges, 6 special algorithm challenges, 10 code-review snippets and 40 code cards translated to English (matched by stable id, order-checked in `LocalizedContentTest`)
+- ⚠️ Notification **channel labels** (Android Settings) are created once with the language active at first install
+- ⚠️ Theme names are shown in Spanish by design (they are stable identifiers stored in preferences)
+
+Translations live next to the original data: `ChallengesDataEn.kt`, `SpecialChallengesDataEn.kt`, `CodeReviewDataEn.kt`, `CodeCardsEn.kt`. PRs to fix wording (either language) are very welcome.
 
 ---
 
