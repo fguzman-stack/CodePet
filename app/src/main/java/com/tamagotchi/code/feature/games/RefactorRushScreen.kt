@@ -54,8 +54,8 @@ private val puzzleBank = listOf(
         R.string.refactor_puzzle_3,
         listOf(
             "fun greet(name: String, age: Int): String {",
-            "    val greeting = \"Hola, \$name\"",
-            "    val ageMsg = if (age >= 18) \"Eres mayor\" else \"Eres menor\"",
+            "    val greeting = \"Hello, \$name\"",
+            "    val ageMsg = if (age >= 18) \"Adult\" else \"Minor\"",
             "    return \"\$greeting. \$ageMsg\"",
             "}"
         )

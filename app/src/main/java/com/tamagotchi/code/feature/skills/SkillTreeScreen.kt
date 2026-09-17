@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.skillDescription
+import com.tamagotchi.code.ui.components.skillName
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.viewmodel.SkillNodeData
 
@@ -86,6 +88,8 @@ fun SkillTreeScreen(
         }
 
         skills.forEach { skill ->
+            val skillNameText = skillName(skill.id, skill.name)
+            val skillDescText = skillDescription(skill.id, skill.description)
             val canAfford = xp >= (skill.currentTier + 1) * 100
             val isMaxed = skill.currentTier >= skill.maxTier
             val progress = skill.currentTier.toFloat() / skill.maxTier
@@ -109,7 +113,7 @@ fun SkillTreeScreen(
                 ) {
                     Icon(
                         imageVector = icon,
-                        contentDescription = skill.name,
+                        contentDescription = skillNameText,
                         tint = if (isMaxed) Color(0xFFFFD700) else Color(0xFF81C784),
                         modifier = Modifier.size(24.dp)
                     )
@@ -117,14 +121,14 @@ fun SkillTreeScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = skill.name,
+                            text = skillNameText,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
                             color = Color.White
                         )
                         Text(
-                            text = skill.description,
+                            text = skillDescText,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = Color.Gray

@@ -8,6 +8,7 @@ import com.tamagotchi.code.data.CodeCard
 import com.tamagotchi.code.data.CodingChallenge
 import com.tamagotchi.code.data.QuestType
 import com.tamagotchi.code.data.codeCards
+import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.data.getTargetForQuest
 import com.tamagotchi.code.data.database.FocusSessionEntity
 import com.tamagotchi.code.data.database.PetStateEntity
@@ -35,6 +36,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import android.content.Context
 import android.app.NotificationManager
+import androidx.annotation.StringRes
+import com.tamagotchi.code.R
 
 class PetViewModel(
     private val repository: PetRepository,
@@ -84,7 +87,7 @@ class PetViewModel(
     }
 
     val selectedTopics = MutableStateFlow<Set<String>>(emptySet())
-    val defaultInitialTopics = setOf("Kotlin", "Estructuras de Datos", "Git")
+    val defaultInitialTopics = setOf("Kotlin", "Data Structures", "Git")
 
     fun setTopics(topics: Set<String>) {
         viewModelScope.launch {
@@ -115,7 +118,7 @@ class PetViewModel(
         }
     }
 
-    val difficulty = MutableStateFlow("Inicial")
+    val difficulty = MutableStateFlow(com.tamagotchi.code.util.DifficultyKey.INITIAL)
     val focusDurationDefault = MutableStateFlow(25)
     val soundEnabled = MutableStateFlow(true)
     val vibrationEnabled = MutableStateFlow(true)
@@ -133,10 +136,9 @@ class PetViewModel(
         viewModelScope.launch {
             userPreferences.setDifficulty(newDifficulty)
             difficulty.value = newDifficulty
-            
+
             // Lógica para dificultad principiante
-            if (newDifficulty.contains("Principiante", ignoreCase = true) || 
-                newDifficulty.contains("experiencia", ignoreCase = true)) {
+            if (newDifficulty == com.tamagotchi.code.util.DifficultyKey.BEGINNER) {
                 // Podríamos cargar un set de retos ultra-básicos aquí
             }
         }
@@ -188,7 +190,7 @@ class PetViewModel(
             repository.savePetState(defaultPet)
             userPreferences.setSelectedTopics(defaultInitialTopics)
             hasSeenOnboarding.value = false
-            userPreferences.setDifficulty("Inicial")
+            userPreferences.setDifficulty(com.tamagotchi.code.util.DifficultyKey.INITIAL)
             userPreferences.setFocusDurationDefault(25)
         }
     }
@@ -498,7 +500,7 @@ class PetViewModel(
     fun loadChallengesForLanguage(language: String) {
         _selectedChallengeLanguage.value = language
         val filtered = ChallengesData.challenges.filter { it.language.equals(language, ignoreCase = true) }
-        _activeChallenges.value = filtered.shuffled().take(3)
+        _activeChallenges.value = filtered.map { it.localized() }.shuffled().take(3)
         _currentChallengeIndex.value = 0
         _challengeFeedback.value = null
     }
@@ -918,8 +920,6 @@ class PetViewModel(
         private set
     var showQuestCompletedDialog = mutableStateOf(false)
         private set
-    var questCompletedMessage = mutableStateOf("")
-        private set
 
     fun dismissDeathDialog() {
         showDeathDialog.value = false
@@ -957,7 +957,7 @@ class PetViewModel(
             }
             val card = pool.random()
             userPreferences.markCardShown(card.id)
-            currentCodeCard.value = card
+            currentCodeCard.value = card.localized()
             showCodeCardDialog.value = true
         }
     }
@@ -1011,7 +1011,6 @@ class PetViewModel(
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updated)
-            questCompletedMessage.value = "Mision completada!\n\n${currentType.displayName}\n\n+$rewardXp XP\n+$rewardBytes Bytes"
             showQuestCompletedDialog.value = true
             soundManager.playLevelUp()
             triggerCelebration()
@@ -1157,15 +1156,8 @@ class PetViewModel(
 
     fun triggerRandomMoodlet() {
         viewModelScope.launch {
-            val events = listOf(
-                "bug_prod" to "Encontró un bug en producción 😱",
-                "tabs" to "Te vio usar tabs 😊",
-                "spaces" to "Te vio usar espacios 🤔",
-                "bad_commit" to "Commit sin descripción 😞",
-                "clean_code" to "Código limpio detectado 🎉",
-                "spilled_coffee" to "Café derramado 😰"
-            )
-            val (type, message) = events.random()
+            val eventTypes = listOf("bug_prod", "tabs", "spaces", "bad_commit", "clean_code", "spilled_coffee")
+            val type = eventTypes.random()
             val duration = when (type) {
                 "bug_prod" -> 2L
                 "spilled_coffee" -> 1L
@@ -1175,7 +1167,7 @@ class PetViewModel(
             }
             val expiry = System.currentTimeMillis() + duration * 60 * 60 * 1000
             userPreferences.saveMoodlet(type, expiry)
-            moodletState.value = MoodletState(message, expiry)
+            moodletState.value = MoodletState(type, expiry)
         }
     }
 
@@ -1422,10 +1414,11 @@ data class WeeklyMissionData(
     val completed: Boolean = false
 ) {
     companion object {
+        // Title/description are resolved by id at display time (see LocalizedGameText.kt)
         fun generateWeeklyMissions(): List<WeeklyMissionData> = listOf(
-            WeeklyMissionData("wm1", "5 retos de código", "Completa 5 retos en Aprender", 100, 50),
-            WeeklyMissionData("wm2", "2h modo foco", "Estudia 2 horas en modo foco", 200, 100),
-            WeeklyMissionData("wm3", "Gana 3 Bug Hunt", "Gana 3 partidas de Bug Hunt", 150, 75)
+            WeeklyMissionData("wm1", "", "", 100, 50),
+            WeeklyMissionData("wm2", "", "", 200, 100),
+            WeeklyMissionData("wm3", "", "", 150, 75)
         )
     }
 }
@@ -1447,13 +1440,14 @@ data class SkillNodeData(
 )
 
 object SkillTreeData {
+    // name/description are resolved by id at display time (see LocalizedGameText.kt)
     val DEFAULT_SKILLS = listOf(
-        SkillNodeData("double_xp", "Doble XP domingo", "XP x1.5/2/3 los domingos"),
-        SkillNodeData("slow_decay", "Decaimiento lento", "Decaimiento -10%/-20%/-30%"),
-        SkillNodeData("shop_discount", "Descuento tienda", "5%/10%/15% descuento"),
-        SkillNodeData("minigame_bonus", "Bonus minijuegos", "+10%/+20%/+30% recompensa"),
-        SkillNodeData("offline_xp", "XP offline", "1h/2h/4h de XP pasivo"),
-        SkillNodeData("extra_heart", "Corazón extra", "Máximo 6 corazones")
+        SkillNodeData("double_xp", "", ""),
+        SkillNodeData("slow_decay", "", ""),
+        SkillNodeData("shop_discount", "", ""),
+        SkillNodeData("minigame_bonus", "", ""),
+        SkillNodeData("offline_xp", "", ""),
+        SkillNodeData("extra_heart", "", "")
     )
 }
 
@@ -1463,15 +1457,15 @@ data class DailyReward(
     val xp: Int,
     val healthRestore: Float = 0f,
     val energyRestore: Float = 0f,
-    val title: String
+    @StringRes val titleRes: Int
 )
 
 val dailyRewardsList = listOf(
-    DailyReward(1, 50, 15, title = "Hola, Mundo!"),
-    DailyReward(2, 100, 25, title = "Variables Inicializadas"),
-    DailyReward(3, 150, 35, energyRestore = 15f, title = "Café Double Shot"),
-    DailyReward(4, 200, 45, title = "Bucle Optimizado"),
-    DailyReward(5, 250, 55, healthRestore = 15f, title = "Bug Solucionado"),
-    DailyReward(6, 350, 70, title = "Compilación Limpia"),
-    DailyReward(7, 500, 100, healthRestore = 25f, energyRestore = 25f, title = "Despliegue Exitoso (PROD)")
+    DailyReward(1, 50, 15, titleRes = R.string.dr_1_title),
+    DailyReward(2, 100, 25, titleRes = R.string.dr_2_title),
+    DailyReward(3, 150, 35, energyRestore = 15f, titleRes = R.string.dr_3_title),
+    DailyReward(4, 200, 45, titleRes = R.string.dr_4_title),
+    DailyReward(5, 250, 55, healthRestore = 15f, titleRes = R.string.dr_5_title),
+    DailyReward(6, 350, 70, titleRes = R.string.dr_6_title),
+    DailyReward(7, 500, 100, healthRestore = 25f, energyRestore = 25f, titleRes = R.string.dr_7_title)
 )

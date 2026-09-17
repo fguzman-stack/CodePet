@@ -71,7 +71,7 @@ class SplashActivity : Activity() {
             
             // Tagline
             val taglineTextView = android.widget.TextView(this@SplashActivity).apply {
-                text = "Tu compañero de programación"
+                text = getString(R.string.splash_tagline)
                 textSize = 14f
                 setTextColor(android.graphics.Color.parseColor("#E6E9FF"))
                 layoutParams = android.view.ViewGroup.LayoutParams(

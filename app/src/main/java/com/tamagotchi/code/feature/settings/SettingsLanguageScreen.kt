@@ -28,16 +28,7 @@ fun SettingsLanguageScreen(
     val difficulty by viewModel.difficulty.collectAsStateWithLifecycle()
     val petState by viewModel.petState.collectAsStateWithLifecycle()
     
-    val allTopics = listOf(
-        stringResource(R.string.topic_kotlin),
-        stringResource(R.string.topic_javascript),
-        stringResource(R.string.topic_python),
-        stringResource(R.string.topic_php),
-        stringResource(R.string.topic_sql),
-        stringResource(R.string.topic_git),
-        stringResource(R.string.topic_clean_code),
-        stringResource(R.string.topic_data_structures)
-    )
+    val allTopics = com.tamagotchi.code.util.TopicKey.ALL.map { it to com.tamagotchi.code.util.TopicKey.displayRes(it) }
     
     val allLanguages = listOf("Kotlin", "JavaScript", "Python", "PHP")
 
@@ -104,16 +95,12 @@ fun SettingsLanguageScreen(
             Text(stringResource(R.string.settings_lang_difficulty), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(
-                    stringResource(R.string.settings_lang_diff_beginner),
-                    stringResource(R.string.settings_lang_diff_initial),
-                    stringResource(R.string.settings_lang_diff_intermediate),
-                    stringResource(R.string.settings_lang_diff_mixed)
-                ).forEach { diffOption ->
+                com.tamagotchi.code.util.DifficultyKey.ALL.forEach { key ->
+                    val label = stringResource(com.tamagotchi.code.util.DifficultyKey.displayRes(key))
                     FilterChip(
-                        selected = difficulty == diffOption,
-                        onClick = { viewModel.setDifficulty(diffOption) },
-                        label = { Text(diffOption) }
+                        selected = difficulty == key,
+                        onClick = { viewModel.setDifficulty(key) },
+                        label = { Text(label) }
                     )
                 }
             }
@@ -128,23 +115,24 @@ fun SettingsLanguageScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                allTopics.forEach { topic ->
+                allTopics.forEach { (topicKey, labelRes) ->
+                    val topicLabel = stringResource(labelRes)
                     FilterChip(
-                        selected = selectedTopics.contains(topic),
+                        selected = selectedTopics.contains(topicKey),
                         onClick = {
                             val newSelection = selectedTopics.toMutableSet()
-                            if (newSelection.contains(topic)) {
+                            if (newSelection.contains(topicKey)) {
                                 if (newSelection.size > 1) {
-                                    newSelection.remove(topic)
+                                    newSelection.remove(topicKey)
                                 }
                             } else {
-                                newSelection.add(topic)
+                                newSelection.add(topicKey)
                             }
                             viewModel.setTopics(newSelection)
                         },
-                        label = { Text(topic) },
+                        label = { Text(topicLabel) },
                         leadingIcon = {
-                            TopicIcon(topic = topic, modifier = androidx.compose.ui.Modifier.size(18.dp))
+                            TopicIcon(topic = topicKey, modifier = androidx.compose.ui.Modifier.size(18.dp))
                         }
                     )
                 }
@@ -159,7 +147,11 @@ fun SettingsLanguageScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(R.string.settings_lang_preview, selectedTopics.size, difficulty),
+                    text = stringResource(
+                        R.string.settings_lang_preview,
+                        selectedTopics.size,
+                        stringResource(com.tamagotchi.code.util.DifficultyKey.displayRes(difficulty))
+                    ),
                     modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant

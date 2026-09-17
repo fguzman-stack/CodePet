@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.CodingChallenge
+import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
@@ -438,7 +439,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 @Composable
 fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
     val unlockedThemes by viewModel.unlockedThemes.collectAsStateWithLifecycle()
-    var currentChallenge by remember { mutableStateOf(com.tamagotchi.code.data.SpecialChallengesData.challenges.random()) }
+    var currentChallenge by remember { mutableStateOf(com.tamagotchi.code.data.SpecialChallengesData.challenges.random().localized()) }
     var showFeedback by remember { mutableStateOf<Boolean?>(null) }
     var unlockedThemeName by remember { mutableStateOf<String?>(null) }
     var isAnswered by remember { mutableStateOf(false) }
@@ -612,7 +613,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
                         isAnswered = false
                         showFeedback = null
                         unlockedThemeName = null
-                        currentChallenge = com.tamagotchi.code.data.SpecialChallengesData.challenges.random()
+                        currentChallenge = com.tamagotchi.code.data.SpecialChallengesData.challenges.random().localized()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {

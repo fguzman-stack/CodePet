@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.weeklyMissionDescription
+import com.tamagotchi.code.ui.components.weeklyMissionTitle
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -102,14 +104,14 @@ fun WeeklyMissionsScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = mission.title,
+                            text = weeklyMissionTitle(mission.id, mission.title),
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
                             color = if (mission.completed) Color(0xFF81C784) else Color.White
                         )
                         Text(
-                            text = mission.description,
+                            text = weeklyMissionDescription(mission.id, mission.description),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             color = Color.Gray

@@ -36,7 +36,7 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_1
     ),
     BugSnippet(
-        listOf("if (x = 5) {", "print(\"Cinco\")", "} else {", "print(\"Otro\")", "}"),
+        listOf("if (x = 5) {", "print(\"Five\")", "} else {", "print(\"Other\")", "}"),
         bugIndex = 0,
         explanationRes = R.string.bug_expl_2,
         humorRes = R.string.bug_humor_2
@@ -54,7 +54,7 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_4
     ),
     BugSnippet(
-        listOf("fun main() {", "val msg = \"Hola\"", "println(msg)", "}//fin"),
+        listOf("fun main() {", "val msg = \"Hello\"", "println(msg)", "}//end"),
         bugIndex = 0,
         explanationRes = R.string.bug_expl_5,
         humorRes = R.string.bug_humor_5
@@ -84,7 +84,7 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_9
     ),
     BugSnippet(
-        listOf("fun greet() {", "println(\"Hola\")", "", "", "", "}"),
+        listOf("fun greet() {", "println(\"Hello\")", "", "", "", "}"),
         bugIndex = 2,
         explanationRes = R.string.bug_expl_10,
         humorRes = R.string.bug_humor_10

@@ -157,7 +157,7 @@ fun OnboardingScreen(
                     )
                 ) {
                     Text(
-                        "Siguiente",
+                        stringResource(R.string.onboarding_next),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp
@@ -373,21 +373,12 @@ private fun Step3Content(
     selectedTopics: Set<String>,
     onTopicsChange: (Set<String>) -> Unit
 ) {
-    val allTopics = listOf(
-        stringResource(R.string.topic_kotlin),
-        stringResource(R.string.topic_javascript),
-        stringResource(R.string.topic_python),
-        stringResource(R.string.topic_php),
-        stringResource(R.string.topic_sql),
-        stringResource(R.string.topic_git),
-        stringResource(R.string.topic_clean_code),
-        stringResource(R.string.topic_data_structures)
-    )
+    val allTopics = com.tamagotchi.code.util.TopicKey.ALL.map { it to com.tamagotchi.code.util.TopicKey.displayRes(it) }
 
     val initialRoute = setOf(
-        stringResource(R.string.topic_kotlin),
-        stringResource(R.string.topic_git),
-        stringResource(R.string.topic_data_structures)
+        com.tamagotchi.code.util.TopicKey.KOTLIN,
+        com.tamagotchi.code.util.TopicKey.GIT,
+        com.tamagotchi.code.util.TopicKey.DATA_STRUCTURES
     )
 
     Column(
@@ -442,28 +433,29 @@ private fun Step3Content(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                allTopics.forEach { topic ->
+                allTopics.forEach { (topicKey, labelRes) ->
+                    val topicLabel = stringResource(labelRes)
                     FilterChip(
-                        selected = selectedTopics.contains(topic),
+                        selected = selectedTopics.contains(topicKey),
                         onClick = {
                             val newSelection = selectedTopics.toMutableSet()
-                            if (newSelection.contains(topic)) {
+                            if (newSelection.contains(topicKey)) {
                                 if (newSelection.size > 1) {
-                                    newSelection.remove(topic)
+                                    newSelection.remove(topicKey)
                                 }
                             } else {
                                 if (newSelection.size < 3) {
-                                    newSelection.add(topic)
+                                    newSelection.add(topicKey)
                                 }
                             }
                             if (newSelection.isNotEmpty()) {
                                 onTopicsChange(newSelection)
                             }
                         },
-                        label = { Text(topic, fontSize = 11.sp) },
+                        label = { Text(topicLabel, fontSize = 11.sp) },
                         leadingIcon = {
                             com.tamagotchi.code.ui.components.TopicIcon(
-                                topic = topic,
+                                topic = topicKey,
                                 modifier = androidx.compose.ui.Modifier.size(18.dp)
                             )
                         }

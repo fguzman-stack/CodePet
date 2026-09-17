@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.viewmodel.DailyReward
 import com.tamagotchi.code.ui.viewmodel.dailyRewardsList
@@ -118,7 +120,7 @@ fun DailyRewardDialog(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = if (isClaimedToday) "¡Recompensa Reclamada!" else "Recompensas Diarias",
+                    text = stringResource(if (isClaimedToday) R.string.dr_claimed_title else R.string.dr_dialog_title),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
@@ -126,8 +128,7 @@ fun DailyRewardDialog(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (isClaimedToday) "Vuelve mañana por más"
-                    else "¡Vuelve cada día por más!",
+                    text = stringResource(if (isClaimedToday) R.string.dr_claimed_sub else R.string.dr_open_sub),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.5f)
@@ -200,8 +201,7 @@ fun DailyRewardDialog(
                     )
                 ) {
                     Text(
-                        text = if (isClaimedToday) "CERRAR"
-                        else "RECLAMAR RECOMPENSA",
+                        text = stringResource(if (isClaimedToday) R.string.dr_close_btn else R.string.dr_claim_btn),
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp
@@ -249,7 +249,7 @@ private fun RewardCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "DÍA ${reward.day}",
+                text = stringResource(R.string.dr_day, reward.day),
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 11.sp,
@@ -330,14 +330,14 @@ private fun MegaPackCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "DÍA 7 — ¡MEGA PACK!",
+                    text = stringResource(R.string.dr_day7_mega),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = accentColor.copy(alpha = alpha)
                 )
                 Text(
-                    text = reward.title,
+                    text = stringResource(reward.titleRes),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = alpha * 0.7f)
@@ -384,7 +384,7 @@ private fun MegaPackCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "+${reward.healthRestore.toInt()} Salud",
+                            text = stringResource(R.string.dr_health_amount, reward.healthRestore.toInt()),
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
                             color = Color.White.copy(alpha = alpha * 0.6f)
@@ -399,7 +399,7 @@ private fun MegaPackCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "+${reward.energyRestore.toInt()} Energía",
+                            text = stringResource(R.string.dr_energy_amount, reward.energyRestore.toInt()),
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace,
                             color = Color.White.copy(alpha = alpha * 0.6f)

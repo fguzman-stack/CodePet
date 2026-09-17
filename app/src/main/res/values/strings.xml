@@ -106,7 +106,7 @@
     <string name="games_refactor_rush_desc">Ordena el código para que tenga sentido antes de que falle el build.</string>
     <string name="games_classic_arcade">Arcade Clásico</string>
     <string name="games_classic_desc">Minijuegos antiguos para pasar el rato.</string>
-    <string name="games_cooldown">En enfriamiento (Vuelve más tarde para ganar más recompensa)</string>
+    <string name="games_cooldown">En enfriamiento (vuelve más tarde para ganar más recompensa)</string>
     <string name="games_play">Jugar</string>
 
     <!-- Bug Hunt -->
@@ -232,7 +232,7 @@
     <string name="bug_score">Acertaste %1$d de %2$d</string>
     <string name="bug_explanation">Explicación: %1$s</string>
     <string name="bug_expl_1">Falta el paréntesis de cierre en println.</string>
-    <string name="bug_humor_1">¡Era un paréntesis fugitivo! Se escapó sin pagar el alquiler.</string>
+    <string name="bug_humor_1">¡Era un paréntesis fugitivo! Escapó sin dejar señas.</string>
     <string name="bug_expl_2">En Kotlin la comparación es == no =. = es asignación.</string>
     <string name="bug_humor_2">Codey: ¡Un solo = es asignación, doble == es comparación! No confundas al compilador.</string>
     <string name="bug_expl_3">Falta el tipo de retorno explícito, debería ser \': Int\'.</string>
@@ -265,7 +265,7 @@
     <string name="git_opt_1c">git push --force</string>
     <string name="git_expl_1">Crear una rama nueva desde main es la forma correcta de empezar un feature.</string>
     <string name="git_humor_1">Codey: ¡Nunca pushes a main sin antes crear una rama! Eres un cowboy.</string>
-    <string name="git_sit_2">Has hecho cambios locales y te das cuenta de que rompiste todo. Quieres volver al último commit limpio.</string>
+    <string name="git_sit_2">Hiciste un commit que rompió todo en tu rama. Quieres deshacerlo de forma segura, preservando el historial.</string>
     <string name="git_opt_2a">git reset --hard HEAD</string>
     <string name="git_opt_2b">git revert HEAD</string>
     <string name="git_opt_2c">git rm -rf .</string>
@@ -281,7 +281,7 @@
     <string name="git_opt_4a">git pull origin main</string>
     <string name="git_opt_4b">git merge feature main</string>
     <string name="git_opt_4c">git branch -d main</string>
-    <string name="git_expl_4">git pull trae los cambios de main a tu rama actual. merge lo haría al revés.</string>
+    <string name="git_expl_4">git pull origin main trae los cambios de main a tu rama actual: es un fetch + merge en un solo comando.</string>
     <string name="git_humor_4">Codey: No borres main. Nunca borres main. Es como borrar el diccionario.</string>
     <string name="git_sit_5">Hiciste un commit pero olvidaste incluir un archivo. ¿Cómo lo arreglas?</string>
     <string name="git_opt_5a">git add archivo &amp;&amp; git commit --amend</string>
@@ -301,7 +301,7 @@
     <string name="git_opt_7c">git commit --fixup</string>
     <string name="git_expl_7">rebase interactivo te permite squash, reordenar y renombrar commits.</string>
     <string name="git_humor_7">Codey: Los mensajes \'fix\' y \'update\' son como decir \'cosa\' en un examen. Sé descriptivo.</string>
-    <string name="git_sit_8">Tu rama feature quedó atrás de main y necesitas actualizarla sin crear commits de merge.</string>
+    <string name="git_sit_8">Tu rama local quedó atrás respecto a su versión en el remoto y quieres incorporar esos cambios sin crear commits de merge.</string>
     <string name="git_opt_8a">git rebase main</string>
     <string name="git_opt_8b">git merge main</string>
     <string name="git_opt_8c">git pull --rebase</string>
@@ -455,7 +455,7 @@
 
     <!-- Season Pass -->
     <string name="season_header">&gt;&gt;&gt; PASE DE TEMPORADA</string>
-    <string name="season_desc">Gana XP de pase completando actividades. 20 niveles de recompensas!</string>
+    <string name="season_desc">Gana XP de pase completando actividades. ¡20 niveles de recompensas!</string>
     <string name="season_level">NIVEL %1$d / 20</string>
     <string name="season_xp">XP del pase: %1$d/100</string>
     <string name="season_premium">PASE PREMIUM: Skins exclusivas + sombreros raros + XP boost</string>
@@ -464,11 +464,292 @@
     <string name="season_reward_5">Nivel 5: Sombrero básico</string>
     <string name="season_reward_10">Nivel 10: 200 XP</string>
     <string name="season_reward_15">Nivel 15: Carta de código rara</string>
-    <string name="season_reward_20">Nivel 20: Skin legendaria!</string>
+    <string name="season_reward_20">Nivel 20: ¡Skin legendaria!</string>
 
     <!-- Weekly Missions -->
     <string name="weekly_header">&gt;&gt;&gt; MISIONES SEMANALES</string>
-    <string name="weekly_bonus">BONUS COMPLETO: 500 XP + Sombrero exclusivo!</string>
+    <string name="weekly_bonus">BONUS COMPLETO: 500 XP + ¡Sombrero exclusivo!</string>
     <string name="weekly_desc">Completa las 3 misiones semanales para un bonus especial.</string>
+
+    <!-- Weekly mission items (resolved by stable id) -->
+    <string name="wm_wm1_title">5 retos de código</string>
+    <string name="wm_wm1_desc">Completa 5 retos en Aprender</string>
+    <string name="wm_wm2_title">2h modo foco</string>
+    <string name="wm_wm2_desc">Estudia 2 horas en modo foco</string>
+    <string name="wm_wm3_title">Gana 3 Bug Hunt</string>
+    <string name="wm_wm3_desc">Gana 3 partidas de Bug Hunt</string>
+
+    <!-- Skill nodes (resolved by stable id) -->
+    <string name="skill_double_xp_name">Doble XP domingo</string>
+    <string name="skill_double_xp_desc">XP x1.5/2/3 los domingos</string>
+    <string name="skill_slow_decay_name">Decaimiento lento</string>
+    <string name="skill_slow_decay_desc">Decaimiento -10%/-20%/-30%</string>
+    <string name="skill_shop_discount_name">Descuento tienda</string>
+    <string name="skill_shop_discount_desc">5%/10%/15% descuento</string>
+    <string name="skill_minigame_bonus_name">Bonus minijuegos</string>
+    <string name="skill_minigame_bonus_desc">+10%/+20%/+30% recompensa</string>
+    <string name="skill_offline_xp_name">XP offline</string>
+    <string name="skill_offline_xp_desc">1h/2h/4h de XP pasivo</string>
+    <string name="skill_extra_heart_name">Corazón extra</string>
+    <string name="skill_extra_heart_desc">Máximo 6 corazones</string>
+
+    <!-- Achievements (resolved by stable id) -->
+    <string name="ach_primer_build_name">Primer build</string>
+    <string name="ach_primer_build_desc">Completa tu primera sesión Focus</string>
+    <string name="ach_nivel_experto_name">Nivel Experto</string>
+    <string name="ach_nivel_experto_desc">Sube de nivel por primera vez</string>
+    <string name="ach_cazador_de_bugs_name">Cazador de bugs</string>
+    <string name="ach_cazador_de_bugs_desc">Puntuación perfecta en Bug Hunt</string>
+    <string name="ach_git_sin_panico_name">Git sin pánico</string>
+    <string name="ach_git_sin_panico_desc">Aprueba Git Rescue con 3+ aciertos</string>
+    <string name="ach_racha_7_name">Racha de 7 días</string>
+    <string name="ach_racha_7_desc">Mantén una racha de estudio de 7 días</string>
+    <string name="ach_racha_30_name">Racha de 30 días</string>
+    <string name="ach_racha_30_desc">Mantén una racha de estudio de 30 días</string>
+    <string name="ach_coleccionista_name">Coleccionista</string>
+    <string name="ach_coleccionista_desc">Desbloquea 3 temas visuales</string>
+    <string name="ach_completista_name">Completista</string>
+    <string name="ach_completista_desc">Desbloquea los 12 temas visuales</string>
+    <string name="ach_ahorrador_name">Ahorrador</string>
+    <string name="ach_ahorrador_desc">Acumula 1000 Bytes</string>
+    <string name="ach_primer_acaricie_name">Primer mimo</string>
+    <string name="ach_primer_acaricie_desc">Acaricia a tu mascota por primera vez</string>
+    <string name="ach_duermevela_name">Duermevela</string>
+    <string name="ach_duermevela_desc">Pon a dormir a tu mascota</string>
+    <string name="ach_limpiador_name">Limpieza profunda</string>
+    <string name="ach_limpiador_desc">Limpia a tu mascota 10 veces</string>
+
+    <!-- Daily rewards -->
+    <string name="dr_1_title">¡Hola, Mundo!</string>
+    <string name="dr_2_title">Variables Inicializadas</string>
+    <string name="dr_3_title">Café Doble Shot</string>
+    <string name="dr_4_title">Bucle Optimizado</string>
+    <string name="dr_5_title">Bug Solucionado</string>
+    <string name="dr_6_title">Compilación Limpia</string>
+    <string name="dr_7_title">¡Despliegue Exitoso (PROD)!</string>
+    <string name="dr_dialog_title">Recompensas Diarias</string>
+    <string name="dr_claimed_title">¡Recompensa Reclamada!</string>
+    <string name="dr_claimed_sub">Vuelve mañana por más</string>
+    <string name="dr_open_sub">¡Vuelve cada día por más!</string>
+    <string name="dr_day">DÍA %1$d</string>
+    <string name="dr_day7_mega">DÍA 7 — ¡MEGA PACK!</string>
+    <string name="dr_health_amount">+%1$d Salud</string>
+    <string name="dr_energy_amount">+%1$d Energía</string>
+    <string name="dr_claim_btn">RECLAMAR RECOMPENSA</string>
+    <string name="dr_close_btn">CERRAR</string>
+
+    <!-- Quest types (resolved by enum name) -->
+    <string name="quest_study_kotlin_title">Estudia Kotlin</string>
+    <string name="quest_study_kotlin_desc">¡Hoy quiero estudiar Kotlin!</string>
+    <string name="quest_go_shop_title">Visita la tienda</string>
+    <string name="quest_go_shop_desc">¡Llévame a la tienda a comprar algo!</string>
+    <string name="quest_play_bug_hunt_title">Juega Bug Hunt</string>
+    <string name="quest_play_bug_hunt_desc">¡Juguemos Bug Hunt, hace tiempo que no!</string>
+    <string name="quest_buy_pizza_title">Compra pizza</string>
+    <string name="quest_buy_pizza_desc">Tengo hambre, ¡cómprame una pizza!</string>
+    <string name="quest_acariciar_title">Acaríciame 3 veces</string>
+    <string name="quest_acariciar_desc">¡Hoy necesito mucho cariño!</string>
+    <string name="quest_limpiar_title">Limpia mi hábitat</string>
+    <string name="quest_limpiar_desc">Mi casa está sucia, ¡necesito que me limpies!</string>
+    <string name="quest_focus_25_title">Foco 25 minutos</string>
+    <string name="quest_focus_25_desc">¡Pongamos música de foco y trabajemos 25 minutos!</string>
+    <string name="quest_complete_3_challenges_title">Completa 3 retos</string>
+    <string name="quest_complete_3_challenges_desc">¡Hagamos ejercicios mentales!</string>
+
+    <!-- Moodlet events (resolved by stable type key) -->
+    <string name="moodlet_bug_prod">Encontró un bug en producción 😱</string>
+    <string name="moodlet_tabs">Te vio usar tabs 😊</string>
+    <string name="moodlet_spaces">Te vio usar espacios 🤔</string>
+    <string name="moodlet_bad_commit">Commit sin descripción 😞</string>
+    <string name="moodlet_clean_code">Código limpio detectado 🎉</string>
+    <string name="moodlet_spilled_coffee">Café derramado 😰</string>
+
+    <!-- Viewport card -->
+    <string name="cd_rename">Renombrar</string>
+    <string name="viewport_specialist">Especialista: %1$s</string>
+    <string name="cd_heart">Corazón %1$d</string>
+    <string name="viewport_level">LVL %1$d</string>
+    <string name="season_level_short">Nivel %1$d</string>
+    <string name="cd_love">Amor</string>
+    <string name="cd_message">Mensaje</string>
+    <string name="viewport_xp_progress">XP: %1$d / %2$d</string>
+    <string name="meter_health">Vida</string>
+    <string name="meter_food">Alimento</string>
+    <string name="meter_energy">Energía</string>
+    <string name="cd_sleep_toggle">Dormir o despertar</string>
+    <string name="viewport_wake">Despertar</string>
+    <string name="viewport_sleep">Dormir</string>
+    <string name="action_pet">Acariciar</string>
+    <string name="action_clean">Limpiar</string>
+    <string name="action_play">Jugar</string>
+
+    <plurals name="streak_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+
+    <!-- Pair buddy (Buggy) -->
+    <string name="pair_buddy_here">¡%1$s está aquí!</string>
+    <plurals name="pair_buddy_xp">
+        <item quantity="one">XP x%2$s por %1$d reto más</item>
+        <item quantity="other">XP x%2$s por %1$d retos más</item>
+    </plurals>
+
+    <!-- Code cards dialog -->
+    <string name="cc_title_fact">Dato Curioso</string>
+    <string name="cc_title_joke">Chiste de Programador</string>
+    <string name="cc_title_tip">Tip de Código</string>
+    <string name="cc_another">¡Otra!</string>
+
+    <!-- Navigation -->
+    <string name="splash_tagline">Tu compañero de programación</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_learn">Aprender</string>
+    <string name="nav_focus">Estudio</string>
+    <string name="nav_shop">Tienda</string>
+    <string name="cd_app_icon">Icono de Code Tamagotchi</string>
+    <string name="cd_open_settings">Abrir configuración</string>
+
+    <!-- Pet status quotes by mood -->
+    <string-array name="quote_sleeping">
+        <item>Zzz… if (dream) { sleep() } else { repeat() }… Zzz</item>
+        <item>Cargando baterías… no interrumpas mi hilo principal.</item>
+        <item>Soñando con compiladores veloces y cero NullPointers…</item>
+        <item>Mi CPU está en modo ahorro. Vuelve en un ciclo de reloj.</item>
+        <item>Zzz… ¿viste ese commit? Fue… legendario…</item>
+    </string-array>
+    <string-array name="quote_studying">
+        <item>¡Shhh! Estoy optimizando algoritmos en mi cerebro.</item>
+        <item>Compilando… codeando a 1000 WPM.</item>
+        <item>Siento cómo se incrementa mi sinapsis neuronal binaria.</item>
+        <item>¿Sabías que el primer bug fue una polilla real? Yo prefiero los digitales.</item>
+        <item>Mi código es arte. Tu código… bueno, funciona.</item>
+        <item>Concentración total. No me hagas un force push ahora.</item>
+    </string-array>
+    <string-array name="quote_sick">
+        <item>Error 500: Necesito desbuguear urgente. ¡Dame una píldora!</item>
+        <item>Demasiados bugs acumulados en mi stack… me siento mal.</item>
+        <item>Siento mi CPU sobrecalentada. ¿Podemos repasar un poco?</item>
+        <item>Mi recolector de basura no está funcionando. Me siento… sucio.</item>
+        <item>¿Me formateas? No, mejor dame cariño, es menos traumático.</item>
+    </string-array>
+    <string-array name="quote_sad">
+        <item>Tengo flojera… me siento un poco depre.</item>
+        <item>Mi batería de motivación está por debajo del 20%.</item>
+        <item>¿Procrastinando otra vez? Mi código se llena de advertencias.</item>
+        <item>Siento que mi arquitectura se desmorona. Necesito un refactor emocional.</item>
+        <item>Ni siquiera un \'Hello World\' me anima hoy.</item>
+    </string-array>
+    <string-array name="quote_hungry">
+        <item>¡NullPointerException en mi estómago! Necesito bytes.</item>
+        <item>Mi caché de energía está vacía, ¿me das de comer?</item>
+        <item>Sin comida, mi rendimiento cae a O(n^2).</item>
+        <item>Mi estómago está haciendo un loop infinito de ruidos.</item>
+        <item>Aliméntame o empezaré a borrar tus archivos temporales. Es broma… ¿o no?</item>
+    </string-array>
+    <string-array name="quote_excited">
+        <item>¡Wiii! ¡Mi código es O(1) y mi corazón también!</item>
+        <item>¡Nivel de felicidad al MÁXIMO! Gracias por quererme.</item>
+        <item>¡Siento que podría compilar el kernel de Linux en 1 segundo!</item>
+        <item>¡Soy el root de tu corazón! ¡Wiiiii!</item>
+        <item>¡Todo compila a la primera! ¡Esto es magia negra!</item>
+    </string-array>
+    <string-array name="quote_dead">
+        <item>R.I.P. Fue procesado por un segfault…</item>
+        <item>Aquí yace una mascota. Su código quedó sin mergear.</item>
+        <item>404: vida no encontrada. Revídame para continuar.</item>
+        <item>from grave import revive  # ¿todavía estás a tiempo?</item>
+    </string-array>
+    <string-array name="quote_happy">
+        <item>¡Compilar sin advertencias es mi pasión!</item>
+        <item>¿Listo para tirar unas líneas de código limpias hoy?</item>
+        <item>¡Siento el poder de un refactor exitoso!</item>
+        <item>Me agradas, haces que mi arquitectura sea modular y sólida.</item>
+        <item>¿Has probado a apagarlo y volverlo a encender? A mí me funciona.</item>
+        <item>Tu código es tan limpio que puedo ver mi reflejo en él.</item>
+        <item>Oye, ¿has visto mis logs? Están llenos de amor por ti.</item>
+    </string-array>
+
+    <!-- Notifications -->
+    <string name="notif_title_dead">%1$s ha muerto</string>
+    <string name="notif_title_dying">%1$s está al borde de la muerte</string>
+    <string name="notif_title_starving">%1$s se muere de hambre</string>
+    <string name="notif_title_exhausted">%1$s está en las últimas</string>
+    <string name="notif_title_needs_you">%1$s te necesita</string>
+    <string name="notif_reason_dead">Me he ido al otro lado del compilador… ¿me rescatas?</string>
+    <string name="notif_reason_health_pain">Me duele hasta el último bit… ¿puedes revisarme? (Salud: %1$d%%)</string>
+    <string name="notif_reason_health_low">Noto que el Blue Screen of Death se acerca… (Salud: %1$d%%)</string>
+    <string name="notif_reason_hunger_extreme">Llevo horas sin comer, ¿crees que soy un microservicio? (Hambre: %1$d%%)</string>
+    <string name="notif_reason_hunger_loop">Mi estómago está haciendo un loop infinito de ruidos. (Hambre: %1$d%%)</string>
+    <string name="notif_reason_energy_red">Mi batería está en rojo. Y no es una metáfora de código. (Energía: %1$d%%)</string>
+    <string name="notif_reason_energy_logs">Oye, ¿has visto mis logs? Están llenos de NullPointerException existenciales. (Energía: %1$d%%)</string>
+    <string name="notif_reason_general">¡Necesito atención!</string>
+    <string name="notif_commit_title">%1$s hizo commit</string>
+
+    <!-- Notification channels -->
+    <string name="channel_group_care">Cuidado de Codey</string>
+    <string name="channel_hunger_name">Hambre de Codey</string>
+    <string name="channel_hunger_desc">Codey tiene hambre</string>
+    <string name="channel_health_name">Salud de Codey</string>
+    <string name="channel_health_desc">Codey está enfermo</string>
+    <string name="channel_energy_name">Energía de Codey</string>
+    <string name="channel_energy_desc">Codey está cansado</string>
+    <string name="channel_critical_name">Codey en peligro</string>
+    <string name="channel_critical_desc">Codey está en estado crítico</string>
+    <string name="channel_reminders_name">Recordatorios de Codey</string>
+    <string name="channel_reminders_desc">Recordatorios sobre el estado de tu mascota virtual</string>
+
+    <!-- Daily commit messages -->
+    <string name="commit_idle_1">docs: hoy no hice nada productivo</string>
+    <string name="commit_idle_2">chore: día de procrastinación técnica</string>
+    <string name="commit_idle_3">fix: sobreviví otro día sin crashear</string>
+    <string name="commit_idle_4">style: no toqué nada pero me veo bien</string>
+    <string name="commit_idle_5">refactor: moví archivos de lugar sin motivo aparente</string>
+    <string name="commit_busy_1">feat: hoy fue un día completo, hasta hice merge</string>
+    <string name="commit_busy_2">feat: commit masivo con varias funcionalidades</string>
+    <string name="commit_busy_3">chore: %1$s tuvo un día ocupado</string>
+    <string name="commit_study_love">feat: aprendí cosas nuevas mientras recibía cariño</string>
+    <string name="commit_study_1">feat: aprendí cosas nuevas hoy</string>
+    <string name="commit_study_2">feat: %1$s estudió y ganó XP</string>
+    <string name="commit_study_3">docs: sesión de estudio completada</string>
+    <string name="commit_shop_1">chore: gasté bytes en cosas innecesarias</string>
+    <string name="commit_shop_2">chore: compras impulsivas en la tienda</string>
+    <string name="commit_shop_3">feat: nuevos items adquiridos</string>
+    <string name="commit_play_1">refactor: me distraje un rato</string>
+    <string name="commit_play_2">feat: sesión de juegos completada</string>
+    <string name="commit_play_3">test: probé mis reflejos en los minijuegos</string>
+    <string name="commit_sleep_1">fix: pausa activa para recargar baterías</string>
+    <string name="commit_sleep_2">fix: %1$s durmió y recuperó energía</string>
+    <string name="commit_sleep_3">chore: modo ahorro de energía activado</string>
+    <string name="commit_pet_1">style: recibí cariño y eso mejora el código</string>
+    <string name="commit_pet_2">feat: ++felicidad, --bugs</string>
+    <string name="commit_pet_3">chore: mantenimiento emocional completado</string>
+    <string name="commit_clean_1">refactor: limpieza profunda del sistema</string>
+    <string name="commit_challenge_1">feat: desafío de código completado</string>
+    <string name="commit_challenge_2">fix: bugs eliminados con éxito</string>
+    <string name="commit_challenge_3">test: retos de programación superados</string>
+    <string name="commit_normal_1">chore: día normal, nada especial</string>
+    <string name="commit_normal_2">docs: %1$s estuvo tranquilo hoy</string>
+    <string name="commit_normal_3">style: sin cambios aparentes</string>
+
+    <!-- Home screen widget -->
+    <string name="widget_level">Nv.%1$d</string>
+    <string name="widget_status_happy">¡Todo va genial!</string>
+    <string name="widget_status_sleeping">Zzz… durmiendo</string>
+    <string name="widget_status_sick">No me siento bien</string>
+    <string name="widget_status_hungry">¡Tengo hambre!</string>
+    <string name="widget_status_sad">Estoy triste</string>
+    <string name="widget_status_studying">¡Modo estudio!</string>
+    <string name="widget_status_excited">¡Muy emocionado!</string>
+    <string name="widget_status_dead">Descansa en paz…</string>
+    <string name="widget_bytes">%1$d bytes</string>
+    <string name="widget_hunger">Hambre</string>
+    <string name="widget_start_app">¡Inicia la app!</string>
+    <string name="cd_widget_pet">Mascota Code Pet</string>
+
+    <plurals name="widget_streak">
+        <item quantity="one">Racha: %1$d día</item>
+        <item quantity="other">Racha: %1$d días</item>
+    </plurals>
 
 </resources>

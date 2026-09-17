@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -74,69 +77,18 @@ fun ViewportCard(
         else -> MaterialTheme.colorScheme.secondary
     }
 
-    val randomQuote = remember(state.currentStatus, state.xp) {
-        val quotes = when (state.currentStatus) {
-            "SLEEPING" -> listOf(
-                "Zzz... if (dream) { sleep() } else { repeat() }... Zzz",
-                "Cargando baterías... no interrumpas mi hilo principal.",
-                "Soñando con compiladores veloces y cero NullPointers...",
-                "Mi CPU está en modo ahorro. Vuelve en un ciclo de reloj.",
-                "Zzz... ¿viste ese commit? Fue... legendario..."
-            )
-            "STUDYING" -> listOf(
-                "¡Shhh! Estoy optimizando algoritmos en mi cerebro.",
-                "Compilando... codeando a 1000 WPM.",
-                "Siento cómo se incrementa mi sinapsis neuronal binaria.",
-                "¿Sabías que el primer bug fue una polilla real? Yo prefiero los digitales.",
-                "Mi código es arte. Tu código... bueno, funciona.",
-                "Concentración total. No me hagas un force push ahora."
-            )
-            "SICK" -> listOf(
-                "Error 500: Necesito desbuguear urgente. ¡Dame una píldora!",
-                "Demasiados bugs acumulados en mi stack... me siento mal.",
-                "Siento mi CPU sobrecalentada. ¿Podemos repasar un poco?",
-                "Mi recolector de basura no está funcionando. Me siento... sucio.",
-                "¿Me formateas? No, mejor dame cariño, es menos traumático."
-            )
-            "SAD" -> listOf(
-                "Tengo flojera... me siento un poco depre.",
-                "Mi batería de motivación está por debajo del 20%.",
-                "¿Procrastinando otra vez? Mi código se llena de advertencias.",
-                "Siento que mi arquitectura se desmorona. Necesito un refactor emocional.",
-                "Ni siquiera un 'Hello World' me anima hoy."
-            )
-            "HUNGRY" -> listOf(
-                "¡NullPointerException en mi estómago! Necesito bytes.",
-                "Mi caché de energía está vacía, ¿me das de comer?",
-                "Sin comida, mi rendimiento cae a O(n^2).",
-                "Mi estómago está haciendo un loop infinito de ruidos.",
-                "Aliméntame o empezaré a borrar tus archivos temporales. Es broma... ¿o no?"
-            )
-            "EXCITED" -> listOf(
-                "¡Wiii! ¡Mi código es O(1) y mi corazón también!",
-                "¡Nivel de felicidad al MÁXIMO! Gracias por quererme.",
-                "¡Siento que podría compilar el kernel de Linux en 1 segundo!",
-                "¡Soy el root de tu corazón! ¡Wiiiii!",
-                "¡Todo compila a la primera! ¡Esto es magia negra!"
-            )
-            "DEAD" -> listOf(
-                "R.I.P. Fue procesado por un segfault...",
-                "Aquí yace una mascota. Su código quedó sin mergear.",
-                "404: vida no encontrada. Revídame para continuar.",
-                "from grave import revive  # ¿todavía estás a tiempo?"
-            )
-            else -> listOf(
-                "¡Compilar sin advertencias es mi pasión!",
-                "¿Listo para tirar unas líneas de código limpias hoy?",
-                "¡Siento el poder de un refactor exitoso!",
-                "Me agradas, haces que mi arquitectura sea modular y sólida.",
-                "¿Has probado a apagarlo y volverlo a encender? A mí me funciona.",
-                "Tu código es tan limpio que puedo ver mi reflejo en él.",
-                "Oye, ¿has visto mis logs? Están llenos de amor por ti."
-            )
-        }
-        quotes.random()
+    val quoteArrayRes = when (state.currentStatus) {
+        "SLEEPING" -> R.array.quote_sleeping
+        "STUDYING" -> R.array.quote_studying
+        "SICK" -> R.array.quote_sick
+        "SAD" -> R.array.quote_sad
+        "HUNGRY" -> R.array.quote_hungry
+        "EXCITED" -> R.array.quote_excited
+        "DEAD" -> R.array.quote_dead
+        else -> R.array.quote_happy
     }
+    val statusQuotes = stringArrayResource(quoteArrayRes)
+    val randomQuote = remember(quoteArrayRes, state.xp) { statusQuotes.random() }
 
     Card(
         shape = cardShape,
@@ -170,7 +122,7 @@ fun ViewportCard(
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Renombrar",
+                            contentDescription = stringResource(R.string.cd_rename),
                             tint = statusColor,
                             modifier = Modifier
                                 .size(16.dp)
@@ -178,7 +130,7 @@ fun ViewportCard(
                         )
                     }
                     Text(
-                        text = "Especialista: ${state.language}",
+                        text = stringResource(R.string.viewport_specialist, state.language),
                         fontSize = 12.sp,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -193,7 +145,7 @@ fun ViewportCard(
                             val isFilled = i <= currentHearts
                             Icon(
                                 imageVector = if (isFilled) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                                contentDescription = "Corazón $i",
+                                contentDescription = stringResource(R.string.cd_heart, i),
                                 tint = if (isFilled) MaterialTheme.colorScheme.error else Color.Gray,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -208,7 +160,7 @@ fun ViewportCard(
                     modifier = Modifier.testTag("level_badge")
                 ) {
                     Text(
-                        text = "LVL ${state.level}",
+                        text = stringResource(R.string.viewport_level, state.level),
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelMedium,
                         fontSize = 13.sp,
@@ -278,7 +230,7 @@ fun ViewportCard(
                     if (showHeart) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
-                            contentDescription = "Amor",
+                            contentDescription = stringResource(R.string.cd_love),
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -305,7 +257,7 @@ fun ViewportCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ChatBubbleOutline,
-                        contentDescription = "Mensaje",
+                        contentDescription = stringResource(R.string.cd_message),
                         tint = statusColor,
                         modifier = Modifier.size(20.dp)
                     )
@@ -332,7 +284,7 @@ fun ViewportCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "XP: ${state.xp} / $currentLevelRequiredXp",
+                        text = stringResource(R.string.viewport_xp_progress, state.xp, currentLevelRequiredXp),
                         fontSize = 11.sp,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -371,19 +323,19 @@ fun ViewportCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 MeterItem(
-                    label = "Vida", value = state.health,
+                    label = stringResource(R.string.meter_health), value = state.health,
                     icon = Icons.Default.Favorite, activeColor = MaterialTheme.colorScheme.error,
                     trackColor = MaterialTheme.colorScheme.error.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("health_bar")
                 )
                 MeterItem(
-                    label = "Alimento", value = state.hunger,
+                    label = stringResource(R.string.meter_food), value = state.hunger,
                     icon = Icons.Default.Restaurant, activeColor = appTheme.accent,
                     trackColor = appTheme.accent.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("hunger_bar")
                 )
                 MeterItem(
-                    label = "Energía", value = state.energy,
+                    label = stringResource(R.string.meter_energy), value = state.energy,
                     icon = Icons.Default.FlashOn, activeColor = MaterialTheme.colorScheme.tertiary,
                     trackColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.2f),
                     modifier = Modifier.weight(1f).testTag("energy_bar")
@@ -411,7 +363,7 @@ fun ViewportCard(
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${state.streak} días", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = MaterialTheme.colorScheme.error)
+                    Text(pluralStringResource(R.plurals.streak_days, state.streak, state.streak), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = MaterialTheme.colorScheme.error)
                 }
                 Button(
                     onClick = { viewModel.toggleSleep() },
@@ -425,12 +377,12 @@ fun ViewportCard(
                 ) {
                     Icon(
                         imageVector = if (state.currentStatus == "SLEEPING") Icons.Default.WbSunny else Icons.Default.NightsStay,
-                        contentDescription = "Dormir/Despertar",
+                        contentDescription = stringResource(R.string.cd_sleep_toggle),
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        if (state.currentStatus == "SLEEPING") "Despertar" else "Dormir",
+                        stringResource(if (state.currentStatus == "SLEEPING") R.string.viewport_wake else R.string.viewport_sleep),
                         fontSize = 10.sp, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -451,9 +403,9 @@ fun ViewportCard(
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Icon(Icons.Default.Pets, contentDescription = "Acariciar", modifier = Modifier.size(14.dp))
+                    Icon(Icons.Default.Pets, contentDescription = stringResource(R.string.action_pet), modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Acariciar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.action_pet), fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = { viewModel.cleanThePet(); viewModel.soundManager.playClick() },
@@ -462,9 +414,9 @@ fun ViewportCard(
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Icon(Icons.Default.CleaningServices, contentDescription = "Limpiar", modifier = Modifier.size(14.dp))
+                    Icon(Icons.Default.CleaningServices, contentDescription = stringResource(R.string.action_clean), modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Limpiar", fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.action_clean), fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
                 Button(
                     onClick = onPlayClick,
@@ -473,9 +425,9 @@ fun ViewportCard(
                     contentPadding = PaddingValues(horizontal = 6.dp, vertical = 4.dp),
                     modifier = Modifier.weight(1f).height(34.dp)
                 ) {
-                    Icon(Icons.Default.SportsEsports, contentDescription = "Jugar", modifier = Modifier.size(14.dp))
+                    Icon(Icons.Default.SportsEsports, contentDescription = stringResource(R.string.action_play), modifier = Modifier.size(14.dp))
                     Spacer(modifier = Modifier.width(3.dp))
-                    Text("Jugar", fontWeight = FontWeight.Bold, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.action_play), fontWeight = FontWeight.Bold, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.labelSmall)
                 }
             }
         }

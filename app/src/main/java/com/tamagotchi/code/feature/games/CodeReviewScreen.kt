@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.CodeReviewData
 import com.tamagotchi.code.data.CodeReviewSnippet
+import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @Composable
@@ -33,7 +34,7 @@ fun CodeReviewScreen(
 ) {
     var currentRound by remember { mutableIntStateOf(0) }
     var score by remember { mutableIntStateOf(0) }
-    val rounds = remember { CodeReviewData.snippets.shuffled().take(5) }
+    val rounds = remember { CodeReviewData.snippets.map { it.localized() }.shuffled().take(5) }
     var showResults by remember { mutableStateOf(false) }
     var selectedAnswer by remember { mutableStateOf<Boolean?>(null) }
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }

@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
+import com.tamagotchi.code.ui.components.achievementDescription
+import com.tamagotchi.code.ui.components.achievementName
+import com.tamagotchi.code.ui.components.moodletLabel
 import com.tamagotchi.code.ui.theme.AppTheme
 import com.tamagotchi.code.ui.theme.ThemeRegistry
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
@@ -298,14 +301,14 @@ fun SettingsScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = achievement.name,
+                                text = achievementName(achievement.id, achievement.name),
                                 fontWeight = if (isUnlocked) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 14.sp,
                                 color = if (isUnlocked) MaterialTheme.colorScheme.onSurface
                                 else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = achievement.description,
+                                text = achievementDescription(achievement.id, achievement.description),
                                 fontSize = 11.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -335,6 +338,7 @@ fun SettingsScreen(
             )
 
             if (moodlet != null) {
+                val moodletTypeLabel = moodletLabel(moodlet!!.moodletType)
                 Spacer(modifier = Modifier.height(4.dp))
                 Surface(
                     shape = RoundedCornerShape(6.dp),
@@ -342,7 +346,7 @@ fun SettingsScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.settings_moodlet, moodlet!!.moodletType),
+                        text = stringResource(R.string.settings_moodlet, moodletTypeLabel),
                         fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(8.dp)

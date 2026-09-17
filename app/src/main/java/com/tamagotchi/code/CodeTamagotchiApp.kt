@@ -36,27 +36,27 @@ class CodeTamagotchiApp : Application() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val manager = getSystemService(NotificationManager::class.java)
             val groupId = "pet_care"
-            NotificationChannelGroup(groupId, "Cuidado de Codey").let { manager.createNotificationChannelGroup(it) }
+            NotificationChannelGroup(groupId, getString(R.string.channel_group_care)).let { manager.createNotificationChannelGroup(it) }
 
             val channels = listOf(
-                NotificationChannel("pet_hunger", "Hambre de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
-                    description = "Codey tiene hambre"
+                NotificationChannel("pet_hunger", getString(R.string.channel_hunger_name), NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = getString(R.string.channel_hunger_desc)
                     this.group = groupId
                 },
-                NotificationChannel("pet_health", "Salud de Codey", NotificationManager.IMPORTANCE_HIGH).apply {
-                    description = "Codey está enfermo"
+                NotificationChannel("pet_health", getString(R.string.channel_health_name), NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = getString(R.string.channel_health_desc)
                     this.group = groupId
                 },
-                NotificationChannel("pet_energy", "Energía de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
-                    description = "Codey está cansado"
+                NotificationChannel("pet_energy", getString(R.string.channel_energy_name), NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = getString(R.string.channel_energy_desc)
                     this.group = groupId
                 },
-                NotificationChannel("pet_critical", "Codey en peligro", NotificationManager.IMPORTANCE_HIGH).apply {
-                    description = "Codey está en estado crítico"
+                NotificationChannel("pet_critical", getString(R.string.channel_critical_name), NotificationManager.IMPORTANCE_HIGH).apply {
+                    description = getString(R.string.channel_critical_desc)
                     this.group = groupId
                 },
-                NotificationChannel(NOTIFICATION_CHANNEL_ID, "Recordatorios de Codey", NotificationManager.IMPORTANCE_DEFAULT).apply {
-                    description = "Recordatorios sobre el estado de tu mascota virtual"
+                NotificationChannel(NOTIFICATION_CHANNEL_ID, getString(R.string.channel_reminders_name), NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = getString(R.string.channel_reminders_desc)
                     this.group = groupId
                 }
             )

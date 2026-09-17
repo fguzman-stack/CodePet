@@ -29,7 +29,7 @@ class CommitWorker(
         val prefs = get<UserPreferencesRepository>(UserPreferencesRepository::class.java)
 
         val activities = prefs.getDailyActivityLog()
-        val commit = DailyCommitGenerator.generateCommit(activities, petState.name)
+        val commit = DailyCommitGenerator.generateCommit(applicationContext, activities, petState.name)
         prefs.setPendingCommit(commit)
         prefs.clearDailyActivityLog()
 
@@ -51,7 +51,7 @@ class CommitWorker(
             "pet_care_reminder"
         )
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("${petState.name} hizo commit")
+            .setContentTitle(applicationContext.getString(R.string.notif_commit_title, petState.name))
             .setContentText(commit)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)

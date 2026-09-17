@@ -17,11 +17,13 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tamagotchi.code.R
 import com.tamagotchi.code.data.CodeCard
 import com.tamagotchi.code.data.CardType
 
@@ -59,11 +61,13 @@ fun CodeCardDialog(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = when (card.type) {
-                        CardType.FACT -> "Dato Curioso"
-                        CardType.JOKE -> "Chiste de Programador"
-                        CardType.TIP -> "Tip de Codigo"
-                    },
+                    text = stringResource(
+                        when (card.type) {
+                            CardType.FACT -> R.string.cc_title_fact
+                            CardType.JOKE -> R.string.cc_title_joke
+                            CardType.TIP -> R.string.cc_title_tip
+                        }
+                    ),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
@@ -130,7 +134,7 @@ fun CodeCardDialog(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("Otra!", fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.cc_another), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
             }
         }
     )
