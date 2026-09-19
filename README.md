@@ -10,7 +10,7 @@
     <a href="https://github.com/fguzman-stack/CodePet/actions/workflows/android.yml"><img src="https://img.shields.io/github/actions/workflow/status/fguzman-stack/CodePet/android.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=Build" alt="Build status"/></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
     <img src="https://img.shields.io/badge/Kotlin-2.2.10-7F52FF?style=flat-square&logo=kotlin&logoColor=white"/>
     <img src="https://img.shields.io/badge/Jetpack_Compose-UI-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white"/>
     <img src="https://img.shields.io/badge/Material_3-Material_You-6750A4?style=flat-square&logo=materialdesign&logoColor=white"/>
@@ -59,6 +59,7 @@
 - Health, hunger and energy in real time with progressive decay
 - ☠️ **Death & revival system** — if health hits 0, Codey shows up under a tombstone and you can revive him with Bytes
 - State-based animations (breathing, trembling, hunger pulse, blinking)
+- 🖌️ Codey is drawn **100% procedurally** with Compose Canvas — no sprite PNGs; the home-screen widget reuses the same renderer
 - Level, XP and Bytes (virtual currency) system
 - Daily study streaks and offline rewards
 - 🏅 **Visual evolution** — 5 stages: Egg → Baby → Adult → Veteran → Legendary
@@ -74,7 +75,7 @@
 - Special algorithm challenges that unlock visual themes
 - Educational feedback on every answer, in Codey's voice
 - Progress and accuracy rewards
-- **88+ built-in coding challenges**
+- **96 built-in coding challenges** (90 regular + 6 special)
 
 </td>
 </tr>
@@ -96,7 +97,7 @@
 - 🐛 **Bug Hunt — Terminal Panic:** find bugs in code snippets
 - 🐙 **Git Rescue:** Git decisions to save a repo on fire
 - 🔧 **Refactor Rush:** reorder code blocks until it compiles
-- 📝 **Code Review:** spot errors in 15 multi-language snippets
+- 📝 **Code Review:** spot errors in 10 multi-language snippets
 - 🏆 **Hackathon:** weekly event with 3 problems of rising difficulty
 - Codey's humorous explanations on every round
 - Daily cooldown to prevent currency farming
@@ -112,6 +113,7 @@
 - 🏆 **Daily rewards** streak & offline rewards
 - 🎫 **Season Pass** — 30-day battle pass with 20 levels
 - 📋 **Weekly Missions** — 3 rotating missions every Monday with rewards
+- 📱 **Home-screen widget** — watch Codey with health, energy and hunger meters (compact 2×2, resizable)
 
 ---
 
@@ -260,7 +262,7 @@ CodePet/
 │   ├── CodeTamagotchiApp.kt          # Application (Koin, WorkManager)
 │   ├── MainActivity.kt               # Entry point (Theme, Nav)
 │   ├── data/
-│   │   ├── ChallengesData.kt         # 88+ coding challenges
+│   │   ├── ChallengesData.kt         # 90 coding challenges (+6 special)
 │   │   ├── CodeReviewData.kt         # Code review snippets
 │   │   ├── PersonalityMissions.kt    # Mission definitions
 │   │   ├── database/                 # Room DB (v5, migrations, DAO, entities)
@@ -345,7 +347,7 @@ Translations live next to the original data: `ChallengesDataEn.kt`, `SpecialChal
 ## 🗺️ Roadmap
 
 - [x] 🐾 Virtual pet with emotional states and decay
-- [x] 💻 88+ coding challenges (Kotlin, JS, PHP, Python)
+- [x] 💻 90 coding challenges + 6 special (Kotlin, JS, PHP, Python)
 - [x] ⏱️ Persistent Pomodoro with auto-resume
 - [x] 🎨 12 premium themes with animated Canvas backgrounds
 - [x] 🕹️ 6 minigames: Bug Hunt, Git Rescue, Refactor Rush, Code Review, Hackathon, Classic Arcade

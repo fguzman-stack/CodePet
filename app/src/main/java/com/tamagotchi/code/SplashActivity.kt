@@ -50,7 +50,7 @@ class SplashActivity : Activity() {
                 layoutParams = android.view.ViewGroup.LayoutParams(
                     120, 120
                 )
-                setImageResource(R.drawable.iconoapp)
+                setImageResource(R.drawable.ic_codey_logo)
                 scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
                 setPadding(0, 0, 0, 40)
             }

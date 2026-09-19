@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
-import com.tamagotchi.code.ui.components.AnimatedPetSprite
+import com.tamagotchi.code.ui.components.CodeySprite
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -80,7 +80,7 @@ fun OnboardingScreen(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Box(modifier = Modifier.size(120.dp)) {
-                        AnimatedPetSprite(
+                        CodeySprite(
                             status = "HAPPY",
                             level = 1,
                             celebrationTrigger = celebrationTrigger,

@@ -8,12 +8,13 @@ First off, thanks for taking the time to contribute! CodePet is a gamified codin
 
 ### 🧩 Add coding challenges (easiest way to start!)
 
-The app ships with 88+ challenges in Kotlin, JavaScript, PHP and Python. We'd love to grow to **Ruby, Go, Rust, Swift, SQL and C**.
+The app ships with 90 challenges (+6 special) in Kotlin, JavaScript, PHP and Python. We'd love to grow to **Ruby, Go, Rust, Swift, SQL and C**.
 
 1. Open `app/src/main/java/com/tamagotchi/code/data/ChallengesData.kt`
 2. Study the format of existing challenges (trivia, debugging, code output)
 3. Add 5–10 well-explained challenges in a new language
-4. Submit a PR — one language per PR keeps reviews fast
+4. **Add the English translation for each one** in `ChallengesDataEn.kt` (same id, same option ORDER — `LocalizedContentTest` fails if they drift apart)
+5. Submit a PR — one language per PR keeps reviews fast
 
 **Rules for good challenges:**
 - The explanation teaches a concept, it doesn't just say "right/wrong"
@@ -22,7 +23,7 @@ The app ships with 88+ challenges in Kotlin, JavaScript, PHP and Python. We'd lo
 
 ### 🎨 Themes, pets and art
 - New visual themes: implement an `AppTheme` in `ui/theme/ThemeConfig.kt` and its animated background in `ui/components/AnimatedThemeBackground.kt`
-- Pixel-art pet skins go in `app/src/main/assets/pet/`
+- Codey is drawn 100% procedurally in `ui/components/CodeySprite.kt` (Compose Canvas); the launcher widget reuses the same renderer via `ui/components/CodeyBitmap.kt`. Do not add pet PNGs to `app/src/main/assets/pet/`.
 
 ### 🐛 Bug fixes
 Search [issues](https://github.com/fguzman-stack/CodePet/issues) first. `good first issue` labels are beginner-friendly.
@@ -67,7 +68,7 @@ Be kind. We follow the [Code of Conduct](CODE_OF_CONDUCT.md) (Contributor Covena
 ## 🤝 Contribuyendo (en español)
 
 ### Cómo empezar
-La forma más fácil de contribuir es **agregar retos de programación** en lenguajes que aún no tenemos: Ruby, Go, Rust, Swift, SQL o C. Todo está en `app/src/main/java/com/tamagotchi/code/data/ChallengesData.kt`. Copia el formato de los retos existentes y envía un PR por lenguaje.
+La forma más fácil de contribuir es **agregar retos de programación** en lenguajes que aún no tenemos: Ruby, Go, Rust, Swift, SQL o C. Todo está en `app/src/main/java/com/tamagotchi/code/data/ChallengesData.kt`. Copia el formato de los retos existentes y envía un PR por lenguaje. Cada reto nuevo necesita su traducción al inglés en `ChallengesDataEn.kt` (mismo id y mismo orden de opciones; `LocalizedContentTest` lo verifica).
 
 ### Reglas de oro
 - Cada explicación debe enseñar un concepto, no solo decir "correcto/incorrecto"

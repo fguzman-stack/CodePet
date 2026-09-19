@@ -7,10 +7,15 @@ import androidx.work.WorkManager
 
 class TestApplication : Application() {
   override fun onCreate() {
-    WorkManager.initialize(
-      this,
-      Configuration.Builder().setMinimumLoggingLevel(Log.ERROR).build()
-    )
     super.onCreate()
+    // Robolectric can reuse WorkManager's singleton across tests in the same sandbox.
+    try {
+      WorkManager.getInstance(this)
+    } catch (_: IllegalStateException) {
+      WorkManager.initialize(
+        this,
+        Configuration.Builder().setMinimumLoggingLevel(Log.ERROR).build()
+      )
+    }
   }
 }

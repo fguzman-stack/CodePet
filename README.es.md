@@ -7,10 +7,10 @@
   <p>
     <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=for-the-badge&logo=github&logoColor=white&color=7C4DFF" alt="Última versión"/></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-81C784?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="Licencia MIT"/></a>
-    <a href="https://github.com/fguzman-stack/CodePet/actions"><img src="https://img.shields.io/badge/Build-passing-00C853?style=for-the-badge&logo=githubactions&logoColor=white" alt="Estado del build"/></a>
+    <a href="https://github.com/fguzman-stack/CodePet/actions/workflows/android.yml"><img src="https://img.shields.io/github/actions/workflow/status/fguzman-stack/CodePet/android.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=Build" alt="Estado del build"/></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/Android-24%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white"/>
     <img src="https://img.shields.io/badge/Kotlin-2.2.10-7F52FF?style=flat-square&logo=kotlin&logoColor=white"/>
     <img src="https://img.shields.io/badge/Jetpack_Compose-UI-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white"/>
     <img src="https://img.shields.io/badge/Material_3-Material_You-6750A4?style=flat-square&logo=materialdesign&logoColor=white"/>
@@ -76,7 +76,7 @@
 - Retos especiales de algoritmos que desbloquean temas visuales
 - Feedback educativo en cada respuesta con explicaciones de Codey
 - Recompensas por progreso y precisión
-- **88+ desafíos de programación integrados**
+- **96 desafíos de programación integrados** (90 normales + 6 especiales)
 
 </td>
 </tr>
@@ -98,7 +98,7 @@
 - 🐛 **Bug Hunt — Terminal Panic:** Encuentra bugs en fragmentos de código
 - 🐙 **Git Rescue:** Decisiones Git para salvar un repo en llamas
 - 🔧 **Refactor Rush:** Ordena bloques de código para que compilen
-- 📝 **Code Review:** Identifica errores en 15 snippets multi-lenguaje
+- 📝 **Code Review:** Identifica errores en 10 snippets multi-lenguaje
 - 🏆 **Hackathon:** Evento semanal con 3 problemas de dificultad progresiva
 - Explicaciones con humor de Codey en cada ronda
 - Cooldown diario para evitar farm de moneda
@@ -113,7 +113,7 @@
 - 🌳 **Skill Tree** — Árbol de habilidades con 3 ramas y 9 nodos desbloqueables
 - 🎫 **Season Pass** — Pase de batalla de 30 días con 20 niveles
 - 📋 **Weekly Missions** — 3 misiones rotativas cada lunes con recompensas
-- 📱 **Widget para pantalla de inicio** — mira a Codey sin abrir la app
+- 📱 **Widget para pantalla de inicio** — mira a Codey con barras de vida, energía y hambre (compacto 2×2, redimensionable)
 
 ---
 
@@ -184,7 +184,7 @@ El proyecto usa Gradle 9.x con Gradle Wrapper. **Requiere:** JDK 17+ y Android S
 | 🍽️ `HUNGRY` | Hambre menor a 30% | Pulso de alerta |
 | 😢 `SAD` | Energía menor a 20% | Baja actividad |
 | 😆 `EXCITED` | Felicidad máxima | Rebote rápido |
-| ☠️ `DEAD` | Salud llega a 0 | Lápida estática (`mascota_dead`), diálogo de revivir |
+| ☠️ `DEAD` | Salud llega a 0 | Robot tumbado junto a una lápida (dibujado por código, sin animación), diálogo de revivir |
 
 ---
 
@@ -260,7 +260,7 @@ CodePet/
 │   ├── CodeTamagotchiApp.kt          # Application (Koin, WorkManager)
 │   ├── MainActivity.kt               # Entry point (Theme, Nav)
 │   ├── data/
-│   │   ├── ChallengesData.kt         # 88+ coding challenges
+│   │   ├── ChallengesData.kt         # 90 retos de código (+6 especiales)
 │   │   ├── CodeReviewData.kt         # Code review snippets
 │   │   ├── PersonalityMissions.kt    # Mission definitions
 │   │   ├── database/
@@ -301,7 +301,7 @@ CodePet/
 │   │   ├── components/
 │   │   │   ├── ViewportCard.kt       # Main pet card
 │   │   │   ├── MeterItem.kt          # Stat progress bars
-│   │   │   ├── AnimatedPetSprite.kt  # Animated pet rendering
+│   │   │   ├── CodeySprite.kt          # Procedural pet rendering (Canvas)
 │   │   │   ├── AnimatedThemeBackground.kt  # 12 animated backgrounds
 │   │   │   └── PairBuddy.kt          # Pair programming buddy UI
 │   │   └── theme/
@@ -386,7 +386,7 @@ Las traducciones viven junto a los datos originales: `ChallengesDataEn.kt`, `Spe
 ## 🗺️ Roadmap
 
 - [x] 🐾 Mascota virtual con estados emocionales y decaimiento
-- [x] 💻 88+ retos de programación (Kotlin, JS, PHP, Python)
+- [x] 💻 90 retos + 6 especiales de programación (Kotlin, JS, PHP, Python)
 - [x] ⏱️ Pomodoro persistente con reanudación automática
 - [x] 🎨 12 temas premium con fondos animados Canvas
 - [x] 🕹️ 6 minijuegos: Bug Hunt, Git Rescue, Refactor Rush, Code Review, Hackathon, Arcade Clásico

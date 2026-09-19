@@ -81,7 +81,7 @@ class PetCheckWorker(
             applicationContext,
             channelId
         )
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_stat_codey)
             .setContentTitle(title)
             .setContentText(reason)
             .setPriority(if (isCritical) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT)

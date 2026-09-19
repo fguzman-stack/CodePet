@@ -1,6 +1,8 @@
 package com.tamagotchi.code
 
 import android.app.Application
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
@@ -15,14 +17,23 @@ import com.tamagotchi.code.di.appModule
 import com.tamagotchi.code.util.CommitWorker
 import com.tamagotchi.code.util.PetCheckWorker
 import com.tamagotchi.code.widget.WidgetUpdateWorker
+import com.tamagotchi.code.widget.CodePetWidgetProvider
+import com.tamagotchi.code.data.repository.PetRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.util.concurrent.TimeUnit
 
 class CodeTamagotchiApp : Application() {
+    private val widgetScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     override fun onCreate() {
         super.onCreate()
-        startKoin {
+        val koin = startKoin {
             androidContext(this@CodeTamagotchiApp)
             modules(appModule)
         }
@@ -30,6 +41,16 @@ class CodeTamagotchiApp : Application() {
         schedulePetCheck()
         scheduleWidgetUpdate()
         scheduleDailyCommit()
+        // Observe Room rather than a screen's lifecycle: updates also cover background writes.
+        widgetScope.launch {
+            val manager = AppWidgetManager.getInstance(this@CodeTamagotchiApp)
+            val provider = ComponentName(this@CodeTamagotchiApp, CodePetWidgetProvider::class.java)
+            koin.koin.get<PetRepository>().petState.distinctUntilChanged().collect { state ->
+                manager.getAppWidgetIds(provider).forEach { id ->
+                    CodePetWidgetProvider.updateAppWidget(this@CodeTamagotchiApp, manager, id, state)
+                }
+            }
+        }
     }
 
     private fun createNotificationChannels() {

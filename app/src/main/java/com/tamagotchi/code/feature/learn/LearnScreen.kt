@@ -13,7 +13,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -29,7 +28,7 @@ import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
-import com.tamagotchi.code.ui.components.AnimatedPetSprite
+import com.tamagotchi.code.ui.components.CodeySprite
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
@@ -65,13 +64,14 @@ fun LearnScreen(
             }
             
             Box(modifier = Modifier.size(80.dp)) {
-                AnimatedPetSprite(
+                CodeySprite(
                     status = state.currentStatus,
                     level = state.level,
+                    isDead = state.isDead,
                     celebrationTrigger = viewModel.celebrationTrigger,
                     learningEventTrigger = viewModel.learningEventTrigger,
                     onClick = { viewModel.petThePet() },
-                    modifier = Modifier.scale(0.6f)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }

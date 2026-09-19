@@ -1,47 +1,38 @@
 # 🐾 Code Tamagotchi Pet Assets
 
-Este directorio contiene los recursos visuales de la mascota virtual, organizados por estilo y estado emocional.
+Este directorio ya **no contiene imágenes de la mascota**. Codey ahora se dibuja 100% por código
+(Jetpack Compose `Canvas`) desde `app/src/main/java/com/tamagotchi/code/ui/components/CodeySprite.kt`,
+parametrizado por la etapa de evolución (`PetEvolutionStage`: Egg, Child, Adult, Veteran, Legendary)
+derivada del nivel y el ánimo (`currentStatus` + `isDead` de `PetStateEntity`, en `PetViewModel`).
+El widget de pantalla de inicio reutiliza el mismo renderizador vía
+`CodeyBitmap.kt` (`RemoteViews.setImageViewBitmap`), por lo que tampoco necesita PNG.
 
 ---
 
-## 🏗️ Organización de Carpetas
+## 🎭 Matriz de estados (referencia de diseño)
 
-La arquitectura de archivos permite una escalabilidad sencilla para nuevos temas visuales.
+La apariencia de cada ánimo se define en el código, no en archivos de imagen:
 
-| Carpeta | Estilo | Descripción |
+| Estado | Acento | Señal visual |
 | :--- | :--- | :--- |
-| `normal/` | **Default 2D** | Estilo ilustrado moderno, resolución base 512px. |
-| `pixel_art/` | **Retro 8-bit** | Estilo pixelado clásico para desbloqueables premium. |
-
-Dentro de cada estilo encontrarás:
-- `static/`: Imágenes en formato PNG de alta calidad.
-- `animations/`: Archivos GIF/WebP para movimiento fluido.
-
----
-
-## 🎭 Matriz de Estados
-
-Cada estado representa una necesidad o emoción de la mascota:
-
-| Icono | Estado | Archivo | Significado Visual |
-| :---: | :--- | :--- | :--- |
-| <img src="normal/static/mascota_happy.png" width="32"> | **HAPPY** | `mascota_happy.png` | Flotando, con rubor y sonrisa. |
-| <img src="normal/static/mascota_sleeping.png" width="32"> | **SLEEPING** | `mascota_sleeping.png` | Burbuja de sueño (Zzz) y ojos cerrados. |
-| <img src="normal/static/mascota_studying.png" width="32"> | **STUDYING** | `mascota_studying.png` | Usando gafas o con un libro/laptop. |
-| <img src="normal/static/mascota_sick.png" width="32"> | **SICK** | `mascota_sick.png` | Tono verdoso o termómetro. |
-| <img src="normal/static/mascota_sad.png" width="32"> | **SAD** | `mascota_sad.png` | Mirada baja y lagrimitas. |
-| <img src="normal/static/mascota_hungry.png" width="32"> | **HUNGRY** | `mascota_hungry.png` | Pensando en comida o con tenedor/cuchillo. |
-| <img src="normal/static/mascota_excited.png" width="32"> | **EXCITED** | `mascota_excited.png` | Saltando con estrellas en los ojos. |
+| **HAPPY** | `#4DE0C4` | Ojos y boca en arco, rebote suave. |
+| **SLEEPING** | `#4D8FD1` | Ojos y boca como líneas, brillo del núcleo bajo. |
+| **STUDYING** | `#52E07A` | Ojos `<` concentrados. |
+| **SICK** | `#EF5D5D` | Ojos `X`, boca ondulada, gota verde flotando. |
+| **HUNGRY** | `#F0B84C` | Ojos circulares, anillo pulsante alrededor del cuerpo. |
+| **SAD** | `#4D7EA8` | Ojos caídos, lagrimita azul, postura inclinada. |
+| **EXCITED** | `#F4C94D` | Ojos estrella, chispas orbitando, rebote rápido. |
+| **DEAD** | `#3C454D` | Núcleo apagado, ojos `X` grises, cuerpo tumbado junto a una lápida, sin animación. |
 
 ---
 
 ## ⚙️ Guía de Contribución
 
-Si deseas agregar un nuevo estilo (ej. *Cyberpunk* o *Kawaii*):
-1. Crea una nueva subcarpeta en `pet/`.
-2. Mantén la estructura `static/` y `animations/`.
-3. Asegúrate de incluir los 7 estados básicos con los nombres de archivo exactos.
-4. Las imágenes deben tener el fondo transparente (Alpha channel).
-
----
-> 🚀 **Tip:** Usa el estado `EXCITED` para las animaciones de recompensa tras completar un desafío de código.
+1. **No agregar PNG de la mascota**: cualquier cambio visual de Codey se hace editando
+   `CodeySprite.kt` (diseño) y `CodeyRendererTest.kt` (verificación de las 40 combinaciones
+   etapa/ánimo, que no se recorte y que DEAD esté congelado).
+2. Esta carpeta queda reservada únicamente para assets experimentales o de referencia; las
+   subcarpetas `static/` y `animations/` se conservan vacías con `.gitkeep` por compatibilidad
+   histórica.
+3. Las capturas de referencia del renderizado procedural viven en
+   `app/src/test/screenshots/codey.png` (generada por `CodeyRendererTest`).

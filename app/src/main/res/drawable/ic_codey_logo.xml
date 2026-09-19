@@ -5,26 +5,31 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- antenna stem -->
-    <path
-        android:pathData="M54,36 L54,27"
-        android:strokeColor="#5B6B78" android:strokeWidth="4" android:strokeLineCap="round" />
-    <!-- antenna glow -->
-    <path android:pathData="M54,17 a7,7 0 1,0 0.01,0 z">
+    <path android:pathData="M20,0 L88,0 A20,20 0 0 1 108,20 L108,88 A20,20 0 0 1 88,108 L20,108 A20,20 0 0 1 0,88 L0,20 A20,20 0 0 1 20,0 Z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:type="radial"
-                android:centerX="54" android:centerY="24" android:gradientRadius="7">
-                <item android:offset="0" android:color="#664DE0C4" />
-                <item android:offset="1" android:color="#004DE0C4" />
+                android:type="linear"
+                android:startX="0" android:startY="0"
+                android:endX="108" android:endY="108">
+                <item android:offset="0" android:color="#4E58EA" />
+                <item android:offset="1" android:color="#1E2470" />
             </gradient>
         </aapt:attr>
     </path>
-    <!-- antenna bulb -->
+    <path
+        android:pathData="M27,45 L18,54 L27,63"
+        android:strokeColor="#FFFFFF" android:strokeAlpha="0.10"
+        android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path
+        android:pathData="M81,45 L90,54 L81,63"
+        android:strokeColor="#FFFFFF" android:strokeAlpha="0.10"
+        android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path
+        android:pathData="M54,36 L54,27"
+        android:strokeColor="#5B6B78" android:strokeWidth="4" android:strokeLineCap="round" />
     <path
         android:pathData="M50.5,24 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0 z"
         android:fillColor="#4DE0C4" />
-    <!-- metallic head -->
     <path
         android:pathData="M32,57 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0 z"
         android:strokeColor="#5B6B78" android:strokeWidth="2.5">
@@ -39,25 +44,15 @@
             </gradient>
         </aapt:attr>
     </path>
-    <!-- visor -->
     <path
         android:pathData="M48,46 L60,46 A7,7 0 0 1 67,53 L67,60 A7,7 0 0 1 60,67 L48,67 A7,7 0 0 1 41,60 L41,53 A7,7 0 0 1 48,46 Z"
         android:fillColor="#0B1420" />
-    <!-- eye glow -->
-    <path
-        android:pathData="M41,53 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 z"
-        android:fillColor="#4DE0C4" android:fillAlpha="0.22" />
-    <path
-        android:pathData="M55,53 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 z"
-        android:fillColor="#4DE0C4" android:fillAlpha="0.22" />
-    <!-- happy eyes -->
     <path
         android:pathData="M43,54 A4,4 0 0 1 51,54"
         android:strokeColor="#4DE0C4" android:strokeWidth="3" android:strokeLineCap="round" />
     <path
         android:pathData="M57,54 A4,4 0 0 1 65,54"
         android:strokeColor="#4DE0C4" android:strokeWidth="3" android:strokeLineCap="round" />
-    <!-- smile -->
     <path
         android:pathData="M49,61 A5,5 0 0 0 59,61"
         android:strokeColor="#4DE0C4" android:strokeWidth="3" android:strokeLineCap="round" />

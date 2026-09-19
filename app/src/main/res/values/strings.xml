@@ -430,7 +430,7 @@
 
     <!-- About -->
     <string name="about_title">Acerca de</string>
-    <string name="about_version">Versión 1.0.0</string>
+    <string name="about_version">Versión %1$s</string>
     <string name="about_what">¿Qué es Code Tamagotchi?</string>
     <string name="about_what_desc">Code Tamagotchi es una aplicación que combina el aprendizaje de programación con el cuidado de una mascota virtual. Resuelve desafíos de código, completa sesiones de estudio y juega minijuegos para mantener a tu mascota feliz y saludable mientras mejoras tus habilidades de programación.</string>
     <string name="about_features_title">Características principales</string>
@@ -733,6 +733,7 @@
     <string name="commit_normal_3">style: sin cambios aparentes</string>
 
     <!-- Home screen widget -->
+    <string name="widget_description">Mira a Codey: vida, energía y hambre de un vistazo.</string>
     <string name="widget_level">Nv.%1$d</string>
     <string name="widget_status_happy">¡Todo va genial!</string>
     <string name="widget_status_sleeping">Zzz… durmiendo</string>

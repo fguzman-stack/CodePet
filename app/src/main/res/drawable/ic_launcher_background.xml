@@ -8,18 +8,25 @@
     <path android:pathData="M0,0h108v108h-108z">
         <aapt:attr name="android:fillColor">
             <gradient
-                android:endX="108"
-                android:endY="108"
-                android:startX="0"
-                android:startY="0"
-                android:type="linear">
-                <item
-                    android:color="#1A2B20"
-                    android:offset="0.0" />
-                <item
-                    android:color="#0B130E"
-                    android:offset="1.0" />
+                android:type="linear"
+                android:startX="0" android:startY="0"
+                android:endX="108" android:endY="108">
+                <item android:offset="0" android:color="#4E58EA" />
+                <item android:offset="1" android:color="#1E2470" />
             </gradient>
         </aapt:attr>
     </path>
+    <!-- faint code motif: < > _ -->
+    <path
+        android:pathData="M27,45 L18,54 L27,63"
+        android:strokeColor="#FFFFFF" android:strokeAlpha="0.10"
+        android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path
+        android:pathData="M81,45 L90,54 L81,63"
+        android:strokeColor="#FFFFFF" android:strokeAlpha="0.10"
+        android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" />
+    <path
+        android:pathData="M46,90 L62,90"
+        android:strokeColor="#FFFFFF" android:strokeAlpha="0.10"
+        android:strokeWidth="4" android:strokeLineCap="round" />
 </vector>

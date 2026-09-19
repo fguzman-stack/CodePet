@@ -1,6 +1,6 @@
 # Documentación — Code Tamagotchi
 
-> **Versión:** 2.0.0  
+> **Versión:** 3.0.0  
 > **Plataforma:** Android (API 24+)  
 > **Lenguaje:** Kotlin 2.2.10  
 > **UI:** Jetpack Compose + Material 3  
@@ -8,6 +8,8 @@
 > **DI:** Koin 4.0.2  
 > **Arquitectura:** MVVM + Repository + Feature Modules  
 > **Package:** `com.tamagotchi.code`
+
+> ⚠️ **Nota (v3.x):** Codey ya no usa sprites PNG (`mascota_*.png` eliminados). Se dibuja 100% por código en `ui/components/CodeySprite.kt` (Canvas de Compose) y el widget reutiliza el mismo renderizador vía `ui/components/CodeyBitmap.kt`. Las secciones que mencionan `AnimatedPetSprite`, `PixelArtPetSprite` o assets `pet/` son históricas.
 
 ---
 

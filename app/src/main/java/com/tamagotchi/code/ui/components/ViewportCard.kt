@@ -30,7 +30,6 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,7 +49,6 @@ fun ViewportCard(
     val reduceMotion = LocalReduceMotion.current
     val cardShape = RoundedCornerShape(appTheme.cornerRadius)
     
-    val equippedSkin by viewModel.equippedSkin.collectAsStateWithLifecycle()
 
     fun onPetTap() {
         viewModel.petThePet()
@@ -192,24 +190,14 @@ fun ViewportCard(
                 contentAlignment = Alignment.Center
             ) {
                 Box {
-                    val spriteStatus = if (state.isDead) "DEAD" else state.currentStatus
-                    if (equippedSkin != null && !state.isDead) {
-                        PixelArtPetSprite(
-                            status = spriteStatus,
-                            level = state.level,
-                            equippedSkin = equippedSkin!!,
-                            celebrationTrigger = viewModel.celebrationTrigger,
-                            onClick = { onPetTap() }
-                        )
-                    } else {
-                        AnimatedPetSprite(
-                            status = spriteStatus,
-                            level = state.level,
-                            celebrationTrigger = viewModel.celebrationTrigger,
-                            learningEventTrigger = viewModel.learningEventTrigger,
-                            onClick = { onPetTap() }
-                        )
-                    }
+                    CodeySprite(
+                        status = state.currentStatus,
+                        level = state.level,
+                        isDead = state.isDead,
+                        celebrationTrigger = viewModel.celebrationTrigger,
+                        learningEventTrigger = viewModel.learningEventTrigger,
+                        onClick = { onPetTap() }
+                    )
 
                     Box(
                         modifier = Modifier

@@ -5,13 +5,13 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.tamagotchi.code.MainActivity
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
+import com.tamagotchi.code.ui.components.renderCodeyBitmap
 
 class CodePetWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -31,69 +31,55 @@ class CodePetWidgetProvider : AppWidgetProvider() {
             appWidgetId: Int,
             petState: PetStateEntity? = null
         ) {
+            appWidgetManager.updateAppWidget(appWidgetId, createRemoteViews(context, petState))
+        }
+
+        internal fun createRemoteViews(context: Context, petState: PetStateEntity?): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.code_pet_widget)
 
-            if (petState != null) {
-                views.setTextViewText(R.id.widget_title, petState.name)
-                views.setTextViewText(R.id.widget_level, context.getString(R.string.widget_level, petState.level))
+            views.setTextViewText(R.id.widget_title, petState?.name ?: context.getString(R.string.default_pet_name))
+            views.setTextViewText(R.id.widget_level, context.getString(R.string.widget_level, petState?.level ?: 1))
 
-                val effectiveStatus = if (petState.isDead) "DEAD" else petState.currentStatus
-
-                val subtitleRes = when (effectiveStatus) {
-                    "HAPPY" -> R.string.widget_status_happy
-                    "SLEEPING" -> R.string.widget_status_sleeping
-                    "SICK" -> R.string.widget_status_sick
-                    "HUNGRY" -> R.string.widget_status_hungry
-                    "SAD" -> R.string.widget_status_sad
-                    "STUDYING" -> R.string.widget_status_studying
-                    "EXCITED" -> R.string.widget_status_excited
-                    "DEAD" -> R.string.widget_status_dead
-                    else -> R.string.widget_status_happy
-                }
-                views.setTextViewText(R.id.widget_subtitle, context.getString(subtitleRes))
-
-                val imageRes = when (effectiveStatus) {
-                    "DEAD" -> R.drawable.mascota_dead
-                    "SLEEPING" -> R.drawable.mascota_sleeping
-                    "SICK" -> R.drawable.mascota_sick
-                    "HUNGRY" -> R.drawable.mascota_hungry
-                    "SAD" -> R.drawable.mascota_sad
-                    "STUDYING" -> R.drawable.mascota_studying
-                    "EXCITED" -> R.drawable.mascota_excited
-                    else -> R.drawable.mascota_happy
-                }
-                views.setImageViewResource(R.id.widget_pet_image, imageRes)
-
-                views.setViewVisibility(R.id.heart_1, if (petState.health > 0) View.VISIBLE else View.INVISIBLE)
-                views.setViewVisibility(R.id.heart_2, if (petState.health >= 34f) View.VISIBLE else View.INVISIBLE)
-                views.setViewVisibility(R.id.heart_3, if (petState.health >= 67f) View.VISIBLE else View.INVISIBLE)
-
-                val energy = petState.energy.toInt().coerceIn(0, 100)
-                val hunger = petState.hunger.toInt().coerceIn(0, 100)
-                views.setProgressBar(R.id.energy_bar, 100, energy, false)
-                views.setProgressBar(R.id.hunger_bar, 100, hunger, false)
-                views.setTextViewText(R.id.energy_value, "${energy}%")
-                views.setTextViewText(R.id.hunger_value, "${hunger}%")
-                views.setTextViewText(R.id.widget_bytes, context.getString(R.string.widget_bytes, petState.bytes))
-                views.setTextViewText(
-                    R.id.widget_streak,
-                    context.resources.getQuantityString(R.plurals.widget_streak, petState.streak, petState.streak)
-                )
-            } else {
-                views.setTextViewText(R.id.widget_title, context.getString(R.string.default_pet_name))
-                views.setTextViewText(R.id.widget_level, context.getString(R.string.widget_level, 1))
-                views.setTextViewText(R.id.widget_subtitle, context.getString(R.string.widget_start_app))
-                views.setImageViewResource(R.id.widget_pet_image, R.drawable.mascota_happy)
-                views.setProgressBar(R.id.energy_bar, 100, 0, false)
-                views.setProgressBar(R.id.hunger_bar, 100, 0, false)
-                views.setTextViewText(R.id.energy_value, "0%")
-                views.setTextViewText(R.id.hunger_value, "0%")
-                views.setTextViewText(R.id.widget_bytes, context.getString(R.string.widget_bytes, 0))
-                views.setTextViewText(
-                    R.id.widget_streak,
-                    context.resources.getQuantityString(R.plurals.widget_streak, 0, 0)
-                )
+            val effectiveStatus = when {
+                petState == null -> null
+                petState.isDead -> "DEAD"
+                else -> petState.currentStatus
             }
+            val subtitleRes = when (effectiveStatus) {
+                null -> R.string.widget_start_app
+                "HAPPY" -> R.string.widget_status_happy
+                "SLEEPING" -> R.string.widget_status_sleeping
+                "SICK" -> R.string.widget_status_sick
+                "HUNGRY" -> R.string.widget_status_hungry
+                "SAD" -> R.string.widget_status_sad
+                "STUDYING" -> R.string.widget_status_studying
+                "EXCITED" -> R.string.widget_status_excited
+                "DEAD" -> R.string.widget_status_dead
+                else -> R.string.widget_status_happy
+            }
+            views.setTextViewText(R.id.widget_subtitle, context.getString(subtitleRes))
+
+            views.setImageViewBitmap(
+                R.id.widget_pet_image,
+                renderCodeyBitmap(petState?.level ?: 1, effectiveStatus ?: "HAPPY", petState?.isDead ?: false)
+            )
+
+            val health = (petState?.health ?: 0f).toInt().coerceIn(0, 100)
+            val energy = (petState?.energy ?: 0f).toInt().coerceIn(0, 100)
+            val hunger = (petState?.hunger ?: 0f).toInt().coerceIn(0, 100)
+            views.setProgressBar(R.id.health_bar, 100, health, false)
+            views.setProgressBar(R.id.energy_bar, 100, energy, false)
+            views.setProgressBar(R.id.hunger_bar, 100, hunger, false)
+            views.setTextViewText(R.id.health_value, "${health}%")
+            views.setTextViewText(R.id.energy_value, "${energy}%")
+            views.setTextViewText(R.id.hunger_value, "${hunger}%")
+
+            views.setTextViewText(R.id.widget_bytes, context.getString(R.string.widget_bytes, petState?.bytes ?: 0))
+            val streak = petState?.streak ?: 0
+            views.setTextViewText(
+                R.id.widget_streak,
+                context.resources.getQuantityString(R.plurals.widget_streak, streak, streak)
+            )
 
             val launchIntent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(
@@ -104,7 +90,7 @@ class CodePetWidgetProvider : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+            return views
         }
     }
 }

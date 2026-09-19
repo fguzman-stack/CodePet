@@ -50,7 +50,7 @@ class CommitWorker(
             applicationContext,
             "pet_care_reminder"
         )
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_stat_codey)
             .setContentTitle(applicationContext.getString(R.string.notif_commit_title, petState.name))
             .setContentText(commit)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

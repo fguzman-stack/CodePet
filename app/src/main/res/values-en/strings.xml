@@ -430,7 +430,7 @@
 
     <!-- About -->
     <string name="about_title">About</string>
-    <string name="about_version">Version 1.0.0</string>
+    <string name="about_version">Version %1$s</string>
     <string name="about_what">What is Code Tamagotchi?</string>
     <string name="about_what_desc">Code Tamagotchi is an app that combines learning to program with taking care of a virtual pet. Solve coding challenges, complete study sessions and play minigames to keep your pet happy and healthy while you level up your programming skills.</string>
     <string name="about_features_title">Main features</string>
@@ -733,6 +733,7 @@
     <string name="commit_normal_3">style: no apparent changes</string>
 
     <!-- Home screen widget -->
+    <string name="widget_description">Check on Codey at a glance: health, energy and hunger.</string>
     <string name="widget_level">Lv.%1$d</string>
     <string name="widget_status_happy">All systems happy!</string>
     <string name="widget_status_sleeping">Zzz… sleeping</string>
