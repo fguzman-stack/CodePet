@@ -133,7 +133,7 @@ object ChallengesDataEn {
                 "To prevent any instance of the class from being created",
                 "To mark a class as deprecated and discouraged"
             ),
-            explanation = "'sealed class' types define a restricted inheritance hierarchy: all direct subtypes must be declared in the same file, which enables exhaustive when."
+            explanation = "'sealed class' types define a restricted inheritance hierarchy: all direct subtypes must be declared in the same module and package (since Kotlin 1.5), which enables exhaustive when."
         ),
         19 to ChallengeTextsEn(
             language = "Kotlin",
@@ -540,7 +540,7 @@ object ChallengesDataEn {
                 "\$_SERVER",
                 "\$_REQUEST"
             ),
-            explanation = "\$_POST contains form data sent with method='post', including files (combined with \$_FILES)."
+            explanation = "\$_POST contains the form fields sent with method='post'. Uploaded files don't arrive there: they're available separately in \$_FILES."
         ),
         42 to ChallengeTextsEn(
             language = "PHP",
@@ -558,15 +558,15 @@ object ChallengesDataEn {
         43 to ChallengeTextsEn(
             language = "PHP",
             title = "isset vs empty",
-            question = "Which function returns true if a variable exists and is not null?",
+            question = "isset() returns true if a variable exists and is not null. What does var_dump(empty(\$var)) print when \$var = 0?",
             codeSnippet = null,
             options = listOf(
-                "true because 0 is a valid value",
-                "false because 0 is considered empty",
-                "true because empty only checks whether the variable exists",
+                "false because 0 is a valid value",
+                "true because 0 is considered an empty value",
+                "false because empty only checks whether the variable exists",
                 "It throws a type error"
             ),
-            explanation = "empty(\$var) returns true for 'empty' values: \"\", 0, \"0\", null, false, array(), and undefined variables. Since \$var = 0, empty() returns true."
+            explanation = "empty(\$var) returns true for 'empty' values: \"\", 0, \"0\", null, false, array(), and undefined variables. Since \$var = 0, empty() returns true, even though the variable does exist."
         ),
         44 to ChallengeTextsEn(
             language = "PHP",
@@ -598,7 +598,7 @@ object ChallengesDataEn {
             language = "PHP",
             title = "echo vs print_r",
             question = "Which function is more suitable for inspecting the contents of an array?",
-            codeSnippet = "\$data = ['a' => 1, 'b' => 2];\necho \$data; // Error\n???",
+            codeSnippet = "\$data = ['a' => 1, 'b' => 2];\necho \$data; // Warning: Array to string conversion\n???",
             options = listOf(
                 "echo only works for strings, use print_r(\$data) or var_dump(\$data)",
                 "Use echo \$data with double quotes",

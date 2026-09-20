@@ -167,10 +167,9 @@ fun CodeReviewResult(
     viewModel: PetViewModel
 ) {
     val bytesEarned = score * 10
-    val xpEarned = score * 5
 
     LaunchedEffect(Unit) {
-        viewModel.completeMinigame(bytesEarned, 5f, -10f)
+        viewModel.completeMinigame(bytesEarned, 5f, -10f, gameId = "code_review")
         viewModel.recordGamePlay("code_review")
     }
 
@@ -203,7 +202,7 @@ fun CodeReviewResult(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = stringResource(R.string.review_reward, bytesEarned, xpEarned),
+            text = stringResource(R.string.review_reward, bytesEarned),
             fontFamily = FontFamily.Monospace,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,

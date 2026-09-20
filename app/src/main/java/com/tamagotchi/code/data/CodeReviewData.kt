@@ -28,7 +28,7 @@ object CodeReviewData {
             3,
             "fun greet(name: String?) {\n    println(\"Hello \" + name.length)\n}",
             true,
-            "NullPointerException: Intentando acceder a .length en un String que puede ser nulo.",
+            "Error de compilación: no puedes acceder a .length en un String? sin llamada segura (name?.length) o !! (que arriesga un NullPointerException).",
             "Kotlin"
         ),
         CodeReviewSnippet(

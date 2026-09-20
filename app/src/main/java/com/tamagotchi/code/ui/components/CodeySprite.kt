@@ -4,6 +4,7 @@ package com.tamagotchi.code.ui.components
 // Rendering is shared with RemoteViews through CodeyBitmap.
 
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -146,6 +147,17 @@ fun CodeySprite(
     val animate = animationEnabled && !reduceMotion && mood != PetMood.DEAD
     var celebrating by remember { mutableStateOf(false) }
     var failed by remember { mutableStateOf(false) }
+    val evolutionAnimation = remember { Animatable(0f) }
+    var previousStage by remember { mutableStateOf(stage) }
+    LaunchedEffect(stage, animate) {
+        if (stage != previousStage && animate) {
+            previousStage = stage
+            evolutionAnimation.snapTo(1f)
+            evolutionAnimation.animateTo(0f, tween(1000))
+        } else {
+            previousStage = stage
+        }
+    }
     LaunchedEffect(celebrationTrigger, animate) {
         celebrating = false
         celebrationTrigger?.collect {
@@ -190,19 +202,36 @@ fun CodeySprite(
         val effectiveMood = if (celebrating && animate) PetMood.EXCITED else mood
         rotate(if (failed && animate) sin(t * 0.8f) * 5f else 0f) {
             if (pixelMode) drawCodeyPixelFrame(stage, effectiveMood, t)
-            else drawCodeyFrame(stage, effectiveMood, t)
+            else drawCodeyFrame(stage, effectiveMood, t, evolutionAnimation.value)
         }
     }
 }
 
 /** Shared by the live Canvas and the launcher's offscreen bitmap. Time is in 60 Hz ticks. */
-internal fun DrawScope.drawCodeyFrame(stage: PetEvolutionStage, mood: PetMood, time: Float) {
+internal fun DrawScope.drawCodeyFrame(stage: PetEvolutionStage, mood: PetMood, time: Float, evolutionProgress: Float = 0f) {
     val t = if (mood == PetMood.DEAD) 0f else time
     val scaleF = minOf(size.width / DESIGN_W, size.height / DESIGN_H)
     translate((size.width - DESIGN_W * scaleF) / 2f, (size.height - DESIGN_H * scaleF) / 2f) {
         scale(scaleF, scaleF, pivot = Offset.Zero) {
             drawCodey(stage, mood, t, t % 139f > 130f)
+            if (evolutionProgress > 0f) drawEvolutionBurst(evolutionProgress, t)
         }
+    }
+}
+
+private fun DrawScope.drawEvolutionBurst(progress: Float, t: Float) {
+    val radius = 35f + (1f - progress) * 105f
+    val alpha = (progress * 0.8f).coerceIn(0f, 0.8f)
+    drawCircle(Color(0xFFFFE08A).copy(alpha = alpha * 0.25f), radius = radius + 10f, center = Offset(180f, 210f))
+    drawCircle(Color(0xFFFFE08A).copy(alpha = alpha), radius = radius, center = Offset(180f, 210f), style = Stroke(width = 3f))
+    for (i in 0 until 8) {
+        val angle = t * 0.05f + i * (PI.toFloat() / 4f)
+        val distance = radius + 8f
+        drawCircle(
+            Color(0xFFFFF3B0).copy(alpha = alpha),
+            radius = 2.5f,
+            center = Offset(180f + cos(angle) * distance, 210f + sin(angle) * distance)
+        )
     }
 }
 
@@ -246,7 +275,7 @@ private fun DrawScope.drawCodey(stage: PetEvolutionStage, mood: PetMood, t: Floa
     tilt = if (isLow) 0.12f else 0f
 
     drawShadow(cfg.torsoW / 1.6f, 180f, 300f + (cfg.baseY - 200f))
-    val cy = drawRobot(mood, cfg, pal, accent, bounce, legSwing, armSwing, tilt, t, blinking)
+    val cy = drawRobot(stage, mood, cfg, pal, accent, bounce, legSwing, armSwing, tilt, t, blinking)
     drawMoodEffect(mood, accent, cy - (cfg.headR + 40f), t)
 }
 
@@ -420,6 +449,25 @@ private fun DrawScope.drawVisorFace(cx: Float, cy: Float, w: Float, h: Float, mo
     val closed = blinking && mood != PetMood.DEAD && mood != PetMood.SLEEPING && mood != PetMood.EXCITED
     val stroke = Stroke(width = 3f * s, cap = StrokeCap.Round)
 
+    // Soft eyebrows make the visor read as a face instead of a status panel.
+    val browY = eyeY - 11f * s
+    listOf(-1f, 1f).forEach { side ->
+        val ex = cx + side * eyeGap
+        val (startY, endY) = when (mood) {
+            PetMood.SAD, PetMood.SICK -> 3f to -2f
+            PetMood.EXCITED, PetMood.HAPPY -> -3f to -5f
+            PetMood.STUDYING -> 1f to -3f
+            else -> 0f to 0f
+        }
+        drawLine(
+            accent.copy(alpha = 0.9f),
+            Offset(ex - 6f * s, browY + side * startY * s),
+            Offset(ex + 6f * s, browY + side * endY * s),
+            strokeWidth = 2.4f * s,
+            cap = StrokeCap.Round
+        )
+    }
+
     listOf(-1f, 1f).forEach { side ->
         val ex = cx + side * eyeGap
         if (mood != PetMood.DEAD) {
@@ -498,7 +546,7 @@ private fun DrawScope.drawStar(x: Float, y: Float, r: Float, color: Color) {
 }
 
 private fun DrawScope.drawRobot(
-    mood: PetMood, cfg: StageConfig, pal: StagePalette, accent: Color,
+    stage: PetEvolutionStage, mood: PetMood, cfg: StageConfig, pal: StagePalette, accent: Color,
     bounce: Float, legSwing: Float, armSwing: Float, tilt: Float, t: Float, blinking: Boolean
 ): Float {
     val cx = 180f
@@ -533,6 +581,11 @@ private fun DrawScope.drawRobot(
             drawWing(-shoulderX - 4, shoulderY + 6, -1f, accent, pal, t)
             drawWing(shoulderX + 4, shoulderY + 6, 1f, accent, pal, t)
         }
+        if (stage == PetEvolutionStage.Legendary) {
+            drawEnergyCape(0f, torsoTop + 8f, accent, pal, t)
+        } else if (stage == PetEvolutionStage.Adult) {
+            drawBackpack(-cfg.torsoW / 2 - 7f, torsoTop + 8f, pal)
+        }
 
         drawLimb(Offset(-hipX + 10, hipY), cfg.legW, cfg.legH, legSwing, accent, pal)
         drawLimb(Offset(hipX - 10, hipY), cfg.legW, cfg.legH, -legSwing, accent, pal)
@@ -557,6 +610,11 @@ private fun DrawScope.drawRobot(
         ).forEach { drawCircle(pal.dark.copy(alpha = 0.55f), radius = 2.5f, center = it) }
 
         drawCore(0f, 4f, cfg.coreR, mood, accent, t, pal)
+        if (stage == PetEvolutionStage.Veteran) {
+            drawRankChevrons(0f, torsoTop + 27f, pal.trim)
+        } else if (stage == PetEvolutionStage.Adult) {
+            drawBadge(0f, torsoBottom - 10f, pal.trim)
+        }
         // status LEDs beside the core
         for (i in 0 until 3) {
             val on = mood == PetMood.EXCITED || i <= 1 || mood == PetMood.HAPPY
@@ -616,9 +674,88 @@ private fun DrawScope.drawRobot(
         }
 
         drawVisorFace(0f, headY + 3f, cfg.headR * 1.5f, cfg.headR * 1.0f, mood, accent, blinking, pal)
+
+        when (stage) {
+            PetEvolutionStage.Child -> drawPropellerCap(0f, headY - cfg.headR + 5f, accent, pal, t)
+            PetEvolutionStage.Adult -> drawHeadphones(0f, headY, cfg.headR, accent, pal)
+            PetEvolutionStage.Legendary -> drawCircuitCrown(0f, headY - cfg.headR + 2f, accent, pal, t)
+            else -> Unit
+        }
     }
 
     return cy
+}
+
+private fun DrawScope.drawBackpack(x: Float, y: Float, pal: StagePalette) {
+    drawRoundRect(
+        brush = Brush.linearGradient(listOf(pal.dark, pal.mid), Offset(x - 8f, y), Offset(x + 8f, y + 42f)),
+        topLeft = Offset(x - 8f, y),
+        size = Size(16f, 42f),
+        cornerRadius = CornerRadius(6f)
+    )
+    drawLine(pal.trim.copy(alpha = 0.8f), Offset(x, y + 8f), Offset(x + 18f, y + 20f), 2f, cap = StrokeCap.Round)
+    drawCircle(pal.trim, 2.5f, Offset(x + 18f, y + 20f))
+}
+
+private fun DrawScope.drawBadge(cx: Float, cy: Float, accent: Color) {
+    drawLine(accent.copy(alpha = 0.7f), Offset(cx, cy - 20f), Offset(cx, cy - 3f), 1.5f)
+    drawRoundRect(accent.copy(alpha = 0.9f), Offset(cx - 8f, cy - 3f), Size(16f, 10f), CornerRadius(2f))
+    drawLine(Color.White.copy(alpha = 0.7f), Offset(cx - 5f, cy + 1f), Offset(cx + 5f, cy + 1f), 1f)
+}
+
+private fun DrawScope.drawRankChevrons(cx: Float, cy: Float, color: Color) {
+    for (i in 0 until 2) {
+        val y = cy + i * 8f
+        drawLine(color, Offset(cx - 12f, y), Offset(cx, y + 5f), 2f, cap = StrokeCap.Round)
+        drawLine(color, Offset(cx, y + 5f), Offset(cx + 12f, y), 2f, cap = StrokeCap.Round)
+    }
+}
+
+private fun DrawScope.drawPropellerCap(x: Float, y: Float, accent: Color, pal: StagePalette, t: Float) {
+    drawRoundRect(pal.trim.copy(alpha = 0.95f), Offset(x - 18f, y - 5f), Size(36f, 10f), CornerRadius(5f))
+    drawLine(pal.edge, Offset(x, y - 5f), Offset(x, y - 15f), 2f, cap = StrokeCap.Round)
+    withTransform({ translate(x, y - 17f); rotate(sin(t * 0.16f) * 35f) }) {
+        drawOval(accent, Offset(-15f, -2f), Size(30f, 4f))
+        drawOval(pal.light.copy(alpha = 0.85f), Offset(-2f, -15f), Size(4f, 30f))
+        drawCircle(pal.edge, 3f, Offset.Zero)
+    }
+}
+
+private fun DrawScope.drawHeadphones(cx: Float, cy: Float, headR: Float, accent: Color, pal: StagePalette) {
+    drawArc(pal.dark, 190f, 160f, false, Offset(cx - headR - 5f, cy - headR - 7f), Size((headR + 5f) * 2f, (headR + 5f) * 2f), style = Stroke(width = 5f))
+    listOf(-1f, 1f).forEach { side ->
+        drawRoundRect(pal.dark, Offset(cx + side * (headR - 2f) - 6f, cy - 8f), Size(12f, 25f), CornerRadius(5f))
+        drawCircle(accent.copy(alpha = 0.85f), 4f, Offset(cx + side * (headR - 2f), cy + 4f))
+    }
+}
+
+private fun DrawScope.drawCircuitCrown(cx: Float, y: Float, accent: Color, pal: StagePalette, t: Float) {
+    val lift = sin(t * 0.05f) * 2f
+    val crown = Path().apply {
+        moveTo(cx - 22f, y + lift)
+        lineTo(cx - 15f, y - 17f + lift)
+        lineTo(cx, y - 6f + lift)
+        lineTo(cx + 15f, y - 17f + lift)
+        lineTo(cx + 22f, y + lift)
+        close()
+    }
+    drawPath(crown, Brush.linearGradient(listOf(pal.trim, Color(0xFFFFF0A8))))
+    drawPath(crown, pal.edge, style = Stroke(width = 2f))
+    listOf(-15f, 0f, 15f).forEach { dx -> drawCircle(accent, 2.5f, Offset(cx + dx, y - 9f + lift)) }
+}
+
+private fun DrawScope.drawEnergyCape(cx: Float, y: Float, accent: Color, pal: StagePalette, t: Float) {
+    val wave = sin(t * 0.08f) * 4f
+    val cape = Path().apply {
+        moveTo(cx - 30f, y)
+        cubicTo(cx - 52f, y + 28f, cx - 48f + wave, y + 65f, cx - 34f, y + 88f)
+        lineTo(cx, y + 70f)
+        lineTo(cx + 34f, y + 88f)
+        cubicTo(cx + 48f - wave, y + 65f, cx + 52f, y + 28f, cx + 30f, y)
+        close()
+    }
+    drawPath(cape, Brush.linearGradient(listOf(pal.trim.copy(alpha = 0.7f), accent.copy(alpha = 0.12f))))
+    drawPath(cape, accent.copy(alpha = 0.6f), style = Stroke(width = 1.5f))
 }
 
 // ─────────────────────────────────────────────────────────
@@ -806,6 +943,8 @@ private fun DrawScope.drawMoodEffect(mood: PetMood, accent: Color, cy: Float, t:
                 drawLine(Color(0xFF5C7288), Offset(-12f, -4f), Offset(12f, -4f), strokeWidth = 2f, cap = StrokeCap.Round)
                 drawTextNative("01", 0f, -6f, 8f, accent.copy(alpha = 0.8f))
             }
+            drawLine(accent, Offset(235f, cy + 5f), Offset(248f, cy + 15f), 2f, cap = StrokeCap.Round)
+            drawCircle(accent.copy(alpha = 0.8f), 2.5f, Offset(235f, cy + 5f))
         }
         PetMood.SAD -> {
             drawOval(accent, topLeft = Offset(195f, cy - 22f + (t % 30f)), size = Size(6f, 10f))
@@ -835,6 +974,8 @@ private fun DrawScope.drawMoodEffect(mood: PetMood, accent: Color, cy: Float, t:
                 cubicTo(18f, 13f, 12f, 11f, 13f, 6f)
                 close()
             }, Color(0xFF52E07A).copy(alpha = 0.6f))
+            drawLine(Color.White.copy(alpha = 0.8f), Offset(11f, -5f), Offset(11f, 8f), 2f, cap = StrokeCap.Round)
+            drawCircle(Color.White.copy(alpha = 0.8f), 4f, Offset(11f, -7f))
         }
         PetMood.SLEEPING -> {
             // rising "z z Z"
@@ -844,6 +985,15 @@ private fun DrawScope.drawMoodEffect(mood: PetMood, accent: Color, cy: Float, t:
                 val alpha = (0.9f - p * 0.7f).coerceIn(0f, 1f)
                 drawTextNative(if (i == 2) "Z" else "z", 236f + i * 8f + p * 14f, cy - 30f - p * 40f - i * 4f, 12f + i * 5f, Color(0xFFA9C7E8).copy(alpha = alpha))
             }
+        }
+        PetMood.STUDYING -> {
+            withTransform({ translate(237f, cy + 3f); rotate(-8f) }) {
+                drawRoundRect(Color(0xFF203B4A), Offset(-18f, -14f), Size(36f, 26f), CornerRadius(3f))
+                drawRoundRect(accent.copy(alpha = 0.8f), Offset(-14f, -10f), Size(28f, 18f), CornerRadius(2f), style = Stroke(width = 1.5f))
+                drawLine(accent, Offset(-10f, -5f), Offset(8f, -5f), 1.5f)
+                drawLine(accent.copy(alpha = 0.7f), Offset(-10f, 1f), Offset(4f, 1f), 1.5f)
+            }
+            drawTextNative("{}", 244f, cy - 32f + sin(t * 0.08f) * 4f, 9f, accent.copy(alpha = 0.75f))
         }
         else -> Unit
     }

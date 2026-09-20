@@ -169,7 +169,7 @@ fun GitRescueScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 Button(onClick = {
                     viewModel.recordGamePlay("git_rescue")
-                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
+                    viewModel.completeMinigame(bytesEarned, 10f, -5f, gameId = "git_rescue")
                     onNavigateBack()
                 }) {
                     Text(stringResource(R.string.game_result_finish))

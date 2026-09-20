@@ -30,7 +30,7 @@ private data class BugSnippet(
 
 private val snippetPool = listOf(
     BugSnippet(
-        listOf("val name = \"Codey\"", "println(name", "age++", "fun greet() { }"),
+        listOf("val name = \"Codey\"", "println(name", "val age = 3", "fun greet() { }"),
         bugIndex = 1,
         explanationRes = R.string.bug_expl_1,
         humorRes = R.string.bug_humor_1
@@ -42,8 +42,8 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_2
     ),
     BugSnippet(
-        listOf("fun add(a: Int, b: Int): Int {", "return a + b", "}", "add(2, 3)"),
-        bugIndex = 1,
+        listOf("fun add(a: Int, b: Int) {", "return a + b", "}", "val total = add(2, 3)"),
+        bugIndex = 0,
         explanationRes = R.string.bug_expl_3,
         humorRes = R.string.bug_humor_3
     ),
@@ -54,13 +54,13 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_4
     ),
     BugSnippet(
-        listOf("fun main() {", "val msg = \"Hello\"", "println(msg)", "}//end"),
-        bugIndex = 0,
+        listOf("fun double(n: Int): Int {", "val result = n * 2", "println(resut)", "return result", "}"),
+        bugIndex = 2,
         explanationRes = R.string.bug_expl_5,
         humorRes = R.string.bug_humor_5
     ),
     BugSnippet(
-        listOf("val count = 0", "while (count < 5) {", "println(count)", "count--", "}"),
+        listOf("var count = 0", "while (count < 5) {", "println(count)", "count--", "}"),
         bugIndex = 3,
         explanationRes = R.string.bug_expl_6,
         humorRes = R.string.bug_humor_6
@@ -84,8 +84,8 @@ private val snippetPool = listOf(
         humorRes = R.string.bug_humor_9
     ),
     BugSnippet(
-        listOf("fun greet() {", "println(\"Hello\")", "", "", "", "}"),
-        bugIndex = 2,
+        listOf("fun greet(name: String) {", "println(\"Hola, \" + nme)", "println(\"Bienvenido!\")", "}"),
+        bugIndex = 1,
         explanationRes = R.string.bug_expl_10,
         humorRes = R.string.bug_humor_10
     )
@@ -155,7 +155,7 @@ fun BugHuntScreen(
                 Spacer(modifier = Modifier.height(24.dp))
                 Button(onClick = {
                     viewModel.recordGamePlay("bug_hunt")
-                    viewModel.completeMinigame(bytesEarned, 10f, -5f)
+                    viewModel.completeMinigame(bytesEarned, 10f, -5f, gameId = "bug_hunt")
                     onNavigateBack()
                 }) {
                     Text(stringResource(R.string.game_result_finish))

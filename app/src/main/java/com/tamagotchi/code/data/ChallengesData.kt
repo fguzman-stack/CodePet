@@ -166,7 +166,7 @@ object ChallengesData {
                 "Para marcar una clase como obsoleta y no recomendada"
             ),
             correctAnswerIndex = 1,
-            explanation = "Las 'sealed class' definen una jerarquía de herencia restringida: todos los subtipos directos deben declararse en el mismo archivo, lo que permite when exhaustivo."
+            explanation = "Las 'sealed class' definen una jerarquía de herencia restringida: todos los subtipos directos deben declararse en el mismo módulo y paquete (desde Kotlin 1.5), lo que permite when exhaustivo."
         ),
         CodingChallenge(
             id = 19,
@@ -644,7 +644,7 @@ object ChallengesData {
                 "\$_REQUEST"
             ),
             correctAnswerIndex = 1,
-            explanation = "\$_POST contiene los datos de formularios enviados con method='post', incluyendo archivos (combinado con \$_FILES)."
+            explanation = "\$_POST contiene los campos de formularios enviados con method='post'. Los archivos subidos no llegan ahí: están disponibles por separado en \$_FILES."
         ),
         CodingChallenge(
             id = 42,
@@ -666,16 +666,16 @@ object ChallengesData {
             language = "PHP",
             type = "DEBUG",
             title = "isset vs empty",
-            question = "¿Qué función devuelve true si una variable existe y no es null?",
+            question = "isset() devuelve true si la variable existe y no es null. ¿Qué imprime var_dump(empty(\$var)) cuando \$var = 0?",
             codeSnippet = "\$var = 0;\nvar_dump(isset(\$var)); // true\nvar_dump(empty(\$var)); // ?",
             options = listOf(
-                "true porque 0 es un valor válido",
-                "false porque 0 se considera vacío",
-                "true porque empty solo revisa si existe",
+                "false porque 0 es un valor válido",
+                "true porque 0 se considera un valor vacío",
+                "false porque empty solo revisa si la variable existe",
                 "Lanza un error de tipo"
             ),
             correctAnswerIndex = 1,
-            explanation = "empty(\$var) devuelve true para valores 'vacíos': \"\", 0, \"0\", null, false, array(), y variables no definidas. Como \$var = 0, empty() devuelve true."
+            explanation = "empty(\$var) devuelve true para valores 'vacíos': \"\", 0, \"0\", null, false, array(), y variables no definidas. Como \$var = 0, empty() devuelve true, aunque la variable sí exista."
         ),
         CodingChallenge(
             id = 44,
@@ -713,7 +713,7 @@ object ChallengesData {
             type = "DEBUG",
             title = "echo vs print_r",
             question = "¿Qué función es más adecuada para inspeccionar el contenido de un array?",
-            codeSnippet = "\$datos = ['a' => 1, 'b' => 2];\necho \$datos; // Error\n???",
+            codeSnippet = "\$datos = ['a' => 1, 'b' => 2];\necho \$datos; // Warning: Array to string conversion\n???",
             options = listOf(
                 "echo solo sirve para strings, usa print_r(\$datos) o var_dump(\$datos)",
                 "Usa echo \$datos con comillas dobles",

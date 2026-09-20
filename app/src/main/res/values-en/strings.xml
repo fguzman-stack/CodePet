@@ -233,14 +233,14 @@
     <string name="bug_explanation">Explanation: %1$s</string>
     <string name="bug_expl_1">The closing parenthesis is missing in println.</string>
     <string name="bug_humor_1">It was a fugitive parenthesis! It escaped without leaving a forwarding address.</string>
-    <string name="bug_expl_2">In Kotlin comparison is ==, not =. = is assignment.</string>
+    <string name="bug_expl_2">In Kotlin comparison is ==, not = (which is assignment). This if doesn\'t even compile: an assignment doesn\'t return a Boolean.</string>
     <string name="bug_humor_2">Codey: One = is assignment, double == is comparison! Don\'t confuse the compiler.</string>
     <string name="bug_expl_3">The explicit return type is missing, it should be \': Int\'.</string>
     <string name="bug_humor_3">Codey: Even a pocket calculator knows what it\'s going to return.</string>
     <string name="bug_expl_4">In Kotlin, for uses parentheses: for (i in nums).</string>
     <string name="bug_humor_4">Codey: Parentheses aren\'t decoration! They\'re part of the syntax.</string>
-    <string name="bug_expl_5">main doesn\'t need empty parentheses if it\'s the entry point.</string>
-    <string name="bug_humor_5">Codey: Actually main() is fine, but this bug is a cheater!</string>
+    <string name="bug_expl_5">\'resut\' doesn\'t exist: the variable is named \'result\'. One typo and nothing compiles.</string>
+    <string name="bug_humor_5">Codey: Your fingers typed faster than your brain! Watch out for typos.</string>
     <string name="bug_expl_6">It\'s decrementing count instead of incrementing it. Infinite loop.</string>
     <string name="bug_humor_6">Codey: You\'ll never reach 5 that way! It\'s like running backwards.</string>
     <string name="bug_expl_7">You can\'t assign a String directly to an Int. Use toInt().</string>
@@ -249,8 +249,8 @@
     <string name="bug_humor_8">Codey: The compiler isn\'t a fortune teller. Tell it what you\'re returning.</string>
     <string name="bug_expl_9">listOf creates an immutable list. Use mutableListOf.</string>
     <string name="bug_humor_9">Codey: You can\'t modify an immutable list! That\'s like trying to change the past.</string>
-    <string name="bug_expl_10">Unnecessary blank lines. Code should be clean.</string>
-    <string name="bug_humor_10">Codey: Are you writing code or a novel? Very poetic, not very practical.</string>
+    <string name="bug_expl_10">The variable \'nme\' doesn\'t exist; the function parameter is called \'name\'.</string>
+    <string name="bug_humor_10">Codey: \'nme\' isn\'t a name, it\'s a sneeze. The parameter is \'name\'.</string>
 
     <!-- Git Rescue -->
     <string name="git_initial">Quick, the repo is on fire!</string>
@@ -289,7 +289,7 @@
     <string name="git_opt_5c">git commit --allow-empty</string>
     <string name="git_expl_5">With amend you can add files to the previous commit without creating a new one.</string>
     <string name="git_humor_5">Codey: --allow-empty fixes nothing. It\'s like putting a post-it on a closed door.</string>
-    <string name="git_sit_6">You want to see which files you modified before committing. Which command do you use?</string>
+    <string name="git_sit_6">You want a quick list of the modified, new and untracked files before committing. Which command do you use?</string>
     <string name="git_opt_6a">git diff</string>
     <string name="git_opt_6b">git status</string>
     <string name="git_opt_6c">git show</string>
@@ -311,7 +311,7 @@
     <!-- Refactor Rush -->
     <string name="refactor_initial">Sort this mess out!</string>
     <string name="refactor_win">Excellent! Clean, ordered code in %1$d attempt(s).</string>
-    <string name="refactor_keep_trying">Keep trying, it still doesn\'t compile (attempt %1$d).</string>
+    <string name="refactor_keep_trying">Keep trying: the order isn\'t the original one yet (attempt %1$d).</string>
     <string name="refactor_verify">Verify</string>
     <string name="refactor_puzzle_1">Compute total</string>
     <string name="refactor_puzzle_2">Filter evens</string>
@@ -327,18 +327,18 @@
     <string name="refactor_puzzle_12">Capitalize words</string>
 
     <!-- Binary Guess -->
-    <string name="binary_prompt">What do you think the secret bit is?</string>
-    <string name="binary_header">GUESS THE BIT (Round %1$d of 5)</string>
+    <string name="binary_prompt">Choose the correct binary representation:</string>
+    <string name="binary_header">BINARY CHALLENGE (Round %1$d of 5)</string>
     <string name="binary_fin">END</string>
-    <string name="binary_correct">Excellent! The secret bit was %1$d.</string>
-    <string name="binary_wrong">Wrong. The secret bit was %1$d.</string>
-    <string name="binary_gameover">Game Over!\nYou got: %1$d of 5\nReward: +%2$d Bytes, +%3$d%% Happiness</string>
+    <string name="binary_correct">Correct! %1$d in binary is %2$s.</string>
+    <string name="binary_wrong">Wrong. %1$d in binary is %2$s.</string>
+    <string name="binary_gameover">Game Over!\nYou got: %1$d of 5\nReward: +%2$d Bytes, +%3$d Health</string>
     <string name="binary_next_round">Next Round</string>
 
     <!-- Bug Smasher -->
     <string name="smasher_header">BUG SMASHER</string>
     <string name="smasher_desc">Tap the bugs that appear in the 3x3 grid as fast as you can. You have 10 seconds!</string>
-    <string name="smasher_gameover">Time\'s Up!\nBugs caught: %1$d\nReward: +%2$d Bytes, +%3$d%% Happiness</string>
+    <string name="smasher_gameover">Time\'s Up!\nBugs caught: %1$d\nReward: +%2$d Bytes, +%3$d Health</string>
     <string name="smasher_bugs">Bugs: %1$d</string>
     <string name="smasher_time">Time: %1$ds</string>
     <string name="smasher_bug_cd">BUG</string>
@@ -360,16 +360,16 @@
     <string name="rps_round_lose">You lost the round. %1$s beats %2$s.</string>
     <string name="rps_match_win">You won the match!</string>
     <string name="rps_match_lose">The compiler won the match.</string>
-    <string name="rps_game_win">Congrats! You defeated the compiler.\nReward: +%1$d Bytes, +%2$d%% Happiness</string>
-    <string name="rps_game_lose">You lost against the compiler.\nReward: +%1$d Bytes, +%2$d%% Happiness</string>
+    <string name="rps_game_win">Congrats! You defeated the compiler.\nReward: +%1$d Bytes, +%2$d Health</string>
+    <string name="rps_game_lose">You lost against the compiler.\nReward: +%1$d Bytes, +%2$d Health</string>
 
     <!-- Minigames Dialog -->
     <string name="mg_header">&gt;&gt;&gt; MINI-GAMES</string>
     <string name="mg_detail">&gt;&gt;&gt; GAME DETAIL</string>
     <string name="mg_back">Back</string>
-    <string name="mg_intro">Play with %1$s to boost its happiness and earn extra Bytes.</string>
-    <string name="mg_binary_title">Guess the Bit</string>
-    <string name="mg_binary_desc">Try to predict the next binary bit (0 or 1). Quick 5-round game.</string>
+    <string name="mg_intro">Play with %1$s to boost its Health and earn extra Bytes.</string>
+    <string name="mg_binary_title">Binary Challenge</string>
+    <string name="mg_binary_desc">Convert decimal numbers to binary. Quick 5-round game.</string>
     <string name="mg_smasher_title">Bug Smasher</string>
     <string name="mg_smasher_desc">Quick! The bugs are escaping. Catch as many as you can in 10 seconds.</string>
     <string name="mg_rps_title">Server, Script, Hacker</string>
@@ -385,7 +385,7 @@
     <string name="review_done">REVIEW COMPLETE</string>
     <string name="review_score">Score: %1$d / %2$d</string>
     <string name="review_congrats">Good job, Sr. Developer!</string>
-    <string name="review_reward">+%1$d Bytes\n+%2$d XP</string>
+    <string name="review_reward">Reward: +%1$d Bytes</string>
     <string name="review_back">BACK TO THE TERMINAL</string>
 
     <!-- Hackathon -->
@@ -396,8 +396,15 @@
     <string name="hack_attempts">Attempts left: %1$d / 3</string>
     <string name="hack_best_time">Best time: %1$ds</string>
     <string name="hack_solve">SOLVE CHALLENGE</string>
-    <string name="hack_reward">Reward: 200 XP + 500 Bytes + exclusive temporary skin</string>
+    <string name="hack_reward">Reward: 200 XP + 500 Bytes</string>
     <string name="hack_no_attempts">No attempts left. Wait for the next hackathon!</string>
+    <string name="hack_quiz_prompt">The rule is not to use sort(). How do you solve the challenge?</string>
+    <string name="hack_opt_own">Implement your own algorithm (e.g. bubble sort or insertion sort)</string>
+    <string name="hack_opt_sorted">Call array.sorted() from the standard library</string>
+    <string name="hack_opt_collections">Use Collections.sort(array)</string>
+    <string name="hack_opt_sort">Use array.sort() with a comparator</string>
+    <string name="hack_wrong">That solution uses forbidden sorting functions! The rule is without sort(). Attempt consumed.</string>
+    <string name="hack_expl_win">Correct! The hackathon rule is to implement the logic yourself: bubble sort, insertion sort, etc.</string>
 
     <!-- Shop -->
     <string name="shop_header">&gt;&gt;&gt; SHOP</string>

@@ -183,7 +183,7 @@ fun RockPaperSciGame(
                         contentPadding = PaddingValues(horizontal = 4.dp),
                         modifier = Modifier.weight(1f).height(44.dp)
                     ) {
-                        Text(choice, fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color(0xFF81C784))
+                        Text(choiceName(choice), fontSize = 10.sp, fontFamily = FontFamily.Monospace, color = Color(0xFF81C784))
                     }
                 }
             }

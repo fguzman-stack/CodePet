@@ -13,7 +13,7 @@ object CodeReviewDataEn {
         ),
         3 to ReviewTextsEn(
             code = "fun greet(name: String?) {\n    println(\"Hello \" + name.length)\n}",
-            explanation = "NullPointerException: Trying to access .length on a String that can be null."
+            explanation = "Compile error: you can't access .length on a String? without a safe call (name?.length) or !! (which risks a NullPointerException)."
         ),
         4 to ReviewTextsEn(
             code = "val x: Int = 10\nif (x == 10) {\n    println(\"It's ten\")\n}",

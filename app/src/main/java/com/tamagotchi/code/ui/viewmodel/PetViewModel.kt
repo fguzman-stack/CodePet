@@ -864,7 +864,12 @@ class PetViewModel(
         }
     }
 
-    fun completeMinigame(bytesEarned: Int, healthEarned: Float, energyCost: Float) {
+    fun completeMinigame(
+        bytesEarned: Int,
+        healthEarned: Float,
+        energyCost: Float,
+        gameId: String? = null
+    ) {
         viewModelScope.launch {
             val pet = repository.petState.firstOrNull() ?: return@launch
             val bonusTier = skillTreeState.value.find { it.id == "minigame_bonus" }?.currentTier ?: 0
@@ -887,10 +892,11 @@ class PetViewModel(
             if (pairBuddyState.value != null) {
                 consumePairBuddyChallenge()
             }
-            
-            if (bytesEarned == 100) {
+
+            if (gameId == "bug_hunt" && bytesEarned >= 50) {
                 achievementsRepository.unlockAchievement("cazador_de_bugs")
-            } else if (bytesEarned == 45) {
+            }
+            if (gameId == "git_rescue" && bytesEarned >= 45) {
                 achievementsRepository.unlockAchievement("git_sin_panico")
             }
             userPreferences.addDailyActivity("game:${bytesEarned}")
@@ -1296,7 +1302,7 @@ class PetViewModel(
         }
     }
 
-    fun submitHackathonSolution(attempts: Int, timeMs: Long) {
+    fun submitHackathonSolution(timeMs: Long) {
         viewModelScope.launch {
             val current = hackathonState.value ?: return@launch
             if (current.attempts >= 3) return@launch
@@ -1309,7 +1315,7 @@ class PetViewModel(
             userPreferences.saveHackathonData(updated)
 
             val pet = petState.value ?: return@launch
-            val newLevel = com.tamagotchi.code.util.LevelCalculator.calculateLevel(pet.xp + 200)
+            val newLevel = LevelCalculator.calculateLevel(pet.xp + 200)
             repository.savePetState(pet.copy(
                 xp = pet.xp + 200,
                 level = newLevel,
@@ -1317,6 +1323,18 @@ class PetViewModel(
             ))
             soundManager.playLevelUp()
             triggerCelebration()
+        }
+    }
+
+    fun consumeHackathonAttempt() {
+        viewModelScope.launch {
+            val current = hackathonState.value ?: return@launch
+            if (current.attempts >= 3) return@launch
+
+            val updated = current.copy(attempts = current.attempts + 1)
+            hackathonState.value = updated
+            userPreferences.saveHackathonData(updated)
+            soundManager.playError()
         }
     }
 
