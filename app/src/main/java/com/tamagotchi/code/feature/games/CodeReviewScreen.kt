@@ -26,6 +26,7 @@ import com.tamagotchi.code.data.CodeReviewData
 import com.tamagotchi.code.data.CodeReviewSnippet
 import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.readableOnBackground
 
 @Composable
 fun CodeReviewScreen(
@@ -55,7 +56,7 @@ fun CodeReviewScreen(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF81C784)
+                color = readableOnBackground(Color(0xFF81C784))
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -183,21 +184,21 @@ fun CodeReviewResult(
             fontFamily = FontFamily.Monospace,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF81C784)
+            color = readableOnBackground(Color(0xFF81C784))
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.review_score, score, total),
             fontFamily = FontFamily.Monospace,
             fontSize = 18.sp,
-            color = Color.White
+            color = readableOnBackground(Color.White)
         )
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = stringResource(R.string.review_congrats),
             fontFamily = FontFamily.Monospace,
             fontSize = 14.sp,
-            color = Color.Gray,
+            color = readableOnBackground(Color.Gray),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -206,7 +207,7 @@ fun CodeReviewResult(
             fontFamily = FontFamily.Monospace,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF81C784),
+            color = readableOnBackground(Color(0xFF81C784)),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(40.dp))

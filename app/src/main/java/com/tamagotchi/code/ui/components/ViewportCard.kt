@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
+import com.tamagotchi.code.ui.theme.bestContentOn
+import com.tamagotchi.code.ui.theme.compositeOver
+import com.tamagotchi.code.ui.theme.ensureContrast
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.delay
@@ -162,7 +165,10 @@ fun ViewportCard(
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelMedium,
                         fontSize = 13.sp,
-                        color = statusColor,
+                        color = ensureContrast(
+                            statusColor,
+                            statusColor.copy(alpha = 0.2f).compositeOver(MaterialTheme.colorScheme.surface)
+                        ),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -210,7 +216,7 @@ fun ViewportCard(
                             fontSize = 10.sp,
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black,
+                            color = bestContentOn(statusColor),
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
@@ -347,7 +353,7 @@ fun ViewportCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.MonetizationOn, contentDescription = null, tint = appTheme.accent, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("${state.bytes} B", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = appTheme.accent)
+                    Text("${state.bytes} B", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, fontSize = 13.sp, color = ensureContrast(appTheme.accent, MaterialTheme.colorScheme.surface))
                     Spacer(modifier = Modifier.width(16.dp))
                     Icon(Icons.Default.LocalFireDepartment, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(4.dp))

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.readableOnBackground
 
 @Composable
 fun SeasonPassScreen(
@@ -41,7 +42,7 @@ fun SeasonPassScreen(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF81C784)
+                color = readableOnBackground(Color(0xFF81C784))
             )
         }
 
@@ -49,7 +50,7 @@ fun SeasonPassScreen(
             text = stringResource(R.string.season_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
-            color = Color.Gray
+            color = readableOnBackground(Color.Gray)
         )
 
         Card(
@@ -108,7 +109,7 @@ fun SeasonPassScreen(
             fontFamily = FontFamily.Monospace,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF81C784)
+            color = readableOnBackground(Color(0xFF81C784))
         )
 
         val rewards = listOf(

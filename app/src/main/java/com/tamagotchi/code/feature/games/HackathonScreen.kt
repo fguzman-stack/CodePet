@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.HackathonData
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.readableOnBackground
 import kotlin.math.min
 
 @Composable
@@ -42,7 +43,7 @@ fun HackathonScreen(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF81C784)
+                color = readableOnBackground(Color(0xFF81C784))
             )
         }
 
@@ -50,7 +51,7 @@ fun HackathonScreen(
             text = stringResource(R.string.hack_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 12.sp,
-            color = Color.Gray
+            color = readableOnBackground(Color.Gray)
         )
 
         Card(
@@ -134,7 +135,7 @@ fun HackathonScreen(
                 text = stringResource(R.string.hack_reward),
                 fontFamily = FontFamily.Monospace,
                 fontSize = 10.sp,
-                color = Color(0xFFFFB74D),
+                color = readableOnBackground(Color(0xFFFFB74D)),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -143,7 +144,7 @@ fun HackathonScreen(
                 text = stringResource(R.string.hack_no_attempts),
                 fontFamily = FontFamily.Monospace,
                 fontSize = 12.sp,
-                color = Color(0xFFEF5350),
+                color = readableOnBackground(Color(0xFFEF5350)),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

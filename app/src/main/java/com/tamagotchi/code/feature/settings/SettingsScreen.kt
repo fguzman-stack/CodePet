@@ -36,6 +36,8 @@ import com.tamagotchi.code.ui.components.achievementName
 import com.tamagotchi.code.ui.components.moodletLabel
 import com.tamagotchi.code.ui.theme.AppTheme
 import com.tamagotchi.code.ui.theme.ThemeRegistry
+import com.tamagotchi.code.ui.theme.ensureContrast
+import com.tamagotchi.code.ui.theme.readableOnBackground
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -348,7 +350,7 @@ fun SettingsScreen(
                     Text(
                         text = stringResource(R.string.settings_moodlet, moodletTypeLabel),
                         fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.tertiary,
+                        color = ensureContrast(MaterialTheme.colorScheme.tertiary, MaterialTheme.colorScheme.surface),
                         modifier = Modifier.padding(8.dp)
                     )
                 }
@@ -364,7 +366,7 @@ fun SettingsScreen(
                     Text(
                         text = stringResource(R.string.settings_dnd_active),
                         fontSize = 11.sp,
-                        color = Color(0xFFFFB74D),
+                        color = readableOnBackground(Color(0xFFFFB74D)),
                         modifier = Modifier.padding(8.dp)
                     )
                 }
@@ -515,15 +517,16 @@ fun ThemePreviewCard(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Theme name
+            // Theme name — locked cards sit on a fixed dark container, so the
+            // theme's own text colors must not be used there.
             Text(
                 text = theme.name,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                 fontSize = 12.sp,
-                color = if (isUnlocked) {
-                    if (theme.isDark) Color.White else theme.textPrimary
-                } else {
-                    Color.Gray
+                color = when {
+                    !isUnlocked -> Color.White.copy(alpha = 0.85f)
+                    theme.isDark -> Color.White
+                    else -> theme.textPrimary
                 },
                 textAlign = TextAlign.Center,
                 maxLines = 1,
@@ -535,10 +538,10 @@ fun ThemePreviewCard(
             Text(
                 text = if (isUnlocked) theme.description else stringResource(R.string.theme_locked),
                 fontSize = 9.sp,
-                color = if (isUnlocked) {
-                    if (theme.isDark) Color.LightGray else theme.textSecondary
-                } else {
-                    Color.DarkGray
+                color = when {
+                    !isUnlocked -> Color.LightGray.copy(alpha = 0.8f)
+                    theme.isDark -> Color.LightGray
+                    else -> ensureContrast(theme.textSecondary, theme.surface)
                 },
                 textAlign = TextAlign.Center,
                 maxLines = 2,
@@ -573,7 +576,7 @@ fun ThemePreviewCard(
                 Text(
                     text = stringResource(R.string.settings_experience_theme_active),
                     fontSize = 9.sp,
-                    color = theme.primary,
+                    color = ensureContrast(theme.primary, theme.surface),
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()

@@ -28,6 +28,7 @@ import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.data.database.StudySessionEntity
+import com.tamagotchi.code.ui.theme.readableOnBackground
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,7 +47,7 @@ fun FocusScreen(
             text = stringResource(R.string.focus_header),
             fontSize = 14.sp,
             fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
+            color = readableOnBackground(Color(0xFF81C784)),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
@@ -116,7 +117,7 @@ fun TimerPanel(
                     text = stringResource(R.string.focus_dnd_banner),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 10.sp,
-                    color = Color(0xFFFFB74D),
+                    color = readableOnBackground(Color(0xFFFFB74D)),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(8.dp)
                 )
@@ -127,7 +128,7 @@ fun TimerPanel(
                 text = stringResource(R.string.focus_start_logs),
                 fontSize = 13.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color(0xFF81C784),
+                color = readableOnBackground(Color(0xFF81C784)),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -141,7 +142,7 @@ fun TimerPanel(
                     text = stringResource(R.string.focus_topic_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color.White,
+                    color = readableOnBackground(Color.White),
                     modifier = Modifier.width(80.dp)
                 )
 
@@ -209,7 +210,7 @@ fun TimerPanel(
                     text = stringResource(R.string.focus_time_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color.White,
+                    color = readableOnBackground(Color.White),
                     modifier = Modifier.width(80.dp)
                 )
 
@@ -251,7 +252,7 @@ fun TimerPanel(
                 text = stringResource(R.string.focus_studying_desc),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color.Gray,
+                color = readableOnBackground(Color.Gray),
                 lineHeight = 16.sp
             )
 
@@ -283,7 +284,7 @@ fun TimerPanel(
                 text = stringResource(R.string.focus_compiling_header),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color(0xFFFFB74D),
+                color = readableOnBackground(Color(0xFFFFB74D)),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -292,7 +293,7 @@ fun TimerPanel(
                 text = stringResource(R.string.focus_enfoque, currentTopic),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color.Gray,
+                color = readableOnBackground(Color.Gray),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -307,14 +308,14 @@ fun TimerPanel(
                     fontSize = 42.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
-                    color = Color(0xFF81C784),
+                    color = readableOnBackground(Color(0xFF81C784)),
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = stringResource(R.string.focus_pet_studying, state.name),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color.Gray,
+                    color = readableOnBackground(Color.Gray),
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
@@ -360,7 +361,7 @@ fun LogsPanel(
             text = stringResource(R.string.focus_logs_header),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
+            color = readableOnBackground(Color(0xFF81C784)),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
@@ -377,7 +378,7 @@ fun LogsPanel(
                     text = stringResource(R.string.focus_logs_empty),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color.Gray,
+                    color = readableOnBackground(Color.Gray),
                     textAlign = TextAlign.Center,
                     lineHeight = 16.sp
                 )
@@ -459,3 +460,4 @@ fun LogsPanel(
         }
     }
 }
+

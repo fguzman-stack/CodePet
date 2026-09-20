@@ -29,12 +29,17 @@ class CodePetWidgetProvider : AppWidgetProvider() {
             context: Context,
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
-            petState: PetStateEntity? = null
+            petState: PetStateEntity? = null,
+            pixelMode: Boolean = false
         ) {
-            appWidgetManager.updateAppWidget(appWidgetId, createRemoteViews(context, petState))
+            appWidgetManager.updateAppWidget(appWidgetId, createRemoteViews(context, petState, pixelMode))
         }
 
-        internal fun createRemoteViews(context: Context, petState: PetStateEntity?): RemoteViews {
+        internal fun createRemoteViews(
+            context: Context,
+            petState: PetStateEntity?,
+            pixelMode: Boolean = false
+        ): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.code_pet_widget)
 
             views.setTextViewText(R.id.widget_title, petState?.name ?: context.getString(R.string.default_pet_name))
@@ -61,7 +66,12 @@ class CodePetWidgetProvider : AppWidgetProvider() {
 
             views.setImageViewBitmap(
                 R.id.widget_pet_image,
-                renderCodeyBitmap(petState?.level ?: 1, effectiveStatus ?: "HAPPY", petState?.isDead ?: false)
+                renderCodeyBitmap(
+                    petState?.level ?: 1,
+                    effectiveStatus ?: "HAPPY",
+                    petState?.isDead ?: false,
+                    pixelMode = pixelMode
+                )
             )
 
             val health = (petState?.health ?: 0f).toInt().coerceIn(0, 100)

@@ -16,9 +16,11 @@ internal fun renderCodeyBitmap(
     isDead: Boolean = false,
     width: Int = 360,
     height: Int = 380,
-    time: Float = 0f
+    time: Float = 0f,
+    pixelMode: Boolean = false
 ): Bitmap {
     require(width > 0 && height > 0)
+    if (pixelMode) return renderCodeyPixelBitmap(level, status, isDead, width, height, time)
     val bitmap = createBitmap(width, height)
     CanvasDrawScope().draw(
         density = Density(1f),

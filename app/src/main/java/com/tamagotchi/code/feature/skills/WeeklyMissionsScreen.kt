@@ -22,6 +22,9 @@ import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.components.weeklyMissionDescription
 import com.tamagotchi.code.ui.components.weeklyMissionTitle
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.compositeOver
+import com.tamagotchi.code.ui.theme.ensureContrast
+import com.tamagotchi.code.ui.theme.readableOnBackground
 
 @Composable
 fun WeeklyMissionsScreen(
@@ -43,7 +46,7 @@ fun WeeklyMissionsScreen(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF81C784)
+                color = readableOnBackground(Color(0xFF81C784))
             )
         }
 
@@ -65,7 +68,7 @@ fun WeeklyMissionsScreen(
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
-                        color = Color(0xFFFFD700)
+                        color = readableOnBackground(Color(0xFFFFD700))
                     )
                 }
             }
@@ -75,10 +78,12 @@ fun WeeklyMissionsScreen(
             text = stringResource(R.string.weekly_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
-            color = Color.Gray
+            color = readableOnBackground(Color.Gray)
         )
 
         missions.forEach { mission ->
+            val cardBg = (if (mission.completed) Color(0xFF1B5E20).copy(alpha = 0.2f) else Color(0xFF151D16))
+                .compositeOver(MaterialTheme.colorScheme.background)
             Card(
                 shape = RoundedCornerShape(8.dp),
                 colors = CardDefaults.cardColors(
@@ -108,13 +113,13 @@ fun WeeklyMissionsScreen(
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
-                            color = if (mission.completed) Color(0xFF81C784) else Color.White
+                            color = ensureContrast(if (mission.completed) Color(0xFF81C784) else Color.White, cardBg)
                         )
                         Text(
                             text = weeklyMissionDescription(mission.id, mission.description),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
-                            color = Color.Gray
+                            color = ensureContrast(Color.Gray, cardBg)
                         )
                     }
 
@@ -124,14 +129,14 @@ fun WeeklyMissionsScreen(
                             fontFamily = FontFamily.Monospace,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFFB74D)
+                            color = ensureContrast(Color(0xFFFFB74D), cardBg)
                         )
                         Text(
                             text = "+${mission.rewardBytes} B",
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF81C784)
+                            color = ensureContrast(Color(0xFF81C784), cardBg)
                         )
                     }
                 }

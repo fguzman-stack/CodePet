@@ -19,9 +19,11 @@ import com.tamagotchi.code.util.PetCheckWorker
 import com.tamagotchi.code.widget.WidgetUpdateWorker
 import com.tamagotchi.code.widget.CodePetWidgetProvider
 import com.tamagotchi.code.data.repository.PetRepository
+import com.tamagotchi.code.data.repository.UserPreferencesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
@@ -45,9 +47,15 @@ class CodeTamagotchiApp : Application() {
         widgetScope.launch {
             val manager = AppWidgetManager.getInstance(this@CodeTamagotchiApp)
             val provider = ComponentName(this@CodeTamagotchiApp, CodePetWidgetProvider::class.java)
-            koin.koin.get<PetRepository>().petState.distinctUntilChanged().collect { state ->
+            val petRepository = koin.koin.get<PetRepository>()
+            val preferences = koin.koin.get<UserPreferencesRepository>()
+            combine(
+                petRepository.petState.distinctUntilChanged(),
+                preferences.currentTheme
+            ) { state, theme -> state to theme }.collect { (state, theme) ->
+                val pixelMode = theme == "Retro Pixel"
                 manager.getAppWidgetIds(provider).forEach { id ->
-                    CodePetWidgetProvider.updateAppWidget(this@CodeTamagotchiApp, manager, id, state)
+                    CodePetWidgetProvider.updateAppWidget(this@CodeTamagotchiApp, manager, id, state, pixelMode)
                 }
             }
         }

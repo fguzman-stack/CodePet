@@ -27,6 +27,9 @@ import com.tamagotchi.code.data.CodingChallenge
 import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.compositeOver
+import com.tamagotchi.code.ui.theme.ensureContrast
+import com.tamagotchi.code.ui.theme.readableOnBackground
 
 import com.tamagotchi.code.ui.components.CodeySprite
 import androidx.compose.animation.AnimatedVisibility
@@ -52,14 +55,14 @@ fun LearnScreen(
                     text = stringResource(R.string.learn_header),
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color(0xFF81C784),
+                    color = readableOnBackground(Color(0xFF81C784)),
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = if (activeTab == 0) stringResource(R.string.learn_subtitle_studying, state.name) else stringResource(R.string.learn_subtitle_elite),
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color.Gray
+                    color = readableOnBackground(Color.Gray)
                 )
             }
             
@@ -119,7 +122,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
             text = stringResource(R.string.badges_header),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
+            color = readableOnBackground(Color(0xFF81C784)),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
@@ -128,7 +131,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
             text = stringResource(R.string.badges_hint),
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
-            color = Color.Gray
+            color = readableOnBackground(Color.Gray)
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -236,7 +239,7 @@ fun QuizPanel(viewModel: PetViewModel) {
             text = stringResource(R.string.learn_arena, currentLang),
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace,
-            color = Color(0xFF81C784),
+            color = readableOnBackground(Color(0xFF81C784)),
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
@@ -246,7 +249,7 @@ fun QuizPanel(viewModel: PetViewModel) {
             Text(
                 text = stringResource(R.string.learn_loading),
                 fontFamily = FontFamily.Monospace,
-                color = Color.Gray,
+                color = readableOnBackground(Color.Gray),
                 fontSize = 12.sp
             )
         } else if (currentIndex < challengesList.size) {
@@ -269,7 +272,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                     text = petTip,
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace,
-                    color = Color(0xFF81C784),
+                    color = readableOnBackground(Color(0xFF81C784)),
                     modifier = Modifier.padding(8.dp)
                 )
             }
@@ -283,14 +286,14 @@ fun QuizPanel(viewModel: PetViewModel) {
                 ),
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color.Gray
+                color = readableOnBackground(Color.Gray)
             )
             Text(
                 text = challenge.title,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = readableOnBackground(Color.White),
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
@@ -317,7 +320,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                 text = challenge.question,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace,
-                color = Color.LightGray,
+                color = readableOnBackground(Color.LightGray),
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -338,6 +341,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                     } else {
                         Color(0xFF151D16)
                     }
+                    val optionTextColorBase = optionBgColor.compositeOver(MaterialTheme.colorScheme.background)
 
                     Surface(
                         onClick = {
@@ -359,7 +363,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             Text(
                                 text = "[$optIndex] ",
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF81C784),
+                                color = ensureContrast(Color(0xFF81C784), optionTextColorBase),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 12.sp
                             )
@@ -367,7 +371,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                                 text = optionText,
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 11.sp,
-                                color = Color.White
+                                color = ensureContrast(Color.White, optionTextColorBase)
                             )
                         }
                     }
@@ -398,7 +402,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp,
-                                color = if (fb == "CORRECT") Color(0xFF81C784) else Color(0xFFEF5350)
+                                color = if (fb == "CORRECT") readableOnBackground(Color(0xFF81C784)) else readableOnBackground(Color(0xFFEF5350))
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
@@ -406,7 +410,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             text = challenge.explanation,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 11.sp,
-                            color = Color.LightGray,
+                            color = readableOnBackground(Color.LightGray),
                             lineHeight = 15.sp
                         )
                     }
@@ -571,7 +575,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
 
         if (isAnswered) {
             val message = if (showFeedback == true) stringResource(R.string.special_correct) else stringResource(R.string.special_incorrect)
-            val color = if (showFeedback == true) Color(0xFF4CAF50) else Color(0xFFEF5350)
+            val color = readableOnBackground(if (showFeedback == true) Color(0xFF4CAF50) else Color(0xFFEF5350))
 
             Column(
                 modifier = Modifier.fillMaxWidth(),

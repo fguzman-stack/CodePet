@@ -29,6 +29,9 @@ import com.tamagotchi.code.ui.components.skillDescription
 import com.tamagotchi.code.ui.components.skillName
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.viewmodel.SkillNodeData
+import com.tamagotchi.code.ui.theme.compositeOver
+import com.tamagotchi.code.ui.theme.ensureContrast
+import com.tamagotchi.code.ui.theme.readableOnBackground
 
 @Composable
 fun SkillTreeScreen(
@@ -51,7 +54,7 @@ fun SkillTreeScreen(
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF81C784)
+                color = readableOnBackground(Color(0xFF81C784))
             )
         }
 
@@ -59,7 +62,7 @@ fun SkillTreeScreen(
             text = stringResource(R.string.skill_desc),
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
-            color = Color.Gray
+            color = readableOnBackground(Color.Gray)
         )
 
         Text(
@@ -67,7 +70,7 @@ fun SkillTreeScreen(
             fontFamily = FontFamily.Monospace,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFFFFB74D)
+            color = readableOnBackground(Color(0xFFFFB74D))
         )
 
         // Skill Tree Canvas
@@ -93,6 +96,8 @@ fun SkillTreeScreen(
             val canAfford = xp >= (skill.currentTier + 1) * 100
             val isMaxed = skill.currentTier >= skill.maxTier
             val progress = skill.currentTier.toFloat() / skill.maxTier
+            val cardBg = (if (isMaxed) Color(0xFF1B5E20).copy(alpha = 0.3f) else Color(0xFF151D16))
+                .compositeOver(MaterialTheme.colorScheme.background)
 
             val icon: ImageVector = when (skill.icon) {
                 "Star" -> Icons.Default.Star
@@ -125,13 +130,13 @@ fun SkillTreeScreen(
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 12.sp,
-                            color = Color.White
+                            color = ensureContrast(Color.White, cardBg)
                         )
                         Text(
                             text = skillDescText,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 10.sp,
-                            color = Color.Gray
+                            color = ensureContrast(Color.Gray, cardBg)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
@@ -144,7 +149,7 @@ fun SkillTreeScreen(
                             text = stringResource(R.string.skill_level, skill.currentTier, skill.maxTier),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 9.sp,
-                            color = Color.Gray
+                            color = ensureContrast(Color.Gray, cardBg)
                         )
                     }
 
