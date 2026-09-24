@@ -38,6 +38,14 @@
   [📸 Screenshots](#-screenshots) ·
   [🛠️ Tech Stack](#️-tech-stack) ·
   [🏗️ Architecture](#️-architecture) ·
+  [⚙️ Mechanics](#-game-mechanics-in-real-code) ·
+  [💾 Persistence](#-persistence--room-v5) ·
+  [🧩 Live systems](#-live-systems-petviewmodel) ·
+  [⏰ Background work](#-background-work-workmanager) ·
+  [🔌 DI](#-dependency-injection-koin) ·
+  [🖌️ Rendering](#-procedural-rendering) ·
+  [📱 Widget](#-home-screen-widget) ·
+  [🧪 Tests](#-testing) ·
   [⚡ Quick Start](#-quick-start) ·
   [🎮 How to Play](#-how-to-play) ·
   [🎨 Themes](#-themes) ·
@@ -179,13 +187,15 @@ The project uses Gradle 9.x with the Gradle Wrapper. **Requires:** JDK 17+, Andr
 | State | Main trigger | Behavior |
 |:-------|:--------------------|:---------------|
 | 😊 `HAPPY` | Balanced stats | Gentle floating, blinking |
-| 😴 `SLEEPING` | User enables rest | Recovers energy, breathing backdrop |
+| 😴 `SLEEPING` | User enables rest | Recovers energy (+12/h), breathing backdrop |
 | 📚 `STUDYING` | Pomodoro in progress | Focused on learning |
-| 🤒 `SICK` | Health below 30% | Trembles, needs care |
-| 🍽️ `HUNGRY` | Hunger below 30% | Alert pulse |
-| 😢 `SAD` | Energy below 20% | Low activity |
+| 🤒 `SICK` | Health below 20% | Trembles, needs care |
+| 🍽️ `HUNGRY` | Hunger below 20% | Alert pulse |
+| 😢 `SAD` | Energy below 15% | Low activity |
 | 😆 `EXCITED` | Max happiness | Fast bouncing |
 | ☠️ `DEAD` | Health hits 0 | Static tombstone, revival dialog |
+
+> Status is a **priority chain** resolved in `StatusCalculator.determineStatus()` — see [game mechanics](#-game-mechanics-in-real-code).
 
 ---
 
@@ -259,26 +269,422 @@ User → Composable (Screen) → ViewModel → Repository → DAO → SQLite
 ```
 CodePet/
 ├── app/src/main/java/com/tamagotchi/code/
-│   ├── CodeTamagotchiApp.kt          # Application (Koin, WorkManager)
-│   ├── MainActivity.kt               # Entry point (Theme, Nav)
+│   ├── CodeTamagotchiApp.kt          # Application (Koin, channels, 3 WorkManager jobs, widget observer)
+│   ├── SplashActivity.kt             # 2s intro -> MainActivity
+│   ├── MainActivity.kt               # Entry point (Theme, Nav, koinViewModel)
 │   ├── data/
-│   │   ├── ChallengesData.kt         # 90 coding challenges (+6 special)
-│   │   ├── CodeReviewData.kt         # Code review snippets
+│   │   ├── ChallengesData.kt         # 90 coding challenges
+│   │   ├── ChallengesDataEn.kt       # EN mirror keyed by stable challenge id
+│   │   ├── SpecialChallengesData.kt  # 6 algorithm/architecture challenges (+En)
+│   │   ├── CodeReviewData.kt         # Code review snippets (+ CodeReviewDataEn)
+│   │   ├── CodeCards.kt              # 40 trivia cards (+ CodeCardsEn)
+│   │   ├── LocalizedContent.kt       # localized() extensions per content type
 │   │   ├── PersonalityMissions.kt    # Mission definitions
-│   │   ├── database/                 # Room DB (v5, migrations, DAO, entities)
+│   │   ├── database/                 # AppDatabase (v5), PetDao, entities
 │   │   └── repository/               # Pet, preferences & achievements repos
-│   ├── di/AppModule.kt               # Koin DI module
+│   ├── di/AppModule.kt               # Koin DI module (entire graph, 19 lines)
 │   ├── navigation/AppNavigation.kt   # NavHost, Routes, BottomNav
-│   ├── feature/                      # Screens: home, learn, focus, shop,
-│   │                                 # onboarding, games, settings, skills
+│   ├── feature/
+│   │   ├── home/ learn/ focus/ shop/ onboarding/ settings/
+│   │   ├── games/                    # BugHunt, GitRescue, RefactorRush,
+│   │   │                             # CodeReview, Hackathon + classic arcade
+│   │   │                             # (BinaryGuess, BugSmasher, RockPaperSci)
+│   │   └── skills/                   # SeasonPass, SkillTree, WeeklyMissions
 │   ├── ui/
-│   │   ├── components/               # Viewport, meters, animated sprites,
-│   │   │                             # 12 animated theme backgrounds, buddy
+│   │   ├── viewmodel/PetViewModel.kt # central game brain (~1,500 lines)
+│   │   ├── components/               # ViewportCard, CodeySprite (procedural
+│   │   │                             # Canvas), CodeyBitmap (widget renderer),
+│   │   │                             # AnimatedThemeBackground, PairBuddy...
 │   │   └── theme/                    # ThemeConfig (12 themes), Theme, Type
-│   └── util/                         # Decay/reward/level/status calculators,
-│                                     # sound & music managers, daily commit
-│                                     # generator, periodic decay worker
-└── gradle/libs.versions.toml
+│   ├── widget/
+│   │   ├── CodePetWidgetProvider.kt  # RemoteViews + procedural bitmap
+│   │   └── WidgetUpdateWorker.kt     # hourly refresh
+│   └── util/                         # Decay/Reward/Level/Status calculators,
+│                                     # SoundManager, DailyCommitGenerator,
+│                                     # CommitWorker, PetCheckWorker, ContentKeys
+├── app/src/test/                     # JVM + Robolectric + Roborazzi tests
+└── gradle/libs.versions.toml         # Gradle version catalog
+```
+
+---
+
+## ⚙️ Game mechanics in real code
+
+> Every snippet below is copied verbatim from the source — no pseudo-code.
+
+### Stat decay (`util/DecayCalculator.kt`)
+
+Decay is **offline-safe**: nothing runs on a timer while you're away. When the app (or `PetCheckWorker`) wakes up, the elapsed time since `lastUpdated` is converted to hours and applied in one pass:
+
+```kotlin
+val hours = elapsedMs.toFloat() / (1000f * 60f * 60f)
+...
+if (state.currentStatus == "SLEEPING") {
+    newEnergy = (newEnergy + (hours * 12f)).coerceIn(0f, 100f)
+    newHunger = (newHunger - (hours * 1f)).coerceIn(0f, 100f)
+    if (newEnergy >= 100f) {
+        newStatus = "HAPPY"
+    }
+} else {
+    newHunger = (newHunger - (hours * 2.5f)).coerceIn(0f, 100f)
+    newEnergy = (newEnergy - (hours * 2f)).coerceIn(0f, 100f)
+}
+
+val baseHealthDecay = hours * 1.5f
+newHealth = (newHealth - baseHealthDecay).coerceIn(0f, 100f)
+```
+
+| Rule | Effect |
+|:--|:--|
+| Awake decay | hunger **−2.5/h** · energy **−2/h** · health **−1.5/h** |
+| Sleeping | energy **+12/h** (auto-wakes at 100), hunger only −1/h |
+| Starving (hunger = 0) | extra health −3/h |
+| Exhausted (energy ≤ 10) | extra health −1/h |
+| No study in 72 h | extra health −1.5/h |
+| No study in 48 h | streak resets to 0 |
+| Health ≤ 0 | `isDead = true`, status `DEAD` |
+
+### Status resolution (`util/StatusCalculator.kt`)
+
+A priority chain — first match wins, which is why a sleeping pet never shows as hungry:
+
+```kotlin
+return when {
+    isDead -> "DEAD"
+    isExcited -> "EXCITED"
+    isStudying -> "STUDYING"
+    isSleeping -> "SLEEPING"
+    health < 20f -> "SICK"
+    hunger < 20f -> "HUNGRY"
+    energy < 15f -> "SAD"
+    else -> "HAPPY"
+}
+```
+
+### Economy (`util/RewardCalculator.kt`)
+
+```kotlin
+val baseBytes = minutes * 2
+val baseXP = minutes * 3
+val bonusBytes = if (minutes >= 25) 50 else 0
+val bonusXP = if (minutes >= 25) 75 else 0
+val energyCost = (minutes * 0.5f).coerceAtMost(30f)
+```
+
+```kotlin
+fun calculateChallengeReward(type: String): ChallengeReward {
+    val bytes = if (type == "DEBUG") 30 else 25
+    val xp = if (type == "DEBUG") 25 else 20
+    return ChallengeReward(bytes = bytes, xp = xp, hungerRestore = 15f, healthRestore = 20f)
+}
+
+fun calculateMinigameReward(score: Int, maxBytes: Int): Int {
+    return (score * 10).coerceAtMost(maxBytes)
+}
+
+fun calculateRefactorReward(attempts: Int): Int {
+    return maxOf(50 - attempts * 5, 10)
+}
+```
+
+Streaks use **calendar days**, not rolling 24 h windows:
+
+```kotlin
+val studiedYesterday = lastCal.get(Calendar.YEAR) == yesterdayCal.get(Calendar.YEAR) &&
+        lastCal.get(Calendar.DAY_OF_YEAR) == yesterdayCal.get(Calendar.DAY_OF_YEAR)
+newStreak = if (studiedYesterday) currentStreak + 1 else 1
+```
+
+### Level curve (`util/LevelCalculator.kt`)
+
+```kotlin
+var level = 1
+var requiredXp = 100
+while (xp >= requiredXp) {
+    level++
+    requiredXp += level * 100
+}
+```
+
+Cumulative XP: **L2 = 100 · L3 = 300 · L4 = 600 · L5 = 1000 · L6 = 1500** — each new level costs `level × 100` XP, so evolution stages feel earned.
+
+---
+
+## 💾 Persistence — Room v5
+
+Eight entities, five versions, four explicit migrations:
+
+```kotlin
+@Database(
+    entities = [
+        PetStateEntity::class, StudySessionEntity::class, FocusSessionEntity::class,
+        CodeCardEntity::class, QuestEntity::class, OwnedItemEntity::class,
+        LanguageProgressEntity::class, ActivityLogEntity::class
+    ],
+    version = 5,
+    exportSchema = false
+)
+```
+
+| Migration | What it does (real SQL in `AppDatabase.kt`) |
+|:--|:--|
+| `1 → 2` | `CREATE TABLE focus_sessions` — live Pomodoro timer state |
+| `2 → 3` | `ALTER TABLE pet_state ADD hasRenamed` |
+| `3 → 4` | `ALTER TABLE pet_state ADD isDead` — death system |
+| `4 → 5` | `code_cards`, `quests`, `owned_items`, `language_progress`, `activity_logs` |
+
+The pet row is a **singleton pattern** (`WHERE id = 1 LIMIT 1`), exposed reactively:
+
+```kotlin
+@Query("SELECT * FROM pet_state WHERE id = 1 LIMIT 1")
+fun getPetState(): Flow<PetStateEntity?>
+
+@Transaction
+suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
+    updateFocusSessionStatus(sessionId, status)
+    insertOrUpdatePetState(petState)
+}
+```
+
+`PetStateEntity` fields: `name · language · level · xp · hunger · health · energy · bytes · streak · lastUpdated · lastStudyDate · currentStatus · hasRenamed · isDead`. Anything non-critical (theme, DND, cooldowns, moodlets, skill tree, season pass) lives in **DataStore Preferences** instead of a schema change.
+
+---
+
+## 🧩 Live systems (PetViewModel)
+
+### 😊 Moodlets — 6 random events
+
+```kotlin
+val eventTypes = listOf("bug_prod", "tabs", "spaces", "bad_commit", "clean_code", "spilled_coffee")
+val type = eventTypes.random()
+val duration = when (type) {
+    "bug_prod" -> 2L
+    "spilled_coffee" -> 1L
+    "bad_commit" -> 2L
+    "clean_code" -> 3L
+    else -> 1L
+} // hours, persisted with an expiry timestamp
+```
+
+Roll: every 30 minutes, 5% chance (`checkAndTriggerMoodlet`).
+
+### 👫 Pair Programming Buddy
+
+```kotlin
+fun checkAndActivatePairBuddy() {
+    if (pairBuddyState.value != null) return
+    if (kotlin.random.Random.nextFloat() < 0.2f) activatePairBuddy()
+}
+// PairBuddyState(name = "Buggy", remainingChallenges = 3, xpMultiplier = 1.5f)
+```
+
+### 🌳 Skill Tree — XP burned, not spent
+
+```kotlin
+val cost = (node.currentTier + 1) * 100   // tier 1 = 100 XP, tier 2 = 200 XP...
+if (pet.xp < cost) return@launch
+val updated = pet.copy(xp = pet.xp - cost)
+```
+
+3 branches × 3 nodes, each node upgradable through `maxTier = 3`.
+
+### 🎫 Season Pass
+
+```kotlin
+val newXp = current.xp + xp
+val newLevel = current.level + (newXp / 100)
+val remainingXp = newXp % 100
+val updated = current.copy(xp = remainingXp, level = newLevel.coerceAtMost(20)) // then persisted to DataStore
+```
+
+### 📋 Weekly Missions & 🏆 Hackathon
+
+```kotlin
+WeeklyMissionData("wm1", ..., 100, 50)   // XP, Bytes
+WeeklyMissionData("wm2", ..., 200, 100)
+WeeklyMissionData("wm3", ..., 150, 75)
+// HackathonData(attempts, bestTimeMs, expiresAt = now + 48h)
+```
+
+Titles are resolved by stable id at display time (`LocalizedGameText.kt`), so mission text localizes without touching the persisted state.
+
+### 🔇 DND detection — real Android API
+
+```kotlin
+val filter = notificationManager.currentInterruptionFilter
+isDndActive.value = filter == INTERRUPTION_FILTER_PRIORITY ||
+        filter == INTERRUPTION_FILTER_NONE || filter == INTERRUPTION_FILTER_ALARMS
+```
+
+When active: notifications silenced and **+10% XP** on learning rewards.
+
+### ☠️ Death & revival
+
+```kotlin
+fun reviveWithBytes() {
+    val cost = deathReviveCost.value
+    if (pet.bytes < cost) return@launch
+    val revived = pet.copy(
+        isDead = false, health = 50f, energy = 50f, hunger = 50f,
+        currentStatus = "HAPPY", bytes = pet.bytes - cost, ...
+    )
+}
+```
+
+| Path | Cost | Restored stats |
+|:--|:--|:--|
+| `reviveWithBytes()` | Bytes price (dynamic) | 50 / 50 / 50 |
+| `reviveForFree()` | 0 Bytes | 40 / 40 / 40 — the "hard reset" mercy path |
+
+---
+
+## ⏰ Background work (WorkManager)
+
+All jobs are scheduled from `CodeTamagotchiApp.onCreate()`:
+
+| Job | Schedule | Policy | Notes |
+|:--|:--|:--|:--|
+| `pet_check` | every **4 h** | `KEEP` | `setRequiresBatteryNotLow(true)`, 2 h initial delay |
+| `widget_update` | every **1 h** | `KEEP` | keeps launcher meters fresh even if the app never opens |
+| `daily_commit` | one-shot at **midnight** | `REPLACE` | reschedules itself for the next midnight |
+
+```kotlin
+val request = PeriodicWorkRequestBuilder<PetCheckWorker>(4, TimeUnit.HOURS)
+    .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
+    .setInitialDelay(2, TimeUnit.HOURS)
+    .build()
+WorkManager.getInstance(this)
+    .enqueueUniquePeriodicWork("pet_check", ExistingPeriodicWorkPolicy.KEEP, request)
+```
+
+`PetCheckWorker` routes alerts by severity into **5 notification channels** (grouped under `pet_care`):
+
+```kotlin
+val channelId = when {
+    petState.health < 5f || petState.hunger < 5f || petState.energy < 5f -> "pet_critical"
+    petState.hunger < 20f -> "pet_hunger"
+    petState.health < 20f -> "pet_health"
+    petState.energy < 15f -> "pet_energy"
+    else -> "pet_care_reminder"
+}
+```
+
+The widget-update trick: the **Application observes Room**, not a screen lifecycle, so even background writes (workers) refresh the launcher instantly:
+
+```kotlin
+combine(petRepository.petState.distinctUntilChanged(), preferences.currentTheme)
+    { state, theme -> state to theme }.collect { (state, theme) ->
+        val pixelMode = theme == "Retro Pixel"
+        manager.getAppWidgetIds(provider).forEach { id ->
+            CodePetWidgetProvider.updateAppWidget(this, manager, id, state, pixelMode)
+        }
+    }
+```
+
+---
+
+## 🔌 Dependency injection (Koin)
+
+`di/AppModule.kt` — the entire graph, 19 lines:
+
+```kotlin
+val appModule = module {
+    single { AppDatabase.getDatabase(androidContext()) }
+    single { get<AppDatabase>().petDao() }
+    single { PetRepository(get()) }
+    single { UserPreferencesRepository(androidContext()) }
+    single { AchievementsRepository(androidContext()) }
+    viewModel { PetViewModel(get(), get(), get()) }
+}
+```
+
+Screens get it with `viewModel<PetViewModel>(koin = koin)` / `koinViewModel()` — there is exactly **one** game brain.
+
+---
+
+## 🖌️ Procedural rendering
+
+There are **zero PNGs** for Codey. The persisted status string maps to an enum and a single `Canvas` draws everything:
+
+```kotlin
+internal enum class PetMood { HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED, DEAD }
+
+internal fun codeyMood(status: String, isDead: Boolean = false): PetMood =
+    if (isDead) PetMood.DEAD
+    else PetMood.entries.firstOrNull { it.name == status } ?: PetMood.HAPPY
+```
+
+The renderer is a toolbox of `DrawScope` extensions, all in `CodeySprite.kt`:
+
+`drawEgg` · `drawRobot` · `drawVisorFace` · `drawCore` · `drawAntenna` · `drawWing` · `drawLimb` · `drawBackpack` · `drawBadge` · `drawPropellerCap` · `drawHeadphones` · `drawCircuitCrown` · `drawEnergyCape` · `drawEvolutionBurst` · `drawDeadScene` · `drawTombstone` · `drawGhost`
+
+Design decisions:
+- **5 evolution stages** swap `stagePalette()` and bolt on parts — egg → baby bot → … → circuit crown + energy cape at Legendary
+- Blinking, breathing, trembling and hunger-pulse come from `rememberInfiniteTransition`, and every one respects the **Reduce Motion** preference
+- The user's **accent color** (persisted in DataStore, costs 30 Bytes) tints visor and core — so no two pets look identical
+- The DEAD scene is fully drawn too: tombstone + ghost, deliberately static
+
+---
+
+## 📱 Home-screen widget
+
+`RemoteViews` can't run Compose, so the widget renders the **same** procedural Codey into a `Bitmap` via `CodeyBitmap.kt`:
+
+```kotlin
+views.setImageViewBitmap(
+    R.id.widget_pet_image,
+    renderCodeyBitmap(
+        petState?.level ?: 1,
+        effectiveStatus ?: "HAPPY",
+        petState?.isDead ?: false,
+        pixelMode = pixelMode
+    )
+)
+views.setProgressBar(R.id.health_bar, 100, health, false)
+```
+
+Compact 2×2, resizable, tap opens `MainActivity`. `pixelMode` switches the renderer to 8-bit when the **Retro Pixel** theme is active. Covered by `CodePetWidgetRenderingTest` on the JVM — no emulator needed.
+
+---
+
+## 🧠 Public API cheat-sheet (`PetViewModel`)
+
+| Method | Responsibility |
+|:--|:--|
+| `submitAnswer(optionIndex)` | grading, rewards, moodlet/buddy rolls, season-pass XP, quest & language progress |
+| `startStudyTimer / completeFocusSession / cancelStudyTimer` | Pomodoro lifecycle + persistence + auto-resume |
+| `buyShopItem / buySkin / equipSkin` | shop economy, `@Transaction` item equipping |
+| `petThePet / cleanThePet / toggleSleep` | care actions (drive quests & daily commits) |
+| `canPlayGame / recordGamePlay` | 24 h arcade cooldowns |
+| `checkDailyRewardEligibility / claimDailyReward` | offline & daily rewards |
+| `loadMoodlet / triggerRandomMoodlet` | moodlet system |
+| `unlockSkillNode` | skill-tree progression (XP burn) |
+| `addSeasonPassXp` | battle-pass leveling |
+| `completeWeeklyMission` | Monday-reset mission board |
+| `submitHackathonSolution / consumeHackathonAttempt` | 48 h weekly event |
+| `checkDeathState / reviveWithBytes / reviveForFree` | death & revival |
+| `checkDndMode` | system interruption-filter probe |
+
+---
+
+## 🧪 Testing
+
+| Test | What it pins down |
+|:--|:--|
+| `StatusCalculatorTest` | status priority chain and thresholds |
+| `GameEconomyTest` | reward math, cooldown logic, settings validation |
+| `LocalizedContentTest` | ES↔EN id parity for all 90+6 challenges, 10 snippets, 40 cards |
+| `CodeyRendererTest` / `CodeySpriteTest` | procedural renderer across every stage & mood |
+| `PetAnimationConfigTest` | animation config per state |
+| `ThemeContrastTest` | readable contrast on all 12 themes |
+| `CodePetWidgetRenderingTest` | widget bitmap + RemoteViews construction |
+| `GreetingScreenshotTest` | Roborazzi golden (`app/src/test/screenshots/greeting.png`) |
+
+```bash
+./gradlew :app:testDebugUnitTest          # all JVM/Robolectric tests
+./gradlew :app:testDebugUnitTest --tests "com.tamagotchi.code.StatusCalculatorTest"
+./gradlew :app:verifyRoborazziDebug       # visual regression
+./gradlew :app:lintDebug                  # Android lint
 ```
 
 ---
@@ -341,6 +747,23 @@ Code Tamagotchi is fully bilingual (**English + Spanish**) and follows your **sy
 - ⚠️ Theme names are shown in Spanish by design (they are stable identifiers stored in preferences)
 
 Translations live next to the original data: `ChallengesDataEn.kt`, `SpecialChallengesDataEn.kt`, `CodeReviewDataEn.kt`, `CodeCardsEn.kt`. PRs to fix wording (either language) are very welcome.
+
+The mechanism is a single extension per content type, resolved at display time — Spanish stays the source of truth and the DB never stores translations:
+
+```kotlin
+fun isEnglishContent(): Boolean = Locale.getDefault().language.equals("en", ignoreCase = true)
+
+fun CodingChallenge.localized(): CodingChallenge {
+    if (!isEnglishContent()) return this
+    val en = ChallengesDataEn.translations[id]
+        ?: SpecialChallengesDataEn.translations[id]
+        ?: return this
+    return copy(language = en.language, title = en.title, question = en.question,
+        codeSnippet = en.codeSnippet ?: codeSnippet, options = en.options, explanation = en.explanation)
+}
+```
+
+`LocalizedContentTest` asserts that every Spanish id has an English twin and that option order (hence `correctAnswerIndex`) is preserved.
 
 ---
 
