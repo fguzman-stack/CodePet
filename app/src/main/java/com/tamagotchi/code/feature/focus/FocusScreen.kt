@@ -29,6 +29,7 @@ import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.ui.theme.readableOnBackground
+import com.tamagotchi.code.ui.theme.bestContentOn
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -235,7 +236,7 @@ fun TimerPanel(
                             ) {
                                 Text(
                                     text = stringResource(R.string.focus_min_label, mins),
-                                    color = if (isSelected) Color.Black else Color(0xFF81C784),
+                                    color = if (isSelected) bestContentOn(Color(0xFF2E7D32)) else Color(0xFF81C784),
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = FontFamily.Monospace

@@ -1,4 +1,6 @@
 <resources>
+    <string name="theme_japanese_name">Japonés</string>
+    <string name="theme_japanese_description">Luna sobre el torii. Faroles cálidos en una noche índigo.</string>
     <string name="app_name">Code Tamagotchi</string>
     
     <!-- Onboarding -->

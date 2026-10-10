@@ -56,7 +56,7 @@ class UserPreferencesRepository(private val context: Context) {
     }
 
     val currentTheme: Flow<String> = context.dataStore.data.map { prefs ->
-        prefs[KEY_THEME] ?: "Default"
+        ThemeRegistry.canonicalName(prefs[KEY_THEME] ?: "Default")
     }
 
     val defaultThemeMode: Flow<String> = context.dataStore.data.map { prefs ->
@@ -66,7 +66,7 @@ class UserPreferencesRepository(private val context: Context) {
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
         val stored = prefs[KEY_UNLOCKED_THEMES]
         val allNames = ThemeRegistry.allThemes.map { it.name }.toSet()
-        if (stored == null || stored.isEmpty()) allNames else stored
+        if (stored == null || stored.isEmpty()) allNames else stored.map(ThemeRegistry::canonicalName).toSet()
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -125,20 +125,20 @@ class UserPreferencesRepository(private val context: Context) {
 
     suspend fun setTheme(theme: String) {
         context.dataStore.edit { prefs ->
-            prefs[KEY_THEME] = theme
+            prefs[KEY_THEME] = ThemeRegistry.canonicalName(theme)
         }
     }
 
     suspend fun addUnlockedTheme(theme: String) {
         context.dataStore.edit { prefs ->
             val current = prefs[KEY_UNLOCKED_THEMES] ?: ThemeRegistry.allThemes.map { it.name }.toSet()
-            prefs[KEY_UNLOCKED_THEMES] = current + theme
+            prefs[KEY_UNLOCKED_THEMES] = (current + theme).map(ThemeRegistry::canonicalName).toSet()
         }
     }
 
     suspend fun setUnlockedThemes(themes: Set<String>) {
         context.dataStore.edit { prefs ->
-            prefs[KEY_UNLOCKED_THEMES] = themes
+            prefs[KEY_UNLOCKED_THEMES] = themes.map(ThemeRegistry::canonicalName).toSet()
         }
     }
 

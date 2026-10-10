@@ -165,7 +165,7 @@ fun SkillTreeScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.skill_cost, cost),
-                                color = Color.Black,
+                                color = if (canAfford) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 9.sp,
                                 fontFamily = FontFamily.Monospace

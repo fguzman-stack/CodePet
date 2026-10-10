@@ -92,6 +92,7 @@ fun AppNavigation(viewModel: PetViewModel) {
 
         Scaffold(
             containerColor = androidx.compose.ui.graphics.Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             if (currentRoute in listOf(Routes.HOME, Routes.LEARN, Routes.FOCUS, Routes.SHOP)) {
                 TopAppBar(

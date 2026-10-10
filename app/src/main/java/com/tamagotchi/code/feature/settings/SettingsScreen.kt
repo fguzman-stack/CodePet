@@ -155,6 +155,7 @@ fun SettingsScreen(
 
     Scaffold(
         containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.Bold) },
@@ -520,7 +521,7 @@ fun ThemePreviewCard(
             // Theme name — locked cards sit on a fixed dark container, so the
             // theme's own text colors must not be used there.
             Text(
-                text = theme.name,
+                text = theme.nameRes?.let { stringResource(it) } ?: theme.name,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                 fontSize = 12.sp,
                 color = when {
@@ -536,7 +537,8 @@ fun ThemePreviewCard(
 
             // Description
             Text(
-                text = if (isUnlocked) theme.description else stringResource(R.string.theme_locked),
+                text = if (isUnlocked) theme.descriptionRes?.let { stringResource(it) } ?: theme.description
+                    else stringResource(R.string.theme_locked),
                 fontSize = 9.sp,
                 color = when {
                     !isUnlocked -> Color.LightGray.copy(alpha = 0.8f)

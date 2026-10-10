@@ -22,6 +22,7 @@ import com.tamagotchi.code.R
 fun AboutScreen(onNavigateBack: () -> Unit) {
     Scaffold(
         containerColor = androidx.compose.ui.graphics.Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.about_title), fontWeight = FontWeight.Bold) },

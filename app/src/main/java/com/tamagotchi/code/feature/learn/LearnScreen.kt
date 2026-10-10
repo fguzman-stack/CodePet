@@ -30,6 +30,7 @@ import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.theme.compositeOver
 import com.tamagotchi.code.ui.theme.ensureContrast
 import com.tamagotchi.code.ui.theme.readableOnBackground
+import com.tamagotchi.code.ui.theme.bestContentOn
 
 import com.tamagotchi.code.ui.components.CodeySprite
 import androidx.compose.animation.AnimatedVisibility
@@ -429,7 +430,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                 ) {
                     Text(
                         text = if (currentIndex + 1 < challengesList.size) stringResource(R.string.learn_next) else stringResource(R.string.learn_load_more),
-                        color = Color.Black,
+                        color = bestContentOn(Color(0xFF2E7D32)),
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp

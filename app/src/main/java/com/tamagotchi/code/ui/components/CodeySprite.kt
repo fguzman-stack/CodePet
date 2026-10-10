@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
@@ -245,7 +246,7 @@ private fun DrawScope.drawCodey(stage: PetEvolutionStage, mood: PetMood, t: Floa
             withTransform({ translate(150f, 252f); rotate(-6f, Offset(30f, 20f)) }) { drawDeadEgg() }
             drawTombstone(250f, 296f, 0.68f)
         } else {
-            rotate(0f, Offset(180f, 210f)) { drawEgg(t, accent, pal, powered = true) }
+            drawEgg(t, accent, pal, mood, blinking)
         }
         return
     }
@@ -280,20 +281,20 @@ private fun DrawScope.drawCodey(stage: PetEvolutionStage, mood: PetMood, t: Floa
 }
 
 private fun DrawScope.drawShadow(halfWidth: Float, cx: Float, groundY: Float) {
-    drawCircle(
-        brush = Brush.radialGradient(
-            colors = listOf(Color.Black.copy(alpha = 0.35f), Color.Transparent),
-            center = Offset(cx, groundY),
-            radius = halfWidth
-        ),
-        radius = halfWidth,
-        center = Offset(cx, groundY)
-    )
+    // Flatten the light falloff onto the ground rather than a dark floating disc.
+    scale(1.35f, 0.28f, pivot = Offset(cx, groundY)) {
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(Color.Black.copy(alpha = 0.30f), Color.Black.copy(alpha = 0.12f), Color.Transparent),
+                center = Offset(cx, groundY), radius = halfWidth
+            ), radius = halfWidth, center = Offset(cx, groundY)
+        )
+    }
 }
 
 private fun DrawScope.metalBrush(pal: StagePalette, w: Float, h: Float, cx: Float, cy: Float): Brush =
     Brush.linearGradient(
-        colors = listOf(pal.light, pal.body, pal.mid),
+        0f to pal.light, 0.25f to pal.body, 0.60f to pal.mid, 1f to pal.dark,
         start = Offset(cx - w / 2, cy - h / 2),
         end = Offset(cx + w / 2, cy + h / 2)
     )
@@ -311,49 +312,70 @@ private fun DrawScope.drawTextNative(text: String, x: Float, y: Float, sizePx: F
     }
 }
 
-private fun DrawScope.drawEgg(t: Float, accent: Color, pal: StagePalette, powered: Boolean) {
+private fun DrawScope.drawEgg(t: Float, accent: Color, pal: StagePalette, mood: PetMood, blinking: Boolean) {
     val cx = 180f
-    val cy = 210f
-    withTransform({ translate(cx, cy) }) {
+    val cy = 210f + sin(t * 0.05f) * 3f
+    val pulse = 0.65f + sin(t * 0.06f) * 0.15f
+    // A pearl-metal incubation shell, with its own chassis and inset glass face.
+    drawOval(Brush.radialGradient(listOf(accent.copy(alpha = 0.12f * pulse), Color.Transparent),
+        Offset(cx, 276f), 64f), Offset(cx - 64f, 254f), Size(128f, 44f))
+    withTransform({ translate(cx, cy); rotate(sin(t * 0.025f) * 2.5f, Offset(0f, 60f)) }) {
         val path = Path().apply {
-            moveTo(0f, -62f)
-            cubicTo(34f, -62f, 40f, -10f, 34f, 30f)
-            cubicTo(24f, 58f, -24f, 58f, -34f, 30f)
-            cubicTo(-40f, -10f, -34f, -62f, 0f, -62f)
+            moveTo(0f, -78f)
+            cubicTo(29f, -78f, 49f, -29f, 49f, 12f)
+            cubicTo(49f, 51f, 29f, 70f, 0f, 70f)
+            cubicTo(-29f, 70f, -49f, 51f, -49f, 12f)
+            cubicTo(-49f, -29f, -29f, -78f, 0f, -78f)
             close()
         }
-        drawPath(path, brush = Brush.linearGradient(
-            listOf(pal.light, pal.body, pal.mid), start = Offset(-40f, -62f), end = Offset(40f, 58f)
-        ))
-        drawPath(path, color = pal.edge, style = Stroke(width = 3f))
-
-        // zigzag hatch seam
-        val seam = Path().apply {
-            moveTo(-35f, 2f)
-            lineTo(-22f, -8f); lineTo(-9f, 4f); lineTo(5f, -8f); lineTo(18f, 4f); lineTo(35f, -2f)
+        drawPath(path, Brush.radialGradient(listOf(pal.light, pal.body, pal.mid, pal.dark),
+            Offset(-22f, -44f), 135f))
+        clipPath(path) {
+            // Sculpted side panels and a reflected rim light.
+            drawOval(pal.dark.copy(alpha = 0.24f), Offset(30f, -66f), Size(36f, 145f))
+            drawOval(Color.White.copy(alpha = 0.5f), Offset(-36f, -61f), Size(19f, 50f))
+            drawPath(Path().apply {
+                moveTo(-29f, -58f); cubicTo(-47f, -13f, -42f, 39f, -23f, 58f)
+            }, Color.White.copy(alpha = 0.75f), style = Stroke(2.5f, cap = StrokeCap.Round))
+            drawPath(Path().apply {
+                moveTo(28f, -49f); cubicTo(38f, -7f, 40f, 29f, 26f, 51f)
+            }, pal.edge.copy(alpha = 0.32f), style = Stroke(1.5f))
         }
-        drawPath(seam, color = pal.dark.copy(alpha = 0.65f), style = Stroke(width = 2.2f))
+        drawPath(path, pal.edge, style = Stroke(width = 2.8f))
 
-        drawOval(pal.visor, topLeft = Offset(-15f, -38f), size = Size(30f, 22f))
-        val pulse = if (powered) 0.5f + sin(t * 0.06f) * 0.2f else 0f
-        drawOval(
-            brush = Brush.radialGradient(
-                colors = listOf(accent.copy(alpha = pulse), Color.Transparent),
-                center = Offset(0f, -27f), radius = 16f
-            ),
-            topLeft = Offset(-15f, -38f), size = Size(30f, 22f)
-        )
-        // a single dim "eye-light" so the egg feels alive
-        drawCircle(accent.copy(alpha = if (powered) 0.8f else 0.2f), radius = 2.6f, center = Offset(0f, -27f))
+        // The hatch sits below the display, with recessed metal and luminous trim.
+        val seam = Path().apply {
+            moveTo(-47f, 23f)
+            lineTo(-32f, 27f); lineTo(-23f, 19f); lineTo(-12f, 28f)
+            lineTo(0f, 20f); lineTo(12f, 28f); lineTo(23f, 19f)
+            lineTo(32f, 27f); lineTo(47f, 23f)
+        }
+        drawPath(seam, pal.dark, style = Stroke(5f, cap = StrokeCap.Round, join = androidx.compose.ui.graphics.StrokeJoin.Round))
+        drawPath(seam, accent.copy(alpha = pulse), style = Stroke(1.6f, cap = StrokeCap.Round))
+        drawVisorFace(0f, -13f, 65f, 38f, mood, accent, blinking, pal)
+        drawRoundRect(metalBrush(pal, 22f, 9f, 0f, -58f), Offset(-11f, -63f), Size(22f, 9f), CornerRadius(4f))
+        drawLine(pal.edge, Offset(0f, -78f), Offset(0f, -85f), 3.5f, cap = StrokeCap.Round)
+        drawCircle(Brush.radialGradient(listOf(accent.copy(alpha = pulse * 0.5f), Color.Transparent),
+            Offset(0f, -87f), 12f), 12f, Offset(0f, -87f))
+        drawCircle(pal.edge, 5f, Offset(0f, -87f))
+        drawCircle(accent, 3.5f, Offset(0f, -87f))
+        drawCircle(Color.White.copy(alpha = 0.8f), 1.2f, Offset(-1f, -88f))
 
-        // nub antenna on the shell
-        drawLine(pal.edge, Offset(0f, -62f), Offset(0f, -72f), strokeWidth = 3f, cap = StrokeCap.Round)
-        drawCircle(pal.trim, radius = 4f, center = Offset(0f, -74f))
-
-        listOf(Offset(-20f, 26f), Offset(20f, 26f), Offset(0f, 46f)).forEach {
-            drawCircle(pal.dark.copy(alpha = 0.5f), radius = 3f, center = it)
+        drawCore(0f, 46f, 7f, mood, accent, t, pal)
+        listOf(-1f, 1f).forEach { side ->
+            drawFastener(Offset(side * 32f, 38f), pal)
+            for (slot in 0..2) drawLine(pal.edge.copy(alpha = 0.55f),
+                Offset(side * 22f - 3f, 47f + slot * 4f), Offset(side * 22f + 3f, 47f + slot * 4f),
+                1.8f, cap = StrokeCap.Round)
         }
     }
+    drawMoodEffect(mood, accent, cy - 106f, t)
+}
+
+private fun DrawScope.drawFastener(center: Offset, pal: StagePalette) {
+    drawCircle(pal.edge.copy(alpha = 0.75f), 3f, center)
+    drawCircle(pal.light, 2f, center + Offset(-0.3f, -0.4f))
+    drawLine(pal.dark, center + Offset(-1f, 0f), center + Offset(1f, 0f), 0.8f)
 }
 
 private fun DrawScope.drawLimb(pivot: Offset, w: Float, h: Float, angle: Float, accent: Color, pal: StagePalette) {
@@ -366,8 +388,11 @@ private fun DrawScope.drawLimb(pivot: Offset, w: Float, h: Float, angle: Float, 
         }
         drawPath(path, brush = metalBrush(pal, w, h, 0f, h / 2))
         drawPath(path, color = pal.edge, style = Stroke(width = 2f))
+        drawLine(pal.light.copy(alpha = 0.75f), Offset(-w * 0.28f, 5f), Offset(-w * 0.28f, h - 6f), 1.5f, cap = StrokeCap.Round)
+        drawLine(pal.dark.copy(alpha = 0.55f), Offset(-w * 0.38f, h * 0.62f), Offset(w * 0.38f, h * 0.62f), 1.4f)
         // joint ring + accent core
         drawCircle(pal.dark, radius = w / 2 + 2, center = Offset.Zero)
+        drawCircle(pal.light.copy(alpha = 0.7f), radius = w / 2 + 1, center = Offset.Zero, style = Stroke(1.4f))
         drawCircle(accent.copy(alpha = 0.55f), radius = w / 2 - 1, center = Offset.Zero)
         // rounded foot/hand pad
         drawOval(
@@ -405,6 +430,12 @@ private fun DrawScope.drawWing(x: Float, y: Float, flip: Float, accent: Color, p
         drawPath(path, brush = Brush.linearGradient(listOf(pal.light, pal.mid, pal.dark), start = Offset(0f, -16f), end = Offset(50f, 34f)))
         drawPath(path, color = pal.edge, style = Stroke(width = 1.5f))
         drawPath(path, color = accent.copy(alpha = 0.7f), style = Stroke(width = 1f))
+        val inset = Path().apply {
+            moveTo(9f, 4f); lineTo(35f, -5f); lineTo(41f, 7f); lineTo(30f, 25f); lineTo(14f, 22f); close()
+        }
+        drawPath(inset, pal.light.copy(alpha = 0.28f))
+        drawPath(inset, pal.edge.copy(alpha = 0.4f), style = Stroke(1f))
+        drawCircle(pal.trim, 2f, Offset(17f, 9f))
         drawLine(accent.copy(alpha = 0.35f), Offset(6f, 6f), Offset(40f, -6f), strokeWidth = 1.2f)
         drawLine(accent.copy(alpha = 0.35f), Offset(10f, 18f), Offset(38f, 22f), strokeWidth = 1.2f)
     }
@@ -424,6 +455,10 @@ private fun DrawScope.drawCore(cx: Float, cy: Float, r: Float, mood: PetMood, ac
     drawCircle(if (mood == PetMood.DEAD) Color(0xFF454F58) else accent, radius = r, center = Offset(cx, cy))
     drawCircle(pal.dark, radius = r, center = Offset(cx, cy), style = Stroke(width = 2f))
     drawCircle(pal.edge, radius = r + 4, center = Offset(cx, cy), style = Stroke(width = 2f))
+    drawArc(pal.light.copy(alpha = 0.85f), 195f, 115f, false,
+        Offset(cx - r - 3f, cy - r - 3f), Size((r + 3f) * 2f, (r + 3f) * 2f), style = Stroke(1.5f))
+    drawCircle(Brush.radialGradient(listOf(Color.White.copy(alpha = 0.7f), accent, accent.copy(alpha = 0.7f)),
+        Offset(cx - r * 0.3f, cy - r * 0.35f), r * 1.6f), r * 0.78f, Offset(cx, cy))
     // inner shine dot keeps the core from looking flat
     drawCircle(Color.White.copy(alpha = if (mood == PetMood.DEAD) 0.06f else 0.45f), radius = r * 0.3f,
         center = Offset(cx - r * 0.3f, cy - r * 0.3f))
@@ -431,10 +466,17 @@ private fun DrawScope.drawCore(cx: Float, cy: Float, r: Float, mood: PetMood, ac
 
 private fun DrawScope.drawVisorFace(cx: Float, cy: Float, w: Float, h: Float, mood: PetMood, accent: Color, blinking: Boolean, pal: StagePalette) {
     val topLeft = Offset(cx - w / 2, cy - h / 2)
+    // Beveled socket and an under-glass glow give the display physical depth.
+    drawRoundRect(pal.dark, topLeft - Offset(3f, 2f), Size(w + 6f, h + 5f), CornerRadius(h * 0.38f))
+    drawRoundRect(Brush.linearGradient(listOf(pal.edge, pal.mid, pal.light), topLeft, topLeft + Offset(w, h)),
+        topLeft - Offset(2f, 2f), Size(w + 4f, h + 4f), CornerRadius(h * 0.37f), style = Stroke(2f))
     drawRoundRect(
         brush = Brush.linearGradient(listOf(pal.visor, pal.visor.copy(alpha = 0.86f)), start = topLeft, end = Offset(cx + w / 2, cy + h / 2)),
         topLeft = topLeft, size = Size(w, h), cornerRadius = CornerRadius(h * 0.34f)
     )
+    drawRoundRect(Brush.verticalGradient(listOf(Color(0xFFABCBE2).copy(alpha = 0.12f), Color.Transparent),
+        startY = topLeft.y, endY = topLeft.y + h * 0.7f),
+        topLeft + Offset(3f, 2f), Size(w - 6f, h * 0.45f), CornerRadius(h * 0.2f))
     for (line in 1 until (h / 4f).toInt()) {
         val y = topLeft.y + line * 4f
         drawLine(Color.White.copy(alpha = 0.04f), Offset(topLeft.x + 4f, y), Offset(topLeft.x + w - 4f, y), 0.5f)
@@ -596,6 +638,9 @@ private fun DrawScope.drawRobot(
         }
         drawPath(torsoPath, brush = metalBrush(pal, cfg.torsoW, cfg.torsoH, 0f, 0f))
         drawPath(torsoPath, color = pal.edge, style = Stroke(width = 2.5f))
+        clipPath(torsoPath) {
+            drawRoundRect(pal.edge.copy(alpha = 0.12f), Offset(cfg.torsoW / 2 - 12f, torsoTop), Size(12f, cfg.torsoH), CornerRadius(6f))
+        }
         // top gloss
         drawRoundRect(
             Color.White.copy(alpha = 0.22f),
@@ -607,7 +652,7 @@ private fun DrawScope.drawRobot(
         listOf(
             Offset(-cfg.torsoW / 2 + 8, torsoTop + 10), Offset(cfg.torsoW / 2 - 8, torsoTop + 10),
             Offset(-cfg.torsoW / 2 + 8, torsoBottom - 8), Offset(cfg.torsoW / 2 - 8, torsoBottom - 8)
-        ).forEach { drawCircle(pal.dark.copy(alpha = 0.55f), radius = 2.5f, center = it) }
+        ).forEach { drawFastener(it, pal) }
 
         drawCore(0f, 4f, cfg.coreR, mood, accent, t, pal)
         if (stage == PetEvolutionStage.Veteran) {
@@ -645,6 +690,8 @@ private fun DrawScope.drawRobot(
                     topLeft = Offset(s * shoulderX - 13, shoulderY - 6 - 10), size = Size(26f, 20f),
                     style = Stroke(width = 1.5f)
                 )
+                drawArc(pal.light.copy(alpha = 0.7f), 205f, 110f, false,
+                    Offset(s * shoulderX - 10f, shoulderY - 13f), Size(20f, 14f), style = Stroke(1.5f, cap = StrokeCap.Round))
             }
         }
 
@@ -659,9 +706,21 @@ private fun DrawScope.drawRobot(
             radius = cfg.headR, center = Offset(0f, headY)
         )
         drawCircle(pal.edge, radius = cfg.headR, center = Offset(0f, headY), style = Stroke(width = 2.5f))
+        // Recessed chin panel and temple seams follow the existing round shell.
+        drawArc(pal.edge.copy(alpha = 0.3f), 35f, 110f, false,
+            Offset(-cfg.headR + 8f, headY - cfg.headR + 8f), Size(cfg.headR * 2f - 16f, cfg.headR * 2f - 16f), style = Stroke(1.5f))
+        drawArc(Color.White.copy(alpha = 0.65f), 205f, 82f, false,
+            Offset(-cfg.headR + 4f, headY - cfg.headR + 4f), Size(cfg.headR * 2f - 8f, cfg.headR * 2f - 8f),
+            style = Stroke(2.5f, cap = StrokeCap.Round))
+        drawArc(pal.dark.copy(alpha = 0.55f), 20f, 140f, false,
+            Offset(-cfg.headR + 3f, headY - cfg.headR + 3f), Size(cfg.headR * 2f - 6f, cfg.headR * 2f - 6f),
+            style = Stroke(3f))
         // ear pods
         listOf(-1f, 1f).forEach { s ->
-            drawCircle(pal.mid, radius = cfg.headR * 0.22f, center = Offset(s * cfg.headR * 0.96f, headY + 2f))
+            val pod = Offset(s * cfg.headR * 0.96f, headY + 2f)
+            drawCircle(Brush.radialGradient(listOf(pal.light, pal.mid, pal.dark), pod - Offset(3f, 4f), cfg.headR * 0.4f),
+                radius = cfg.headR * 0.22f, center = pod)
+            drawCircle(pal.edge, radius = cfg.headR * 0.22f, center = pod, style = Stroke(1.5f))
             drawCircle(pal.trim.copy(alpha = 0.8f), radius = cfg.headR * 0.1f, center = Offset(s * cfg.headR * 0.96f, headY + 2f))
         }
 

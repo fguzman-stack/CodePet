@@ -1,4 +1,6 @@
 <resources>
+    <string name="theme_japanese_name">Japanese</string>
+    <string name="theme_japanese_description">Moon above the torii. Warm lanterns in an indigo night.</string>
     <string name="app_name">Code Tamagotchi</string>
 
     <!-- Onboarding -->

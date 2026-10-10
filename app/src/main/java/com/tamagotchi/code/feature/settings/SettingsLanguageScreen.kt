@@ -34,6 +34,7 @@ fun SettingsLanguageScreen(
 
     Scaffold(
         containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings_lang_title), fontWeight = FontWeight.Bold) },

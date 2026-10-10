@@ -135,7 +135,8 @@ fun ShopPanel(
                         ) {
                             Text(
                                 text = "${item.cost} B",
-                                color = if (canAfford) appTheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = if (canAfford) com.tamagotchi.code.ui.theme.bestContentOn(appTheme.accent)
+                                    else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.Bold,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontSize = 11.sp

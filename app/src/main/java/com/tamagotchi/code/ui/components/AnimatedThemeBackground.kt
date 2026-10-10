@@ -26,7 +26,9 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import com.tamagotchi.code.ui.theme.AppTheme
+import com.tamagotchi.code.ui.theme.ThemeRegistry
 import kotlin.math.sin
 import kotlin.math.cos
 import kotlin.math.abs
@@ -49,6 +51,13 @@ fun AnimatedThemeBackground(
             .fillMaxSize()
             .then(bgModifier)
     ) {
+        val scenery = when (ThemeRegistry.canonicalName(theme.name)) {
+            "Océano" -> ScenicTheme.OCEAN
+            "Japonés" -> ScenicTheme.JAPANESE
+            "Aurora" -> ScenicTheme.AURORA
+            else -> null
+        }
+        if (scenery != null) ScenicThemeBackground(scenery, reduceMotion)
         if (!reduceMotion) {
             when (theme.name) {
                 "Default" -> DefaultBackground(theme.primary, theme.secondary, theme.accent, theme.isDark)
@@ -58,10 +67,7 @@ fun AnimatedThemeBackground(
                 "Sakura" -> SakuraBackground()
                 "Minimalista" -> MinimalistBackground()
                 "Neón" -> NeonBackground(theme.primary, theme.secondary, theme.tertiary)
-                "Océano" -> OceanBackground()
                 "Volcánico" -> VolcanicBackground()
-                "Samurai" -> SamuraiBackground()
-                "Aurora" -> AuroraBackground(theme.primary, theme.secondary, theme.tertiary)
                 "Nocturno" -> NightBackground()
                 "Retro Pixel" -> RetroPixelBackground()
             }
@@ -205,6 +211,28 @@ fun MatrixBackground(primary: Color, accent: Color) {
                             paint
                         )
                     }
+                }
+            }
+            // Cross-current binary streams, offset from the vertical grid.
+            val rowSpacing = 64.dp.toPx()
+            val glyphSpacing = 12.dp.toPx()
+            val rowCount = (size.height / rowSpacing).toInt()
+            val rowRandom = java.util.Random(93)
+            paint.typeface = android.graphics.Typeface.MONOSPACE
+            paint.textSize = 11.dp.toPx()
+            for (row in 0 until rowCount) {
+                val direction = if (row % 2 == 0) 1f else -1f
+                val speed = (10f + rowRandom.nextFloat() * 12f) * speedMultiplier
+                val length = 8 + rowRandom.nextInt(8)
+                val span = size.width + length * glyphSpacing * 2f
+                val head = ((baseTime * speed * direction + rowRandom.nextFloat() * span) % span + span) % span
+                for (j in 0 until length) {
+                    val x = head - length * glyphSpacing - direction * j * glyphSpacing
+                    if (x !in -glyphSpacing..size.width + glyphSpacing) continue
+                    val alpha = (1f - j.toFloat() / length) * introAlpha * 0.28f
+                    paint.color = (if (j == 0) accent else primary).copy(alpha = alpha).toArgb()
+                    nativeCanvas.drawText(characters[(row + j) % 2].toString(), x,
+                        rowSpacing * (row + 0.5f), paint)
                 }
             }
         }
@@ -601,147 +629,6 @@ fun NeonBackground(color1: Color, color2: Color, color3: Color) {
 }
 
 // ---------------------------------------------------------
-// 7. Océano — god rays, layered waves, fish, seaweed & bubbles
-// ---------------------------------------------------------
-@Composable
-fun OceanBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "ocean")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(70000, easing = LinearEasing)),
-        label = "wave"
-    )
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val w = size.width
-        val h = size.height
-
-        // ── god rays from the surface ──
-        for (r in 0 until 4) {
-            val baseX = w * (0.15f + r * 0.24f)
-            val sway = sin(time * 0.4f + r * 1.8f) * w * 0.05f
-            val topW = 26f + r * 8f
-            val botW = topW * 3.4f
-            val alpha = 0.045f + sin(time * 0.7f + r * 2.2f) * 0.02f
-            val ray = Path().apply {
-                moveTo(baseX + sway - topW / 2f, 0f)
-                lineTo(baseX + sway + topW / 2f, 0f)
-                lineTo(baseX + sway + topW / 2f + botW, h * 0.86f)
-                lineTo(baseX + sway - botW / 2f, h * 0.86f)
-                close()
-            }
-            drawPath(ray, color = Color(0xFFBFEFFF).copy(alpha = alpha.coerceIn(0f, 1f)))
-        }
-
-        // ── layered waves with crest highlights ──
-        val waveColors = listOf(
-            Color(0xFF00B4D8),
-            Color(0xFF48CAE4),
-            Color(0xFF90E0EF),
-            Color(0xFF03045E)
-        )
-        for (wv in waveColors.indices) {
-            val path = Path()
-            val baseY = h * (0.5f + wv * 0.12f)
-            val waveHeight = 30f + wv * 12f
-            val freq = 80f + wv * 30f
-            val phase = wv * 1.2f
-            path.moveTo(0f, h)
-            val crest = ArrayList<Float>((w / 8f).toInt() + 2)
-            for (i in 0..w.toInt() step 8) {
-                val x = i.toFloat()
-                val y = baseY + sin((x / freq) + time * 0.8f + phase) * waveHeight
-                crest.add(y)
-                path.lineTo(x, y)
-            }
-            path.lineTo(w, h)
-            path.close()
-            drawPath(path, color = waveColors[wv].copy(alpha = 0.22f - wv * 0.035f))
-            var ci = 1
-            while (ci < crest.size) {
-                val crestShine = (sin(ci * 0.9f + time * 1.6f + wv) + 1f) / 2f
-                if (crestShine > 0.72f) {
-                    drawLine(
-                        color = Color.White.copy(alpha = (crestShine - 0.72f) * 0.6f),
-                        start = Offset((ci - 1) * 8f, crest[ci - 1] - 1f),
-                        end = Offset(ci * 8f, crest[ci] - 1f),
-                        strokeWidth = 1.6f
-                    )
-                }
-                ci++
-            }
-        }
-
-        // ── seaweed ribbons swaying on the seabed ──
-        val weedRandom = java.util.Random(88)
-        for (s in 0 until 7) {
-            val sx = w * (0.06f + s * 0.14f) + weedRandom.nextFloat() * 30f
-            val heightFrac = 0.10f + weedRandom.nextFloat() * 0.12f
-            val weedPath = Path()
-            weedPath.moveTo(sx, h)
-            val segs = 8
-            for (seg in 1..segs) {
-                val frac = seg / segs.toFloat()
-                val yy = h - h * heightFrac * frac
-                val xx = sx + sin(time * 1.1f + frac * 3f + s * 1.4f) * 14f * frac
-                weedPath.quadraticBezierTo(sx + (xx - sx) * 0.4f, (yy + h * heightFrac * (frac - 0.06f)), xx, yy)
-            }
-            drawPath(weedPath, color = Color(0xFF1B5E20).copy(alpha = 0.35f), style = Stroke(width = 5f))
-            drawPath(weedPath, color = Color(0xFF2E7D32).copy(alpha = 0.22f), style = Stroke(width = 2f))
-        }
-
-        // ── fish silhouettes crossing at depth ──
-        for (f in 0 until 6) {
-            val depth = 0.60f + (f % 3) * 0.12f
-            val dir = if (f % 2 == 0) 1f else -1f
-            val speed = 0.05f + (f % 4) * 0.018f
-            val fx = ((time * speed * dir * 60f + f * 173f) % (w + 160f) + w + 160f) % (w + 160f) - 80f
-            val fy = h * depth + sin(time * 2f + f * 2.1f) * 8f
-            val fs = (4f + (f % 3) * 2.5f) * dir
-            val tail = sin(time * 9f + f) * fs * 0.18f
-            drawOval(
-                color = Color(0xFF90CAF9).copy(alpha = 0.10f + (f % 3) * 0.03f),
-                topLeft = Offset(fx - abs(fs), fy - abs(fs) * 0.45f),
-                size = Size(abs(fs) * 2f, abs(fs) * 0.9f)
-            )
-            drawPath(
-                Path().apply {
-                    moveTo(fx + fs, fy)
-                    lineTo(fx + fs * 1.7f, fy - abs(fs) * 0.5f + tail)
-                    lineTo(fx + fs * 1.7f, fy + abs(fs) * 0.5f + tail)
-                    close()
-                },
-                color = Color(0xFF90CAF9).copy(alpha = 0.10f + (f % 3) * 0.03f)
-            )
-        }
-
-        // ── rising bubbles with wobble and highlight ──
-        val bubbleRandom = java.util.Random(500)
-        for (i in 0..14) {
-            val seedX = bubbleRandom.nextFloat() * w
-            val speed = 12f + bubbleRandom.nextFloat() * 20f
-            val by = h + 30f - ((time * speed + bubbleRandom.nextFloat() * 900f) % (h + 60f))
-            val br = 2f + bubbleRandom.nextFloat() * 4.5f
-            val bx = seedX + sin(time * 2f + i * 1.3f) * 10f
-            drawCircle(
-                color = Color.White.copy(alpha = 0.16f),
-                radius = br, center = Offset(bx, by), style = Stroke(width = 1f)
-            )
-            drawCircle(color = Color.White.copy(alpha = 0.28f), radius = br * 0.28f,
-                center = Offset(bx - br * 0.35f, by - br * 0.35f))
-        }
-
-        // ── drifting plankton specks ──
-        val plankton = java.util.Random(404)
-        for (i in 0 until 30) {
-            val px = (plankton.nextFloat() * w + time * (4f + plankton.nextFloat() * 6f)) % w
-            val py = (plankton.nextFloat() * h + sin(time + i) * 6f)
-            drawCircle(Color(0xFFB2EBF2).copy(alpha = 0.08f + (i % 4) * 0.02f), radius = 1f, center = Offset(px, py))
-        }
-    }
-}
-
-// ---------------------------------------------------------
 // 8. Volcánico — flowing lava with crust cracks, bubbles & heat haze
 // ---------------------------------------------------------
 @Composable
@@ -892,247 +779,6 @@ fun VolcanicBackground() {
             }
             drawCircle(color = emberColor.copy(alpha = alpha), radius = r, center = Offset(xOffset.toFloat(), yOffset))
         }
-    }
-}
-
-// ---------------------------------------------------------
-// 9. Samurai — red sun, mist, bamboo groves, maple leaves & katana glint
-// ---------------------------------------------------------
-@Composable
-fun SamuraiBackground() {
-    val infiniteTransition = rememberInfiniteTransition(label = "samurai")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 1000f,
-        animationSpec = infiniteRepeatable(tween(78000, easing = LinearEasing)),
-        label = "time"
-    )
-
-    val bambooSeeds = remember {
-        java.util.Random(401).let { r -> List(8) { Triple(r.nextFloat(), 0.06f + r.nextFloat() * 0.88f, r.nextFloat()) } }
-    }
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val random = java.util.Random(400)
-        val w = size.width
-        val h = size.height
-        val cx = w / 2f
-        val cy = h / 2f
-
-        // ── pale red sun with soft breathing edge ──
-        val sunX = w * 0.24f
-        val sunY = h * 0.18f
-        val sunR = w * 0.16f * (1f + sin(time * 0.11f) * 0.02f)
-        drawCircle(
-            brush = Brush.radialGradient(
-                listOf(Color(0xFFB03A2E).copy(alpha = 0.22f), Color(0xFFB03A2E).copy(alpha = 0.07f), Color.Transparent),
-                center = Offset(sunX, sunY), radius = sunR * 1.6f
-            ),
-            radius = sunR * 1.6f, center = Offset(sunX, sunY)
-        )
-        drawCircle(color = Color(0xFFC0392B).copy(alpha = 0.16f), radius = sunR, center = Offset(sunX, sunY))
-
-        // ── mist bands drifting at different depths ──
-        for (m in 0 until 3) {
-            val my = h * (0.30f + m * 0.22f)
-            val drift = ((time * (6f + m * 4f)) % (w + 400f)) - 200f
-            drawRect(
-                brush = Brush.horizontalGradient(
-                    listOf(Color.Transparent, Color(0xFFD8CFC8).copy(alpha = 0.045f + m * 0.01f), Color.Transparent),
-                    startX = drift - 200f, endX = drift + 200f
-                ),
-                topLeft = Offset(0f, my), size = Size(w, h * 0.06f)
-            )
-        }
-
-        // ── mon (family crest) watermark ──
-        val monRadius = w * 0.12f
-        drawCircle(color = Color(0xFFC0A080).copy(alpha = 0.08f), radius = monRadius, center = Offset(cx, cy))
-        drawCircle(
-            color = Color(0xFFC0A080).copy(alpha = 0.06f), radius = monRadius * 0.8f,
-            style = Stroke(width = 1.5f), center = Offset(cx, cy)
-        )
-        for (i in 0..7) {
-            val angle = (i * PI.toFloat()) / 4f + time * 0.01f
-            drawLine(
-                color = Color(0xFFC0A080).copy(alpha = 0.06f),
-                start = Offset(cx + cos(angle) * monRadius * 0.3f, cy + sin(angle) * monRadius * 0.3f),
-                end = Offset(cx + cos(angle) * monRadius * 0.9f, cy + sin(angle) * monRadius * 0.9f),
-                strokeWidth = 1f
-            )
-        }
-
-        // ── bamboo groves flanking both edges, swaying ──
-        bambooSeeds.forEachIndexed { b, (xF, topF, seed) ->
-            val bx = xF * w
-            val by = h * topF
-            if (bx < w * 0.14f || bx > w * 0.86f) {
-                val sway = sin(time * 0.12f + b * 0.9f) * 5f
-                val stalk = Path().apply {
-                    moveTo(bx, h)
-                    quadraticBezierTo(bx + sway * 0.3f, (by + h) / 2f, bx + sway, by)
-                }
-                drawPath(stalk, color = Color(0xFF4A7C59).copy(alpha = 0.20f), style = Stroke(width = 3.5f))
-                for (k in 0..5) {
-                    val frac = (k + 1) / 7f
-                    val knotY = h - (h - by) * frac
-                    val knotX = bx + sway * frac * frac
-                    drawLine(
-                        color = Color(0xFF4A7C59).copy(alpha = 0.16f),
-                        start = Offset(knotX - 6f, knotY), end = Offset(knotX + seed * 12f + 6f, knotY - 8f - seed * 8f),
-                        strokeWidth = 1.5f
-                    )
-                    drawLine(
-                        color = Color(0xFF4A7C59).copy(alpha = 0.16f),
-                        start = Offset(knotX, knotY), end = Offset(knotX - 8f - seed * 10f, knotY - 10f - seed * 6f),
-                        strokeWidth = 1.5f
-                    )
-                }
-            }
-        }
-
-        // ── falling maple leaves tumbling across ──
-        val leafColors = listOf(
-            Color(0xFF8B0000), Color(0xFFB03A2E), Color(0xFFC9622B), Color(0xFFD98E32)
-        )
-        for (i in 0 until 14) {
-            val speedY = 14f + random.nextFloat() * 22f
-            val speedX = 18f + random.nextFloat() * 30f
-            val yOffset = (time * speedY + random.nextFloat() * 3000f) % (h + 100f) - 50f
-            val xOffset = ((time * speedX + random.nextFloat() * 2000f + sin(time * 0.8f + i) * 40f) % (w + 100f)) - 50f
-            val sizeF = 0.7f + random.nextFloat() * 0.8f
-            withTransform({
-                translate(xOffset, yOffset)
-                rotate(time * (4f + (i % 5) * 2f) + i * 47f)
-                scale(sizeF, sizeF, pivot = Offset.Zero)
-            }) {
-                val leafPath = Path().apply {
-                    moveTo(0f, -12f)
-                    quadraticBezierTo(9f, -6f, 6f, 2f)
-                    quadraticBezierTo(9f, 8f, 0f, 12f)
-                    quadraticBezierTo(-9f, 8f, -6f, 2f)
-                    quadraticBezierTo(-9f, -6f, 0f, -12f)
-                    close()
-                }
-                drawPath(leafPath, color = leafColors[i % leafColors.size].copy(alpha = 0.22f))
-                drawLine(
-                    Color(0xFF3E1F0D).copy(alpha = 0.18f),
-                    start = Offset(0f, -9f), end = Offset(0f, 11f), strokeWidth = 0.8f
-                )
-            }
-        }
-
-        // ── katana with periodic glint sweep ──
-        val katanaX = w * 0.76f
-        val katanaY = h * 0.28f
-        val bladeLength = h * 0.34f
-        val bladeAngle = sin(time * 0.05f) * 0.1f
-        withTransform({
-            rotate(bladeAngle * 180f / PI.toFloat(), pivot = Offset(katanaX, katanaY))
-        }) {
-            val bladePath = Path().apply {
-                moveTo(katanaX - 3f, katanaY)
-                lineTo(katanaX - 1f, katanaY + bladeLength)
-                lineTo(katanaX + 1f, katanaY + bladeLength)
-                lineTo(katanaX + 3f, katanaY)
-                close()
-            }
-            drawPath(bladePath, color = Color(0xFFE0E0E0).copy(alpha = 0.14f))
-            val glint = (time * 0.35f) % 3f
-            if (glint < 1f) {
-                val gy = katanaY + (bladeLength * glint)
-                val fade = sin(glint * PI.toFloat())
-                drawLine(
-                    color = Color.White.copy(alpha = 0.5f * fade),
-                    start = Offset(katanaX - 2f, gy), end = Offset(katanaX + 2f, gy + 24f),
-                    strokeWidth = 1.5f
-                )
-            }
-            drawCircle(
-                color = Color(0xFFC0A080).copy(alpha = 0.16f),
-                radius = 8f, center = Offset(katanaX, katanaY + bladeLength * 0.15f)
-            )
-        }
-    }
-}
-
-// ---------------------------------------------------------
-// 10. Aurora — shimmering curtains, stars & mirrored glow
-// ---------------------------------------------------------
-@Composable
-fun AuroraBackground(color1: Color, color2: Color, color3: Color) {
-    val infiniteTransition = rememberInfiniteTransition(label = "aurora")
-    val time by infiniteTransition.animateFloat(
-        initialValue = 0f, targetValue = 2f * PI.toFloat(),
-        animationSpec = infiniteRepeatable(tween(120000, easing = LinearEasing)),
-        label = "time"
-    )
-    val stars = remember {
-        java.util.Random(66).let { r -> List(46) { floatArrayOf(r.nextFloat(), r.nextFloat() * 0.55f, r.nextFloat() * 10f) } }
-    }
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val w = size.width
-        val h = size.height
-
-        // ── twinkling stars behind the curtains ──
-        stars.forEachIndexed { i, s ->
-            val twinkle = (sin(time * 2.2f + s[2]) + 1f) / 2f
-            drawCircle(
-                color = Color.White.copy(alpha = 0.12f + twinkle * 0.45f),
-                radius = if (s[2] > 8f) 1.6f else 0.9f,
-                center = Offset(s[0] * w, s[1] * h)
-            )
-            if (twinkle > 0.93f && i % 4 == 0) {
-                drawLine(Color.White.copy(alpha = 0.4f), Offset(s[0] * w - 4f, s[1] * h), Offset(s[0] * w + 4f, s[1] * h), 0.8f)
-                drawLine(Color.White.copy(alpha = 0.4f), Offset(s[0] * w, s[1] * h - 4f), Offset(s[0] * w, s[1] * h + 4f), 0.8f)
-            }
-        }
-
-        // ── aurora curtains drawn as shimmering vertical strips ──
-        val bands = listOf(
-            Triple(color1, 0.10f, 40f),
-            Triple(color2, 0.24f, 60f),
-            Triple(color3, 0.05f, 50f),
-            Triple(color1, 0.30f, 30f)
-        )
-        val strip = 12f
-        bands.forEach { (color, phaseOffset, heightF) ->
-            val baseY = h * (0.12f + phaseOffset * 0.18f)
-            var x = 0f
-            while (x < w) {
-                val crest = baseY +
-                        sin((x / (110f + phaseOffset * 200f)) + time * (1f + phaseOffset) + phaseOffset * 3f) * 42f +
-                        sin((x / 55f) + time * 1.5f) * 16f
-                val curtainH = h * heightF * (0.55f + 0.45f * sin(time + x * 0.01f + phaseOffset * 6f))
-                val shimmer = 0.5f + 0.5f * sin(x * 0.11f + time * 3f + phaseOffset * 9f)
-                drawLine(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            color.copy(alpha = (0.16f + shimmer * 0.14f)),
-                            color.copy(alpha = 0.05f + shimmer * 0.03f),
-                            Color.Transparent
-                        ),
-                        startY = crest,
-                        endY = crest + curtainH.toFloat().coerceAtMost(h - crest)
-                    ),
-                    start = Offset(x, crest),
-                    end = Offset(x, crest + curtainH),
-                    strokeWidth = strip + 2f
-                )
-                x += strip
-            }
-        }
-
-        // ── mirrored glow near the horizon (faint reflection) ──
-        val pulseAlpha = (sin(time * 0.7f) + 1f) / 2f * 0.08f + 0.03f
-        drawRect(
-            brush = Brush.verticalGradient(
-                colors = listOf(Color.Transparent, color1.copy(alpha = pulseAlpha), color2.copy(alpha = pulseAlpha * 0.6f)),
-                startY = h * 0.72f, endY = h
-            ),
-            topLeft = Offset(0f, h * 0.72f),
-            size = Size(w, h * 0.28f)
-        )
     }
 }
 

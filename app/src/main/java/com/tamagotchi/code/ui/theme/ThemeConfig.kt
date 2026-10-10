@@ -21,6 +21,8 @@ data class AppTheme(
     val icon: ImageVector,
     val description: String,
     val isDark: Boolean,
+    val nameRes: Int? = null,
+    val descriptionRes: Int? = null,
 
     // Color palette
     val background: Color,
@@ -311,32 +313,34 @@ object ThemeRegistry {
         ),
 
         // ──────────────────────────────────────────────────────────
-        // 9. SAMURAI – Elegante, rojo/negro/oro
+        // 9. JAPANESE – Indigo night, vermilion gates and warm lanterns
         // ──────────────────────────────────────────────────────────
         AppTheme(
-            name = "Samurai",
-            icon = Icons.Default.Security,
-            description = "Honor y disciplina. Acero, sangre y oro antiguo.",
+            name = "Japonés",
+            icon = Icons.Default.Landscape,
+            description = "Luna sobre el torii. Faroles cálidos en una noche índigo.",
             isDark = true,
-            background = Color(0xFF0A0A0A),
-            surface = Color(0xFF141414),
-            surfaceVariant = Color(0xFF211C1C),
-            primary = Color(0xFFD32F2F),
-            secondary = Color(0xFFC0A080),
-            tertiary = Color(0xFF8B0000),
-            onPrimary = Color.White,
-            textPrimary = Color(0xFFEBEBEB),
-            textSecondary = Color(0xFFB0A8A5),
-            accent = Color(0xFFC0A080),
-            success = Color(0xFF43A047),
-            error = Color(0xFFD50000),
+            nameRes = R.string.theme_japanese_name,
+            descriptionRes = R.string.theme_japanese_description,
+            background = Color(0xFF080F25),
+            surface = Color(0xFF111C35),
+            surfaceVariant = Color(0xFF1C2B46),
+            primary = Color(0xFFFF8F7B),
+            secondary = Color(0xFFEBC58D),
+            tertiary = Color(0xFF93ACD8),
+            onPrimary = Color(0xFF32120E),
+            textPrimary = Color(0xFFF6F0E8),
+            textSecondary = Color(0xFFC1CADE),
+            accent = Color(0xFFEBC58D),
+            success = Color(0xFF87D6AE),
+            error = Color(0xFFFF7B87),
             fontFamily = FontFamily.Serif,
             titleFontFamily = FontFamily.Serif,
             titleWeight = FontWeight.SemiBold,
-            cornerRadius = 0.dp,
+            cornerRadius = 12.dp,
             borderWidth = 1.dp,
             usesGradients = true,
-            gradientColors = listOf(Color(0xFF211C1C), Color(0xFF141414), Color(0xFF0A0A0A))
+            gradientColors = listOf(Color(0xFF162644), Color(0xFF0C1730), Color(0xFF080F25))
         ),
 
         // ──────────────────────────────────────────────────────────
@@ -426,8 +430,10 @@ object ThemeRegistry {
         )
     )
 
+    fun canonicalName(name: String): String = if (name == "Samurai") "Japonés" else name
+
     fun getTheme(name: String, isDark: Boolean = false): AppTheme {
-        val theme = allThemes.find { it.name == name } ?: allThemes.first()
+        val theme = allThemes.find { it.name == canonicalName(name) } ?: allThemes.first()
         if (name != "Default" || !isDark) return theme
         return theme.copy(
             isDark = true,
