@@ -32,6 +32,7 @@ import com.tamagotchi.code.ui.theme.bestContentOn
 import com.tamagotchi.code.ui.theme.compositeOver
 import com.tamagotchi.code.ui.theme.ensureContrast
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import kotlin.math.ceil
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -44,6 +45,7 @@ fun ViewportCard(
     onPlayClick: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
+    val wardrobe by viewModel.ownedItems.collectAsState()
     val heartOffsetY = remember { Animatable(0f) }
     val heartAlpha = remember { Animatable(0f) }
     var showHeart by remember { mutableStateOf(false) }
@@ -141,7 +143,7 @@ fun ViewportCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val currentHearts = (state.health / 20f).toInt().coerceIn(0, 5)
+                        val currentHearts = ceil(state.health / 20f).toInt().coerceIn(0, 5)
                         for (i in 1..5) {
                             val isFilled = i <= currentHearts
                             Icon(
@@ -202,6 +204,7 @@ fun ViewportCard(
                         isDead = state.isDead,
                         celebrationTrigger = viewModel.celebrationTrigger,
                         learningEventTrigger = viewModel.learningEventTrigger,
+                        outfit = com.tamagotchi.code.data.PetOutfit.from(wardrobe),
                         onClick = { onPetTap() }
                     )
 

@@ -6,9 +6,9 @@ import org.junit.Test
 
 class StatusCalculatorTest {
   @Test
-  fun `dead pet always reports DEAD regardless of stats`() {
+  fun `legacy dead flag reports recoverable sick status`() {
     assertEquals(
-      "DEAD",
+      "SICK",
       StatusCalculator.determineStatus(
         health = 0f, hunger = 0f, energy = 0f,
         isSleeping = false, isStudying = false, isDead = true
@@ -17,9 +17,9 @@ class StatusCalculatorTest {
   }
 
   @Test
-  fun `dead wins over sleeping and studying`() {
+  fun `recoverable critical status wins over sleeping and studying`() {
     assertEquals(
-      "DEAD",
+      "SICK",
       StatusCalculator.determineStatus(
         health = 50f, hunger = 50f, energy = 50f,
         isSleeping = true, isStudying = true, isDead = true

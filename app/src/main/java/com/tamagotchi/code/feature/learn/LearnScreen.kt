@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +32,7 @@ import com.tamagotchi.code.ui.theme.compositeOver
 import com.tamagotchi.code.ui.theme.ensureContrast
 import com.tamagotchi.code.ui.theme.readableOnBackground
 import com.tamagotchi.code.ui.theme.bestContentOn
+import com.tamagotchi.code.util.ProgrammingLanguages
 
 import com.tamagotchi.code.ui.components.CodeySprite
 import androidx.compose.animation.AnimatedVisibility
@@ -42,10 +44,11 @@ fun LearnScreen(
     viewModel: PetViewModel,
     state: PetStateEntity
 ) {
-    var activeTab by remember { mutableIntStateOf(0) }
+    var activeTab by rememberSaveable { mutableIntStateOf(0) }
+    val wardrobe by viewModel.ownedItems.collectAsStateWithLifecycle()
     val tabs = listOf(stringResource(R.string.learn_tab_quiz), stringResource(R.string.learn_tab_special), stringResource(R.string.learn_tab_badges))
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 24.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -74,6 +77,7 @@ fun LearnScreen(
                     isDead = state.isDead,
                     celebrationTrigger = viewModel.celebrationTrigger,
                     learningEventTrigger = viewModel.learningEventTrigger,
+                    outfit = com.tamagotchi.code.data.PetOutfit.from(wardrobe),
                     onClick = { viewModel.petThePet() },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -136,12 +140,9 @@ fun BadgesPanel(viewModel: PetViewModel) {
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        val languages = listOf("Kotlin", "JavaScript", "PHP", "Python")
-        val languageKeyMap = mapOf("Kotlin" to "KOTLIN", "JavaScript" to "JS", "PHP" to "PHP", "Python" to "PYTHON")
-
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            languages.forEach { langName ->
-                val key = languageKeyMap[langName] ?: langName.uppercase()
+            ProgrammingLanguages.ALL.forEach { langName ->
+                val key = ProgrammingLanguages.progressKey(langName)
                 val progress = languageProgress.find { it.languageId == key }
                 val total = progress?.totalChallenges ?: 10
                 val completed = progress?.challengesCompleted ?: 0
@@ -173,7 +174,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
 
                         Icon(
                             imageVector = badgeIcon,
-                            contentDescription = "Badge $langName",
+                            contentDescription = null,
                             tint = badgeColor,
                             modifier = Modifier.size(28.dp)
                         )
@@ -191,7 +192,7 @@ fun BadgesPanel(viewModel: PetViewModel) {
                                 text = stringResource(R.string.badges_progress, completed, total, pct),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 10.sp,
-                                color = Color.Gray
+                                color = Color.LightGray
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             LinearProgressIndicator(
@@ -309,7 +310,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                 ) {
                     Text(
                         text = code,
-                        fontSize = 11.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily.Monospace,
                         color = Color(0xFFA5D6A7),
                         modifier = Modifier.padding(10.dp)
@@ -319,7 +320,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 
             Text(
                 text = challenge.question,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 color = readableOnBackground(Color.LightGray),
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -330,7 +331,6 @@ fun QuizPanel(viewModel: PetViewModel) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 challenge.options.forEachIndexed { optIndex, optionText ->
-                    val isCorrectSelection = feedback == "CORRECT" && optIndex == challenge.correctAnswerIndex
                     val optionBorderColor = if (feedback != null) {
                         if (optIndex == challenge.correctAnswerIndex) Color(0xFF81C784) else Color(0xFFEF5350).copy(alpha = 0.3f)
                     } else {
@@ -338,7 +338,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                     }
 
                     val optionBgColor = if (feedback != null) {
-                        if (optIndex == challenge.correctAnswerIndex) Color(0xFF1B5E20).copy(alpha = 0.3f) else Color(0xFFB71C1C).copy(alpha = 0.05f)
+                        if (optIndex == challenge.correctAnswerIndex) Color(0xFF1B5E20) else Color(0xFF151D16)
                     } else {
                         Color(0xFF151D16)
                     }
@@ -350,6 +350,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                                 viewModel.submitAnswer(optIndex)
                             }
                         },
+                        enabled = feedback == null,
                         shape = RoundedCornerShape(8.dp),
                         color = optionBgColor,
                         border = BorderStroke(1.dp, optionBorderColor),
@@ -362,7 +363,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "[$optIndex] ",
+                                text = "[${optIndex + 1}] ",
                                 fontWeight = FontWeight.Bold,
                                 color = ensureContrast(Color(0xFF81C784), optionTextColorBase),
                                 fontFamily = FontFamily.Monospace,
@@ -371,7 +372,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                             Text(
                                 text = optionText,
                                 fontFamily = FontFamily.Monospace,
-                                fontSize = 11.sp,
+                                fontSize = 14.sp,
                                 color = ensureContrast(Color.White, optionTextColorBase)
                             )
                         }
@@ -385,7 +386,7 @@ fun QuizPanel(viewModel: PetViewModel) {
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = if (fb == "CORRECT") Color(0xFF1B5E20).copy(alpha = 0.2f) else Color(0xFFB71C1C).copy(alpha = 0.2f),
+                    color = if (fb == "CORRECT") Color(0xFF1B5E20) else Color(0xFFB71C1C),
                     border = BorderStroke(1.dp, if (fb == "CORRECT") Color(0xFF81C784) else Color(0xFFEF5350)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -393,8 +394,8 @@ fun QuizPanel(viewModel: PetViewModel) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = if (fb == "CORRECT") Icons.Default.CheckCircle else Icons.Default.Cancel,
-                                contentDescription = fb,
-                                tint = if (fb == "CORRECT") Color(0xFF81C784) else Color(0xFFEF5350),
+                                contentDescription = null,
+                                tint = Color.White,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
@@ -403,16 +404,16 @@ fun QuizPanel(viewModel: PetViewModel) {
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 12.sp,
-                                color = if (fb == "CORRECT") readableOnBackground(Color(0xFF81C784)) else readableOnBackground(Color(0xFFEF5350))
+                                color = Color.White
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = challenge.explanation,
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 11.sp,
-                            color = readableOnBackground(Color.LightGray),
-                            lineHeight = 15.sp
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            lineHeight = 20.sp
                         )
                     }
                 }
@@ -425,7 +426,7 @@ fun QuizPanel(viewModel: PetViewModel) {
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(38.dp)
+                        .heightIn(min = 48.dp)
                         .testTag("quiz_next_button")
                 ) {
                     Text(
@@ -453,8 +454,7 @@ fun SpecialChallengesPanel(viewModel: PetViewModel, state: PetStateEntity) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(

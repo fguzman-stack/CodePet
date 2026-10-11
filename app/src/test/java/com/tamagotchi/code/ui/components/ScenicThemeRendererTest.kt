@@ -60,11 +60,11 @@ class ScenicThemeRendererTest {
     }
 
     @Test
-    fun eggHasDistinctMoodExpressionsAndRemainsAnimated() {
+    fun kittenHasDistinctMoodExpressionsAndRemainsAnimated() {
         val happy = renderCodeyBitmap(1, "HAPPY")
         for (mood in listOf("SLEEPING", "SICK", "SAD", "EXCITED")) {
             val other = renderCodeyBitmap(1, mood)
-            assertFalse("Egg ignores $mood", happy.sameAs(other))
+            assertFalse("Kitten ignores $mood", happy.sameAs(other))
             other.recycle()
         }
         val animated = renderCodeyBitmap(1, "HAPPY", time = 50f)

@@ -25,15 +25,21 @@ class PetRepository(val petDao: PetDao) {
     }
 
     suspend fun saveFocusSession(session: FocusSessionEntity): Long {
-        petDao.insertFocusSession(session)
-        return session.id
+        return petDao.insertFocusSession(session)
     }
 
     suspend fun updateFocusSessionStatus(sessionId: Long, status: String) {
         petDao.updateFocusSessionStatus(sessionId, status)
     }
 
-    suspend fun completeOfflineSession(sessionId: Long, status: String, petState: PetStateEntity) {
-        petDao.completeOfflineSession(sessionId, status, petState)
-    }
+    suspend fun startFocusSession(session: FocusSessionEntity): FocusSessionEntity? =
+        petDao.startFocusSession(session)
+
+    suspend fun cancelFocusSession(sessionId: Long, now: Long): Boolean =
+        petDao.cancelFocusSession(sessionId, now)
+
+    suspend fun completeFocusSession(sessionId: Long, now: Long): FocusSessionCompletion? =
+        petDao.completeFocusSession(sessionId, now)
+
+    suspend fun applyPetDecay(now: Long): PetStateEntity? = petDao.applyPetDecay(now)
 }

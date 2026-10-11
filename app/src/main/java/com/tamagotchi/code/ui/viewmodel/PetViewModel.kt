@@ -14,6 +14,7 @@ import com.tamagotchi.code.data.database.FocusSessionEntity
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.data.repository.PetRepository
+import com.tamagotchi.code.data.repository.FocusSessionCompletion
 import com.tamagotchi.code.data.repository.UserPreferencesRepository
 import com.tamagotchi.code.data.repository.AchievementsRepository
 import com.tamagotchi.code.ui.theme.ThemeRegistry
@@ -22,6 +23,7 @@ import com.tamagotchi.code.util.LevelCalculator
 import com.tamagotchi.code.util.RewardCalculator
 import com.tamagotchi.code.util.StatusCalculator
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,15 +38,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import android.content.Context
 import android.app.NotificationManager
+import android.util.Log
 import androidx.annotation.StringRes
 import com.tamagotchi.code.R
 
 class PetViewModel(
     private val repository: PetRepository,
     private val userPreferences: UserPreferencesRepository,
-    private val achievementsRepository: AchievementsRepository
+    private val achievementsRepository: AchievementsRepository,
+    private val focusClock: () -> Long = System::currentTimeMillis
 ) : ViewModel() {
-    val soundManager = com.tamagotchi.code.util.SoundManager()
+    val soundManager = com.tamagotchi.code.util.SoundManager { soundEnabled.value }
 
     var hasSeenOnboarding = mutableStateOf(false)
         private set
@@ -213,6 +217,17 @@ class PetViewModel(
     var currentStudyTopic = mutableStateOf("Kotlin")
         private set
 
+    var isFocusBusy = mutableStateOf(false)
+        private set
+    var focusError = mutableStateOf<Int?>(null)
+        private set
+    var focusCompletion = mutableStateOf<FocusSessionCompletion?>(null)
+        private set
+
+    fun dismissFocusCompletion() {
+        focusCompletion.value = null
+    }
+
     var showOfflineRewardDialog = mutableStateOf(false)
         private set
     var offlineRewardXp = mutableStateOf(0)
@@ -297,7 +312,7 @@ class PetViewModel(
             
             var newStatus = pet.currentStatus
             if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
-                newStatus = StatusCalculator.determineStatus(updatedHealth, pet.hunger, updatedEnergy, false, false, isDead = pet.isDead)
+                newStatus = StatusCalculator.determineStatus(updatedHealth, pet.hunger, updatedEnergy, false, false, isDead = false)
             }
             
             val updatedPet = pet.copy(
@@ -307,6 +322,7 @@ class PetViewModel(
                 health = updatedHealth,
                 energy = updatedEnergy,
                 currentStatus = newStatus,
+                isDead = false,
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updatedPet)
@@ -320,7 +336,6 @@ class PetViewModel(
         }
     }
 
-    private var activeFocusSessionId: Long? = null
     private var timerJob: Job? = null
     private val _activeFocusEntity = MutableStateFlow<FocusSessionEntity?>(null)
 
@@ -335,6 +350,10 @@ class PetViewModel(
 
     private val _selectedChallengeLanguage = MutableStateFlow("Kotlin")
     val selectedChallengeLanguage = _selectedChallengeLanguage.asStateFlow()
+
+    // Main.immediate collectors can emit during construction; initialize first.
+    private val _gameLastPlayed = MutableStateFlow<Map<String, Long>>(emptyMap())
+    val gameCooldowns: StateFlow<Map<String, Long>> = _gameLastPlayed.asStateFlow()
 
     init {
         studySessions = repository.studySessions.stateIn(
@@ -399,53 +418,15 @@ class PetViewModel(
             }
         }
 
-        viewModelScope.launch {
+        runFocusOperation {
             val current = repository.petState.firstOrNull()
             if (current == null) {
-                val defaultPet = PetStateEntity()
-                repository.savePetState(defaultPet)
-                loadChallengesForLanguage("Kotlin")
-            } else {
-                val decayed = DecayCalculator.applyDecay(current)
-                repository.savePetState(decayed)
-                loadChallengesForLanguage(decayed.language)
+                repository.savePetState(PetStateEntity(lastUpdated = focusClock()))
             }
-        }
-
-        viewModelScope.launch {
-            val active = repository.getActiveFocusSession()
-            if (active != null) {
-                val elapsedSeconds = (System.currentTimeMillis() - active.startedAt) / 1000
-                val totalSeconds = active.plannedDurationMinutes * 60L
-                val remaining = (totalSeconds - elapsedSeconds).toInt()
-                if (remaining > 0) {
-                    isTimerRunning.value = true
-                    timerSelectedMinutes.value = active.plannedDurationMinutes
-                    timerSecondsRemaining.value = remaining
-                    currentStudyTopic.value = active.topic
-                    activeFocusSessionId = active.id
-                    resumeTimer()
-                } else {
-                    val current = repository.petState.firstOrNull()
-                    if (current != null) {
-                        val xpReward = active.plannedDurationMinutes * 2
-                        val bytesReward = active.plannedDurationMinutes * 1
-                        val updatedXp = current.xp + xpReward
-                        val updatedLevel = LevelCalculator.calculateLevel(updatedXp)
-                        val updated = current.copy(
-                            xp = updatedXp,
-                            level = updatedLevel,
-                            bytes = current.bytes + bytesReward
-                        )
-                        repository.completeOfflineSession(active.id, "COMPLETED", updated)
-                        offlineRewardXp.value = xpReward
-                        offlineRewardBytes.value = bytesReward
-                        showOfflineRewardDialog.value = true
-                    } else {
-                        repository.updateFocusSessionStatus(active.id, "COMPLETED")
-                    }
-                }
-            }
+            restoreFocusSession()
+            val pet = repository.applyPetDecay(focusClock())
+            loadChallengesForLanguage(pet?.language ?: "Kotlin")
+            checkDeathState()
         }
         loadOwnedItems()
         loadPetAccentColor()
@@ -457,18 +438,62 @@ class PetViewModel(
         loadLanguageProgress()
         checkAndTriggerMoodlet()
         checkDailyRewardEligibility()
+    }
+
+    private fun runFocusOperation(operation: suspend () -> Unit) {
+        if (isFocusBusy.value) return
+        isFocusBusy.value = true
+        focusError.value = null
+        viewModelScope.launch {
+            try {
+                operation()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Log.e("PetViewModel", "Focus operation failed", error)
+                focusError.value = R.string.focus_storage_error
+            } finally {
+                isFocusBusy.value = false
+            }
+        }
+    }
+
+    fun retryFocusSession() = runFocusOperation {
+        restoreFocusSession()
+        repository.applyPetDecay(focusClock())
         checkDeathState()
+    }
+
+    private suspend fun restoreFocusSession() {
+        timerJob?.cancel()
+        val active = repository.getActiveFocusSession()
+        if (active == null) {
+            clearFocusTimer()
+            return
+        }
+        _activeFocusEntity.value = active
+        timerSelectedMinutes.value = active.plannedDurationMinutes
+        currentStudyTopic.value = active.topic
+        timerSecondsRemaining.value = active.remainingSeconds(focusClock())
+        isTimerRunning.value = true
+        if (timerSecondsRemaining.value == 0) {
+            settleFocusSession(offline = true)
+        } else {
+            resumeTimer()
+        }
     }
 
     private fun resumeTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            while (timerSecondsRemaining.value > 0 && isTimerRunning.value) {
+            val active = _activeFocusEntity.value ?: return@launch
+            while (isTimerRunning.value) {
+                timerSecondsRemaining.value = active.remainingSeconds(focusClock())
+                if (timerSecondsRemaining.value == 0) {
+                    completeFocusSession()
+                    return@launch
+                }
                 delay(1000)
-                timerSecondsRemaining.value -= 1
-            }
-            if (timerSecondsRemaining.value <= 0 && isTimerRunning.value) {
-                completeStudySession()
             }
         }
     }
@@ -503,9 +528,17 @@ class PetViewModel(
         _activeChallenges.value = filtered.map { it.localized() }.shuffled().take(3)
         _currentChallengeIndex.value = 0
         _challengeFeedback.value = null
+        viewModelScope.launch {
+            val solved = repository.petDao.getSolvedChallengeIds(language).toSet()
+            if (_selectedChallengeLanguage.value != language || _challengeFeedback.value != null || _currentChallengeIndex.value != 0) return@launch
+            val remaining = filtered.filter { it.id !in solved }.shuffled()
+            val practice = filtered.filter { it.id in solved }.shuffled()
+            _activeChallenges.value = (remaining + practice).take(3).map { it.localized() }
+        }
     }
 
     fun submitAnswer(optionIndex: Int) {
+        if (_challengeFeedback.value != null) return
         val challengesList = _activeChallenges.value
         val index = _currentChallengeIndex.value
         if (index >= challengesList.size) return
@@ -539,10 +572,12 @@ class PetViewModel(
                         energy = current.energy,
                         isSleeping = current.currentStatus == "SLEEPING",
                         isStudying = current.currentStatus == "STUDYING",
-                        isDead = current.isDead
-                    )
+                        isDead = false
+                    ),
+                    isDead = false
                 )
                 repository.savePetState(updated)
+                repository.petDao.recordChallengeMastery(challenge.id)
                 addSeasonPassXp(reward.xp / 2)
 
                 if (pairBuddyState.value != null) {
@@ -605,7 +640,8 @@ class PetViewModel(
                 hunger = updatedHunger,
                 health = updatedHealth,
                 energy = updatedEnergy,
-                currentStatus = newStatus
+                currentStatus = newStatus,
+                isDead = false
             )
             repository.savePetState(updated)
             addSeasonPassXp(5)
@@ -644,144 +680,77 @@ class PetViewModel(
     }
 
     fun startStudyTimer(minutes: Int, topic: String) {
-        if (isTimerRunning.value) return
-
-        isTimerRunning.value = true
-        timerSelectedMinutes.value = minutes
-        timerSecondsRemaining.value = minutes * 60
-        currentStudyTopic.value = topic
-
-        viewModelScope.launch {
-            val current = petState.value ?: return@launch
-
-            val session = FocusSessionEntity(
-                topic = topic,
-                plannedDurationMinutes = minutes,
-                startedAt = System.currentTimeMillis(),
-                status = "RUNNING"
-            )
-            repository.saveFocusSession(session)
-            activeFocusSessionId = session.id
-            _activeFocusEntity.value = session
-
-            val updated = current.copy(
-                currentStatus = "STUDYING",
-                lastUpdated = System.currentTimeMillis()
-            )
-            repository.savePetState(updated)
-        }
-
-        timerJob?.cancel()
-        timerJob = viewModelScope.launch {
-            while (timerSecondsRemaining.value > 0 && isTimerRunning.value) {
-                delay(1000)
-                timerSecondsRemaining.value -= 1
+        if (isTimerRunning.value || minutes !in 1..180 || topic.isBlank()) return
+        runFocusOperation {
+            val session = repository.startFocusSession(FocusSessionEntity(
+                topic = topic, plannedDurationMinutes = minutes,
+                startedAt = focusClock(),
+                xpMultiplier = if (isDndActive.value) 1.5f else 1f
+            ))
+            if (session == null) {
+                focusError.value = R.string.focus_pet_unavailable
+                checkDeathState()
+                return@runFocusOperation
             }
-            if (timerSecondsRemaining.value <= 0 && isTimerRunning.value) {
-                completeStudySession()
-            }
+            restoreFocusSession()
         }
     }
 
-    fun completeFocusSession() {
-        viewModelScope.launch {
-            if (_activeFocusEntity.value != null && _activeFocusEntity.value!!.status == "RUNNING") {
-                val pet = repository.petState.firstOrNull() ?: return@launch
-                val elapsed = System.currentTimeMillis() - _activeFocusEntity.value!!.startedAt
-                val minutes = (elapsed / 60000).toInt()
-                
-                val xpEarned = minutes * 5
-                val healthRecovered = 20
-                val energyRecovered = -10
-                
-                val updated = pet.copy(
-                    xp = pet.xp + xpEarned,
-                    health = (pet.health + healthRecovered).coerceIn(0f, 100f),
-                    energy = (pet.energy + energyRecovered).coerceIn(0f, 100f)
-                )
-
-                if (updated.xp >= updated.level * 100) {
-                    soundManager.playLevelUp()
-                } else {
-                    soundManager.playSuccess()
-                }
-                
-                triggerCelebration()
-                repository.savePetState(updated)
-                
-                repository.updateFocusSessionStatus(_activeFocusEntity.value!!.id, "COMPLETED")
-                
-                _activeFocusEntity.value = null
-                
-                achievementsRepository.unlockAchievement("primer_build")
-            }
-        }
-    }
+    fun completeFocusSession() = runFocusOperation { settleFocusSession(offline = false) }
 
     fun cancelStudyTimer() {
+        val active = _activeFocusEntity.value ?: return
         if (!isTimerRunning.value) return
-        isTimerRunning.value = false
-        timerJob?.cancel()
-
-        viewModelScope.launch {
-            activeFocusSessionId?.let { id ->
-                repository.updateFocusSessionStatus(id, "CANCELLED")
-                activeFocusSessionId = null
+        runFocusOperation {
+            timerJob?.cancel()
+            val now = focusClock()
+            // A delayed tap after the deadline completes the session rather than losing its reward.
+            if (now >= active.endsAt) {
+                settleFocusSession(offline = false)
+            } else {
+                repository.cancelFocusSession(active.id, now)
+                clearFocusTimer()
             }
-            val current = petState.value ?: return@launch
-            val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, current.energy, false, false, isDead = current.isDead)
-            val updated = current.copy(
-                currentStatus = newStatus,
-                lastUpdated = System.currentTimeMillis()
-            )
-            repository.savePetState(updated)
         }
     }
 
-    private suspend fun completeStudySession() {
-        isTimerRunning.value = false
+    private fun clearFocusTimer() {
         timerJob?.cancel()
+        timerJob = null
+        isTimerRunning.value = false
+        timerSecondsRemaining.value = 0
+        _activeFocusEntity.value = null
+    }
 
-        activeFocusSessionId?.let { id ->
-            repository.updateFocusSessionStatus(id, "COMPLETED")
-            activeFocusSessionId = null
+    private suspend fun settleFocusSession(offline: Boolean) {
+        val active = _activeFocusEntity.value ?: return
+        val now = focusClock()
+        if (now < active.endsAt) return
+        val completion = repository.completeFocusSession(active.id, now)
+        clearFocusTimer()
+        if (completion == null) return
+        if (offline) {
+            offlineRewardXp.value = completion.xp
+            offlineRewardBytes.value = completion.bytes
+            showOfflineRewardDialog.value = true
+        } else {
+            focusCompletion.value = completion
+            if (soundEnabled.value) soundManager.playSuccess()
+            triggerCelebration()
         }
-
-        val current = petState.value ?: return
-        val minutes = timerSelectedMinutes.value
-        val topic = currentStudyTopic.value
-
-        val session = StudySessionEntity(topic = topic, durationMinutes = minutes)
-        repository.addStudySession(session)
-
-        val reward = RewardCalculator.calculateStudyReward(
-            minutes = minutes, currentXp = current.xp,
-            currentLevel = current.level, currentStreak = current.streak,
-            lastStudyDate = current.lastStudyDate
-        )
-
-        val dndMultiplier = if (isDndActive.value) 1.5f else 1.0f
-        val adjustedXp = (reward.xp * dndMultiplier).toInt()
-
-        val now = System.currentTimeMillis()
-        val updatedEnergy = (current.energy - reward.energyCost).coerceIn(0f, 100f)
-        val newStatus = StatusCalculator.determineStatus(current.health, current.hunger, updatedEnergy, false, false, isDead = current.isDead)
-
-        val updated = current.copy(
-            xp = current.xp + adjustedXp,
-            level = com.tamagotchi.code.util.LevelCalculator.calculateLevel(current.xp + adjustedXp),
-            bytes = current.bytes + reward.bytes,
-            energy = updatedEnergy,
-            streak = reward.streak,
-            lastStudyDate = now,
-            lastUpdated = now,
-            currentStatus = newStatus
-        )
-        repository.savePetState(updated)
-        addSeasonPassXp(adjustedXp / 2)
-        if (reward.streak >= 7) achievementsRepository.unlockAchievement("racha_7")
-        if (reward.streak >= 30) achievementsRepository.unlockAchievement("racha_30")
-        userPreferences.addDailyActivity("study:${topic}")
+        // These secondary preferences cannot roll back the committed Room reward.
+        viewModelScope.launch {
+            try {
+                addSeasonPassXp(completion.xp / 2)
+                if (completion.pet.streak >= 7) achievementsRepository.unlockAchievement("racha_7")
+                if (completion.pet.streak >= 30) achievementsRepository.unlockAchievement("racha_30")
+                userPreferences.addDailyActivity("study:${active.topic}")
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Log.e("PetViewModel", "Could not record secondary focus progress", error)
+            }
+        }
     }
 
     fun petThePet() {
@@ -800,6 +769,7 @@ class PetViewModel(
                 energy = updatedEnergy,
                 health = updatedHealth,
                 currentStatus = newStatus,
+                isDead = false,
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updated)
@@ -824,6 +794,7 @@ class PetViewModel(
                 health = updatedHealth,
                 energy = updatedEnergy,
                 currentStatus = newStatus,
+                isDead = false,
                 lastUpdated = System.currentTimeMillis()
             )
             repository.savePetState(updated)
@@ -843,8 +814,6 @@ class PetViewModel(
         }
     }
 
-    private val _gameLastPlayed = MutableStateFlow<Map<String, Long>>(emptyMap())
-    val gameCooldowns: StateFlow<Map<String, Long>> = _gameLastPlayed.asStateFlow()
 
     private val _celebrationTrigger = MutableSharedFlow<Unit>(replay = 0)
     val celebrationTrigger: SharedFlow<Unit> = _celebrationTrigger.asSharedFlow()
@@ -882,7 +851,8 @@ class PetViewModel(
             val updated = pet.copy(
                 bytes = pet.bytes + finalBytes,
                 health = (pet.health + healthEarned).coerceIn(0f, 100f),
-                energy = (pet.energy + energyCost).coerceIn(0f, 100f)
+                energy = (pet.energy - energyCost).coerceIn(0f, 100f),
+                isDead = false
             )
             repository.savePetState(updated)
             addSeasonPassXp(finalBytes / 4)
@@ -1084,6 +1054,25 @@ class PetViewModel(
     }
 
     // === SOMBREROS (Shop) ===
+    fun buyCosmetic(itemId: String) {
+        viewModelScope.launch {
+            if (repository.petDao.buyCosmetic(itemId)) {
+                soundManager.playBuy()
+                userPreferences.addDailyActivity("shop:cosmetic:$itemId")
+                userPreferences.refreshPetWidget()
+            } else soundManager.playError()
+        }
+    }
+
+    fun equipCosmetic(itemId: String, equip: Boolean) {
+        viewModelScope.launch {
+            if (repository.petDao.equipCosmetic(itemId, equip)) {
+                soundManager.playClick()
+                userPreferences.refreshPetWidget()
+            }
+        }
+    }
+
     fun loadOwnedItems() {
         viewModelScope.launch {
             repository.petDao.getOwnedItems().collect { items ->
@@ -1356,6 +1345,9 @@ class PetViewModel(
     // === LANGUAGE BADGES ===
     fun loadLanguageProgress() {
         viewModelScope.launch {
+            ChallengesData.challenges.map { it.language }.distinct().forEach {
+                repository.petDao.refreshLanguageMastery(it)
+            }
             repository.petDao.getAllLanguageProgress().collect { progress ->
                 languageProgressList.value = progress
             }

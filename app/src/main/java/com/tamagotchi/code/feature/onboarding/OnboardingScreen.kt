@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.components.CodeySprite
+import com.tamagotchi.code.ui.theme.LocalReduceMotion
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -40,10 +42,11 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(pageCount = { 4 })
     val scope = rememberCoroutineScope()
     val celebrationTrigger = remember { MutableSharedFlow<Unit>() }
+    val reduceMotion = LocalReduceMotion.current
 
     var selectedTopics by remember { mutableStateOf(setOf<String>()) }
-    var petName by remember { mutableStateOf("") }
-    var useDefaultName by remember { mutableStateOf(true) }
+    var petName by rememberSaveable { mutableStateOf("") }
+    var useDefaultName by rememberSaveable { mutableStateOf(true) }
 
     HorizontalPager(
         state = pagerState,
@@ -53,14 +56,16 @@ fun OnboardingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .systemBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
                 .padding(top = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Pet + speech area
             Box(
                 modifier = Modifier
-                    .weight(0.45f)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -93,8 +98,8 @@ fun OnboardingScreen(
             // Step content area
             Box(
                 modifier = Modifier
-                    .weight(0.35f)
                     .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             ) {
                 when (page) {
                     0 -> Step1Content()
@@ -143,14 +148,16 @@ fun OnboardingScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            val nextPage = pagerState.currentPage + 1
+                            if (reduceMotion) pagerState.scrollToPage(nextPage)
+                            else pagerState.animateScrollToPage(nextPage)
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                         .padding(bottom = 16.dp)
-                        .height(50.dp),
+                        .heightIn(min = 50.dp),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
@@ -241,7 +248,7 @@ private fun Step1Content() {
         Column(
             modifier = Modifier
                 .padding(horizontal = 28.dp)
-                .fillMaxSize(),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -294,7 +301,7 @@ private fun Step2Content() {
     Column(
         modifier = Modifier
             .padding(horizontal = 28.dp)
-            .fillMaxSize(),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -384,7 +391,7 @@ private fun Step3Content(
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp)
-            .fillMaxSize(),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(4.dp))
@@ -423,11 +430,9 @@ private fun Step3Content(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
         ) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -484,7 +489,7 @@ private fun Step4Content(
     Column(
         modifier = Modifier
             .padding(horizontal = 28.dp)
-            .fillMaxSize(),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -560,14 +565,14 @@ private fun Step4Content(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = onComplete,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
-                .height(52.dp),
+                .heightIn(min = 52.dp),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary

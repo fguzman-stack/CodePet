@@ -1,4 +1,39 @@
 <resources>
+    <string name="cosmetic_beanie">Knitted beanie</string>
+    <string name="cosmetic_top_hat">Top hat</string>
+    <string name="cosmetic_scarf">Raspberry scarf</string>
+    <string name="cosmetic_dev_jacket">Developer jacket</string>
+    <string name="cosmetic_kotlin_beret">Kotlin beret</string>
+    <string name="cosmetic_js_jacket">JavaScript jacket</string>
+    <string name="cosmetic_php_robe">PHP robe</string>
+    <string name="cosmetic_python_hood">Python hood</string>
+    <string name="wardrobe_title">Codey’s wardrobe</string>
+    <string name="wardrobe_desc">Buy and equip one hat and one garment. No secret fitting room: if you want to see it, earn it or buy it.</string>
+    <string name="wardrobe_equipped_preview">Your equipped outfit</string>
+    <string name="wardrobe_try_preview">Fitting room · preview</string>
+    <string name="wardrobe_choose_phase">Choose pet stage</string>
+    <string name="wardrobe_real_phase">Current stage</string>
+    <string name="wardrobe_egg">Kitten</string>
+    <string name="wardrobe_child">Child</string>
+    <string name="wardrobe_adult">Adult</string>
+    <string name="wardrobe_veteran">Veteran</string>
+    <string name="wardrobe_legendary">Legendary</string>
+    <string name="wardrobe_phase_label">Stage: %1$s</string>
+    <string name="wardrobe_pixel">Try Retro Pixel</string>
+    <string name="wardrobe_preview_only">The fitting room does not change your pet’s level or theme.</string>
+    <string name="wardrobe_return_equipped">Return to equipped outfit</string>
+    <string name="wardrobe_shop_title">Collection · buy with bytes</string>
+    <string name="wardrobe_mastery_title">Exclusive mastery trophies</string>
+    <string name="wardrobe_hat">Hat</string>
+    <string name="wardrobe_clothing">Garment</string>
+    <string name="wardrobe_equipped">Equipped</string>
+    <string name="wardrobe_mastery_requirement">Master %1$s: %2$d / %3$d unique challenges solved. Free reward; cannot be purchased.</string>
+    <string name="wardrobe_mastery_unlocked">Mastery achieved! Reward unlocked.</string>
+    <string name="wardrobe_try">Try on</string>
+    <string name="wardrobe_remove">Remove</string>
+    <string name="wardrobe_equip">Equip</string>
+    <string name="wardrobe_locked">Locked</string>
+    <string name="wardrobe_buy">Buy · %1$d B</string>
     <string name="theme_japanese_name">Japanese</string>
     <string name="theme_japanese_description">Moon above the torii. Warm lanterns in an indigo night.</string>
     <string name="app_name">Code Tamagotchi</string>
@@ -146,12 +181,12 @@
     <string name="home_daily_available">DAILY REWARDS (AVAILABLE!)</string>
     <string name="home_offline_title">Session completed while you were away</string>
     <string name="home_offline_text">Congrats! You earned %1$d XP and %2$d Bytes for your Focus session.</string>
-    <string name="home_death_title">%1$s has died</string>
-    <string name="home_death_desc">Your pet passed away from lack of care.\n\nBut all is not lost... you can revive it:</string>
-    <string name="home_revive_bytes_desc">Revive for %1$d Bytes</string>
-    <string name="home_revive_free_desc">Free revive (low stats)</string>
-    <string name="home_revive_bytes_button">Revive (%1$d Bytes)</string>
-    <string name="home_revive_free">Free revive</string>
+    <string name="home_death_title">%1$s entered blue-screen mode</string>
+    <string name="home_death_desc">Your pet is critical, not dead. Drama survived; progress did too.\n\nStabilize it like this:</string>
+    <string name="home_revive_bytes_desc">Premium recovery for %1$d Bytes</string>
+    <string name="home_revive_free_desc">Free recovery (low stats, ego intact)</string>
+    <string name="home_revive_bytes_button">Stabilize (%1$d Bytes)</string>
+    <string name="home_revive_free">Stabilize for free</string>
     <string name="home_commit_title">Codey made a commit</string>
     <string name="home_commit_summary">Yesterday\'s summary:</string>
     <string name="home_commit_merge">Merge (Accept)</string>
@@ -177,7 +212,13 @@
     <string name="focus_logs_entry">Study: %1$s</string>
     <string name="focus_logs_min">+%1$d Min</string>
     <string name="focus_note_title">[!] NOTE FROM THE LIFE COMPILER:</string>
-    <string name="focus_note_body">If you stop logging sessions for more than 36 hours, your study streak resets to 0, and your pet loses health from lack of maintenance.</string>
+    <string name="focus_note_body">Codey\'s hearts drain over time: play, learn and care for your pet to keep it alive. After more than 48 hours without studying, your streak resets; after 72 hours, health drains faster.</string>
+    <string name="focus_storage_error">We couldn\'t update the session. Try again to recover its saved state.</string>
+    <string name="focus_pet_unavailable">Codey is too critical to study. Return Home and stabilize that bug with legs.</string>
+    <string name="focus_retry">Recover session</string>
+    <string name="focus_completed_title">Session completed!</string>
+    <string name="focus_completed_body">You completed %1$d minutes of focus. You earned %2$d XP and %3$d Bytes. The energy cost and reward have been saved.</string>
+    <string name="focus_continue">Continue</string>
 
     <!-- Learn Screen -->
     <string name="learn_tab_quiz">Regular Challenges</string>
@@ -583,7 +624,7 @@
     <string name="cd_message">Message</string>
     <string name="viewport_xp_progress">XP: %1$d / %2$d</string>
     <string name="meter_health">Health</string>
-    <string name="meter_food">Food</string>
+    <string name="meter_food">Satiety</string>
     <string name="meter_energy">Energy</string>
     <string name="cd_sleep_toggle">Sleep or wake up</string>
     <string name="viewport_wake">Wake up</string>
@@ -664,10 +705,10 @@
         <item>Everything compiles on the first try! This is dark magic!</item>
     </string-array>
     <string-array name="quote_dead">
-        <item>R.I.P. Killed by a segfault…</item>
-        <item>Here lies a pet. Its code was never merged.</item>
-        <item>404: life not found. Revive me to continue.</item>
-        <item>from grave import revive  # still in time?</item>
+        <item>I did not die. I performed a controlled crash. Mostly.</item>
+        <item>Critical state: my code is requesting paid vacation.</item>
+        <item>404: energy not found. Quick care, or do we keep pretending?</item>
+        <item>from panic import stabilize  # yes, it was urgent</item>
     </string-array>
     <string-array name="quote_happy">
         <item>Compiling without warnings is my passion!</item>
@@ -680,12 +721,12 @@
     </string-array>
 
     <!-- Notifications -->
-    <string name="notif_title_dead">%1$s has died</string>
-    <string name="notif_title_dying">%1$s is on the verge of death</string>
+    <string name="notif_title_dead">%1$s is critical</string>
+    <string name="notif_title_dying">%1$s is approaching blue-screen mode</string>
     <string name="notif_title_starving">%1$s is starving</string>
     <string name="notif_title_exhausted">%1$s is running on fumes</string>
     <string name="notif_title_needs_you">%1$s needs you</string>
-    <string name="notif_reason_dead">I\'ve gone to the other side of the compiler… will you rescue me?</string>
+    <string name="notif_reason_dead">Your progress is safe, but my dignity is in beta. Stabilize me?</string>
     <string name="notif_reason_health_pain">Even my last bit hurts… can you check on me? (Health: %1$d%%)</string>
     <string name="notif_reason_health_low">I feel the Blue Screen of Death approaching… (Health: %1$d%%)</string>
     <string name="notif_reason_hunger_extreme">Hours without eating — think I\'m a microservice? (Hunger: %1$d%%)</string>
@@ -742,7 +783,7 @@
     <string name="commit_normal_3">style: no apparent changes</string>
 
     <!-- Home screen widget -->
-    <string name="widget_description">Check on Codey at a glance: health, energy and hunger.</string>
+    <string name="widget_description">Check on Codey at a glance: health, energy and satiety.</string>
     <string name="widget_level">Lv.%1$d</string>
     <string name="widget_status_happy">All systems happy!</string>
     <string name="widget_status_sleeping">Zzz… sleeping</string>
@@ -751,9 +792,9 @@
     <string name="widget_status_sad">Feeling sad</string>
     <string name="widget_status_studying">Study mode on!</string>
     <string name="widget_status_excited">So excited!</string>
-    <string name="widget_status_dead">Rest in peace…</string>
+    <string name="widget_status_dead">Critical mode</string>
     <string name="widget_bytes">%1$d bytes</string>
-    <string name="widget_hunger">Hunger</string>
+    <string name="widget_hunger">Satiety</string>
     <string name="widget_start_app">Open the app!</string>
     <string name="cd_widget_pet">Code Pet mascot</string>
 

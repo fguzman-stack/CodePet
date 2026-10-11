@@ -4,11 +4,14 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SoundManager {
+class SoundManager(private val isEnabled: () -> Boolean = { true }) {
     private var toneGen: ToneGenerator? = null
+    private val soundScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     init {
         try {
@@ -19,40 +22,47 @@ class SoundManager {
     }
 
     fun playSuccess() {
-        toneGen?.startTone(ToneGenerator.TONE_PROP_ACK, 100)
+        playTone(ToneGenerator.TONE_PROP_ACK, 100)
     }
 
     fun playError() {
-        toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP2, 150)
+        playTone(ToneGenerator.TONE_PROP_BEEP2, 150)
     }
 
     fun playLevelUp() {
-        CoroutineScope(Dispatchers.Default).launch {
-            toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100)
+        soundScope.launch {
+            playTone(ToneGenerator.TONE_PROP_BEEP, 100)
             delay(150)
-            toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100)
+            playTone(ToneGenerator.TONE_PROP_BEEP, 100)
             delay(150)
-            toneGen?.startTone(ToneGenerator.TONE_PROP_ACK, 200)
+            playTone(ToneGenerator.TONE_PROP_ACK, 200)
         }
     }
 
     fun playClick() {
-        toneGen?.startTone(ToneGenerator.TONE_DTMF_A, 50)
+        playTone(ToneGenerator.TONE_DTMF_A, 50)
     }
 
     fun playBuy() {
-        toneGen?.startTone(ToneGenerator.TONE_PROP_BEEP, 100)
+        playTone(ToneGenerator.TONE_PROP_BEEP, 100)
     }
     
     fun playSleep() {
-        CoroutineScope(Dispatchers.Default).launch {
-            toneGen?.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100)
+        soundScope.launch {
+            playTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100)
             delay(1000)
-            toneGen?.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100)
+            playTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 100)
         }
     }
 
+    @Synchronized
+    private fun playTone(tone: Int, duration: Int) {
+        if (isEnabled()) toneGen?.startTone(tone, duration)
+    }
+
+    @Synchronized
     fun release() {
+        soundScope.cancel()
         toneGen?.release()
         toneGen = null
     }

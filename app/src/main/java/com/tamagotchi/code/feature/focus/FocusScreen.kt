@@ -1,8 +1,9 @@
 package com.tamagotchi.code.feature.focus
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,9 +13,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -26,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
-import com.tamagotchi.code.ui.theme.LocalAppTheme
 import com.tamagotchi.code.data.database.StudySessionEntity
 import com.tamagotchi.code.ui.theme.readableOnBackground
 import com.tamagotchi.code.ui.theme.bestContentOn
@@ -40,10 +40,43 @@ fun FocusScreen(
     state: PetStateEntity,
     studySessions: List<StudySessionEntity>
 ) {
-    var activeTab by remember { mutableIntStateOf(0) }
+    var activeTab by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf(stringResource(R.string.focus_tab_timer), stringResource(R.string.focus_tab_logs))
 
-    Column(modifier = Modifier.fillMaxWidth()) {
+    viewModel.focusCompletion.value?.let { completion ->
+        AlertDialog(
+            onDismissRequest = viewModel::dismissFocusCompletion,
+            title = { Text(stringResource(R.string.focus_completed_title)) },
+            text = {
+                Text(stringResource(
+                    R.string.focus_completed_body, completion.session.plannedDurationMinutes,
+                    completion.xp, completion.bytes
+                ))
+            },
+            confirmButton = {
+                TextButton(onClick = viewModel::dismissFocusCompletion) {
+                    Text(stringResource(R.string.focus_continue))
+                }
+            }
+        )
+    }
+
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(bottom = 24.dp)) {
+        viewModel.focusError.value?.let { message ->
+            Surface(
+                color = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(stringResource(message), style = MaterialTheme.typography.bodyMedium)
+                    TextButton(onClick = viewModel::retryFocusSession, enabled = !viewModel.isFocusBusy.value) {
+                        Text(stringResource(R.string.focus_retry))
+                    }
+                }
+            }
+        }
         Text(
             text = stringResource(R.string.focus_header),
             fontSize = 14.sp,
@@ -86,6 +119,7 @@ fun FocusScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TimerPanel(
     viewModel: PetViewModel,
@@ -93,15 +127,14 @@ fun TimerPanel(
 ) {
     val isRunning = viewModel.isTimerRunning.value
     val secondsRemaining = viewModel.timerSecondsRemaining.value
-    val selectedMinutes = viewModel.timerSelectedMinutes.value
     val currentTopic = viewModel.currentStudyTopic.value
     val isDndActive by viewModel.isDndActive.collectAsStateWithLifecycle()
 
-    var tempMinutes by remember { mutableIntStateOf(25) }
-    var tempTopic by remember { mutableStateOf("Kotlin") }
+    var tempMinutes by rememberSaveable { mutableIntStateOf(viewModel.focusDurationDefault.value) }
+    var tempTopic by rememberSaveable { mutableStateOf("Kotlin") }
     var showDropdown by remember { mutableStateOf(false) }
 
-    val topics = listOf("Kotlin", "JavaScript", "PHP", "Python", "SQL", "Clean Code", "Git", stringResource(R.string.topic_data_structures))
+    val topics = com.tamagotchi.code.util.ProgrammingLanguages.ALL + listOf("Clean Code", "Git", stringResource(R.string.topic_data_structures))
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -135,19 +168,15 @@ fun TimerPanel(
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = stringResource(R.string.focus_topic_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = readableOnBackground(Color.White),
-                    modifier = Modifier.width(80.dp)
                 )
 
-                Box(modifier = Modifier.weight(1f)) {
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Surface(
                         onClick = { showDropdown = true },
                         color = Color(0xFF151D16),
@@ -155,7 +184,7 @@ fun TimerPanel(
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(38.dp)
+                            .heightIn(min = 48.dp)
                     ) {
                         Row(
                             modifier = Modifier.padding(horizontal = 12.dp),
@@ -203,21 +232,18 @@ fun TimerPanel(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = stringResource(R.string.focus_time_label),
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = readableOnBackground(Color.White),
-                    modifier = Modifier.width(80.dp)
                 )
 
-                Row(
-                    modifier = Modifier.weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     listOf(15, 25, 50).forEach { mins ->
                         val isSelected = tempMinutes == mins
@@ -227,12 +253,12 @@ fun TimerPanel(
                             border = BorderStroke(1.dp, Color(0xFF2E7D32)),
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
-                                .weight(1f)
-                                .height(38.dp)
+                                .widthIn(min = 80.dp)
+                                .heightIn(min = 48.dp)
                         ) {
                             Box(
                                 contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
                             ) {
                                 Text(
                                     text = stringResource(R.string.focus_min_label, mins),
@@ -261,16 +287,14 @@ fun TimerPanel(
 
             Button(
                 onClick = {
-                    if (state.currentStatus == "SLEEPING") {
-                        viewModel.toggleSleep()
-                    }
                     viewModel.startStudyTimer(tempMinutes, tempTopic)
                 },
+                enabled = !viewModel.isFocusBusy.value && state.health > 0f && viewModel.focusError.value == null,
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(44.dp)
+                    .heightIn(min = 48.dp)
                     .testTag("timer_start_button")
             ) {
                 Text(
@@ -300,8 +324,8 @@ fun TimerPanel(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            val minText = String.format("%02d", secondsRemaining / 60)
-            val secText = String.format("%02d", secondsRemaining % 60)
+            val minText = String.format(Locale.getDefault(), "%02d", secondsRemaining / 60)
+            val secText = String.format(Locale.getDefault(), "%02d", secondsRemaining % 60)
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
@@ -329,11 +353,12 @@ fun TimerPanel(
             ) {
                 Button(
                     onClick = { viewModel.cancelStudyTimer() },
+                    enabled = !viewModel.isFocusBusy.value,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF5350)),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
                         .weight(1f)
-                        .height(40.dp)
+                        .heightIn(min = 48.dp)
                         .testTag("timer_cancel_button")
                 ) {
                     Text(
@@ -416,7 +441,7 @@ fun LogsPanel(
                                     text = dateStr,
                                     fontFamily = FontFamily.Monospace,
                                     fontSize = 10.sp,
-                                    color = Color.Gray
+                                    color = Color.LightGray
                                 )
                             }
 

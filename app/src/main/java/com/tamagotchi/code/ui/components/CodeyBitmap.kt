@@ -1,6 +1,7 @@
 package com.tamagotchi.code.ui.components
 
 import android.graphics.Bitmap
+import com.tamagotchi.code.data.PetOutfit
 import androidx.core.graphics.createBitmap
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Canvas
@@ -9,7 +10,7 @@ import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 
-/** One snapshot of the same procedural renderer used by [CodeySprite], never persisted. */
+/** One snapshot of the same SVG-derived cat used by [CodeySprite], never persisted. */
 internal fun renderCodeyBitmap(
     level: Int,
     status: String,
@@ -17,10 +18,11 @@ internal fun renderCodeyBitmap(
     width: Int = 360,
     height: Int = 380,
     time: Float = 0f,
-    pixelMode: Boolean = false
+    pixelMode: Boolean = false,
+    outfit: PetOutfit = PetOutfit()
 ): Bitmap {
     require(width > 0 && height > 0)
-    if (pixelMode) return renderCodeyPixelBitmap(level, status, isDead, width, height, time)
+    if (pixelMode) return renderCodeyPixelBitmap(level, status, isDead, width, height, time, outfit)
     val bitmap = createBitmap(width, height)
     CanvasDrawScope().draw(
         density = Density(1f),
@@ -28,7 +30,7 @@ internal fun renderCodeyBitmap(
         canvas = Canvas(bitmap.asImageBitmap()),
         size = Size(width.toFloat(), height.toFloat())
     ) {
-        drawCodeyFrame(PetEvolutionStage.fromLevel(level), codeyMood(status, isDead), time)
+        drawCodeyFrame(PetEvolutionStage.fromLevel(level), codeyMood(status, isDead), time, outfit = outfit)
     }
     return bitmap
 }

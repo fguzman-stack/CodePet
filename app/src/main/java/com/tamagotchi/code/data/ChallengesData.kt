@@ -1394,5 +1394,390 @@ object ChallengesData {
             correctAnswerIndex = 0,
             explanation = "Las funciones asíncronas se definen con 'async def'. Dentro de ellas se usa 'await' para llamar a otras funciones asíncronas."
         ),
+        CodingChallenge(
+            id = 91,
+            language = "Java",
+            type = "TRIVIA",
+            title = "La JVM, esa diva",
+            question = "¿Qué significa que Java compile a bytecode?",
+            options = listOf(
+                "Que el código solo corre en Windows",
+                "Que se genera un formato intermedio ejecutado por la JVM",
+                "Que no necesita compilador",
+                "Que cada clase se convierte en JavaScript"
+            ),
+            correctAnswerIndex = 1,
+            explanation = "Java compila a bytecode, un formato intermedio que la JVM interpreta o compila JIT. Portátil, sí; magia negra corporativa, no tanto."
+        ),
+        CodingChallenge(
+            id = 92,
+            language = "Java",
+            type = "DEBUG",
+            title = "NullPointerException, el clásico familiar",
+            question = "¿Qué línea evita una NullPointerException al comparar strings?",
+            codeSnippet = "String name = null;\nif (name.equals(\"Codey\")) { }",
+            options = listOf(
+                "if (\"Codey\".equals(name)) { }",
+                "if (name == \"Codey\") { }",
+                "if (name.equals(null)) { }",
+                "if (name.toString() == \"Codey\") { }"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Llamar equals sobre el literal evita invocar un método en una referencia nula. Java no te perdona, solo te imprime stack traces larguísimos."
+        ),
+        CodingChallenge(
+            id = 93,
+            language = "Java",
+            type = "TRIVIA",
+            title = "Interfaces modernas",
+            question = "¿Qué permiten los métodos default en una interfaz Java?",
+            options = listOf(
+                "Definir implementación por defecto",
+                "Crear variables mutables públicas",
+                "Evitar implementar la interfaz",
+                "Convertir la interfaz en clase abstracta automáticamente"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Los métodos default permiten agregar comportamiento con implementación a una interfaz sin romper todas las clases existentes. Un parche elegante para una realidad no tan elegante."
+        ),
+        CodingChallenge(
+            id = 94,
+            language = "TypeScript",
+            type = "TRIVIA",
+            title = "JavaScript con casco",
+            question = "¿Qué aporta principalmente TypeScript sobre JavaScript?",
+            options = listOf(
+                "Tipos estáticos opcionales y comprobación en compilación",
+                "Más velocidad automática en el navegador",
+                "Elimina todos los errores de runtime",
+                "Reemplaza HTML y CSS"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "TypeScript agrega tipado estático opcional y herramientas de análisis antes de ejecutar. No arregla tu lógica, pero al menos te juzga temprano."
+        ),
+        CodingChallenge(
+            id = 95,
+            language = "TypeScript",
+            type = "DEBUG",
+            title = "Unión bajo control",
+            question = "¿Cómo se estrecha correctamente este tipo antes de usar toUpperCase()?",
+            codeSnippet = "function print(value: string | number) {\n  return value.toUpperCase()\n}",
+            options = listOf(
+                "if (typeof value === 'string') return value.toUpperCase()",
+                "return value as string.toUpperCase()",
+                "return value.upper()",
+                "if (value is string) return value.toUpperCase()"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "typeof estrecha el tipo dentro del bloque. TypeScript necesita pruebas; confiar en vibes no compila."
+        ),
+        CodingChallenge(
+            id = 96,
+            language = "TypeScript",
+            type = "TRIVIA",
+            title = "Interfaces vs type",
+            question = "¿Qué puede hacer una interface en TypeScript?",
+            options = listOf(
+                "Describir la forma de un objeto",
+                "Ejecutarse en runtime",
+                "Crear una tabla SQL",
+                "Convertir cualquier en never"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Una interface describe contratos estructurales. En runtime desaparece, como tus esperanzas si abusas de any."
+        ),
+        CodingChallenge(
+            id = 97,
+            language = "C#",
+            type = "TRIVIA",
+            title = "LINQ, la navaja elegante",
+            question = "¿Para qué se usa LINQ en C#?",
+            options = listOf(
+                "Consultar y transformar colecciones con sintaxis declarativa",
+                "Compilar proyectos Android",
+                "Crear punteros manuales por defecto",
+                "Reemplazar el CLR"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "LINQ permite consultas sobre colecciones y fuentes de datos con una sintaxis expresiva. SQL se puso traje y aprendió C#."
+        ),
+        CodingChallenge(
+            id = 98,
+            language = "C#",
+            type = "DEBUG",
+            title = "Nullable reference types",
+            question = "Con nullable reference types activado, ¿qué indica string? frente a string??",
+            codeSnippet = "string name = null;",
+            options = listOf(
+                "string no debería ser null; string? sí puede serlo",
+                "string? es más rápido",
+                "string? solo existe para enteros",
+                "No hay diferencia"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "string declara una referencia no nula; string? permite null. El compilador te advierte antes de que producción haga teatro."
+        ),
+        CodingChallenge(
+            id = 99,
+            language = "C#",
+            type = "TRIVIA",
+            title = "async y await",
+            question = "¿Qué devuelve normalmente un método asíncrono sin resultado en C#?",
+            options = listOf("Task", "void", "Thread", "Promise"),
+            correctAnswerIndex = 0,
+            explanation = "Un método async sin resultado normalmente devuelve Task. async void se reserva para eventos; usarlo por gusto invoca al caos."
+        ),
+        CodingChallenge(
+            id = 100,
+            language = "SQL",
+            type = "TRIVIA",
+            title = "JOIN sin drama",
+            question = "¿Qué hace un INNER JOIN?",
+            options = listOf(
+                "Devuelve filas que coinciden en ambas tablas",
+                "Devuelve todas las filas de la izquierda",
+                "Borra duplicados automáticamente",
+                "Crea una tabla nueva siempre"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "INNER JOIN devuelve solo las filas con coincidencia en ambas tablas. Si no hay match, desaparecen como presupuesto después de un sprint mal estimado."
+        ),
+        CodingChallenge(
+            id = 101,
+            language = "SQL",
+            type = "DEBUG",
+            title = "WHERE antes del aplauso",
+            question = "¿Cuál consulta filtra usuarios activos correctamente?",
+            codeSnippet = "Tabla users(id, name, active)",
+            options = listOf(
+                "SELECT * FROM users WHERE active = 1;",
+                "SELECT WHERE active = 1 FROM users;",
+                "GET users ACTIVE 1;",
+                "SELECT * WHERE users.active = 1;"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "La cláusula WHERE filtra filas después del FROM. SQL es flexible, pero no tanto como para leer poesía libre."
+        ),
+        CodingChallenge(
+            id = 102,
+            language = "SQL",
+            type = "TRIVIA",
+            title = "GROUP BY",
+            question = "¿Para qué sirve GROUP BY?",
+            options = listOf(
+                "Agrupar filas para aplicar agregaciones como COUNT o SUM",
+                "Ordenar alfabéticamente",
+                "Crear índices automáticamente",
+                "Evitar transacciones"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "GROUP BY agrupa filas por columnas para calcular agregados. Es el 'trabajo en equipo' que sí produce resultados medibles."
+        ),
+        CodingChallenge(
+            id = 103,
+            language = "C++",
+            type = "TRIVIA",
+            title = "RAII o lágrimas",
+            question = "¿Qué significa RAII en C++?",
+            options = listOf(
+                "Gestionar recursos vinculándolos al ciclo de vida de objetos",
+                "Reiniciar arrays inmediatamente",
+                "Un recolector de basura obligatorio",
+                "Un modo para ignorar destructores"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "RAII liga recursos a constructores/destructores. Si lo haces bien, limpias solo; si lo ignoras, el memory leak te manda saludos."
+        ),
+        CodingChallenge(
+            id = 104,
+            language = "C++",
+            type = "DEBUG",
+            title = "Puntero inteligente",
+            question = "¿Qué tipo evita liberar memoria manualmente para propiedad exclusiva?",
+            options = listOf("std::unique_ptr", "raw_ptr", "malloc_ptr", "std::manual_ptr"),
+            correctAnswerIndex = 0,
+            explanation = "std::unique_ptr representa propiedad exclusiva y libera el recurso automáticamente. Menos delete, menos rituales oscuros."
+        ),
+        CodingChallenge(
+            id = 105,
+            language = "C++",
+            type = "TRIVIA",
+            title = "const correcto",
+            question = "¿Qué promete un método marcado como const?",
+            options = listOf(
+                "No modificar el estado observable del objeto",
+                "Ejecutarse más rápido siempre",
+                "Ser estático",
+                "No lanzar excepciones"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Un método const no debe modificar el estado observable. Es una promesa; C++ asume que eres adulto, mala idea pero poderosa."
+        ),
+        CodingChallenge(
+            id = 106,
+            language = "Dart",
+            type = "TRIVIA",
+            title = "Future no es adivinación",
+            question = "¿Qué representa un Future en Dart?",
+            options = listOf(
+                "Un valor disponible más tarde",
+                "Un widget visual",
+                "Una lista mutable",
+                "Una excepción permanente"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Future representa un resultado asíncrono. No predice el futuro, solo te obliga a esperarlo con await como persona civilizada."
+        ),
+        CodingChallenge(
+            id = 107,
+            language = "Dart",
+            type = "DEBUG",
+            title = "Null safety en Dart",
+            question = "¿Cómo declaras una variable String que puede ser null?",
+            options = listOf("String? name", "nullable String name", "String name?", "String|null name"),
+            correctAnswerIndex = 0,
+            explanation = "Dart usa ? para marcar tipos nullable. Sin ?, el compilador te mira feo antes de que Flutter explote en rojo."
+        ),
+        CodingChallenge(
+            id = 108,
+            language = "Dart",
+            type = "TRIVIA",
+            title = "Widgets en Flutter",
+            question = "En Flutter, ¿qué describe un Widget?",
+            options = listOf(
+                "Una parte inmutable de la interfaz",
+                "Un hilo de ejecución",
+                "Una base de datos local",
+                "Un paquete de Gradle"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Un Widget describe cómo debe verse parte de la UI. Flutter reconstruye árboles; tú reconstruyes tu paciencia."
+        ),
+        CodingChallenge(
+            id = 109,
+            language = "Swift",
+            type = "TRIVIA",
+            title = "Optional unwrap",
+            question = "¿Para qué sirve if let en Swift?",
+            options = listOf(
+                "Desenvolver un Optional de forma segura",
+                "Crear una constante global",
+                "Forzar un crash elegante",
+                "Definir una clase"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "if let desenvuelve un Optional solo si contiene valor. Es Swift diciendo: 'probemos no romper la app, qué concepto'."
+        ),
+        CodingChallenge(
+            id = 110,
+            language = "Swift",
+            type = "DEBUG",
+            title = "Force unwrap sospechoso",
+            question = "¿Qué riesgo tiene usar name! si name es nil?",
+            codeSnippet = "let name: String? = nil\nprint(name!)",
+            options = listOf(
+                "La app crashea en runtime",
+                "Imprime una cadena vacía",
+                "Convierte nil en 'nil'",
+                "No compila nunca"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "El force unwrap con ! crashea si el Optional es nil. Es una ruleta rusa con tipografía elegante."
+        ),
+        CodingChallenge(
+            id = 111,
+            language = "Swift",
+            type = "TRIVIA",
+            title = "Struct por valor",
+            question = "¿Cómo se pasan normalmente las struct en Swift?",
+            options = listOf("Por valor", "Por referencia siempre", "Como punteros crudos", "Solo por JSON"),
+            correctAnswerIndex = 0,
+            explanation = "Las struct son tipos por valor. Copias controladas, menos dramas compartidos, más paz mental."
+        ),
+        CodingChallenge(
+            id = 112,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Goroutines",
+            question = "¿Qué crea la palabra clave go antes de una llamada de función?",
+            options = listOf("Una goroutine concurrente", "Una clase", "Una excepción", "Un paquete"),
+            correctAnswerIndex = 0,
+            explanation = "go inicia una goroutine, una unidad ligera de concurrencia. Ligera, no mágica: aún puedes crear caos muy rápido."
+        ),
+        CodingChallenge(
+            id = 113,
+            language = "Go",
+            type = "DEBUG",
+            title = "Errores explícitos",
+            question = "¿Cuál es el patrón idiomático para manejar errores en Go?",
+            options = listOf(
+                "if err != nil { return err }",
+                "try { } catch { }",
+                "panic siempre",
+                "ignore(err)"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Go prefiere errores explícitos con if err != nil. Repetitivo, sí; sorpresa, casi ninguna. Tu teclado sí sufre."
+        ),
+        CodingChallenge(
+            id = 114,
+            language = "Go",
+            type = "TRIVIA",
+            title = "Defer",
+            question = "¿Cuándo se ejecuta una llamada defer?",
+            options = listOf(
+                "Al salir de la función actual",
+                "Antes de compilar",
+                "Cada segundo",
+                "Solo si hay panic"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "defer programa una llamada para ejecutarse al salir de la función. Perfecto para cerrar recursos y fingir que somos ordenados."
+        ),
+        CodingChallenge(
+            id = 115,
+            language = "Rust",
+            type = "TRIVIA",
+            title = "Ownership",
+            question = "¿Qué problema central resuelve el sistema de ownership de Rust?",
+            options = listOf(
+                "Seguridad de memoria sin garbage collector",
+                "Estilos CSS más rápidos",
+                "Compilar JavaScript",
+                "Eliminar todos los bugs lógicos"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Ownership permite seguridad de memoria sin GC mediante reglas de propiedad y préstamos. El compilador pelea contigo para que producción no tenga que hacerlo."
+        ),
+        CodingChallenge(
+            id = 116,
+            language = "Rust",
+            type = "DEBUG",
+            title = "Borrow checker, tu terapeuta severo",
+            question = "¿Qué evita el borrow checker?",
+            options = listOf(
+                "Referencias inválidas y mutabilidad compartida peligrosa",
+                "Funciones largas",
+                "Variables con nombres feos",
+                "Todos los unwrap()"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "El borrow checker impide accesos inseguros a memoria. Te hace llorar ahora para que no llores en incidentes."
+        ),
+        CodingChallenge(
+            id = 117,
+            language = "Rust",
+            type = "TRIVIA",
+            title = "Result<T, E>",
+            question = "¿Para qué se usa Result<T, E> en Rust?",
+            options = listOf(
+                "Representar éxito o error de forma explícita",
+                "Crear hilos automáticamente",
+                "Guardar configuración global",
+                "Ignorar errores sin avisar"
+            ),
+            correctAnswerIndex = 0,
+            explanation = "Result<T, E> modela operaciones que pueden fallar. Rust no esconde errores bajo la alfombra; te los entrega con formulario y sello."
+        ),
     )
 }

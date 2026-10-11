@@ -25,9 +25,7 @@ class PetCheckWorker(
     @android.annotation.SuppressLint("MissingPermission", "NotificationPermission")
     override suspend fun doWork(): Result {
         val dao = get<AppDatabase>(AppDatabase::class.java).petDao()
-        val petState = dao.getPetStateSuspend() ?: return Result.success()
-
-        if (petState.isDead) return Result.success()
+        val petState = dao.applyPetDecay(System.currentTimeMillis()) ?: return Result.success()
 
         val isHungry = petState.hunger < 20f
         val isSick = petState.health < 20f

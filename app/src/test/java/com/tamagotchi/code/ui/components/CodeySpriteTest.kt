@@ -30,6 +30,28 @@ class CodeySpriteTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
 
     @Test
+    fun liveClockAnimatesTheCatAndCanBeStopped() {
+        val enabled = MutableStateFlow(true)
+        compose.mainClock.autoAdvance = false
+        compose.setContent {
+            val animate by enabled.collectAsState()
+            CodeySprite("HAPPY", level = 10, animationEnabled = animate,
+                modifier = Modifier.size(180.dp).testTag("animated_cat"))
+        }
+        fun snapshot() = compose.runOnIdle { compose.activity.window.decorView.drawToBitmap() }
+        compose.mainClock.advanceTimeBy(32)
+        val initial = snapshot()
+        compose.mainClock.advanceTimeBy(500)
+        assertFalse("The live cat is static", initial.sameAs(snapshot()))
+        compose.runOnIdle { enabled.value = false }
+        compose.mainClock.advanceTimeBy(32)
+        val frozen = snapshot()
+        compose.mainClock.advanceTimeBy(1000)
+        assertTrue("Disabled animation still moves", frozen.sameAs(snapshot()))
+        initial.recycle(); frozen.recycle()
+    }
+
+    @Test
     fun stateFlowUpdatesSpriteWhileReducedMotionKeepsTimeFrozen() {
         val state = MutableStateFlow(PetStateEntity(level = 10, currentStatus = "HAPPY"))
         compose.setContent {

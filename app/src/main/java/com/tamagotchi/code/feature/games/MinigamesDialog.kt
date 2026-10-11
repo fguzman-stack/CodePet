@@ -3,6 +3,8 @@ package com.tamagotchi.code.feature.games
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.ui.theme.ensureContrast
 
 @Composable
 fun MinigamesDialog(
@@ -38,10 +41,11 @@ fun MinigamesDialog(
             border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
             modifier = Modifier
                 .fillMaxWidth()
+                .fillMaxHeight(0.9f)
                 .padding(8.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -54,7 +58,7 @@ fun MinigamesDialog(
                         fontFamily = FontFamily.Monospace,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = ensureContrast(MaterialTheme.colorScheme.primary, Color(0xFF0C100D))
                     )
                     IconButton(
                         onClick = {

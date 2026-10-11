@@ -3,6 +3,8 @@ package com.tamagotchi.code.feature.games
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -21,6 +23,7 @@ import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.viewmodel.HackathonData
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.theme.readableOnBackground
+import com.tamagotchi.code.ui.theme.bestContentOn
 
 @Composable
 fun HackathonScreen(
@@ -32,7 +35,7 @@ fun HackathonScreen(
 
     var quizOpen by remember { mutableStateOf(false) }
     var quizResult by remember { mutableStateOf<Boolean?>(null) }
-    val startTime = remember { System.currentTimeMillis() }
+    var startTime by remember { mutableLongStateOf(0L) }
     val quizOptions = remember {
         listOf(
             R.string.hack_opt_own to true,
@@ -43,7 +46,7 @@ fun HackathonScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -112,7 +115,7 @@ fun HackathonScreen(
                         text = stringResource(R.string.hack_best_time, data.bestTimeMs / 1000),
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp,
-                        color = Color.Gray
+                        color = Color.LightGray
                     )
                 }
                 LinearProgressIndicator(
@@ -127,7 +130,7 @@ fun HackathonScreen(
         if (quizResult != null) {
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = if (quizResult == true) Color(0xFF1B5E20).copy(alpha = 0.35f) else Color(0xFFB71C1C).copy(alpha = 0.3f),
+                color = if (quizResult == true) Color(0xFF1B5E20) else Color(0xFFB71C1C),
                 border = BorderStroke(1.dp, if (quizResult == true) Color(0xFF81C784) else Color(0xFFEF5350)),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -135,7 +138,7 @@ fun HackathonScreen(
                     text = stringResource(if (quizResult == true) R.string.hack_expl_win else R.string.hack_wrong),
                     fontFamily = FontFamily.Monospace,
                     fontSize = 12.sp,
-                    color = readableOnBackground(if (quizResult == true) Color(0xFF81C784) else Color(0xFFEF5350)),
+                    color = Color.White,
                     modifier = Modifier.fillMaxWidth().padding(12.dp),
                     textAlign = TextAlign.Center
                 )
@@ -143,10 +146,16 @@ fun HackathonScreen(
         } else if (data.attempts < 3) {
             if (!quizOpen) {
                 Button(
-                    onClick = { quizOpen = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                    onClick = {
+                        startTime = System.currentTimeMillis()
+                        quizOpen = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF2E7D32),
+                        contentColor = bestContentOn(Color(0xFF2E7D32))
+                    ),
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -210,13 +219,13 @@ fun HackathonScreen(
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Button(
             onClick = onBack,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray, contentColor = Color.White),
             shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth().height(40.dp)
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
         ) {
             Text(stringResource(R.string.game_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }

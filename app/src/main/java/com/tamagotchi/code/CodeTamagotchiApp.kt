@@ -14,6 +14,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.tamagotchi.code.di.appModule
+import com.tamagotchi.code.ui.components.ProgrammerCatRenderer
 import com.tamagotchi.code.util.CommitWorker
 import com.tamagotchi.code.util.PetCheckWorker
 import com.tamagotchi.code.widget.WidgetUpdateWorker
@@ -43,6 +44,7 @@ class CodeTamagotchiApp : Application() {
         schedulePetCheck()
         scheduleWidgetUpdate()
         scheduleDailyCommit()
+        widgetScope.launch { ProgrammerCatRenderer.prewarm() }
         // Observe Room rather than a screen's lifecycle: updates also cover background writes.
         widgetScope.launch {
             val manager = AppWidgetManager.getInstance(this@CodeTamagotchiApp)

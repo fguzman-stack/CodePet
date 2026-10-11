@@ -7,10 +7,11 @@ object StatusCalculator {
         isDead: Boolean = false
     ): String {
         return when {
-            isDead -> "DEAD"
+            isDead -> "SICK"
             isExcited -> "EXCITED"
             isStudying -> "STUDYING"
             isSleeping -> "SLEEPING"
+            health <= 0f -> "SICK"
             health < 20f -> "SICK"
             hunger < 20f -> "HUNGRY"
             energy < 15f -> "SAD"

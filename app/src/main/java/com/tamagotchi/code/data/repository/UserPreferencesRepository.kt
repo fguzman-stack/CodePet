@@ -16,6 +16,11 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore(name = "user_preferences")
 
 class UserPreferencesRepository(private val context: Context) {
+    fun refreshPetWidget() {
+        androidx.work.WorkManager.getInstance(context).enqueue(
+            androidx.work.OneTimeWorkRequestBuilder<com.tamagotchi.code.widget.WidgetUpdateWorker>().build()
+        )
+    }
 
     companion object {
         private val KEY_ONBOARDING = booleanPreferencesKey("has_seen_onboarding")
@@ -65,8 +70,7 @@ class UserPreferencesRepository(private val context: Context) {
 
     val unlockedThemes: Flow<Set<String>> = context.dataStore.data.map { prefs ->
         val stored = prefs[KEY_UNLOCKED_THEMES]
-        val allNames = ThemeRegistry.allThemes.map { it.name }.toSet()
-        if (stored == null || stored.isEmpty()) allNames else stored.map(ThemeRegistry::canonicalName).toSet()
+        if (stored == null || stored.isEmpty()) setOf("Default") else stored.map(ThemeRegistry::canonicalName).toSet()
     }
 
     val selectedTopics: Flow<Set<String>> = context.dataStore.data.map { prefs ->
@@ -131,7 +135,7 @@ class UserPreferencesRepository(private val context: Context) {
 
     suspend fun addUnlockedTheme(theme: String) {
         context.dataStore.edit { prefs ->
-            val current = prefs[KEY_UNLOCKED_THEMES] ?: ThemeRegistry.allThemes.map { it.name }.toSet()
+            val current = prefs[KEY_UNLOCKED_THEMES] ?: setOf("Default")
             prefs[KEY_UNLOCKED_THEMES] = (current + theme).map(ThemeRegistry::canonicalName).toSet()
         }
     }

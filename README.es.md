@@ -64,9 +64,9 @@
 <td width="50%" valign="top">
 
 ### 🐾 Mascota virtual
-- Estados emocionales dinámicos (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED, DEAD)
-- Salud, hambre y energía en tiempo real con decaimiento progresivo
-- ☠️ **Sistema de muerte y revivir** — si la salud llega a 0, Codey aparece bajo una lápida y puedes revivirlo con Bytes (o gratis con stats bajos)
+- Estados emocionales dinámicos (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED)
+- Salud, saciedad y energía en tiempo real con deuda progresiva de cuidado
+- 🩺 **Estado crítico recuperable** — si la salud llega a 0, Codey entra en pantallazo azul dramático sin perder progreso
 - Animaciones según el estado (respiración, temblor, pulso de hambre, parpadeo)
 - Sistema de nivel, XP y Bytes (moneda virtual)
 - Racha diaria de estudio y recompensas offline
@@ -78,12 +78,12 @@
 <td width="50%" valign="top">
 
 ### 💻 Aprende programando
-- Retos de **Kotlin**, **JavaScript**, **PHP** y **Python**
+- Retos de **Kotlin**, **JavaScript**, **Python**, **PHP**, **Java**, **TypeScript**, **C#**, **SQL**, **C++**, **Dart**, **Swift**, **Go** y **Rust**
 - Preguntas tipo trivia y debugging
 - Retos especiales de algoritmos que desbloquean temas visuales
 - Feedback educativo en cada respuesta con explicaciones de Codey
 - Recompensas por progreso y precisión
-- **96 desafíos de programación integrados** (90 normales + 6 especiales)
+- **123 desafíos de programación integrados** (117 normales + 6 especiales)
 
 </td>
 </tr>
@@ -95,7 +95,7 @@
 - Bitácora persistente de estudio
 - XP y Bytes por cada minuto
 - Bonificación para sesiones de 25+ minutos (+50 Bytes, +75 XP)
-- 8 temas de estudio: Kotlin, JavaScript, PHP, Python, SQL, Clean Code, Git, Estructuras de Datos
+- 16 temas de estudio: 13 lenguajes de programación más Clean Code, Git y Estructuras de Datos
 - Reanudación automática de sesiones activas al abrir la app
 
 </td>
@@ -120,7 +120,9 @@
 - 🌳 **Skill Tree** — Árbol de habilidades con 3 ramas y 9 nodos desbloqueables
 - 🎫 **Season Pass** — Pase de batalla de 30 días con 20 niveles
 - 📋 **Weekly Missions** — 3 misiones rotativas cada lunes con recompensas
-- 📱 **Widget para pantalla de inicio** — mira a Codey con barras de vida, energía y hambre (compacto 2×2, redimensionable)
+- 📱 **Widget para pantalla de inicio** — mira a Codey con barras de vida, energía y saciedad (compacto 2×2, redimensionable)
+- 🎨 **Temas visuales bloqueados** — los temas premium empiezan cerrados y se desbloquean con retos dentro de la app
+- 🧢 **Vestuario de producción** — solo puedes equipar objetos reales adquiridos; se quitó el probador de pruebas
 
 ---
 
@@ -191,7 +193,7 @@ El proyecto usa Gradle 9.x con Gradle Wrapper. **Requiere:** JDK 17+ y Android S
 | 🍽️ `HUNGRY` | Hambre menor a 20% | Pulso de alerta |
 | 😢 `SAD` | Energía menor a 15% | Baja actividad |
 | 😆 `EXCITED` | Felicidad máxima | Rebote rápido |
-| ☠️ `DEAD` | Salud llega a 0 | Robot tumbado junto a una lápida (dibujado por código, sin animación), diálogo de revivir |
+| 🩺 `SICK` | Salud llega a 0 | Modo crítico con pantallazo azul; los cuidados estabilizan a Codey sin perder progreso |
 
 > El estado se resuelve como **cadena de prioridad** en `StatusCalculator.determineStatus()` — mira las [mecánicas](#-mecánicas-de-juego-en-código-real).
 

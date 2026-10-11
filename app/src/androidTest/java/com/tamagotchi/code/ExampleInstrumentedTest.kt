@@ -11,6 +11,6 @@ class ExampleInstrumentedTest {
   @Test
   fun useAppContext() {
     val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-    assertEquals("com.tamagotchi.code", appContext.packageName)
+    assertEquals(BuildConfig.APPLICATION_ID, appContext.packageName)
   }
 }

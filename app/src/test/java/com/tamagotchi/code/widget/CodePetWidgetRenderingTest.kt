@@ -10,6 +10,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.tamagotchi.code.R
 import com.tamagotchi.code.TestApplication
 import com.tamagotchi.code.data.database.PetStateEntity
+import com.tamagotchi.code.data.PetOutfit
 import com.tamagotchi.code.ui.components.renderCodeyBitmap
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -23,6 +24,19 @@ import org.robolectric.annotation.GraphicsMode
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(application = TestApplication::class, sdk = [35])
 class CodePetWidgetRenderingTest {
+    @Test
+    fun wardrobeAndRetroModeAreCarriedIntoRemoteViews() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val pet = PetStateEntity(level = 50)
+        val outfit = PetOutfit("kotlin_beret", "js_jacket")
+        for (pixel in listOf(false, true)) {
+            val root = CodePetWidgetProvider.createRemoteViews(context, pet, pixel, outfit)
+                .apply(context, FrameLayout(context))
+            val bitmap = (root.findViewById<ImageView>(R.id.widget_pet_image).drawable as BitmapDrawable).bitmap
+            assertTrue(bitmap.sameAs(renderCodeyBitmap(50, "HAPPY", pixelMode = pixel, outfit = outfit)))
+        }
+    }
+
     @Test
     fun remoteViewsUseProceduralBitmapForInitialAliveAndDeadStates() {
         val context = ApplicationProvider.getApplicationContext<Context>()

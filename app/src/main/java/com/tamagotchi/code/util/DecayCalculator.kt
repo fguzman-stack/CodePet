@@ -3,8 +3,16 @@ package com.tamagotchi.code.util
 import com.tamagotchi.code.data.database.PetStateEntity
 
 object DecayCalculator {
-    fun applyDecay(state: PetStateEntity): PetStateEntity {
-        val now = System.currentTimeMillis()
+    fun applyDecay(state: PetStateEntity, now: Long = System.currentTimeMillis()): PetStateEntity {
+        if (state.isDead) {
+            return state.copy(
+                health = state.health.coerceAtLeast(1f),
+                currentStatus = "SICK",
+                isDead = false,
+                lastUpdated = now
+            )
+        }
+
         val elapsedMs = now - state.lastUpdated
         if (elapsedMs <= 0) return state
 
@@ -38,7 +46,11 @@ object DecayCalculator {
             newEnergy = (newEnergy - (hours * 2f)).coerceIn(0f, 100f)
         }
 
-        val baseHealthDecay = hours * 1.5f
+        val wellnessDebt = listOf(
+            (20f - newHunger).coerceAtLeast(0f),
+            (20f - newEnergy).coerceAtLeast(0f)
+        ).sum()
+        val baseHealthDecay = if (wellnessDebt > 0f) hours * (0.35f + wellnessDebt / 20f) else 0f
         newHealth = (newHealth - baseHealthDecay).coerceIn(0f, 100f)
 
         if (newHunger <= 0f) {
@@ -51,11 +63,11 @@ object DecayCalculator {
             newHealth = (newHealth - (hours * 1.5f)).coerceIn(0f, 100f)
         }
 
-        if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
+        if (newHealth <= 0f) {
+            newStatus = "SICK"
+        } else if (newStatus != "SLEEPING" && newStatus != "STUDYING") {
             newStatus = StatusCalculator.determineStatus(newHealth, newHunger, newEnergy, false, false)
         }
-
-        val isDead = newHealth <= 0f
 
         return state.copy(
             hunger = newHunger,
@@ -63,8 +75,8 @@ object DecayCalculator {
             health = newHealth,
             streak = newStreak,
             lastUpdated = now,
-            currentStatus = if (isDead) "DEAD" else newStatus,
-            isDead = isDead
+            currentStatus = newStatus,
+            isDead = false
         )
     }
 }

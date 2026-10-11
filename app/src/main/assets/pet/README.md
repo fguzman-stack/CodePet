@@ -1,38 +1,38 @@
-# 🐾 Code Tamagotchi Pet Assets
+# Mascota de CodePet
 
-Este directorio ya **no contiene imágenes de la mascota**. Codey ahora se dibuja 100% por código
-(Jetpack Compose `Canvas`) desde `app/src/main/java/com/tamagotchi/code/ui/components/CodeySprite.kt`,
-parametrizado por la etapa de evolución (`PetEvolutionStage`: Egg, Child, Adult, Veteran, Legendary)
-derivada del nivel y el ánimo (`currentStatus` + `isDead` de `PetStateEntity`, en `PetViewModel`).
-El widget de pantalla de inicio reutiliza el mismo renderizador vía
-`CodeyBitmap.kt` (`RemoteViews.setImageViewBitmap`), por lo que tampoco necesita PNG.
+La fuente del dibujo es `gato-programador.svg`, en la raíz del proyecto. Incluye
+cinco gatos; sus tarjetas, flechas y rótulos solo sirven como referencia y no se
+dibujan en la aplicación.
 
----
+## Actualizar el arte
 
-## 🎭 Matriz de estados (referencia de diseño)
+1. Editar el SVG original conservando los cinco grupos de mascotas.
+2. Ejecutar desde la raíz: `python tools/generate_cat_art.py`.
+3. El generador conserva los trazos, degradados y accesorios en
+   `ProgrammerCatArt.kt`, y deriva los iconos vectoriales de la cabeza del gatito.
+4. No editar a mano el archivo de arte generado ni agregar PNG de mascotas.
 
-La apariencia de cada ánimo se define en el código, no en archivos de imagen:
+## Renderizado y animación
 
-| Estado | Acento | Señal visual |
-| :--- | :--- | :--- |
-| **HAPPY** | `#4DE0C4` | Ojos y boca en arco, rebote suave. |
-| **SLEEPING** | `#4D8FD1` | Ojos y boca como líneas, brillo del núcleo bajo. |
-| **STUDYING** | `#52E07A` | Ojos `<` concentrados. |
-| **SICK** | `#EF5D5D` | Ojos `X`, boca ondulada, gota verde flotando. |
-| **HUNGRY** | `#F0B84C` | Ojos circulares, anillo pulsante alrededor del cuerpo. |
-| **SAD** | `#4D7EA8` | Ojos caídos, lagrimita azul, postura inclinada. |
-| **EXCITED** | `#F4C94D` | Ojos estrella, chispas orbitando, rebote rápido. |
-| **DEAD** | `#3C454D` | Núcleo apagado, ojos `X` grises, cuerpo tumbado junto a una lápida, sin animación. |
+- `CatSvgRenderer.kt` interpreta los elementos del SVG y guarda las capas como
+  `Picture` de Android. El SVG se procesa una sola vez, no en cada fotograma.
+- `ProgrammerCatRenderer.kt` coloca las capas, adapta ojos y boca al estado, anima
+  la cola y los accesorios, y dibuja la ropa sobre el torso detrás de la cabeza.
+- `CodeySprite.kt` conecta los eventos de aprendizaje, caricias y evolución. Con
+  movimiento reducido se usa una pose estática; la muerte siempre está congelada.
+- `CodeyBitmap.kt` usa el mismo renderizador para el widget.
+- `CodeyPixelArt.kt` aplica una paleta del gato y escala por vecino más próximo.
+  Su caché acotada conserva las poses discretas y el efecto de evolución.
 
----
+Las cinco etapas se desbloquean en los niveles de experiencia 1, 5, 10, 25 y 50.
 
-## ⚙️ Guía de Contribución
+## Verificación
 
-1. **No agregar PNG de la mascota**: cualquier cambio visual de Codey se hace editando
-   `CodeySprite.kt` (diseño) y `CodeyRendererTest.kt` (verificación de las 40 combinaciones
-   etapa/ánimo, que no se recorte y que DEAD esté congelado).
-2. Esta carpeta queda reservada únicamente para assets experimentales o de referencia; las
-   subcarpetas `static/` y `animations/` se conservan vacías con `.gitkeep` por compatibilidad
-   histórica.
-3. Las capturas de referencia del renderizado procedural viven en
-   `app/src/test/screenshots/codey.png` (generada por `CodeyRendererTest`).
+`ProgrammerCatArtworkTest` verifica la pose original, los umbrales, el parpadeo,
+los límites de dibujo y la muerte estática en ambos modos. Las galerías para
+revisión se generan en `app/build/reports/cat/normal.png` y `retro.png`.
+`WardrobeRendererTest` revisa todas las prendas y genera galerías en
+`app/build/reports/wardrobe/`.
+
+Esta carpeta queda como referencia histórica; no se cargan imágenes de mascota
+desde ella.

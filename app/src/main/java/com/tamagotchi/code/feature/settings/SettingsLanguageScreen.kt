@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tamagotchi.code.R
 import com.tamagotchi.code.ui.components.TopicIcon
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
+import com.tamagotchi.code.util.ProgrammingLanguages
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -30,7 +31,7 @@ fun SettingsLanguageScreen(
     
     val allTopics = com.tamagotchi.code.util.TopicKey.ALL.map { it to com.tamagotchi.code.util.TopicKey.displayRes(it) }
     
-    val allLanguages = listOf("Kotlin", "JavaScript", "Python", "PHP")
+    val allLanguages = ProgrammingLanguages.ALL
 
     Scaffold(
         containerColor = Color.Transparent,

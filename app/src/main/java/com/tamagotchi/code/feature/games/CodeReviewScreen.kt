@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CheckCircle
@@ -27,6 +29,7 @@ import com.tamagotchi.code.data.CodeReviewSnippet
 import com.tamagotchi.code.data.localized
 import com.tamagotchi.code.ui.viewmodel.PetViewModel
 import com.tamagotchi.code.ui.theme.readableOnBackground
+import com.tamagotchi.code.ui.theme.bestContentOn
 
 @Composable
 fun CodeReviewScreen(
@@ -41,13 +44,14 @@ fun CodeReviewScreen(
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }
 
     if (showResults) {
-        CodeReviewResult(score = score, total = 5, onBack = onBack, viewModel = viewModel)
+        CodeReviewResult(score = score, total = rounds.size, onBack = onBack, viewModel = viewModel)
     } else {
         val snippet = rounds[currentRound]
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -63,8 +67,7 @@ fun CodeReviewScreen(
 
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                    .fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 color = Color(0xFF151D16),
                 border = BorderStroke(1.dp, Color(0xFF2E7D32))
@@ -82,9 +85,9 @@ fun CodeReviewScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             if (selectedAnswer == null) {
-                Row(
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Button(
                         onClick = {
@@ -92,8 +95,11 @@ fun CodeReviewScreen(
                             isCorrect = !snippet.hasBug
                             if (isCorrect == true) score++
                         },
-                        modifier = Modifier.weight(1f).height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF2E7D32),
+                            contentColor = bestContentOn(Color(0xFF2E7D32))
+                        ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Icon(Icons.Default.CheckCircle, contentDescription = null)
@@ -107,8 +113,10 @@ fun CodeReviewScreen(
                             isCorrect = snippet.hasBug
                             if (isCorrect == true) score++
                         },
-                        modifier = Modifier.weight(1f).height(56.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB71C1C)),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFB71C1C), contentColor = Color.White
+                        ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Icon(Icons.Default.BugReport, contentDescription = null)
@@ -120,7 +128,7 @@ fun CodeReviewScreen(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
-                    color = if (isCorrect == true) Color(0xFF1B5E20).copy(alpha = 0.3f) else Color(0xFFB71C1C).copy(alpha = 0.3f),
+                    color = if (isCorrect == true) Color(0xFF1B5E20) else Color(0xFFB71C1C),
                     border = BorderStroke(1.dp, if (isCorrect == true) Color(0xFF81C784) else Color(0xFFEF5350))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -128,7 +136,7 @@ fun CodeReviewScreen(
                             text = if (isCorrect == true) stringResource(R.string.review_hit) else stringResource(R.string.review_miss),
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace,
-                            color = if (isCorrect == true) Color(0xFF81C784) else Color(0xFFEF5350)
+                            color = Color.White
                         )
                         Text(
                             text = snippet.explanation,
@@ -139,7 +147,7 @@ fun CodeReviewScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(
                             onClick = {
-                                if (currentRound < 4) {
+                                if (currentRound < rounds.lastIndex) {
                                     currentRound++
                                     selectedAnswer = null
                                     isCorrect = null
@@ -148,7 +156,7 @@ fun CodeReviewScreen(
                                 }
                             },
                             modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray, contentColor = Color.White)
                         ) {
                             Text(stringResource(R.string.review_continue), fontFamily = FontFamily.Monospace)
                         }
@@ -174,7 +182,7 @@ fun CodeReviewResult(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -212,8 +220,10 @@ fun CodeReviewResult(
         Spacer(modifier = Modifier.height(40.dp))
         Button(
             onClick = onBack,
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
+            modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2E7D32), contentColor = bestContentOn(Color(0xFF2E7D32))
+            )
         ) {
             Text(stringResource(R.string.review_back), fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
         }

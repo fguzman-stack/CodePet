@@ -37,7 +37,7 @@ class CodeyRendererTest {
     }
 
     @Test
-    fun deathOverridesStatusAndFreezesEveryStageIncludingAntennasAndEgg() {
+    fun deathOverridesStatusAndFreezesEveryCatStage() {
         for (level in levels) {
             val dead = renderCodeyBitmap(level, "DEAD", time = 0f)
             assertTrue(dead.sameAs(renderCodeyBitmap(level, "DEAD", time = 53f)))
@@ -46,7 +46,7 @@ class CodeyRendererTest {
     }
 
     @Test
-    fun stageMoodAndTimeChangeTheRenderedRobot() {
+    fun stageMoodAndTimeChangeTheRenderedCat() {
         val adult = renderCodeyBitmap(10, "HAPPY")
         assertFalse(adult.sameAs(renderCodeyBitmap(5, "HAPPY")))
         assertFalse(adult.sameAs(renderCodeyBitmap(10, "SICK")))
@@ -61,7 +61,7 @@ class CodeyRendererTest {
         val canvas = Canvas(gallery)
         canvas.drawColor(Color.rgb(27, 32, 43))
         val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 12f }
-        val stages = listOf("Egg", "Child", "Adult", "Veteran", "Legendary")
+        val stages = listOf("Kitten", "Junior", "Developer", "Senior", "Legendary")
         levels.forEachIndexed { row, level ->
             PetMood.entries.forEachIndexed { column, mood ->
                 val left = (column * cellWidth).toFloat()

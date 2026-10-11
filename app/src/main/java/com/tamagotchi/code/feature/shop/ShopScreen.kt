@@ -47,6 +47,8 @@ fun ShopScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         ShopPanel(viewModel = viewModel, state = state)
+        Spacer(Modifier.height(24.dp))
+        WardrobePanel(viewModel, state)
     }
 }
 

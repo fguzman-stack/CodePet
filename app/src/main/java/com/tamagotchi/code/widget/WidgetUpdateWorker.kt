@@ -22,6 +22,7 @@ class WidgetUpdateWorker(
             get<UserPreferencesRepository>(UserPreferencesRepository::class.java).currentTheme.firstOrNull()
         }.getOrNull()
         val pixelMode = themeName == "Retro Pixel"
+        val outfit = com.tamagotchi.code.data.PetOutfit.from(dao.getOwnedItemsSnapshot())
 
         val appWidgetManager = AppWidgetManager.getInstance(applicationContext)
         val widgetIds = appWidgetManager.getAppWidgetIds(
@@ -33,7 +34,9 @@ class WidgetUpdateWorker(
                 applicationContext,
                 appWidgetManager,
                 widgetId,
-                petState
+                petState,
+                pixelMode,
+                outfit
             )
         }
 

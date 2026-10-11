@@ -15,7 +15,8 @@ object RewardCalculator {
     )
 
     fun calculateStudyReward(
-        minutes: Int, currentXp: Int, currentLevel: Int, currentStreak: Int, lastStudyDate: Long
+        minutes: Int, currentXp: Int, currentLevel: Int, currentStreak: Int, lastStudyDate: Long,
+        now: Long = System.currentTimeMillis()
     ): StudyReward {
         val baseBytes = minutes * 2
         val baseXP = minutes * 3
@@ -26,7 +27,6 @@ object RewardCalculator {
         val totalXp = baseXP + bonusXP
         val energyCost = (minutes * 0.5f).coerceAtMost(30f)
 
-        val now = System.currentTimeMillis()
         var newStreak = currentStreak
 
         if (lastStudyDate == 0L) {

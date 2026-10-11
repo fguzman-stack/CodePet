@@ -12,6 +12,7 @@ import com.tamagotchi.code.MainActivity
 import com.tamagotchi.code.R
 import com.tamagotchi.code.data.database.PetStateEntity
 import com.tamagotchi.code.ui.components.renderCodeyBitmap
+import com.tamagotchi.code.data.PetOutfit
 
 class CodePetWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -30,15 +31,17 @@ class CodePetWidgetProvider : AppWidgetProvider() {
             appWidgetManager: AppWidgetManager,
             appWidgetId: Int,
             petState: PetStateEntity? = null,
-            pixelMode: Boolean = false
+            pixelMode: Boolean = false,
+            outfit: PetOutfit = PetOutfit()
         ) {
-            appWidgetManager.updateAppWidget(appWidgetId, createRemoteViews(context, petState, pixelMode))
+            appWidgetManager.updateAppWidget(appWidgetId, createRemoteViews(context, petState, pixelMode, outfit))
         }
 
         internal fun createRemoteViews(
             context: Context,
             petState: PetStateEntity?,
-            pixelMode: Boolean = false
+            pixelMode: Boolean = false,
+            outfit: PetOutfit = PetOutfit()
         ): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.code_pet_widget)
 
@@ -70,7 +73,8 @@ class CodePetWidgetProvider : AppWidgetProvider() {
                     petState?.level ?: 1,
                     effectiveStatus ?: "HAPPY",
                     petState?.isDead ?: false,
-                    pixelMode = pixelMode
+                    pixelMode = pixelMode,
+                    outfit = outfit
                 )
             )
 

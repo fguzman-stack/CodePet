@@ -63,9 +63,9 @@
 <td width="50%" valign="top">
 
 ### 🐾 Virtual pet
-- Dynamic emotional states (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED, DEAD)
-- Health, hunger and energy in real time with progressive decay
-- ☠️ **Death & revival system** — if health hits 0, Codey shows up under a tombstone and you can revive him with Bytes
+- Dynamic emotional states (HAPPY, SLEEPING, STUDYING, SICK, HUNGRY, SAD, EXCITED)
+- Health, satiety and energy in real time with progressive care debt
+- 🩺 **Recoverable critical state** — if health hits 0, Codey blue-screens dramatically but progress is preserved
 - State-based animations (breathing, trembling, hunger pulse, blinking)
 - 🖌️ Codey is drawn **100% procedurally** with Compose Canvas — no sprite PNGs; the home-screen widget reuses the same renderer
 - Level, XP and Bytes (virtual currency) system
@@ -78,12 +78,12 @@
 <td width="50%" valign="top">
 
 ### 💻 Learn by coding
-- Challenges in **Kotlin**, **JavaScript**, **PHP** and **Python**
+- Challenges in **Kotlin**, **JavaScript**, **Python**, **PHP**, **Java**, **TypeScript**, **C#**, **SQL**, **C++**, **Dart**, **Swift**, **Go** and **Rust**
 - Trivia and debugging questions
 - Special algorithm challenges that unlock visual themes
 - Educational feedback on every answer, in Codey's voice
 - Progress and accuracy rewards
-- **96 built-in coding challenges** (90 regular + 6 special)
+- **123 built-in coding challenges** (117 regular + 6 special)
 
 </td>
 </tr>
@@ -95,7 +95,7 @@
 - Persistent study log
 - XP and Bytes per minute
 - Bonus for 25+ minute sessions (+50 Bytes, +75 XP)
-- 8 study topics: Kotlin, JavaScript, PHP, Python, SQL, Clean Code, Git, Data Structures
+- 16 study topics: 13 programming languages plus Clean Code, Git and Data Structures
 - Active sessions auto-resume when opening the app
 
 </td>
@@ -121,7 +121,9 @@
 - 🏆 **Daily rewards** streak & offline rewards
 - 🎫 **Season Pass** — 30-day battle pass with 20 levels
 - 📋 **Weekly Missions** — 3 rotating missions every Monday with rewards
-- 📱 **Home-screen widget** — watch Codey with health, energy and hunger meters (compact 2×2, resizable)
+- 📱 **Home-screen widget** — watch Codey with health, energy and satiety meters (compact 2×2, resizable)
+- 🎨 **Locked visual themes** — premium themes start locked and are unlocked from in-app challenges
+- 🧢 **Production wardrobe** — equip real owned items only; the old fitting-room test controls are gone
 
 ---
 
@@ -193,7 +195,7 @@ The project uses Gradle 9.x with the Gradle Wrapper. **Requires:** JDK 17+, Andr
 | 🍽️ `HUNGRY` | Hunger below 20% | Alert pulse |
 | 😢 `SAD` | Energy below 15% | Low activity |
 | 😆 `EXCITED` | Max happiness | Fast bouncing |
-| ☠️ `DEAD` | Health hits 0 | Static tombstone, revival dialog |
+| 🩺 `SICK` | Health hits 0 | Critical blue-screen mode; care stabilizes Codey without progress loss |
 
 > Status is a **priority chain** resolved in `StatusCalculator.determineStatus()` — see [game mechanics](#-game-mechanics-in-real-code).
 

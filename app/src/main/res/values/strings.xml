@@ -1,4 +1,39 @@
 <resources>
+    <string name="cosmetic_beanie">Gorro tejido</string>
+    <string name="cosmetic_top_hat">Sombrero de copa</string>
+    <string name="cosmetic_scarf">Bufanda de frambuesa</string>
+    <string name="cosmetic_dev_jacket">Chaqueta de desarrollador</string>
+    <string name="cosmetic_kotlin_beret">Boina Kotlin</string>
+    <string name="cosmetic_js_jacket">Chaqueta JavaScript</string>
+    <string name="cosmetic_php_robe">Túnica PHP</string>
+    <string name="cosmetic_python_hood">Capucha Python</string>
+    <string name="wardrobe_title">Vestuario de Codey</string>
+    <string name="wardrobe_desc">Compra y equipa un sombrero y una prenda. Nada de probador clandestino: si lo quieres ver, toca ganarlo o comprarlo.</string>
+    <string name="wardrobe_equipped_preview">Tu vestuario actual</string>
+    <string name="wardrobe_try_preview">Probador · vista previa</string>
+    <string name="wardrobe_choose_phase">Elegir fase de mascota</string>
+    <string name="wardrobe_real_phase">Fase actual</string>
+    <string name="wardrobe_egg">Gatito</string>
+    <string name="wardrobe_child">Niño</string>
+    <string name="wardrobe_adult">Adulto</string>
+    <string name="wardrobe_veteran">Veterano</string>
+    <string name="wardrobe_legendary">Legendario</string>
+    <string name="wardrobe_phase_label">Fase: %1$s</string>
+    <string name="wardrobe_pixel">Probar Retro Pixel</string>
+    <string name="wardrobe_preview_only">El probador no cambia el nivel ni el tema de tu mascota.</string>
+    <string name="wardrobe_return_equipped">Volver al vestuario equipado</string>
+    <string name="wardrobe_shop_title">Colección · compra con bytes</string>
+    <string name="wardrobe_mastery_title">Trofeos exclusivos de dominio</string>
+    <string name="wardrobe_hat">Sombrero</string>
+    <string name="wardrobe_clothing">Prenda</string>
+    <string name="wardrobe_equipped">Equipado</string>
+    <string name="wardrobe_mastery_requirement">Domina %1$s: %2$d / %3$d retos distintos resueltos. Recompensa gratuita; no se puede comprar.</string>
+    <string name="wardrobe_mastery_unlocked">¡Dominio conseguido! Recompensa desbloqueada.</string>
+    <string name="wardrobe_try">Probar</string>
+    <string name="wardrobe_remove">Quitar</string>
+    <string name="wardrobe_equip">Equipar</string>
+    <string name="wardrobe_locked">Bloqueado</string>
+    <string name="wardrobe_buy">Comprar · %1$d B</string>
     <string name="theme_japanese_name">Japonés</string>
     <string name="theme_japanese_description">Luna sobre el torii. Faroles cálidos en una noche índigo.</string>
     <string name="app_name">Code Tamagotchi</string>
@@ -146,12 +181,12 @@
     <string name="home_daily_available">RECOMPENSAS DIARIAS (¡DISPONIBLE!)</string>
     <string name="home_offline_title">Sesión completada mientras estabas fuera</string>
     <string name="home_offline_text">¡Felicidades! Has ganado %1$d XP y %2$d Bytes por tu sesión de Focus.</string>
-    <string name="home_death_title">%1$s ha muerto</string>
-    <string name="home_death_desc">Tu mascota ha fallecido por falta de cuidados.\n\nPero no todo está perdido... puedes revivirla:</string>
-    <string name="home_revive_bytes_desc">Revivir por %1$d Bytes</string>
-    <string name="home_revive_free_desc">Revivir gratis (stats bajos)</string>
-    <string name="home_revive_bytes_button">Revivir (%1$d Bytes)</string>
-    <string name="home_revive_free">Revivir gratis</string>
+    <string name="home_death_title">%1$s entró en modo pantallazo azul</string>
+    <string name="home_death_desc">Tu mascota está en estado crítico, no muerta. Drama sí, pérdida de progreso no.\n\nPuedes estabilizarla así:</string>
+    <string name="home_revive_bytes_desc">Recuperación premium por %1$d Bytes</string>
+    <string name="home_revive_free_desc">Recuperación gratis (stats humildes, ego intacto)</string>
+    <string name="home_revive_bytes_button">Estabilizar (%1$d Bytes)</string>
+    <string name="home_revive_free">Estabilizar gratis</string>
     <string name="home_commit_title">Codey hizo commit</string>
     <string name="home_commit_summary">Resumen de ayer:</string>
     <string name="home_commit_merge">Fusionar (Aceptar)</string>
@@ -177,7 +212,13 @@
     <string name="focus_logs_entry">Estudio: %1$s</string>
     <string name="focus_logs_min">+%1$d Min</string>
     <string name="focus_note_title">[!] NOTA DEL COMPILADOR DE VIDA:</string>
-    <string name="focus_note_body">Si dejas de registrar sesiones por más de 36 horas, tu racha de estudio se reiniciará a 0, y tu mascota perderá salud por falta de mantenimiento.</string>
+    <string name="focus_note_body">Los corazones de Codey se agotan con el tiempo: juega, aprende y cuídalo para mantenerlo vivo. Sin estudiar durante más de 48 horas, tu racha vuelve a 0; después de 72 horas, la salud se agota más rápido.</string>
+    <string name="focus_storage_error">No pudimos actualizar la sesión. Reintenta para recuperar su estado guardado.</string>
+    <string name="focus_pet_unavailable">Codey está demasiado crítico para estudiar. Vuelve a Inicio y estabiliza ese bug con patas.</string>
+    <string name="focus_retry">Recuperar sesión</string>
+    <string name="focus_completed_title">¡Sesión completada!</string>
+    <string name="focus_completed_body">Has completado %1$d minutos de enfoque. Ganaste %2$d XP y %3$d Bytes. La energía consumida y la recompensa ya están guardadas.</string>
+    <string name="focus_continue">Continuar</string>
 
     <!-- Learn Screen -->
     <string name="learn_tab_quiz">Retos Normales</string>
@@ -583,7 +624,7 @@
     <string name="cd_message">Mensaje</string>
     <string name="viewport_xp_progress">XP: %1$d / %2$d</string>
     <string name="meter_health">Vida</string>
-    <string name="meter_food">Alimento</string>
+    <string name="meter_food">Saciedad</string>
     <string name="meter_energy">Energía</string>
     <string name="cd_sleep_toggle">Dormir o despertar</string>
     <string name="viewport_wake">Despertar</string>
@@ -664,10 +705,10 @@
         <item>¡Todo compila a la primera! ¡Esto es magia negra!</item>
     </string-array>
     <string-array name="quote_dead">
-        <item>R.I.P. Fue procesado por un segfault…</item>
-        <item>Aquí yace una mascota. Su código quedó sin mergear.</item>
-        <item>404: vida no encontrada. Revídame para continuar.</item>
-        <item>from grave import revive  # ¿todavía estás a tiempo?</item>
+        <item>No morí. Solo hice crash controlado. Más o menos.</item>
+        <item>Estado crítico: mi código está pidiendo vacaciones pagadas.</item>
+        <item>404: energía no encontrada. ¿Un cuidado rápido o seguimos fingiendo?</item>
+        <item>from panic import stabilize  # sí, era urgente</item>
     </string-array>
     <string-array name="quote_happy">
         <item>¡Compilar sin advertencias es mi pasión!</item>
@@ -680,12 +721,12 @@
     </string-array>
 
     <!-- Notifications -->
-    <string name="notif_title_dead">%1$s ha muerto</string>
-    <string name="notif_title_dying">%1$s está al borde de la muerte</string>
+    <string name="notif_title_dead">%1$s está crítico</string>
+    <string name="notif_title_dying">%1$s está al borde del pantallazo azul</string>
     <string name="notif_title_starving">%1$s se muere de hambre</string>
     <string name="notif_title_exhausted">%1$s está en las últimas</string>
     <string name="notif_title_needs_you">%1$s te necesita</string>
-    <string name="notif_reason_dead">Me he ido al otro lado del compilador… ¿me rescatas?</string>
+    <string name="notif_reason_dead">No perdí tu progreso, pero mi dignidad está en beta. ¿Me estabilizas?</string>
     <string name="notif_reason_health_pain">Me duele hasta el último bit… ¿puedes revisarme? (Salud: %1$d%%)</string>
     <string name="notif_reason_health_low">Noto que el Blue Screen of Death se acerca… (Salud: %1$d%%)</string>
     <string name="notif_reason_hunger_extreme">Llevo horas sin comer, ¿crees que soy un microservicio? (Hambre: %1$d%%)</string>
@@ -742,7 +783,7 @@
     <string name="commit_normal_3">style: sin cambios aparentes</string>
 
     <!-- Home screen widget -->
-    <string name="widget_description">Mira a Codey: vida, energía y hambre de un vistazo.</string>
+    <string name="widget_description">Mira a Codey: vida, energía y saciedad de un vistazo.</string>
     <string name="widget_level">Nv.%1$d</string>
     <string name="widget_status_happy">¡Todo va genial!</string>
     <string name="widget_status_sleeping">Zzz… durmiendo</string>
@@ -751,9 +792,9 @@
     <string name="widget_status_sad">Estoy triste</string>
     <string name="widget_status_studying">¡Modo estudio!</string>
     <string name="widget_status_excited">¡Muy emocionado!</string>
-    <string name="widget_status_dead">Descansa en paz…</string>
+    <string name="widget_status_dead">Modo crítico</string>
     <string name="widget_bytes">%1$d bytes</string>
-    <string name="widget_hunger">Hambre</string>
+    <string name="widget_hunger">Saciedad</string>
     <string name="widget_start_app">¡Inicia la app!</string>
     <string name="cd_widget_pet">Mascota Code Pet</string>
 
