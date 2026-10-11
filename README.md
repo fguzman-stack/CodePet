@@ -809,6 +809,12 @@ The fastest way in: **add coding challenges** for a language we don't cover yet 
 
 ---
 
+## ⚠️ Note for Previous Testers
+
+The `v3.2.0` APK was signed with a new local release key because the previous signing key was not available in the workspace. If Android blocks the update over an older test build, uninstall the previous CodePet version and install the new APK from Releases.
+
+---
+
 ## 📄 License
 
 Released under the **MIT License** — which in plain language means you are free to:

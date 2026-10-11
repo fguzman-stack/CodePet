@@ -841,6 +841,12 @@ fun CodingChallenge.localized(): CodingChallenge {
 
 ---
 
+## ⚠️ Nota para testers anteriores
+
+El APK `v3.2.0` fue firmado con una nueva llave local de release porque la llave anterior no estaba disponible en el workspace. Si Android bloquea la actualización sobre una versión de prueba anterior, desinstala la versión previa de CodePet e instala el APK nuevo desde Releases.
+
+---
+
 ## 📄 Licencia
 
 Bajo **licencia MIT** — que en cristiano significa que puedes:
