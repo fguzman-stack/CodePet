@@ -1,8 +1,10 @@
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=26&duration=3200&pause=900&color=81C784&center=true&vCenter=true&width=760&lines=%F0%9F%90%BE+Code+Tamagotchi;%3E+Tu+mascota+virtual+para+aprender+a+programar;%3E+Estudia.+Resuelve+retos.+Evoluciona." alt="Code Tamagotchi - Tu mascota virtual para aprender a programar"/>
+  <img src="docs/assets/codey-hero.svg" width="1200" alt="Code Tamagotchi - Tu mascota virtual para aprender a programar"/>
   <br/>
-  <img src="app/src/main/res/drawable/iconoapp.png" width="150" alt="Code Tamagotchi Logo"/>
+  <br/>
+  <img src="docs/assets/codey-logo.svg" width="80" height="80" alt="Code Tamagotchi Logo"/>
   <h1>🐾 Code Tamagotchi</h1>
+  <p>Tu mascota virtual para aprender a programar<br/><strong>Estudia. Resuelve retos. Evoluciona.</strong></p>
   <p><em>Tu compañero de estudio que evoluciona mientras programas</em></p>
   <p>
     <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=for-the-badge&logo=github&logoColor=white&color=7C4DFF" alt="Última versión"/></a>
@@ -22,41 +24,41 @@
   <pre>> ./code-tamagotchi --status
 > <b>Status:</b> <code>ACTIVE</code>  <b>Platform:</b> <code>ANDROID</code>  <b>Language:</b> <code>KOTLIN / COMPOSE</code></pre>
   <p><b>Code Tamagotchi</b> transforma el estudio de programación en una experiencia de cuidado, progreso y recompensas. Resuelve desafíos, completa sesiones Pomodoro, gana Bytes y mantén a <b>Codey</b> feliz, saludable y listo para compilar.</p>
-  <a href="#-instalación"><img src="https://img.shields.io/badge/▶_Empezar_a_jugar-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Empezar a jugar"/></a>
-  <a href="#-características"><img src="https://img.shields.io/badge/✨_Explorar_funciones-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explorar funciones"/></a>
+  <a href="#quick-start"><img src="https://img.shields.io/badge/▶_Empezar_a_jugar-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Empezar a jugar"/></a>
+  <a href="#features"><img src="https://img.shields.io/badge/✨_Explorar_funciones-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explorar funciones"/></a>
 </div>
 
 <p align="center">
   <b>Español</b> · <a href="README.md">🇺🇸 English</a>
 </p>
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
 ## 📋 Navegación
 
-<div align="center">
-  [✨ Características](#-características) ·
-  [📸 Capturas](#-capturas) ·
-  [🛠️ Tecnologías](#️-tecnologías) ·
-  [🏗️ Arquitectura](#️-arquitectura) ·
-  [⚙️ Mecánicas](#-mecánicas-de-juego-en-código-real) ·
-  [💾 Persistencia](#-persistencia--room-v5) ·
-  [🧩 Sistemas vivos](#-sistemas-vivos-petviewmodel) ·
-  [⏰ Trabajo en segundo plano](#-trabajo-en-segundo-plano-workmanager) ·
-  [🔌 DI](#-inyección-de-dependencias-koin) ·
-  [🖌️ Renderizado](#-renderizado-procedural) ·
-  [📱 Widget](#-widget-para-pantalla-de-inicio) ·
-  [🧪 Pruebas](#-pruebas) ·
-  [⚡ Quick Start](#-quick-start) ·
-  [🎮 Cómo jugar](#-cómo-jugar) ·
-  [🎨 Temas visuales](#-temas-visuales) ·
-  [🌍 Localización](#-localización) ·
-  [🗺️ Roadmap](#️-roadmap) ·
-  [🤝 Contribuir](#-contribuir)
-</div>
+<p align="center">
+  <a href="#features">✨ Características</a> &nbsp;·&nbsp;
+  <a href="#tech-stack">🛠️ Tecnologías</a> &nbsp;·&nbsp;
+  <a href="#architecture">🏗️ Arquitectura</a> &nbsp;·&nbsp;
+  <a href="#mechanics">⚙️ Mecánicas</a> &nbsp;·&nbsp;
+  <a href="#persistence">💾 Persistencia</a> &nbsp;·&nbsp;
+  <a href="#live-systems">🧩 Sistemas vivos</a><br/><br/>
+  <a href="#background-work">⏰ Trabajo en segundo plano</a> &nbsp;·&nbsp;
+  <a href="#di">🔌 DI</a> &nbsp;·&nbsp;
+  <a href="#rendering">🖌️ Renderizado</a> &nbsp;·&nbsp;
+  <a href="#widget">📱 Widget</a> &nbsp;·&nbsp;
+  <a href="#testing">🧪 Pruebas</a> &nbsp;·&nbsp;
+  <a href="#quick-start">⚡ Quick Start</a><br/><br/>
+  <a href="#how-to-play">🎮 Cómo jugar</a> &nbsp;·&nbsp;
+  <a href="#themes">🎨 Temas visuales</a> &nbsp;·&nbsp;
+  <a href="#localization">🌍 Localización</a> &nbsp;·&nbsp;
+  <a href="#roadmap">🗺️ Roadmap</a> &nbsp;·&nbsp;
+  <a href="#contributing">🤝 Contribuir</a>
+</p>
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="features"></a>
 ## ✨ Características
 
 <table>
@@ -126,20 +128,15 @@
 
 ---
 
-## 📸 Capturas
-
-| Inicio | Retos | Pomodoro |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/01-home.png" width="220"/> | <img src="docs/screenshots/02-learn.png" width="220"/> | <img src="docs/screenshots/03-focus.png" width="220"/> |
-| **Arcade** | **Tienda** | **Misiones Semanales** |
-| <img src="docs/screenshots/04-games.png" width="220"/> | <img src="docs/screenshots/05-shop.png" width="220"/> | <img src="docs/screenshots/06-missions.png" width="220"/> |
-| **Temas** | **Skill Tree** | **Season Pass** |
-| <img src="docs/screenshots/07-themes.png" width="220"/> | <img src="docs/screenshots/08-skilltree.png" width="220"/> | <img src="docs/screenshots/09-seasonpass.png" width="220"/> |
+<p align="center">
+  <img src="docs/assets/codey-angles.svg" width="1200" alt="Codey de frente, en tres cuartos con una laptop y de perfil ante una terminal"/>
+</p>
 
 > 🎨 12 temas premium con fondos animados Canvas únicos. 🐾 Mira a Codey evolucionar de Huevo a Legendario mientras estudias.
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="quick-start"></a>
 ## ⚡ Quick Start
 
 ```bash
@@ -195,10 +192,11 @@ El proyecto usa Gradle 9.x con Gradle Wrapper. **Requiere:** JDK 17+ y Android S
 | 😆 `EXCITED` | Felicidad máxima | Rebote rápido |
 | 🩺 `SICK` | Salud llega a 0 | Modo crítico con pantallazo azul; los cuidados estabilizan a Codey sin perder progreso |
 
-> El estado se resuelve como **cadena de prioridad** en `StatusCalculator.determineStatus()` — mira las [mecánicas](#-mecánicas-de-juego-en-código-real).
+> El estado se resuelve como **cadena de prioridad** en `StatusCalculator.determineStatus()` — mira las [mecánicas](#mechanics).
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="tech-stack"></a>
 ## 🛠️ Tecnologías
 
 | Tecnología | Uso |
@@ -217,6 +215,7 @@ El proyecto usa Gradle 9.x con Gradle Wrapper. **Requiere:** JDK 17+ y Android S
 
 ---
 
+<a id="architecture"></a>
 ## 🏗️ Arquitectura
 
 El proyecto sigue el patrón **MVVM + Repository** con inyección de dependencias via **Koin**.
@@ -349,6 +348,7 @@ CodePet/
 
 ---
 
+<a id="mechanics"></a>
 ## ⚙️ Mecánicas de juego en código real
 
 > Todos los fragmentos de abajo están copiados literalmente del fuente — nada de pseudo-código.
@@ -451,6 +451,7 @@ XP acumulado: **L2 = 100 · L3 = 300 · L4 = 600 · L5 = 1000 · L6 = 1500** —
 
 ---
 
+<a id="persistence"></a>
 ## 💾 Persistencia — Room v5
 
 Ocho entidades, cinco versiones, cuatro migraciones explícitas:
@@ -491,6 +492,7 @@ Campos de `PetStateEntity`: `name · language · level · xp · hunger · health
 
 ---
 
+<a id="live-systems"></a>
 ## 🧩 Sistemas vivos (PetViewModel)
 
 ### 😊 Moodlets — 6 eventos aleatorios
@@ -579,6 +581,7 @@ fun reviveWithBytes() {
 
 ---
 
+<a id="background-work"></a>
 ## ⏰ Trabajo en segundo plano (WorkManager)
 
 Todos los jobs se programan desde `CodeTamagotchiApp.onCreate()`:
@@ -624,6 +627,7 @@ combine(petRepository.petState.distinctUntilChanged(), preferences.currentTheme)
 
 ---
 
+<a id="di"></a>
 ## 🔌 Inyección de dependencias (Koin)
 
 `di/AppModule.kt` — el grafo completo, 19 líneas:
@@ -641,8 +645,9 @@ val appModule = module {
 
 Las pantallas lo obtienen con `koinViewModel()` — hay exactamente **un** cerebro de juego.
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="rendering"></a>
 ## 🖌️ Renderizado procedural
 
 **Cero PNGs** para Codey. El estado persistido (String) se mapea a un enum y un solo `Canvas` dibuja todo:
@@ -667,6 +672,7 @@ Decisiones de diseño:
 
 ---
 
+<a id="widget"></a>
 ## 📱 Widget para pantalla de inicio
 
 `RemoteViews` no puede ejecutar Compose, así que el widget renderiza el **mismo** Codey procedural a un `Bitmap` vía `CodeyBitmap.kt`:
@@ -708,6 +714,7 @@ Compacto 2×2, redimensionable, el tap abre `MainActivity`. `pixelMode` cambia e
 
 ---
 
+<a id="testing"></a>
 ## 🧪 Pruebas
 
 | Test | Qué fija |
@@ -728,8 +735,9 @@ Compacto 2×2, redimensionable, el tap abre `MainActivity`. `pixelMode` cambia e
 ./gradlew :app:lintDebug                  # lint de Android
 ```
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="how-to-play"></a>
 ## 🎮 Cómo jugar
 
 | Paso | Acción | Recompensa |
@@ -753,8 +761,9 @@ Compacto 2×2, redimensionable, el tap abre `MainActivity`. `pixelMode` cambia e
 | Code Review | Hasta +60 | — |
 | Hackathon (completo) | +180 | +175 |
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="themes"></a>
 ## 🎨 Temas visuales
 
 Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno configura colores, tipografía, esquinas, gradientes y un fondo animado Canvas único.
@@ -778,6 +787,7 @@ Code Tamagotchi incluye **12 temas premium** con personalidad única. Cada uno c
 
 ---
 
+<a id="localization"></a>
 ## 🌍 Localización
 
 Code Tamagotchi es totalmente bilingüe (**español + inglés**) y sigue el **idioma del sistema** automáticamente — no hay selector dentro de la app:
@@ -808,6 +818,7 @@ fun CodingChallenge.localized(): CodingChallenge {
 
 ---
 
+<a id="roadmap"></a>
 ## 🗺️ Roadmap
 
 - [x] 🐾 Mascota virtual con estados emocionales y decaimiento
@@ -829,8 +840,9 @@ fun CodingChallenge.localized(): CodingChallenge {
 - [ ] ☁️ Sincronización con Firebase Firestore
 - [ ] 👥 Funcionalidad multijugador y rankings
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="contributing"></a>
 ## 🤝 Contribuir
 
 1. Haz fork del repositorio
@@ -869,6 +881,8 @@ El único requisito es conservar el aviso de copyright y el texto de licencia en
       <img src="https://img.shields.io/github/forks/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=64B5F6" alt="Forks del repositorio"/>
     </a>
   </p>
+  <img src="docs/assets/codey-footer.svg" width="1200" alt="Codey asomándose sobre una terminal con acentos menta y violeta"/>
+  <br/><br/>
   <p><b>Code Tamagotchi v3.0</b> — Donde los bugs se convierten en mascotas y el código en cariño.</p>
   <p>¿Preguntas? Abre un <a href="https://github.com/fguzman-stack/CodePet/issues">issue</a> o consulta la <a href="documentacion.md">documentación completa</a>.</p>
 </div>

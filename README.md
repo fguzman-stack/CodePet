@@ -1,8 +1,10 @@
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=26&duration=3200&pause=900&color=81C784&center=true&vCenter=true&width=760&lines=%F0%9F%90%BE+Code+Tamagotchi;%3E+Your+virtual+pet+that+learns+to+code+with+you;%3E+Study.+Solve+challenges.+Evolve." alt="Code Tamagotchi - Your virtual pet for learning to program"/>
+  <img src="docs/assets/codey-hero.svg" width="1200" alt="Code Tamagotchi - Your virtual pet for learning to program"/>
   <br/>
-  <img src="app/src/main/res/drawable/iconoapp.png" width="150" alt="Code Tamagotchi Logo"/>
+  <br/>
+  <img src="docs/assets/codey-logo.svg" width="80" height="80" alt="Code Tamagotchi Logo"/>
   <h1>🐾 Code Tamagotchi</h1>
+  <p>Your virtual pet that learns to code with you<br/><strong>Study. Solve challenges. Evolve.</strong></p>
   <p><em>Your study buddy that evolves while you code</em></p>
   <p>
     <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=for-the-badge&logo=github&logoColor=white&color=7C4DFF" alt="Latest release"/></a>
@@ -22,40 +24,40 @@
 > <b>Status:</b> <code>ACTIVE</code>  <b>Platform:</b> <code>ANDROID</code>  <b>Language:</b> <code>KOTLIN / COMPOSE</code></pre>
   <p><b>Code Tamagotchi</b> turns programming study into an experience of care, progress and rewards. Solve challenges, finish Pomodoro sessions, earn Bytes and keep <b>Codey</b> happy, healthy and ready to compile.</p>
   <a href="https://github.com/fguzman-stack/CodePet/releases/latest"><img src="https://img.shields.io/badge/▶_Download_the_APK-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Download the APK"/></a>
-  <a href="#-features"><img src="https://img.shields.io/badge/✨_Explore_features-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explore features"/></a>
+  <a href="#features"><img src="https://img.shields.io/badge/✨_Explore_features-7C4DFF?style=for-the-badge&logo=github&logoColor=white" alt="Explore features"/></a>
 </div>
 
 <p align="center">
   <b>English</b> · <a href="README.es.md">🇪🇸 Español</a>
 </p>
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
 ## 📋 Navigation
 
-<div align="center">
-  [✨ Features](#-features) ·
-  [📸 Screenshots](#-screenshots) ·
-  [🛠️ Tech Stack](#️-tech-stack) ·
-  [🏗️ Architecture](#️-architecture) ·
-  [⚙️ Mechanics](#-game-mechanics-in-real-code) ·
-  [💾 Persistence](#-persistence--room-v5) ·
-  [🧩 Live systems](#-live-systems-petviewmodel) ·
-  [⏰ Background work](#-background-work-workmanager) ·
-  [🔌 DI](#-dependency-injection-koin) ·
-  [🖌️ Rendering](#-procedural-rendering) ·
-  [📱 Widget](#-home-screen-widget) ·
-  [🧪 Tests](#-testing) ·
-  [⚡ Quick Start](#-quick-start) ·
-  [🎮 How to Play](#-how-to-play) ·
-  [🎨 Themes](#-themes) ·
-  [🌍 Localization](#-localization) ·
-  [🗺️ Roadmap](#️-roadmap) ·
-  [🤝 Contributing](#-contributing)
-</div>
+<p align="center">
+  <a href="#features">✨ Features</a> &nbsp;·&nbsp;
+  <a href="#tech-stack">🛠️ Tech Stack</a> &nbsp;·&nbsp;
+  <a href="#architecture">🏗️ Architecture</a> &nbsp;·&nbsp;
+  <a href="#mechanics">⚙️ Mechanics</a> &nbsp;·&nbsp;
+  <a href="#persistence">💾 Persistence</a> &nbsp;·&nbsp;
+  <a href="#live-systems">🧩 Live systems</a><br/><br/>
+  <a href="#background-work">⏰ Background work</a> &nbsp;·&nbsp;
+  <a href="#di">🔌 DI</a> &nbsp;·&nbsp;
+  <a href="#rendering">🖌️ Rendering</a> &nbsp;·&nbsp;
+  <a href="#widget">📱 Widget</a> &nbsp;·&nbsp;
+  <a href="#testing">🧪 Tests</a> &nbsp;·&nbsp;
+  <a href="#quick-start">⚡ Quick Start</a><br/><br/>
+  <a href="#how-to-play">🎮 How to Play</a> &nbsp;·&nbsp;
+  <a href="#themes">🎨 Themes</a> &nbsp;·&nbsp;
+  <a href="#localization">🌍 Localization</a> &nbsp;·&nbsp;
+  <a href="#roadmap">🗺️ Roadmap</a> &nbsp;·&nbsp;
+  <a href="#contributing">🤝 Contributing</a>
+</p>
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="features"></a>
 ## ✨ Features
 
 <table>
@@ -127,20 +129,15 @@
 
 ---
 
-## 📸 Screenshots
-
-| Home | Challenges | Pomodoro |
-|:---:|:---:|:---:|
-| <img src="docs/screenshots/01-home.png" width="220"/> | <img src="docs/screenshots/02-learn.png" width="220"/> | <img src="docs/screenshots/03-focus.png" width="220"/> |
-| **Arcade** | **Shop** | **Weekly Missions** |
-| <img src="docs/screenshots/04-games.png" width="220"/> | <img src="docs/screenshots/05-shop.png" width="220"/> | <img src="docs/screenshots/06-missions.png" width="220"/> |
-| **Themes** | **Skill Tree** | **Season Pass** |
-| <img src="docs/screenshots/07-themes.png" width="220"/> | <img src="docs/screenshots/08-skilltree.png" width="220"/> | <img src="docs/screenshots/09-seasonpass.png" width="220"/> |
+<p align="center">
+  <img src="docs/assets/codey-angles.svg" width="1200" alt="Codey from the front, in three-quarter view with a laptop, and in profile at a terminal"/>
+</p>
 
 > 🎨 12 premium themes with unique animated Canvas backgrounds. 🐾 Watch Codey evolve from Egg to Legendary as you study.
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="quick-start"></a>
 ## ⚡ Quick Start
 
 ```bash
@@ -197,10 +194,11 @@ The project uses Gradle 9.x with the Gradle Wrapper. **Requires:** JDK 17+, Andr
 | 😆 `EXCITED` | Max happiness | Fast bouncing |
 | 🩺 `SICK` | Health hits 0 | Critical blue-screen mode; care stabilizes Codey without progress loss |
 
-> Status is a **priority chain** resolved in `StatusCalculator.determineStatus()` — see [game mechanics](#-game-mechanics-in-real-code).
+> Status is a **priority chain** resolved in `StatusCalculator.determineStatus()` — see [game mechanics](#mechanics).
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="tech-stack"></a>
 ## 🛠️ Tech Stack
 
 | Technology | Used for |
@@ -219,6 +217,7 @@ The project uses Gradle 9.x with the Gradle Wrapper. **Requires:** JDK 17+, Andr
 
 ---
 
+<a id="architecture"></a>
 ## 🏗️ Architecture
 
 The project follows **MVVM + Repository** with dependency injection via **Koin**.
@@ -310,6 +309,7 @@ CodePet/
 
 ---
 
+<a id="mechanics"></a>
 ## ⚙️ Game mechanics in real code
 
 > Every snippet below is copied verbatim from the source — no pseudo-code.
@@ -412,6 +412,7 @@ Cumulative XP: **L2 = 100 · L3 = 300 · L4 = 600 · L5 = 1000 · L6 = 1500** �
 
 ---
 
+<a id="persistence"></a>
 ## 💾 Persistence — Room v5
 
 Eight entities, five versions, four explicit migrations:
@@ -452,6 +453,7 @@ suspend fun completeOfflineSession(sessionId: Long, status: String, petState: Pe
 
 ---
 
+<a id="live-systems"></a>
 ## 🧩 Live systems (PetViewModel)
 
 ### 😊 Moodlets — 6 random events
@@ -540,6 +542,7 @@ fun reviveWithBytes() {
 
 ---
 
+<a id="background-work"></a>
 ## ⏰ Background work (WorkManager)
 
 All jobs are scheduled from `CodeTamagotchiApp.onCreate()`:
@@ -585,6 +588,7 @@ combine(petRepository.petState.distinctUntilChanged(), preferences.currentTheme)
 
 ---
 
+<a id="di"></a>
 ## 🔌 Dependency injection (Koin)
 
 `di/AppModule.kt` — the entire graph, 19 lines:
@@ -602,8 +606,9 @@ val appModule = module {
 
 Screens get it with `viewModel<PetViewModel>(koin = koin)` / `koinViewModel()` — there is exactly **one** game brain.
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="rendering"></a>
 ## 🖌️ Procedural rendering
 
 There are **zero PNGs** for Codey. The persisted status string maps to an enum and a single `Canvas` draws everything:
@@ -628,6 +633,7 @@ Design decisions:
 
 ---
 
+<a id="widget"></a>
 ## 📱 Home-screen widget
 
 `RemoteViews` can't run Compose, so the widget renders the **same** procedural Codey into a `Bitmap` via `CodeyBitmap.kt`:
@@ -669,6 +675,7 @@ Compact 2×2, resizable, tap opens `MainActivity`. `pixelMode` switches the rend
 
 ---
 
+<a id="testing"></a>
 ## 🧪 Testing
 
 | Test | What it pins down |
@@ -689,8 +696,9 @@ Compact 2×2, resizable, tap opens `MainActivity`. `pixelMode` switches the rend
 ./gradlew :app:lintDebug                  # Android lint
 ```
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="how-to-play"></a>
 ## 🎮 How to Play
 
 | Step | Action | Reward |
@@ -714,8 +722,9 @@ Compact 2×2, resizable, tap opens `MainActivity`. `pixelMode` switches the rend
 | Code Review | Up to +60 | — |
 | Hackathon (full) | +180 | +175 |
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="themes"></a>
 ## 🎨 Themes
 
 Code Tamagotchi ships with **12 premium themes**. Each configures colors, typography, corners, gradients and a unique animated Canvas background.
@@ -739,6 +748,7 @@ Code Tamagotchi ships with **12 premium themes**. Each configures colors, typogr
 
 ---
 
+<a id="localization"></a>
 ## 🌍 Localization
 
 Code Tamagotchi is fully bilingual (**English + Spanish**) and follows your **system language** automatically — there is no in-app switcher:
@@ -769,6 +779,7 @@ fun CodingChallenge.localized(): CodingChallenge {
 
 ---
 
+<a id="roadmap"></a>
 ## 🗺️ Roadmap
 
 - [x] 🐾 Virtual pet with emotional states and decay
@@ -790,8 +801,9 @@ fun CodingChallenge.localized(): CodingChallenge {
 - [ ] ☁️ Firebase Firestore sync
 - [ ] 👥 Multiplayer and leaderboards
 
----
+<img src="docs/assets/circuit-divider.svg" width="1200" alt=""/>
 
+<a id="contributing"></a>
 ## 🤝 Contributing
 
 The fastest way in: **add coding challenges** for a language we don't cover yet (Rust, Go, Ruby, Swift...). Check [CONTRIBUTING.md](CONTRIBUTING.md) and the [`good first issue`](https://github.com/fguzman-stack/CodePet/labels/good%20first%20issue) label.
@@ -845,6 +857,8 @@ The only requirement is keeping the copyright notice and license text in source 
       <img src="https://img.shields.io/github/forks/fguzman-stack/CodePet?style=for-the-badge&logo=github&color=64B5F6" alt="Repository forks"/>
     </a>
   </p>
+  <img src="docs/assets/codey-footer.svg" width="1200" alt="Codey peeking over a mint and violet terminal horizon"/>
+  <br/><br/>
   <p><b>Code Tamagotchi v3.0</b> — where bugs become pets and code becomes affection.</p>
   <p>Questions? Open an <a href="https://github.com/fguzman-stack/CodePet/issues">issue</a> or check the <a href="documentacion.md">full documentation</a> (ES).</p>
   <p><sub>MIT License · Made with ☕ and 🐛</sub></p>
