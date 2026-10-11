@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="150" viewBox="0 0 900 150" role="img" aria-labelledby="title desc">
+  <title id="title">CodePet loop</title>
+  <desc id="desc">Study, solve, earn, care and unlock loop.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1"><stop stop-color="#0B1020"/><stop offset="1" stop-color="#151232"/></linearGradient>
+    <linearGradient id="edge" x1="0" x2="1"><stop stop-color="#81C784"/><stop offset=".5" stop-color="#7C4DFF"/><stop offset="1" stop-color="#FFD54F"/></linearGradient>
+    <style>text{font-family:Consolas,Menlo,monospace}</style>
+  </defs>
+  <rect width="900" height="150" rx="26" fill="url(#bg)"/>
+  <rect x="1" y="1" width="898" height="148" rx="25" fill="none" stroke="url(#edge)" stroke-width="2"/>
+  <text x="36" y="34" fill="#81C784" font-size="14">$ ./codey --loop</text>
+  <g transform="translate(42 62)" fill="none" stroke-width="2">
+    <g><rect width="124" height="48" rx="16" fill="#101B26" stroke="#81C784"/><text x="32" y="30" fill="#EFFFF2" font-size="14" font-weight="700">STUDY</text></g>
+    <path d="M132 24h54" stroke="#7C4DFF"/><path d="m180 17 9 7-9 7" stroke="#7C4DFF"/>
+    <g transform="translate(198)"><rect width="124" height="48" rx="16" fill="#101B26" stroke="#7C4DFF"/><text x="32" y="30" fill="#F2EEFF" font-size="14" font-weight="700">SOLVE</text></g>
+    <path d="M330 24h54" stroke="#7C4DFF"/><path d="m378 17 9 7-9 7" stroke="#7C4DFF"/>
+    <g transform="translate(396)"><rect width="124" height="48" rx="16" fill="#101B26" stroke="#FFD54F"/><text x="36" y="30" fill="#FFF3B0" font-size="14" font-weight="700">EARN</text></g>
+    <path d="M528 24h54" stroke="#7C4DFF"/><path d="m576 17 9 7-9 7" stroke="#7C4DFF"/>
+    <g transform="translate(594)"><rect width="124" height="48" rx="16" fill="#101B26" stroke="#81C784"/><text x="38" y="30" fill="#EFFFF2" font-size="14" font-weight="700">CARE</text></g>
+    <path d="M726 24h54" stroke="#7C4DFF"/><path d="m774 17 9 7-9 7" stroke="#7C4DFF"/>
+    <g transform="translate(792)"><rect width="66" height="48" rx="16" fill="#101B26" stroke="#64B5F6"/><text x="18" y="30" fill="#D6EEFF" font-size="14" font-weight="700">++</text></g>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="58" viewBox="0 0 260 58" role="img" aria-labelledby="title desc">
+  <title id="title">Download APK</title>
+  <desc id="desc">Green terminal-style button to download the Android APK.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" x2="1"><stop stop-color="#81C784"/><stop offset="1" stop-color="#35D06F"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="2" y="2" width="256" height="54" rx="18" fill="#0D1117" stroke="url(#g)" stroke-width="2"/>
+  <rect x="10" y="10" width="240" height="38" rx="13" fill="url(#g)" opacity=".16"/>
+  <path d="M36 16v18m0 0-8-8m8 8 8-8M27 40h18" fill="none" stroke="#EFFFF2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <text x="62" y="27" fill="#F4FFF7" font-family="Consolas,Menlo,monospace" font-size="15" font-weight="700">download APK</text>
+  <text x="62" y="42" fill="#A9F5BD" font-family="Consolas,Menlo,monospace" font-size="10">Android 7.0+ build</text>
+</svg>

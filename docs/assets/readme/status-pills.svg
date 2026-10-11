@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="78" viewBox="0 0 760 78" role="img" aria-labelledby="title desc">
+  <title id="title">Project status</title>
+  <desc id="desc">Local badges for APK, MIT, Android, Kotlin and Compose.</desc>
+  <defs>
+    <linearGradient id="edge" x1="0" x2="1"><stop stop-color="#81C784"/><stop offset=".5" stop-color="#7C4DFF"/><stop offset="1" stop-color="#64B5F6"/></linearGradient>
+    <style>text{font-family:Consolas,Menlo,monospace}</style>
+  </defs>
+  <rect width="760" height="78" rx="22" fill="#0D1117"/>
+  <rect x="1" y="1" width="758" height="76" rx="21" fill="none" stroke="url(#edge)" stroke-width="2" opacity=".9"/>
+  <g transform="translate(22 20)">
+    <g><rect width="128" height="38" rx="13" fill="#14291D" stroke="#81C784"/><text x="18" y="24" font-size="14" fill="#C9FFD4" font-weight="700">APK READY</text></g>
+    <g transform="translate(144)"><rect width="104" height="38" rx="13" fill="#1B1631" stroke="#7C4DFF"/><text x="24" y="24" font-size="14" fill="#E3D8FF" font-weight="700">MIT</text></g>
+    <g transform="translate(264)"><rect width="132" height="38" rx="13" fill="#14291D" stroke="#35D06F"/><text x="21" y="24" font-size="14" fill="#C9FFD4" font-weight="700">ANDROID 7+</text></g>
+    <g transform="translate(412)"><rect width="132" height="38" rx="13" fill="#181A36" stroke="#7C4DFF"/><text x="31" y="24" font-size="14" fill="#DED5FF" font-weight="700">KOTLIN</text></g>
+    <g transform="translate(560)"><rect width="156" height="38" rx="13" fill="#102238" stroke="#64B5F6"/><text x="29" y="24" font-size="14" fill="#D6EEFF" font-weight="700">COMPOSE UI</text></g>
+  </g>
+</svg>

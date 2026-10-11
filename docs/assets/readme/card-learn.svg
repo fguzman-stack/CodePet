@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="190" viewBox="0 0 420 190" role="img" aria-labelledby="title desc">
+  <title id="title">Learn by coding feature card</title>
+  <desc id="desc">Feature card for programming challenges.</desc>
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#7C4DFF"/><stop offset="1" stop-color="#64B5F6"/></linearGradient><style>text{font-family:Consolas,Menlo,monospace}</style></defs>
+  <rect width="420" height="190" rx="24" fill="#0D1117"/><rect x="1" y="1" width="418" height="188" rx="23" fill="none" stroke="url(#g)" stroke-width="2"/>
+  <circle cx="52" cy="48" r="24" fill="#181A36" stroke="#7C4DFF"/><text x="38" y="56" fill="#DCD3FF" font-size="25">&lt;/&gt;</text>
+  <text x="92" y="41" fill="#A994FF" font-size="14">module.learn</text><text x="92" y="65" fill="#F8F5FF" font-size="24" font-weight="700">Learn By Coding</text>
+  <text x="34" y="106" fill="#C9D1D9" font-size="15">117 challenges, 13 languages</text>
+  <text x="34" y="132" fill="#C9D1D9" font-size="15">special algorithms + code review</text>
+  <text x="34" y="158" fill="#8B949E" font-size="13">Every answer teaches something.</text>
+</svg>

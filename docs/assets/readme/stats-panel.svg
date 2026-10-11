@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="166" viewBox="0 0 900 166" role="img" aria-labelledby="title desc">
+  <title id="title">Project stats</title>
+  <desc id="desc">CodePet stats: version, Android support, challenges, themes and Room schema.</desc>
+  <defs><linearGradient id="edge" x1="0" x2="1"><stop stop-color="#81C784"/><stop offset=".5" stop-color="#7C4DFF"/><stop offset="1" stop-color="#64B5F6"/></linearGradient><style>text{font-family:Consolas,Menlo,monospace}</style></defs>
+  <rect width="900" height="166" rx="26" fill="#0D1117"/><rect x="1" y="1" width="898" height="164" rx="25" fill="none" stroke="url(#edge)" stroke-width="2"/>
+  <text x="34" y="36" fill="#81C784" font-size="14">$ ./codey --stats</text>
+  <g transform="translate(34 62)">
+    <g><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">3.2.0</text><text y="48" fill="#8B949E" font-size="12">app version</text></g>
+    <g transform="translate(145)"><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">API 24+</text><text y="48" fill="#8B949E" font-size="12">Android 7.0+</text></g>
+    <g transform="translate(306)"><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">123</text><text y="48" fill="#8B949E" font-size="12">total challenges</text></g>
+    <g transform="translate(442)"><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">13</text><text y="48" fill="#8B949E" font-size="12">languages</text></g>
+    <g transform="translate(558)"><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">12+</text><text y="48" fill="#8B949E" font-size="12">themes</text></g>
+    <g transform="translate(676)"><text y="24" fill="#F4FFF7" font-size="28" font-weight="700">Room 7</text><text y="48" fill="#8B949E" font-size="12">schema</text></g>
+  </g>
+  <text x="34" y="138" fill="#C9D1D9" font-size="13">117 regular challenges + 6 special challenges, all shipped inside the app.</text>
+</svg>

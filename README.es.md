@@ -7,17 +7,11 @@
   <p>Pomodoro, retos de código, juegos arcade y cuidado de mascota en una app Android local-first.</p>
 
   <p>
-    <a href="https://github.com/fguzman-stack/CodePet/releases/latest"><img src="https://img.shields.io/badge/Descargar_APK-81C784?style=for-the-badge&logo=android&logoColor=white" alt="Descargar APK"/></a>
-    <a href="#capturas"><img src="https://img.shields.io/badge/Ver_capturas-7C4DFF?style=for-the-badge" alt="Ver capturas"/></a>
+    <a href="https://github.com/fguzman-stack/CodePet/releases/latest"><img src="docs/assets/readme/cta-apk.svg" width="260" alt="Descargar APK"/></a>
+    <a href="#capturas"><img src="docs/assets/readme/cta-screenshots.svg" width="260" alt="Ver capturas"/></a>
   </p>
 
-  <p>
-    <a href="https://github.com/fguzman-stack/CodePet/releases"><img src="https://img.shields.io/github/v/release/fguzman-stack/CodePet?style=flat-square&color=7C4DFF" alt="Última versión"/></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/licencia-MIT-81C784?style=flat-square" alt="Licencia MIT"/></a>
-    <img src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android 7.0+"/>
-    <img src="https://img.shields.io/badge/Kotlin-2.2.10-7F52FF?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin 2.2.10"/>
-    <img src="https://img.shields.io/badge/Jetpack_Compose-UI-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white" alt="Jetpack Compose"/>
-  </p>
+  <img src="docs/assets/readme/status-pills.svg" width="760" alt="APK listo, licencia MIT, Android 7+, Kotlin y Compose UI"/>
 
   <p><a href="README.md">English</a> · <strong>Español</strong></p>
 </div>
@@ -38,11 +32,11 @@
 
 Code Tamagotchi convierte la práctica de programación en un ciclo de cuidado. Estudia con Pomodoro, resuelve retos de código, gana XP y Bytes, y usa esas recompensas para mantener a Codey sano, descansado y evolucionando.
 
-```text
-estudiar -> resolver -> ganar -> cuidar -> desbloquear -> repetir
-```
+<div align="center">
+  <img src="docs/assets/readme/loop.svg" width="900" alt="Ciclo de estudiar, resolver, ganar, cuidar y desbloquear"/>
+</div>
 
-La app está construida para Android con Kotlin, Jetpack Compose, Room, DataStore, Koin y WorkManager.
+La app está construida para Android con Kotlin, Jetpack Compose, Room, DataStore, Koin y WorkManager, con Codey renderizado de forma procedural en vez de importado como sprites PNG.
 
 <a id="capturas"></a>
 ## Capturas
@@ -70,64 +64,24 @@ Las capturas del proyecto viven en [`capturas_de_pantalla/`](capturas_de_pantall
 <a id="funciones"></a>
 ## Funciones
 
+<div align="center">
 <table>
 <tr>
-<td width="50%" valign="top">
-
-### Cuidado De Mascota
-
-- Estados dinámicos para felicidad, sueño, estudio, enfermedad, hambre, tristeza, emoción y momentos críticos.
-- Vida, saciedad, energía, XP, Bytes y racha.
-- Acciones para dormir, limpiar, acariciar y comprar recursos.
-- Moodlets, recompensas diarias, misiones semanales y eventos de pair programming.
-
-</td>
-<td width="50%" valign="top">
-
-### Aprende Programando
-
-- 117 retos regulares en 13 lenguajes.
-- 6 retos especiales de algoritmos y arquitectura.
-- Code review, tarjetas de trivia y feedback educativo.
-- Progreso de insignias por lenguaje.
-
-</td>
+<td width="50%"><img src="docs/assets/readme/card-pet-care.svg" width="420" alt="Cuidado de mascota: vida, saciedad, energía, XP, moodlets, cuidados y revivir"/></td>
+<td width="50%"><img src="docs/assets/readme/card-learn.svg" width="420" alt="Aprende programando: 117 retos, 13 lenguajes, algoritmos y code review"/></td>
 </tr>
 <tr>
-<td width="50%" valign="top">
-
-### Foco Y Recompensas
-
-- Sesiones Pomodoro de 15, 25 o 50 minutos.
-- XP y Bytes por tiempo de estudio.
-- Bonus para sesiones largas.
-- Modo foco consciente de No Molestar.
-
-</td>
-<td width="50%" valign="top">
-
-### Sistemas Android
-
-- Base de datos Room con migraciones explícitas.
-- DataStore para preferencias y cooldowns.
-- WorkManager para chequeos y actualizaciones del widget.
-- Renderizado procedural de Codey con Compose Canvas.
-
-</td>
+<td width="50%"><img src="docs/assets/readme/card-focus.svg" width="420" alt="Foco y recompensas: Pomodoro, XP, Bytes y modo No Molestar"/></td>
+<td width="50%"><img src="docs/assets/readme/card-android.svg" width="420" alt="Sistemas Android: Room, DataStore, WorkManager, Compose Canvas y widget"/></td>
 </tr>
 </table>
+</div>
 
 ## Datos Del Proyecto
 
-| Item | Valor actual |
-|:--|:--|
-| Versión de la app | 3.2.0 |
-| Android mínimo | 7.0 / API 24 |
-| Retos regulares | 117 |
-| Retos especiales | 6 |
-| Lenguajes con retos | 13 |
-| Temas visuales | 12 más default |
-| Esquema Room | versión 7 |
+<div align="center">
+  <img src="docs/assets/readme/stats-panel.svg" width="900" alt="Estadísticas de CodePet: version 3.2.0, Android API 24+, 123 retos, 13 lenguajes, 12 temas y Room 7"/>
+</div>
 
 <a id="instalacion"></a>
 ## Instalación

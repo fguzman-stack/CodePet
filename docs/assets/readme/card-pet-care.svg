@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="190" viewBox="0 0 420 190" role="img" aria-labelledby="title desc">
+  <title id="title">Pet care feature card</title>
+  <desc id="desc">Feature card for Codey's pet-care loop.</desc>
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#81C784"/><stop offset="1" stop-color="#7C4DFF"/></linearGradient><style>text{font-family:Consolas,Menlo,monospace}</style></defs>
+  <rect width="420" height="190" rx="24" fill="#0D1117"/><rect x="1" y="1" width="418" height="188" rx="23" fill="none" stroke="url(#g)" stroke-width="2"/>
+  <circle cx="52" cy="48" r="24" fill="#14291D" stroke="#81C784"/><text x="43" y="57" fill="#FF6B7A" font-size="26">♥</text>
+  <text x="92" y="41" fill="#81C784" font-size="14">module.pet</text><text x="92" y="65" fill="#F4FFF7" font-size="24" font-weight="700">Pet Care</text>
+  <text x="34" y="106" fill="#C9D1D9" font-size="15">health, satiety, energy, XP</text>
+  <text x="34" y="132" fill="#C9D1D9" font-size="15">moodlets, care actions, revival</text>
+  <text x="34" y="158" fill="#8B949E" font-size="13">Codey reacts to what you study.</text>
+</svg>

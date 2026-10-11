@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="190" viewBox="0 0 420 190" role="img" aria-labelledby="title desc">
+  <title id="title">Android systems feature card</title>
+  <desc id="desc">Feature card for Android architecture systems.</desc>
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#FFD54F"/><stop offset="1" stop-color="#81C784"/></linearGradient><style>text{font-family:Consolas,Menlo,monospace}</style></defs>
+  <rect width="420" height="190" rx="24" fill="#0D1117"/><rect x="1" y="1" width="418" height="188" rx="23" fill="none" stroke="url(#g)" stroke-width="2"/>
+  <circle cx="52" cy="48" r="24" fill="#2B2410" stroke="#FFD54F"/><text x="38" y="56" fill="#FFF3B0" font-size="25">{ }</text>
+  <text x="92" y="41" fill="#FFD54F" font-size="14">module.android</text><text x="92" y="65" fill="#FFFBE8" font-size="24" font-weight="700">Native Systems</text>
+  <text x="34" y="106" fill="#C9D1D9" font-size="15">Room v7, DataStore, WorkManager</text>
+  <text x="34" y="132" fill="#C9D1D9" font-size="15">Compose Canvas + launcher widget</text>
+  <text x="34" y="158" fill="#8B949E" font-size="13">Built like a real Android app.</text>
+</svg>
